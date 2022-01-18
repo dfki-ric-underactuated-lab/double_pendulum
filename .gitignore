@@ -1,0 +1,3 @@
+src/python/build/*
+src/python/DoublePendulum.egg-info
+examples/outcmaes/*
