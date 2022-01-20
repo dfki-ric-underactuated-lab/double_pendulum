@@ -30,3 +30,20 @@ Suggestion for paper title: A(n Open Source) Dual Purpose Acrobot & Pendubot Pla
 |Parameter Optimization with CMA-ES     |yes            |yes        |
 |Controller Benchmark Tool              |no             |no         |
 |Hardware specification/documentation   |no             |no         |
+
+# Todos
+- Autodesk A360
+    - Get a CAD from Heiner, get a link from the website and put it in repository
+- Cleanup
+    - An **Example folder** for test and simulation
+    - **data folder** for the results and data of the system
+- Software
+    - Double pendulum 
+        - Trajectory optimization
+        - TVLQR
+        - LQR
+    - Design optimization
+    - **unit test** folder
+
+- Documentation
+- Tests
