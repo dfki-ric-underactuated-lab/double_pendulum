@@ -6,19 +6,18 @@
 ## Introduction #
 This project offers an open-source and low-cost kit to test control algorithms for underactuated robots with strongly non-linear dynamics. It implements a **double pendulum** platform built using two quasi-direct drive actuators (QDDs). Due to low friction and high mechanical transparency offered by QDDs, one of the actuators can be kept passive and be used as an encoder. When the shoulder motor is passive and elbow motor is active, the system serves as an **acrobot** and when the shoulder is active and elbow is passive, the system serves as a **pendubot** setup. This project describes the _offline_ and _online_ control methods which can be studied using this dual purpose kit, lists its components, discusses best practices for implementation, presents results from experiments with the simulator and the real system. This repository describes the hardware (CAD, Bill Of Materials (BOM) etc.) required to build the physical system and provides the software (URDF models, simulation and controller) to control it.
 
-
 ## Authors #
 
 * [Shivesh Kumar](https://robotik.dfki-bremen.de/en/about-us/staff/shku02.html) (Project Supervisor)
 * [Felix Wiebe](https://robotik.dfki-bremen.de/en/about-us/staff/fewi01.html) (Software Maintainer)
-* [Jonathan Babel](https://robotik.dfki-bremen.de/en/about-us/staff/joba02.html) (Hardware Maintainer)
+* [Mahdi Javadi](https://robotik.dfki-bremen.de/en/about-us/staff/maja04/) (Hardware Maintainer)
+* [Jonathan Babel](https://robotik.dfki-bremen.de/en/about-us/staff/joba02.html) 
 * [Lasse Maywald](https://robotik.dfki-bremen.de/en/about-us/staff/lama02/)
 * [Heiner Peters](https://robotik.dfki-bremen.de/en/about-us/staff/hepe02.html)
 * [Shubham Vyas](https://robotik.dfki-bremen.de/en/about-us/staff/shvy01/)
 * [Melya Boukheddimi](https://robotik.dfki-bremen.de/en/about-us/staff/mebo01/)
 
 Feel free to contact us if you have questions about the test bench. Enjoy!
-
 
 ## Contributing
 
