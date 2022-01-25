@@ -10,8 +10,9 @@ setup(
         # general
         'numpy',
         'matplotlib',
+        'bitstring',
         # 'pyyaml',
-        # 'pandas',
+        'pandas',
         # 'argparse',
         'scipy',
         'sympy',

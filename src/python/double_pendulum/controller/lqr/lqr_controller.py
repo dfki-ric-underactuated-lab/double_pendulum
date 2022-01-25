@@ -37,18 +37,22 @@ class LQRController(AbstractController):
         self.xd = np.asarray(x)
 
     def set_parameters(self,
-                       pp_cost=1.,     # 1000., 0.001
-                       vv_cost=1.,     # 1000.
-                       pv_cost=0.,     # -500
-                       uu_cost=0.01):  # 100., 0.01
+                       pp1_cost=1.,     # 1000., 0.001
+                       pp2_cost=1.,     # 1000., 0.001
+                       vv1_cost=1.,     # 1000.
+                       vv2_cost=1.,     # 1000.
+                       pv1_cost=0.,     # -500
+                       pv2_cost=0.,     # -500
+                       uu1_cost=0.01,  # 100., 0.01
+                       uu2_cost=0.01):  # 100., 0.01
         # state cost matrix
-        self.Q = np.array([[pp_cost, pv_cost, 0., 0.],
-                           [pv_cost, vv_cost, 0., 0.],
-                           [0., 0., pp_cost, pv_cost],
-                           [0., 0., pv_cost, vv_cost]])
+        self.Q = np.array([[pp1_cost, pv1_cost, 0., 0.],
+                           [pv1_cost, vv1_cost, 0., 0.],
+                           [0., 0., pp2_cost, pv2_cost],
+                           [0., 0., pv2_cost, vv2_cost]])
 
         # control cost matrix
-        self.R = np.array([[uu_cost, 0.], [0., uu_cost]])
+        self.R = np.array([[uu1_cost, 0.], [0., uu2_cost]])
         # self.R = np.array([[uu_cost]])
 
     def init(self):
@@ -75,7 +79,7 @@ class LQRController(AbstractController):
         # u += friction_compensation
 
         if y.dot(np.asarray(self.S.dot(y))[0]) > 15.0:  # old value:0.1
-            u = [0, np.nan]
+            u = [0., 0.]
 
         # print(x, u)
         return u

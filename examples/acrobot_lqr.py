@@ -11,8 +11,8 @@ mass = [0.608, 0.630]
 length = [0.3, 0.2]
 com = [0.275, 0.166]
 damping = [0.081, 0.0]
-cfric = [0.093, 0.186]
-#cfric = [0., 0.]
+#cfric = [0.093, 0.186]
+cfric = [0., 0.]
 gravity = 9.81
 inertia = [0.05472, 0.2522]
 torque_limit = [0.0, 10.0]
@@ -28,7 +28,7 @@ plant = SymbolicDoublePendulum(mass=mass,
 
 sim = Simulator(plant=plant)
 
-dt = 0.01
+dt = 0.005
 t_final = 10.0
 
 controller = LQRController(mass=mass,
@@ -41,13 +41,17 @@ controller = LQRController(mass=mass,
                            torque_limit=torque_limit)
 
 controller.set_goal([np.pi, 0., 0., 0.])
-controller.set_parameters(pp_cost=5.,
-                          vv_cost=1.,
-                          pv_cost=0.,
-                          uu_cost=0.02)
+controller.set_parameters(pp1_cost=50.0,
+                          pp2_cost=10.0,
+                          vv1_cost=10.,
+                          vv2_cost=1.,
+                          pv1_cost=0.,
+                          pv2_cost=0.,
+                          uu1_cost=1.0,
+                          uu2_cost=1.0)
 controller.init()
 
-T, X, U = sim.simulate_and_animate(t0=0.0, x0=[3.1, 0.05, 0.0, 0.1],
+T, X, U = sim.simulate_and_animate(t0=0.0, x0=[3.2, -0.23, 0.0, 0.0],
                                    tf=t_final, dt=dt, controller=controller,
                                    integrator="runge_kutta", phase_plot=False)
 
