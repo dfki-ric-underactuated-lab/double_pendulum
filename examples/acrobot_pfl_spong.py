@@ -53,6 +53,8 @@ t_final = 6.0
 print("dt: ", dt)
 print("t final: ", t_final)
 
+controller.init()
+
 T, X, U = sim.simulate_and_animate(t0=0.0,
                                    x0=[0.1, 0.0, 0.0, 0.0],
                                    tf=t_final,

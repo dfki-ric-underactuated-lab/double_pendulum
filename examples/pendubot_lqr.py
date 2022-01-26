@@ -39,6 +39,8 @@ controller = LQRController(mass=mass,
                            inertia=inertia,
                            torque_limit=torque_limit)
 
+controller.init()
+
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=[3.1, 0.05, 0.0, 0.0],
                                    tf=t_final, dt=dt, controller=controller,
                                    integrator="runge_kutta", phase_plot=False)

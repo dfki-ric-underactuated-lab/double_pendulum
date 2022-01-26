@@ -1,0 +1,47 @@
+mass1: 0.57288
+mass2: 0.57288
+length1: 0.5
+length2: 0.5
+com1: 0.5
+com2: 0.5
+damping1: 0.15
+damping2: 0.15
+coulomb_friction1: 0.0
+coulomb_friction2: 0.0
+gravity: 9.81
+torque_limit1: 10.0
+torque_limit2: 10.0
+
+deltaT: 0.001
+integrator: 1 # 0: euler, 1: runge_kutta
+T: 10.0
+
+start_pos1: 0.0
+start_pos2: 0.0
+start_vel1: 0.0
+start_vel2: 0.0
+goal_pos1: 3.1415926
+goal_pos2: 0.0
+goal_vel1: 0.0
+goal_vel2: 0.0
+
+sCu1: 0.005
+sCu2: 0.0
+sCp1: 0.0
+sCp2: 0.0
+sCv1: 0.0
+sCv2: 0.0
+sCen: 0.0
+fCp1: 1000.0
+fCp2: 1000.0
+fCv1: 10.0
+fCv2: 10.0
+fCen: 0.0
+
+max_iter: 1
+break_cost_redu: 0.000001
+regu_init: 100.0
+N: 5000
+Ninit: 5000
+
+verbose: 0

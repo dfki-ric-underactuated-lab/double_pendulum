@@ -36,7 +36,7 @@ class SymbolicDoublePendulum():
     l1, l2 = smp.symbols("l1 l2")
     r1, r2 = smp.symbols("r1 r2")  # center of masses
     I1, I2 = smp.symbols("I1 I2")
-    g = smp.symbols("g")
+    g_sym = smp.symbols("g")
     b1, b2 = smp.symbols("b1 b2")
     cf1, cf2 = smp.symbols("cf1 cf2")
     tl1, tl2 = smp.symbols("tl1 tl2")
@@ -160,14 +160,14 @@ class SymbolicDoublePendulum():
     def symbolic_gravity_vector(self):
         # equivalent
         if self.formulas == "UnderactuatedLecture":
-            G1 = (-self.m1*self.g*self.r1*smp.sin(self.q1)
-                  - self.m2*self.g*(self.l1*smp.sin(self.q1)
-                                    + self.r2*smp.sin(self.q1+self.q2)))
-            G2 = -self.m2*self.g*self.r2*smp.sin(self.q1+self.q2)
+            G1 = (-self.m1*self.g_sym*self.r1*smp.sin(self.q1)
+                  - self.m2*self.g_sym*(self.l1*smp.sin(self.q1)
+                                        + self.r2*smp.sin(self.q1+self.q2)))
+            G2 = -self.m2*self.g_sym*self.r2*smp.sin(self.q1+self.q2)
         elif self.formulas == "Spong":
-            G1 = -(self.m1*self.r1 + self.m2*self.l1)*self.g*smp.cos(self.q1-0.5*np.pi) - \
-                  self.m2*self.r2*self.g*smp.cos(self.q1-0.5*np.pi+self.q2)
-            G2 = -self.m2*self.r2*self.g*smp.cos(self.q1-0.5*np.pi+self.q2)
+            G1 = -(self.m1*self.r1 + self.m2*self.l1)*self.g_sym*smp.cos(self.q1-0.5*np.pi) - \
+                  self.m2*self.r2*self.g_sym*smp.cos(self.q1-0.5*np.pi+self.q2)
+            G2 = -self.m2*self.r2*self.g_sym*smp.cos(self.q1-0.5*np.pi+self.q2)
         G = smp.Matrix([[G1], [G2]])
         return G
 
@@ -184,7 +184,7 @@ class SymbolicDoublePendulum():
     def symbolic_potential_energy(self):
         h1 = -self.r1*smp.cos(self.q1)
         h2 = -self.l1*smp.cos(self.q1) - self.r2*smp.cos(self.q1+self.q2)
-        Epot = self.m1*self.g*h1 + self.m2*self.g*h2
+        Epot = self.m1*self.g_sym*h1 + self.m2*self.g_sym*h2
         return Epot
 
     def symbolic_total_energy(self):
@@ -252,7 +252,7 @@ class SymbolicDoublePendulum():
         mat_rep = sub_symbols(mat_rep, [self.l1, self.l2], self.l)
         mat_rep = sub_symbols(mat_rep, [self.r1, self.r2], self.com)
         mat_rep = sub_symbols(mat_rep, [self.I1, self.I2], self.I)
-        mat_rep = sub_symbols(mat_rep, [self.g], [self.g])
+        mat_rep = sub_symbols(mat_rep, [self.g_sym], [self.g])
         mat_rep = sub_symbols(mat_rep, [self.b1, self.b2], self.b)
         mat_rep = sub_symbols(mat_rep, [self.cf1, self.cf2], self.coulomb_fric)
         return mat_rep
