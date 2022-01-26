@@ -1,3 +1,7 @@
 src/python/build/*
 src/python/DoublePendulum.egg-info
 examples/outcmaes/*
+src/cpp/bin/*
+src/cpp/controllers/ilqr/bin/*
+src/cpp/controllers/ilqr/obj/*
+src/cpp/python/*.so

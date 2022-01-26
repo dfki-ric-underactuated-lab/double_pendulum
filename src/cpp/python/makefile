@@ -5,7 +5,7 @@ default: cppilqr
 
 cppilqr : setup.py cilqr.pyx $(LIB_DIR)/libilqr.a
 	#python3 setup.py build_ext --inplace && rm -f cilqr.cpp && rm -Rf build
-	CC=clang++-9 python3 setup.py build_ext --inplace  # && rm -f cilqr.cpp && rm -Rf build
+	CC=clang++-9 python3 setup.py build_ext --inplace  && rm -f cilqr.cpp && rm -Rf build
 
 $(LIB_DIR)/libilqr.a:
 	make -C $(LIB_DIR_ROOT) obj/libilqr.a

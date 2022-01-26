@@ -16,8 +16,11 @@ setup(
         # 'argparse',
         'scipy',
         'sympy',
-        'cma'
+        'cma',
         # 'mini-cheetah-motor-driver-socketcan',
+
+        # c++ python bindings
+        'cython'
 
         # optimal control
         # 'drake',
