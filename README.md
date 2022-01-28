@@ -13,6 +13,8 @@ This project offers an open-source and low-cost kit to test control algorithms f
 
 ## Authors #
 
+<img align="right" img width="350" src="hardware/acrobot_swingup_gravity.gif" />
+
 * [Shivesh Kumar](https://robotik.dfki-bremen.de/en/about-us/staff/shku02.html) (Project Supervisor)
 * [Felix Wiebe](https://robotik.dfki-bremen.de/en/about-us/staff/fewi01.html) (Software Maintainer)
 * [Mahdi Javadi](https://robotik.dfki-bremen.de/en/about-us/staff/maja04/) (Hardware Maintainer)
