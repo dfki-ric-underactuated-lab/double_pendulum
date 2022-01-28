@@ -4,17 +4,17 @@ import numpy as np
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.utils.plotting import plot_timeseries
-from double_pendulum.controller.partial_feedback_linearization.pfl import EnergyShapingPFLAndLQRController
+from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl import SymbolicPFLAndLQRController
+
 
 mass = [0.608, 0.630]
 length = [0.3, 0.2]
 com = [0.275, 0.166]
 damping = [0.081, 0.0]
-#cfric = [0.093, 0.186]
-cfric = [0., 0.]
+cfric = [0.093, 0.186]
 gravity = 9.81
 inertia = [0.05472, 0.2522]
-torque_limit = [0.0, 6.0]
+torque_limit = [6.0, 0.0]
 
 
 double_pendulum = SymbolicDoublePendulum(mass=mass,
@@ -27,28 +27,31 @@ double_pendulum = SymbolicDoublePendulum(mass=mass,
                                          torque_limit=torque_limit)
 
 
-controller = EnergyShapingPFLAndLQRController(mass,
-                                              length,
-                                              com,
-                                              damping,
-                                              gravity,
-                                              cfric,
-                                              inertia,
-                                              torque_limit)
+controller = SymbolicPFLAndLQRController(mass,
+                                         length,
+                                         com,
+                                         damping,
+                                         gravity,
+                                         cfric,
+                                         inertia,
+                                         torque_limit,
+                                         "pendubot",
+                                         "collocated")
 
 sim = Simulator(plant=double_pendulum)
 
 controller.set_goal([np.pi, 0, 0, 0])
 
-par = [6.97474837, 9.84031538, 9.1297417]
+# par = [6.97474837, 9.84031538, 9.1297417]
+par = [10.0, 10.0, 10.0]
 #par = np.loadtxt(os.path.join("data",
 #                              sorted(os.listdir("data"))[-1],
 #                              "controller_par.csv"))
 print(par)
 
-controller.set_hyperpar(kpos=par[0],
-                        kvel=par[1],
-                        ken=par[2])
+controller.set_cost_parameters(kpos=par[0],
+                               kvel=par[1],
+                               ken=par[2])
 
 dt = 0.01
 t_final = 10.0

@@ -32,19 +32,23 @@ class LQRController(AbstractController):
         # set default parameters
         self.set_goal()
         self.set_parameters()
+        self.set_cost_parameters()
 
     def set_goal(self, x=[np.pi, 0., 0., 0.]):
         self.xd = np.asarray(x)
 
-    def set_parameters(self,
-                       pp1_cost=1.,     # 1000., 0.001
-                       pp2_cost=1.,     # 1000., 0.001
-                       vv1_cost=1.,     # 1000.
-                       vv2_cost=1.,     # 1000.
-                       pv1_cost=0.,     # -500
-                       pv2_cost=0.,     # -500
-                       uu1_cost=0.01,  # 100., 0.01
-                       uu2_cost=0.01):  # 100., 0.01
+    def set_parameters(self, failure_value=np.nan):
+        self.failure_value = failure_value
+
+    def set_cost_parameters(self,
+                            pp1_cost=1.,     # 1000., 0.001
+                            pp2_cost=1.,     # 1000., 0.001
+                            vv1_cost=1.,     # 1000.
+                            vv2_cost=1.,     # 1000.
+                            pv1_cost=0.,     # -500
+                            pv2_cost=0.,     # -500
+                            uu1_cost=0.01,   # 100., 0.01
+                            uu2_cost=0.01):  # 100., 0.01
         # state cost matrix
         self.Q = np.array([[pp1_cost, pv1_cost, 0., 0.],
                            [pv1_cost, vv1_cost, 0., 0.],
@@ -54,6 +58,16 @@ class LQRController(AbstractController):
         # control cost matrix
         self.R = np.array([[uu1_cost, 0.], [0., uu2_cost]])
         # self.R = np.array([[uu_cost]])
+
+    def set_cost_parameters_(self, pars=[1., 1., 1., 1., 0., 0., 0.01, 0.01]):
+        self.set_cost_parameters(pp1_cost=pars[0],
+                                 pp2_cost=pars[1],
+                                 vv1_cost=pars[2],
+                                 vv2_cost=pars[3],
+                                 pv1_cost=pars[4],
+                                 pv2_cost=pars[5],
+                                 uu1_cost=pars[6],
+                                 uu2_cost=pars[7])
 
     def init(self):
         Alin, Blin = self.splant.linear_matrices(x0=self.xd, u0=[0.0, 0.0])
@@ -79,7 +93,7 @@ class LQRController(AbstractController):
         # u += friction_compensation
 
         if y.dot(np.asarray(self.S.dot(y))[0]) > 15.0:  # old value:0.1
-            u = [0., 0.]
+            u = [self.failure_value, self.failure_value]
 
         # print(x, u)
         return u

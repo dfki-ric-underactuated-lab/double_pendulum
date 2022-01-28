@@ -33,20 +33,17 @@ class EnergyShapingPFLController(AbstractController):
         self.u2 = 0.0
         self.desired_energy = 0.0
 
-        self.k1 = 4.6
-        self.k2 = 1.0
-        self.k3 = 0.3
-
         # self.alpha = np.pi/6.0
-
         self.en = []
 
-    def set_hyperpar(self, kpos=0.3, kvel=0.005, ken=1.0):
+        self.set_parameters()
+
+    def set_cost_parameters(self, kpos=0.3, kvel=0.005, ken=1.0):
         self.k1 = kpos
         self.k2 = kvel
         self.k3 = ken
 
-    def set_parameters(self, pars=[0.3, 0.005, 1.0]):
+    def set_cost_parameters_(self, pars=[0.3, 0.005, 1.0]):
         self.k1 = pars[0]
         self.k2 = pars[1]
         self.k3 = pars[2]
@@ -84,10 +81,11 @@ class EnergyShapingPFLController(AbstractController):
              - self.k2*(vel[1]-self.desired_x[3])
              + self.k3*ubar)  # + F[1] + F[0]
 
-        tau = MMMM*u + (H[1] - MM*H[0]) - (G[1] - MM*G[0]) + (F[1] - MM*F[0])
+        tau = MMMM*u + (H[1] - MM*H[0]) + (MM*G[0] - G[1]) + (MM*F[0] - F[1])
 
         self.u2 = np.clip(tau, -self.torque_limit[1], self.torque_limit[1])
         u = [self.u1, self.u2]
+        # print(x, u)
 
         # this works if both joints are actuated
         # B = self.plant.B
@@ -136,11 +134,14 @@ class EnergyShapingPFLAndLQRController(AbstractController):
         self.active_controller = "energy"
         self.en = []
 
-    def set_hyperpar(self, kpos=0.3, kvel=0.005, ken=1.0):
-        self.en_controller.set_hyperpar(kpos=kpos, kvel=kvel, ken=ken)
+    def set_lqr_parameters(self, failure_value):
+        self.lqr_controller.set_parameters(failure_value)
 
-    def set_parameters(self, pars=[0.3, 0.005, 1.0]):
-        self.en_controller.set_parameters(pars)
+    def set_cost_parameters(self, kpos=0.3, kvel=0.005, ken=1.0):
+        self.en_controller.set_cost_parameters(kpos, kvel, ken)
+
+    def set_cost_parameters_(self, pars=[0.3, 0.005, 1.0]):
+        self.en_controller.set_cost_parameters_(pars)
 
     def set_goal(self, x):
         self.en_controller.set_goal(x)
