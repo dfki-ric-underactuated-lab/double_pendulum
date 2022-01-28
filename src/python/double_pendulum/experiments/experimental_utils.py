@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 import math
 import numpy as np
 # from numpy import linalg as LA
@@ -16,9 +15,10 @@ def yb_friction_matrix(dq_vec):
     y_23 = math.atan(100*dq_vec[1])
     y_24 = dq_vec[1]
 
-    yb_fric = np.array([[y_11, y_12,0,0],
+    yb_fric = np.array([[y_11, y_12, 0, 0],
                         [0, 0, y_23, y_24]])
     return yb_fric
+
 
 def read_data():
     MAIN_DIR = os.path.realpath(os.curdir)
@@ -35,6 +35,7 @@ def wrap_angle_pi2pi(angle):
     if angle > np.pi:
         angle -= 2 * np.pi
     return angle
+
 
 def prepare_data(data, n):
     # Prepare data for creating TVLQR
@@ -65,21 +66,24 @@ def prepare_data(data, n):
     dt = time_traj[2] - time_traj[1]
 
     return (
-        shoulder_pos_traj, shoulder_vel_traj, shoulder_tau_traj, elbow_pos_traj, elbow_vel_traj, elbow_tau_traj,
+        shoulder_pos_traj, shoulder_vel_traj, shoulder_tau_traj,
+        elbow_pos_traj, elbow_vel_traj, elbow_tau_traj,
         time_traj,
-        shoulder_meas_pos, shoulder_meas_vel, shoulder_meas_tau, elbow_meas_pos, elbow_meas_vel, elbow_meas_tau,
+        shoulder_meas_pos, shoulder_meas_vel, shoulder_meas_tau,
+        elbow_meas_pos, elbow_meas_vel, elbow_meas_tau,
         meas_time,
-        gear_ratio, rad2outputrev, shoulder_tau_in, elbow_tau_in, dt, abs_error_state,
-        shoulder_on)  # , shoulder_pos_out, shoulder_vel_out, elbow_pos_out, elbow_vel_out
+        gear_ratio, rad2outputrev, shoulder_tau_in, elbow_tau_in,
+        dt, abs_error_state, shoulder_on)
+
 
 def prepare_empty_data(n):
     # Creating empty arrays for sensor data measurement
-    shoulder_meas_pos = np.zeros(n)
-    shoulder_meas_vel = np.zeros(n)
+    shoulder_meas_pos = np.zeros(n+1)
+    shoulder_meas_vel = np.zeros(n+1)
     shoulder_meas_tau = np.zeros(n)
     shoulder_on = np.zeros(n)
-    elbow_meas_pos = np.zeros(n)
-    elbow_meas_vel = np.zeros(n)
+    elbow_meas_pos = np.zeros(n+1)
+    elbow_meas_vel = np.zeros(n+1)
     elbow_meas_tau = np.zeros(n)
     meas_time = np.zeros(n)
     # transmission of the motor
@@ -87,28 +91,28 @@ def prepare_empty_data(n):
     rad2outputrev = gear_ratio / (2 * np.pi)
     # torque in Nm on the motor side before the gear transmission
 
-    return (
-        shoulder_meas_pos,
-        shoulder_meas_vel,
-        shoulder_meas_tau,
-        elbow_meas_pos,
-        elbow_meas_vel,
-        elbow_meas_tau,
-        meas_time,
-        gear_ratio,
-        rad2outputrev,
-        shoulder_on)
+    return (shoulder_meas_pos,
+            shoulder_meas_vel,
+            shoulder_meas_tau,
+            elbow_meas_pos,
+            elbow_meas_vel,
+            elbow_meas_tau,
+            meas_time,
+            gear_ratio,
+            rad2outputrev,
+            shoulder_on)
+
 
 def plot_figure(save_dir,
-        date,
-        shoulder_meas_pos,
-        shoulder_meas_vel,
-        shoulder_meas_tau,
-        elbow_meas_pos,
-        elbow_meas_vel,
-        elbow_meas_tau,
-        meas_time,
-        shoulder_on):
+                date,
+                shoulder_meas_pos,
+                shoulder_meas_vel,
+                shoulder_meas_tau,
+                elbow_meas_pos,
+                elbow_meas_vel,
+                elbow_meas_tau,
+                meas_time,
+                shoulder_on):
 
     # position plot of elbow
     print('plotting started')
@@ -236,7 +240,9 @@ def save_data(save_dir,
     np.savetxt(os.path.join(save_dir, f'{date}_measured.csv'),
                measured_csv_data,
                delimiter=',',
-               header="meas_time,shoulder_meas_pos,shoulder_meas_vel,shoulder_meas_tau,elbow_meas_pos,elbow_meas_vel,elbow_meas_tau,shoulder_on",
+               header="meas_time,shoulder_meas_pos,shoulder_meas_vel," +
+                      "shoulder_meas_tau,elbow_meas_pos,elbow_meas_vel," +
+                      "elbow_meas_tau,shoulder_on",
                comments="")
     print("CSV file saved\n")
 
@@ -245,6 +251,5 @@ def setZeroPosition(motor, initPos):
     pos = initPos
     while abs(np.rad2deg(pos)) > 0.5:
         pos, vel, curr = motor.set_zero_position()
-        print("Position: {}, Velocity: {}, Torque: {}".format(np.rad2deg(pos), np.rad2deg(vel),
-                                                                curr))
-
+        print("Position: {}, Velocity: {}, Torque: {}".format(
+            np.rad2deg(pos), np.rad2deg(vel), curr))
