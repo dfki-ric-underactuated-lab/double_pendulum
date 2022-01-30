@@ -203,7 +203,7 @@ int main(int argc, char *argv[], char *envp[]){
     ilmpc.set_x_init_traj(x_traj);
     for (int s=0; s<n_steps; s++){
         u_full(0) = 0.;
-        u_full(1) = ilmpc.get_control_output(state)(0);
+        u_full(1) = ilmpc.get_control_output(state); //(0);
         sim.set_state(0.0, state);
         sim.step(u_full, dt, integrator);
         state = sim.get_state();

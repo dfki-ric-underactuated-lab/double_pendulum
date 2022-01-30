@@ -119,8 +119,8 @@ cdef class cppilqr:
         vv2 = v2
         self.il.set_x_init_traj(&pp1[0], &pp2[0], &vv1[0], &vv2[0])
 
-    def run_ilqr(self, max_iter, break_cost_redu, regu_init):
-        self.il.run_ilqr(max_iter, break_cost_redu, regu_init)
+    def run_ilqr(self, max_iter, break_cost_redu, regu_init, max_regu, min_regu):
+        self.il.run_ilqr(max_iter, break_cost_redu, regu_init, max_regu, min_regu)
 
     def get_u1_traj(self):
         N = self.il.get_N()
@@ -211,12 +211,15 @@ cdef class cppilqrmpc:
     #     del self.il
 
     def set_parameters(self, integrator_ind, delta_t,
-                       max_it, break_cost_red, regu_ini):
+                       max_it, break_cost_red, regu_ini,
+                       max_reg, min_reg):
         self.ilmpc.set_parameters(integrator_ind,
                                   delta_t,
                                   max_it,
                                   break_cost_red,
-                                  regu_ini)
+                                  regu_ini,
+                                  max_reg,
+                                  min_reg)
 
     def set_start(self, pos1, pos2, vel1, vel2):
         self.ilmpc.set_start(pos1, pos2, vel1, vel2)

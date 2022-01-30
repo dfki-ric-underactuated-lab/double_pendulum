@@ -67,6 +67,8 @@ int main(int argc, char *argv[], char *envp[]){
     int max_iter = 2;
     double break_cost_redu = 1e-6;
     double regu_init = 100.;
+    double max_regu = 10000.;
+    double min_regu = 0.01;
     int N=1000;
 
     //TODO fix yaml loading
@@ -126,6 +128,8 @@ int main(int argc, char *argv[], char *envp[]){
     if (config["max_iter"]) {max_iter=config["max_iter"].as<int>();}
     if (config["break_cost_redu"]) {break_cost_redu=config["break_cost_redu"].as<double>();}
     if (config["regu_init"]) {regu_init=config["regu_init"].as<double>();}
+    if (config["max_regu"]) {max_regu=config["max_regu"].as<double>();}
+    if (config["min_regu"]) {min_regu=config["min_regu"].as<double>();}
 
     ilqr ilqr_calc(N);
 
@@ -154,7 +158,7 @@ int main(int argc, char *argv[], char *envp[]){
     ilqr_calc.set_goal(goal_pos1, goal_pos2,
                        goal_vel1, goal_vel2);
 
-    ilqr_calc.run_ilqr(max_iter, break_cost_redu, regu_init);
+    ilqr_calc.run_ilqr(max_iter, break_cost_redu, regu_init, max_regu, min_regu);
 
 
     //double* u1_traj_doubles = new double[N-1];

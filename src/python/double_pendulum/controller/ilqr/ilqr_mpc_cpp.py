@@ -42,6 +42,8 @@ class ILQRMPCCPPController(AbstractController):
                        dt=0.005,
                        max_iter=1,
                        regu_init=100,
+                       max_regu=10000.,
+                       min_regu=0.01,
                        break_cost_redu=1e-6,
                        sCu=[0.005, 0.005],
                        sCp=[0., 0.],
@@ -55,6 +57,8 @@ class ILQRMPCCPPController(AbstractController):
         self.dt = 0.005
         self.max_iter = max_iter
         self.regu_init = regu_init
+        self.max_regu = max_regu
+        self.min_regu = min_regu
         self.break_cost_redu = break_cost_redu
 
         self.sCu = sCu
@@ -75,6 +79,8 @@ class ILQRMPCCPPController(AbstractController):
                           dt=0.005,
                           max_iter=100,
                           regu_init=100,
+                          max_regu=10000.,
+                          min_regu=0.01,
                           break_cost_redu=1e-6,
                           sCu=[0.005, 0.005],
                           sCp=[0., 0.],
@@ -114,7 +120,8 @@ class ILQRMPCCPPController(AbstractController):
                                fCp[0], fCp[1],
                                fCv[0], fCv[1],
                                fCen)
-        il.run_ilqr(max_iter, break_cost_redu, regu_init)
+        il.run_ilqr(max_iter, break_cost_redu, regu_init,
+                    max_regu, min_regu)
 
         self.u1_init_traj = il.get_u1_traj()
         self.u2_init_traj = il.get_u2_traj()
@@ -137,7 +144,9 @@ class ILQRMPCCPPController(AbstractController):
                                   self.dt,
                                   self.max_iter,
                                   self.break_cost_redu,
-                                  self.regu_init)
+                                  self.regu_init,
+                                  self.max_regu,
+                                  self.min_regu)
         self.ilmpc.set_goal(self.goal[0], self.goal[1],
                             self.goal[2], self.goal[3])
         self.ilmpc.set_model_parameters(

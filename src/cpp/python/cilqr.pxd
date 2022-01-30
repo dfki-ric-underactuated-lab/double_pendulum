@@ -37,7 +37,8 @@ cdef extern from "../controllers/ilqr/src/ilqr.hpp":
         void set_u_init_traj(double u1[], double u2[])
         void set_x_init_traj(double p1[], double p2[],
                              double v1[], double v2[])
-        void run_ilqr(int max_iter, double break_cost_redu, double regu_init)
+        void run_ilqr(int max_iter, double break_cost_redu, double regu_init,
+                      double max_regu, double min_regu)
         #vector[double] * get_u_traj()
         double *get_u1_traj()
         double *get_u2_traj()
@@ -53,7 +54,8 @@ cdef extern from "../controllers/ilqr/src/ilqr_mpc.hpp":
         ilqr_mpc() except +
         ilqr_mpc(int N, int N_init) except +
         void set_parameters(int integrator_ind, double delta_t, int max_it,
-                            double break_cost_red, double regu_ini)
+                            double break_cost_red, double regu_ini,
+                            double max_reg, double min_reg)
         void set_start(double pos1, double pos2,
                        double vel1, double vel2)
         void set_goal(double pos1, double pos2,

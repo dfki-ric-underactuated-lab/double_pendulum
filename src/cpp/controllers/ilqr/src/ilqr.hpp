@@ -128,7 +128,7 @@ public:
     void set_x_init_traj(double p1[], double p2[], double v1[], double v2[]);
     void set_x_init_traj(Eigen::Vector<double, n_x> xtrj[]);
 
-    void run_ilqr(int, double, double);
+    void run_ilqr(int, double, double, double, double);
 
     Eigen::Vector<double, n_u>* u_traj = new Eigen::Vector<double, n_u>[N-1];
     Eigen::Vector<double, n_u>* u_traj_new = new Eigen::Vector<double, n_u>[N-1];

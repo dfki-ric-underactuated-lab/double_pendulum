@@ -28,7 +28,8 @@ ilqr_mpc::~ilqr_mpc(){
 
 
 void ilqr_mpc::set_parameters(int integrator_ind, double delta_t,
-                              int max_it, double break_cost_red, double regu_ini){
+                              int max_it, double break_cost_red, double regu_ini,
+                              double max_reg, double min_reg){
     if(integrator_ind == 0){
         integrator = "euler";
     }
@@ -40,6 +41,8 @@ void ilqr_mpc::set_parameters(int integrator_ind, double delta_t,
     max_iter = max_it;
     break_cost_redu = break_cost_red;
     regu_init = regu_ini;
+    max_regu = max_reg;
+    min_regu = min_reg;
 }
 
 void ilqr_mpc::read_parameter_file(std::string configfile){
@@ -106,6 +109,8 @@ void ilqr_mpc::read_parameter_file(std::string configfile){
     if (config["max_iter"]) {max_iter=config["max_iter"].as<int>();}
     if (config["break_cost_redu"]) {break_cost_redu=config["break_cost_redu"].as<double>();}
     if (config["regu_init"]) {regu_init=config["regu_init"].as<double>();}
+    if (config["max_regu"]) {max_regu=config["max_regu"].as<double>();}
+    if (config["min_regu"]) {min_regu=config["min_regu"].as<double>();}
 
 
     ilqr_calc->set_parameters(integrator_ind, dt);
@@ -275,15 +280,21 @@ void ilqr_mpc::set_x_init_traj(Eigen::Vector<double, ilqr::n_x> xtrj[]){
 
 void ilqr_mpc::shift_trajs(int s){
     for (int i=0; i<N-2; i++){
-        u_traj[i] = u_traj[i+1];
+        u_traj[i](0) = u_traj[i+1](0);
     }
     for (int i=0; i<N-1; i++){
-        x_traj[i] = x_traj[i+1];
+        x_traj[i](0) = x_traj[i+1](0);
+        x_traj[i](1) = x_traj[i+1](1);
+        x_traj[i](2) = x_traj[i+1](2);
+        x_traj[i](3) = x_traj[i+1](3);
     }
 
-    if (N+s < N_init+1){
-        u_traj[N-2] = u_init_traj[N+s-1];
-        x_traj[N-1] = x_init_traj[N+s];
+    if (N+s < N_init){
+        u_traj[N-2](0) = u_init_traj[N+s-1](0);
+        x_traj[N-1](0) = x_init_traj[N+s](0);
+        x_traj[N-1](1) = x_init_traj[N+s](1);
+        x_traj[N-1](2) = x_init_traj[N+s](2);
+        x_traj[N-1](3) = x_init_traj[N+s](3);
     }
     else{
         u_traj[N-2](0) = 0.0; // todo: acro/pendu
@@ -298,7 +309,7 @@ double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
     ilqr_calc->set_start(x);
     ilqr_calc->set_u_init_traj(u_traj);
     ilqr_calc->set_x_init_traj(x_traj);
-    ilqr_calc->run_ilqr(max_iter, break_cost_redu, regu_init);
+    ilqr_calc->run_ilqr(max_iter, break_cost_redu, regu_init, max_regu, min_regu);
 
     //u_traj = ilqr_calc->get_u_traj();
     //x_traj = ilqr_calc->get_x_traj();
@@ -310,16 +321,19 @@ double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
         x_traj[i] = ilqr_calc->x_traj[i];
     }
 
-    Eigen::Vector<double, ilqr::n_u> u;
+    //Eigen::Vector<double, ilqr::n_u> u;
     //Eigen::Vector<double, 2> u_full;
 
+    double u;
+
     //u[0] = 0.;
-    u[0] = u_traj[0](0);
+    //u[0] = u_traj[0](0);
+    u = u_traj[0](0);
 
     shift_trajs(counter);
     counter += 1;
 
-    return u[0];
+    return u;
 }
 
 double ilqr_mpc::get_control_output(double p1, double p2, double v1, double v2){

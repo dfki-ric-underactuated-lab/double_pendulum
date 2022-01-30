@@ -37,12 +37,16 @@ class ilqr_calculator():
                        dt=0.005,
                        max_iter=100,
                        regu_init=100,
+                       max_regu=10000.,
+                       min_regu=0.01,
                        break_cost_redu=1e-6,
                        integrator="runge_kutta"):
         self.N = N
         self.dt = 0.005
         self.max_iter = max_iter
         self.regu_init = regu_init
+        self.max_regu = max_regu
+        self.min_regu = min_regu
         self.break_cost_redu = break_cost_redu
 
         if integrator == "euler":
@@ -112,7 +116,11 @@ class ilqr_calculator():
                                self.fCp[0], self.fCp[1],
                                self.fCv[0], self.fCv[1],
                                self.fCen)
-        il.run_ilqr(self.max_iter, self.break_cost_redu, self.regu_init)
+        il.run_ilqr(self.max_iter,
+                    self.break_cost_redu,
+                    self.regu_init,
+                    self.max_regu,
+                    self.min_regu)
 
         u1_traj = il.get_u1_traj()
         u2_traj = il.get_u2_traj()

@@ -659,7 +659,7 @@ double ilqr::backward_pass(double regu){
     return expected_cost_redu;
 }
 
-void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init){
+void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, double max_regu, double min_regu){
     if (not warm_start_u){
         for (int i=0; i<N-1; i++){
             for (int j=0; j<n_u; j++){
@@ -720,8 +720,8 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init){
     double last_cost = total_cost;
 
     double regu = regu_init;
-    double max_regu = 10000.;
-    double min_regu = 0.01;
+    // double max_regu = 10000.;
+    // double min_regu = 0.01;
     double expected_cost_redu = 0.;
 
     for (int n=0; n<max_iter; n++){

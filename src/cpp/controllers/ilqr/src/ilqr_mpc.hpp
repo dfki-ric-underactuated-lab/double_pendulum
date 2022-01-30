@@ -39,7 +39,7 @@ private:
 
     int max_iter;
     double break_cost_redu;
-    double regu_init;
+    double regu_init, max_regu, min_regu;
 
     int counter = 0;
 
@@ -47,7 +47,8 @@ private:
 
 public:
 
-    void set_parameters(int, double, int, double, double);
+    void set_parameters(int, double, int, double, double,
+                        double, double);
     void read_parameter_file(std::string);
     void set_model_parameters(double, double, double, double, double,
                               double, double, double, double, double,
