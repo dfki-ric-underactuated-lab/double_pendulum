@@ -41,14 +41,14 @@ controller = LQRController(mass=mass,
                            torque_limit=torque_limit)
 
 controller.set_goal([np.pi, 0., 0., 0.])
-controller.set_parameters(pp1_cost=50.0,
-                          pp2_cost=10.0,
-                          vv1_cost=10.,
-                          vv2_cost=1.,
-                          pv1_cost=0.,
-                          pv2_cost=0.,
-                          uu1_cost=1.0,
-                          uu2_cost=1.0)
+controller.set_cost_parameters(pp1_cost=50.0,
+                               pp2_cost=10.0,
+                               vv1_cost=10.,
+                               vv2_cost=1.,
+                               pv1_cost=0.,
+                               pv2_cost=0.,
+                               uu1_cost=1.0,
+                               uu2_cost=1.0)
 controller.init()
 
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=[3.2, -0.23, 0.0, 0.0],

@@ -2,7 +2,7 @@ import sys
 import numpy as np
 
 # sys.path.append("../../../../cpp/python/")
-sys.path.append("/home/felix/Work/DFKI/Development/underactuated_lab/double_pendulum/caprr-release-version/src/cpp/python/")
+sys.path.append("/home/vhuser/Git/underactuated-robotics/caprr-release-version/src/cpp/python")
 from cppilqr import cppilqr
 
 
@@ -94,13 +94,13 @@ class ilqr_calculator():
 
     def compute_trajectory(self):
 
-        il = cppilqr(self.N)
-        il.set_parameters(self.integrator_int, self.dt)
-        il.set_start(self.start[0], self.start[1],
+        self.il = cppilqr(self.N)
+        self.il.set_parameters(self.integrator_int, self.dt)
+        self.il.set_start(self.start[0], self.start[1],
                      self.start[2], self.start[3])
-        il.set_goal(self.goal[0], self.goal[1],
+        self.il.set_goal(self.goal[0], self.goal[1],
                     self.goal[2], self.goal[3])
-        il.set_model_parameters(
+        self.il.set_model_parameters(
             self.mass[0], self.mass[1],
             self.length[0], self.length[1],
             self.com[0], self.com[1],
@@ -109,28 +109,31 @@ class ilqr_calculator():
             self.coulomb_fric[0], self.coulomb_fric[1],
             self.gravity,
             self.torque_limit[0], self.torque_limit[1])
-        il.set_cost_parameters(self.sCu[0], self.sCu[1],
+        self.il.set_cost_parameters(self.sCu[0], self.sCu[1],
                                self.sCp[0], self.sCp[1],
                                self.sCv[0], self.sCv[1],
                                self.sCen,
                                self.fCp[0], self.fCp[1],
                                self.fCv[0], self.fCv[1],
                                self.fCen)
-        il.run_ilqr(self.max_iter,
+        self.il.run_ilqr(self.max_iter,
                     self.break_cost_redu,
                     self.regu_init,
                     self.max_regu,
                     self.min_regu)
 
-        u1_traj = il.get_u1_traj()
-        u2_traj = il.get_u2_traj()
-        p1_traj = il.get_p1_traj()
-        p2_traj = il.get_p2_traj()
-        v1_traj = il.get_v1_traj()
-        v2_traj = il.get_v2_traj()
+        u1_traj = self.il.get_u1_traj()
+        u2_traj = self.il.get_u2_traj()
+        p1_traj = self.il.get_p1_traj()
+        p2_traj = self.il.get_p2_traj()
+        v1_traj = self.il.get_v1_traj()
+        v2_traj = self.il.get_v2_traj()
 
         T = np.linspace(0, self.N*self.dt, self.N)
         X = np.asarray([p1_traj, p2_traj, v1_traj, v2_traj]).T
         U = np.asarray([u1_traj, u2_traj]).T
 
         return T, X, U
+
+    def save_trajectory_csv(self):
+        self.il.save_trajectory_csv()

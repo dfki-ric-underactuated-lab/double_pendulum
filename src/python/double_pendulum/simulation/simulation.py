@@ -62,7 +62,7 @@ class Simulator:
 
         while (self.t <= tf):
             if controller is not None:
-                tau = controller.get_control_output(self.x)
+                tau = controller.get_control_output(x=self.x, t=self.t)
             else:
                 tau = np.zeros(self.plant.n_actuators)
             self.step(tau, dt, integrator=integrator)
@@ -108,7 +108,7 @@ class Simulator:
         controller = par_dict["controller"]
         integrator = par_dict["integrator"]
         if controller is not None:
-            tau = controller.get_control_output(self.x)
+            tau = controller.get_control_output(x=self.x, t=self.t)
         else:
             tau = np.zeros(self.plant.n_actuators)
         self.step(tau, dt, integrator=integrator)

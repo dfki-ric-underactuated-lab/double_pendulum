@@ -9,7 +9,7 @@ class AbstractController(ABC):
     this abstract class.
     """
     @abstractmethod
-    def get_control_output(self, meas_pos, meas_vel, meas_tau, meas_time):
+    def get_control_output(self, x, t=None):
         """
         The function to compute the control input for the double pendulum's
         actuator(s).
@@ -18,29 +18,20 @@ class AbstractController(ABC):
 
         Parameters
         ----------
-        meas_pos : float
-            the position of the pendulum [rad]
-        meas_vel : float
-            the velocity of the pendulum [rad/s]
-        meas_tau : float
-            the meastured torque of the pendulum [Nm]
-        meas_time : float
-            the collapsed time [s]
-
+        x : array-like
+            state array for double pendulum system with np.shape(x)=4
+        t : float, optional
+            time in seconds
         Returns
         -------
-        des_pos : float
-            the desired position of the pendulum [rad]
-        des_vel : float
-            the desired velocity of the pendulum [rad/s]
-        des_tau : float
-            the torque supposed to be applied by the actuator [Nm]
+        u : array-like
+            the torque supposed to be applied by the actuators [Nm]
+            np.shape(u)=2.
+            For acrobot/pendubot system set the unactuated motor command to 0
         """
 
-        des_pos = None
-        des_vel = None
-        des_tau = None
-        return des_pos, des_vel, des_tau
+        u = [0.0, 0.0]
+        return u
 
     def set_parameters(self):
         """

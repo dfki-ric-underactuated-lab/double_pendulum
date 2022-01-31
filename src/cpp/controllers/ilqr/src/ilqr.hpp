@@ -151,6 +151,8 @@ public:
     Eigen::Vector<double, n_u>* get_u_traj();
     Eigen::Vector<double, n_x>* get_x_traj();
 
+
+    void save_trajectory_csv();
 };
 
 #endif // ILQR_HPP

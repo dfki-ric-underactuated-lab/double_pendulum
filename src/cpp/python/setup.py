@@ -4,7 +4,7 @@ from Cython.Build import cythonize
 
 ilqr_extension = Extension(
     name="cppilqr",
-    sources=["cilqr.pyx"],
+    sources=["cppilqr.pyx"],
     libraries=["ilqr", "yaml-cpp"],
     library_dirs=["../controllers/ilqr/obj"],
     include_dirs=["../controllers/ilqr/obj"],

@@ -47,6 +47,7 @@ cdef extern from "../controllers/ilqr/src/ilqr.hpp":
         double *get_v1_traj()
         double *get_v2_traj()
         int get_N()
+        void save_trajectory_csv()
         const int N
 
 cdef extern from "../controllers/ilqr/src/ilqr_mpc.hpp":

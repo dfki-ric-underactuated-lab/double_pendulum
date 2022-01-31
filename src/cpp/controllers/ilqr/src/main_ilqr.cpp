@@ -64,7 +64,7 @@ int main(int argc, char *argv[], char *envp[]){
     double fCen = 0.0;
 
     // other ilqr parameters
-    int max_iter = 2;
+    int max_iter = 100;
     double break_cost_redu = 1e-6;
     double regu_init = 100.;
     double max_regu = 10000.;
@@ -160,7 +160,7 @@ int main(int argc, char *argv[], char *envp[]){
 
     ilqr_calc.run_ilqr(max_iter, break_cost_redu, regu_init, max_regu, min_regu);
 
-
+    ilqr_calc.save_trajectory_csv();
     //double* u1_traj_doubles = new double[N-1];
     //double* u2_traj_doubles = new double[N-1];
     //double* p1_traj_doubles = new double[N];
@@ -175,17 +175,17 @@ int main(int argc, char *argv[], char *envp[]){
     //v1_traj_doubles = ilqr_calc.get_v1_traj();
     //v2_traj_doubles = ilqr_calc.get_v2_traj();
 
-    std::ofstream traj_file;
-    traj_file.open (foldername+"/trajectory.csv");
-    traj_file << "pos, vel, tau\n";
+    //std::ofstream traj_file;
+    //traj_file.open (foldername+"/trajectory.csv");
+    //traj_file << "pos, vel, tau\n";
 
-    for (int i=0; i<N-1; i++){
-        traj_file << ilqr_calc.x_traj[i](0) << ", " << ilqr_calc.x_traj[i](1) << ", " << ilqr_calc.x_traj[i](2) << ", " << ilqr_calc.x_traj[i](3) << ", " << 0.0 << ", " << ilqr_calc.u_traj[i](0) << "\n";
-    }
+    //for (int i=0; i<N-1; i++){
+    //    traj_file << ilqr_calc.x_traj[i](0) << ", " << ilqr_calc.x_traj[i](1) << ", " << ilqr_calc.x_traj[i](2) << ", " << ilqr_calc.x_traj[i](3) << ", " << 0.0 << ", " << ilqr_calc.u_traj[i](0) << "\n";
+    //}
 
-    Eigen::Vector<double, ilqr_calc.n_x> xf = ilqr_calc.x_traj[N-1];
-    printf("Final state %f %f %f %f \n", xf(0), xf(1), xf(2), xf(3));
-    traj_file << ilqr_calc.x_traj[N-1](0) << ", " << ilqr_calc.x_traj[N-1](1) << ", "<< ilqr_calc.x_traj[N-1](2) << ", " << ilqr_calc.x_traj[N-1](3) << ", " << 0.0 << ", " << 0.0;
+    //Eigen::Vector<double, ilqr_calc.n_x> xf = ilqr_calc.x_traj[N-1];
+    //printf("Final state %f %f %f %f \n", xf(0), xf(1), xf(2), xf(3));
+    //traj_file << ilqr_calc.x_traj[N-1](0) << ", " << ilqr_calc.x_traj[N-1](1) << ", "<< ilqr_calc.x_traj[N-1](2) << ", " << ilqr_calc.x_traj[N-1](3) << ", " << 0.0 << ", " << 0.0;
     // printf("Random state %f %f %f %f \n", p1_traj_doubles[4],
     //                                       p2_traj_doubles[4],
     //                                       v1_traj_doubles[4],

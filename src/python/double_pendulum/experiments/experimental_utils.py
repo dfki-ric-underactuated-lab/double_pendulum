@@ -78,12 +78,12 @@ def prepare_data(data, n):
 
 def prepare_empty_data(n):
     # Creating empty arrays for sensor data measurement
-    shoulder_meas_pos = np.zeros(n+1)
-    shoulder_meas_vel = np.zeros(n+1)
+    shoulder_meas_pos = np.zeros(n)
+    shoulder_meas_vel = np.zeros(n)
     shoulder_meas_tau = np.zeros(n)
     shoulder_on = np.zeros(n)
-    elbow_meas_pos = np.zeros(n+1)
-    elbow_meas_vel = np.zeros(n+1)
+    elbow_meas_pos = np.zeros(n)
+    elbow_meas_vel = np.zeros(n)
     elbow_meas_tau = np.zeros(n)
     meas_time = np.zeros(n)
     # transmission of the motor
@@ -229,6 +229,14 @@ def save_data(save_dir,
               meas_time,
               shoulder_on):
     print("Saving data to .csv files.")
+    print(shoulder_meas_pos)
+    print(shoulder_meas_vel)
+    print(shoulder_meas_tau)
+    print(elbow_meas_pos)
+    print(elbow_meas_vel)
+    print(elbow_meas_tau)
+    print(meas_time)
+    print(shoulder_on)
     measured_csv_data = np.array([np.array(meas_time),
                                   np.array(shoulder_meas_pos),
                                   np.array(shoulder_meas_vel),
@@ -240,9 +248,7 @@ def save_data(save_dir,
     np.savetxt(os.path.join(save_dir, f'{date}_measured.csv'),
                measured_csv_data,
                delimiter=',',
-               header="meas_time,shoulder_meas_pos,shoulder_meas_vel," +
-                      "shoulder_meas_tau,elbow_meas_pos,elbow_meas_vel," +
-                      "elbow_meas_tau,shoulder_on",
+               header="meas_time,shoulder_meas_pos,shoulder_meas_vel,shoulder_meas_tau,elbow_meas_pos,elbow_meas_vel,elbow_meas_tau,shoulder_on",
                comments="")
     print("CSV file saved\n")
 
@@ -253,3 +259,11 @@ def setZeroPosition(motor, initPos):
         pos, vel, curr = motor.set_zero_position()
         print("Position: {}, Velocity: {}, Torque: {}".format(
             np.rad2deg(pos), np.rad2deg(vel), curr))
+
+def rad2rev(angle_in_radians):
+    return angle_in_radians * (1 / (2 * np.pi))
+
+
+def rev2rad(angle_in_revolution):
+    return angle_in_revolution * (2 * np.pi)
+

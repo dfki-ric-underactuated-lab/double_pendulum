@@ -52,7 +52,7 @@ class EnergyShapingPFLController(AbstractController):
         self.desired_energy = self.plant.total_energy(x)  # *1.1
         self.desired_x = x
 
-    def get_control_output(self, x):
+    def get_control_output(self, x, t=None):
         pos = np.copy(x[:2])
         vel = np.copy(x[2:])
 
@@ -152,7 +152,7 @@ class EnergyShapingPFLAndLQRController(AbstractController):
         self.en_controller.init()
         self.lqr_controller.init()
 
-    def get_control_output(self, x, verbose=False):
+    def get_control_output(self, x, t=None, verbose=False):
         u = self.lqr_controller.get_control_output(x)
 
         energy = self.en_controller.plant.total_energy(x)

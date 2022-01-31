@@ -8,7 +8,7 @@ from cpython cimport PyObject, Py_INCREF
 from libcpp.vector cimport vector
 from libc.stdlib cimport free
 
-from cilqr cimport ilqr, ilqr_mpc
+from cppilqr cimport ilqr, ilqr_mpc
 
 cimport numpy as np
 np.import_array()
@@ -200,6 +200,8 @@ cdef class cppilqr:
         Py_INCREF(array_wrapper)
         return ar
 
+    def save_trajectory_csv(self):
+        self.il.save_trajectory_csv();
 
 cdef class cppilqrmpc:
     cdef ilqr_mpc *ilmpc

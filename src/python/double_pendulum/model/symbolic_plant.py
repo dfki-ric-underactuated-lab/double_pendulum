@@ -100,8 +100,8 @@ class SymbolicDoublePendulum():
         self.workspace_range = [[-1.2*np.sum(self.l), 1.2*np.sum(self.l)],
                                 [-1.2*np.sum(self.l), 1.2*np.sum(self.l)]]
 
-        # self.formulas = "UnderactuatedLecture"
-        self.formulas = "Spong"
+        self.formulas = "UnderactuatedLecture"
+        # self.formulas = "Spong"
 
         self.M = self.symbolic_mass_matrix()
         self.C = self.symbolic_coriolis_matrix()

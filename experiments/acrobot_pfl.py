@@ -1,7 +1,7 @@
 import numpy as np
 
 from double_pendulum.controller.partial_feedback_linearization.pfl import EnergyShapingPFLAndLQRController
-from double_pendulum.experiments.hardware_control_loop import run_experiment
+from double_pendulum.experiments.hardware_control_loop_tmotors import run_experiment
 
 
 mass = [0.608, 0.630]

@@ -3,7 +3,7 @@ import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
 # sys.path.append("../../../../cpp/python/")
-sys.path.append("/home/felix/Work/DFKI/Development/underactuated_lab/double_pendulum/caprr-release-version/src/cpp/python/")
+sys.path.append("/home/vhuser/Git/underactuated-robotics/caprr-release-version/src/cpp/python")
 import cppilqr
 
 
@@ -170,7 +170,7 @@ class ILQRMPCCPPController(AbstractController):
         self.ilmpc.set_x_init_traj(self.p1_init_traj, self.p2_init_traj,
                                    self.v1_init_traj, self.v2_init_traj)
 
-    def get_control_output(self, x):
+    def get_control_output(self, x, t=None):
         # print("setup ilqr")
         # self.il.set_start(self.start[0], self.start[1],
         #                   self.start[2], self.start[3])

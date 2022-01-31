@@ -73,6 +73,7 @@ il.set_start(start)
 il.set_goal(goal)
 
 T, X, U = il.compute_trajectory()
+il.save_trajectory_csv()
 
 U = np.append(U, [[0.0, 0.0]], axis=0)
 

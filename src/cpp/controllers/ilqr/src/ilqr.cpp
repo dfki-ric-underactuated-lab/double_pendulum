@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <iostream>
+#include <fstream>
 #include <math.h>
 #include <algorithm>
 #include <yaml-cpp/node/node.h>
@@ -837,4 +838,49 @@ Eigen::Vector<double, n_u>* ilqr::get_u_traj(){
 
 Eigen::Vector<double, n_x>* ilqr::get_x_traj(){
     return x_traj;
+}
+
+void ilqr::save_trajectory_csv(){
+
+    std::ofstream traj_file;
+    traj_file.open ("trajectory.csv");
+    traj_file << "time, pos1, pos2, vel1, vel2, tau1, tau2, K11, K12, K13, K14, K21, K22, K23, K24, k1, k2\n";
+
+    for(int i=0; i<N-1; i++){
+        traj_file << dt*i << ", "
+                  << x_traj[i](0) << ", "
+                  << x_traj[i](1) << ", "
+                  << x_traj[i](2) << ", "
+                  << x_traj[i](3) << ", "
+                  << 0.0 << ", "
+                  << u_traj[i](0) << ", "
+                  << 0.0 << ", "
+                  << 0.0 << ", "
+                  << 0.0 << ", "
+                  << 0.0 << ", "
+		  << K_traj[i](0,0) << ", "
+		  << K_traj[i](0,1) << ", "
+		  << K_traj[i](0,2) << ", "
+		  << K_traj[i](0,3) << ", "
+		  << 0.0 << ", "
+		  << k_traj[i](0) << "\n";
+    }
+    //traj_file << (N-1)*dt << ", "
+    //          << x_traj[N-1](0) << ", "
+    //          << x_traj[N-1](1) << ", "
+    //          << x_traj[N-1](2) << ", "
+    //          << x_traj[N-1](3) << ", "
+    //          << 0.0 << ", "
+    //          << 0.0 << ", "
+    //          << 0.0 << ", "
+    //          << 0.0 << ", "
+    //          << 0.0 << ", "
+    //          << 0.0 << ", "
+    //          << K_traj[N-1](0,0) << ", "
+    //          << K_traj[N-1](0,1) << ", "
+    //          << K_traj[N-1](0,2) << ", "
+    //          << K_traj[N-1](0,3) << ", "
+    //          << 0.0 << ", "
+    //          << k_traj[N-1](0);
+    traj_file.close();
 }

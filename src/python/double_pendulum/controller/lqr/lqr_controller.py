@@ -75,7 +75,7 @@ class LQRController(AbstractController):
         # print(Alin, Blin)
         self.K, self.S, _ = lqr(Alin, Blin, self.Q, self.R)
 
-    def get_control_output(self, x):
+    def get_control_output(self, x, t=None):
         y = x.copy()
         y[0] = y[0] % (2*np.pi)
         y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi

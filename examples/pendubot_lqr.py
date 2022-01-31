@@ -14,7 +14,7 @@ damping = [0.081, 0.0]
 cfric = [0., 0.]
 gravity = 9.81
 inertia = [0.05472, 0.2522]
-torque_limit = [10.0, 0.0]
+torque_limit = [2.0, 0.0]
 
 plant = SymbolicDoublePendulum(mass=mass,
                                length=length,
@@ -38,6 +38,16 @@ controller = LQRController(mass=mass,
                            coulomb_fric=cfric,
                            inertia=inertia,
                            torque_limit=torque_limit)
+
+controller.set_goal([np.pi, 0., 0., 0.])
+controller.set_cost_parameters(pp1_cost=10.0,
+                               pp2_cost=50.0,
+                               vv1_cost=10.,
+                               vv2_cost=1.,
+                               pv1_cost=0.,
+                               pv2_cost=0.,
+                               uu1_cost=1.0,
+                               uu2_cost=1.0)
 
 controller.init()
 
