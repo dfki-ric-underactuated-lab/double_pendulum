@@ -15,7 +15,7 @@ damping = [0.081, 0.0]
 cfric = [0., 0.]
 gravity = 9.81
 inertia = [0.05472, 0.2522]
-torque_limit = [0.0, 10.0]
+torque_limit = [0.0, 4.0]
 
 plant = SymbolicDoublePendulum(mass=mass,
                                length=length,
@@ -41,19 +41,23 @@ controller = LQRController(mass=mass,
                            torque_limit=torque_limit)
 
 controller.set_goal([np.pi, 0., 0., 0.])
-controller.set_cost_parameters(pp1_cost=50.0,
-                               pp2_cost=10.0,
-                               vv1_cost=10.,
-                               vv2_cost=1.,
+# 11.67044417  0.10076462  3.86730188  0.11016735  0.18307841
+controller.set_cost_parameters(pp1_cost=11.67,
+                               pp2_cost=0.10,
+                               vv1_cost=3.87,
+                               vv2_cost=0.11,
                                pv1_cost=0.,
                                pv2_cost=0.,
-                               uu1_cost=1.0,
-                               uu2_cost=1.0)
+                               uu1_cost=0.18,
+                               uu2_cost=0.18)
+controller.set_parameters(failure_value=0.0)
 controller.init()
 
-T, X, U = sim.simulate_and_animate(t0=0.0, x0=[3.2, -0.23, 0.0, 0.0],
+T, X, U = sim.simulate_and_animate(t0=0.0, x0=[2.32, 1.87, 0.0, 0.0],
                                    tf=t_final, dt=dt, controller=controller,
-                                   integrator="runge_kutta", phase_plot=False)
+                                   integrator="runge_kutta", phase_plot=False,
+                                   save_video=False,
+                                   video_name="data/acrobot/lqr/acrobot_lqr")
 
 plot_timeseries(T, X, U, None,
                 plot_energy=False,
