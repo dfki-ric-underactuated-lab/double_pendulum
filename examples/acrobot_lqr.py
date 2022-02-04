@@ -42,14 +42,17 @@ controller = LQRController(mass=mass,
 
 controller.set_goal([np.pi, 0., 0., 0.])
 # 11.67044417  0.10076462  3.86730188  0.11016735  0.18307841
-controller.set_cost_parameters(pp1_cost=11.67,
-                               pp2_cost=0.10,
-                               vv1_cost=3.87,
-                               vv2_cost=0.11,
-                               pv1_cost=0.,
-                               pv2_cost=0.,
-                               uu1_cost=0.18,
-                               uu2_cost=0.18)
+controller.set_cost_parameters(p1p1_cost=11.67,
+                               p2p2_cost=3.87,
+                               v1v1_cost=0.10,
+                               v2v2_cost=0.11,
+                               p1v1_cost=0.,
+                               p1v2_cost=0.,
+                               p2v1_cost=0.,
+                               p2v2_cost=0.,
+                               u1u1_cost=0.18,
+                               u2u2_cost=0.18,
+                               u1u2_cost=0.)
 controller.set_parameters(failure_value=0.0)
 controller.init()
 

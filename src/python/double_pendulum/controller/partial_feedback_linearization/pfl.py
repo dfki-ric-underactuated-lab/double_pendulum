@@ -134,12 +134,6 @@ class EnergyShapingPFLAndLQRController(AbstractController):
         self.active_controller = "energy"
         self.en = []
 
-    def set_lqr_parameters(self, failure_value):
-        self.lqr_controller.set_parameters(failure_value)
-
-    def set_cost_parameters(self, kpos=0.3, kvel=0.005, ken=1.0):
-        self.en_controller.set_cost_parameters(kpos, kvel, ken)
-
     def set_cost_parameters_(self, pars=[0.3, 0.005, 1.0]):
         self.en_controller.set_cost_parameters_(pars)
 

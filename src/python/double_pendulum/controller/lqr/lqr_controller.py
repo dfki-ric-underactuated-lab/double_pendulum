@@ -35,39 +35,53 @@ class LQRController(AbstractController):
         self.set_cost_parameters()
 
     def set_goal(self, x=[np.pi, 0., 0., 0.]):
-        self.xd = np.asarray(x)
+        y = x.copy()
+        y[0] = y[0] % (2*np.pi)
+        y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi
+        self.xd = np.asarray(y)
 
     def set_parameters(self, failure_value=np.nan):
         self.failure_value = failure_value
 
     def set_cost_parameters(self,
-                            pp1_cost=1.,     # 1000., 0.001
-                            pp2_cost=1.,     # 1000., 0.001
-                            vv1_cost=1.,     # 1000.
-                            vv2_cost=1.,     # 1000.
-                            pv1_cost=0.,     # -500
-                            pv2_cost=0.,     # -500
-                            uu1_cost=0.01,   # 100., 0.01
-                            uu2_cost=0.01):  # 100., 0.01
+                            p1p1_cost=1.,     # 1000., 0.001
+                            p2p2_cost=1.,     # 1000., 0.001
+                            v1v1_cost=1.,     # 1000.
+                            v2v2_cost=1.,     # 1000.
+                            p1p2_cost=0.,     # -500
+                            v1v2_cost=0.,     # -500
+                            p1v1_cost=0.,
+                            p1v2_cost=0.,
+                            p2v1_cost=0.,
+                            p2v2_cost=0.,
+                            u1u1_cost=0.01,    # 100., 0.01
+                            u2u2_cost=0.01,    # 100., 0.01
+                            u1u2_cost=0.):
         # state cost matrix
-        self.Q = np.array([[pp1_cost, pv1_cost, 0., 0.],
-                           [pv1_cost, vv1_cost, 0., 0.],
-                           [0., 0., pp2_cost, pv2_cost],
-                           [0., 0., pv2_cost, vv2_cost]])
+        self.Q = np.array([[p1p1_cost, p1p2_cost, p1v1_cost, p1v2_cost],
+                           [p1p2_cost, p2p2_cost, p2v1_cost, p2v2_cost],
+                           [p1v1_cost, p2v1_cost, v1v1_cost, v1v2_cost],
+                           [p1v2_cost, p2v2_cost, v1v2_cost, v2v2_cost]])
 
         # control cost matrix
-        self.R = np.array([[uu1_cost, 0.], [0., uu2_cost]])
-        # self.R = np.array([[uu_cost]])
+        self.R = np.array([[u1u1_cost, u1u2_cost], [u1u2_cost, u2u2_cost]])
+        # self.R = np.array([[u2u2_cost]])
 
-    def set_cost_parameters_(self, pars=[1., 1., 1., 1., 0., 0., 0.01, 0.01]):
-        self.set_cost_parameters(pp1_cost=pars[0],
-                                 pp2_cost=pars[1],
-                                 vv1_cost=pars[2],
-                                 vv2_cost=pars[3],
-                                 pv1_cost=pars[4],
-                                 pv2_cost=pars[5],
-                                 uu1_cost=pars[6],
-                                 uu2_cost=pars[7])
+    def set_cost_parameters_(self,
+                             pars=[1., 1., 1., 1.,
+                                   0., 0., 0., 0., 0., 0.,
+                                   0.01, 0.01, 0.]):
+        self.set_cost_parameters(p1p1_cost=pars[0],
+                                 p2p2_cost=pars[1],
+                                 v1v1_cost=pars[2],
+                                 v2v2_cost=pars[3],
+                                 p1v1_cost=pars[4],
+                                 p1v2_cost=pars[5],
+                                 p2v1_cost=pars[6],
+                                 p2v2_cost=pars[7],
+                                 u1u1_cost=pars[8],
+                                 u2u2_cost=pars[9],
+                                 u1u2_cost=pars[10])
 
     def init(self):
         Alin, Blin = self.splant.linear_matrices(x0=self.xd, u0=[0.0, 0.0])
@@ -94,6 +108,10 @@ class LQRController(AbstractController):
 
         if y.dot(np.asarray(self.S.dot(y))[0]) > 15.0:  # old value:0.1
             u = [self.failure_value, self.failure_value]
+
+        # u = [0., u[0]]
+        u[0] = np.clip(u[0], -self.torque_limit[0], self.torque_limit[0])
+        u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
 
         # print(x, u)
         return u

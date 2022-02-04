@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.utils.plotting import plot_timeseries
-from double_pendulum.controller.partial_feedback_linearization.pfl import EnergyShapingPFLAndLQRController
+from double_pendulum.controller.partial_feedback_linearization.pfl import (EnergyShapingPFLAndLQRController,
+                                                                           EnergyShapingPFLController)
 
 mass = [1.0, 1.0]
 length = [1.0, 1.0]
@@ -26,14 +27,14 @@ double_pendulum = SymbolicDoublePendulum(mass=mass,
                                          torque_limit=torque_limit)
 
 
-controller = EnergyShapingPFLAndLQRController(mass,
-                                              length,
-                                              com,
-                                              damping,
-                                              gravity,
-                                              coulomb_fric,
-                                              inertia,
-                                              torque_limit)
+controller = EnergyShapingPFLController(mass,
+                                        length,
+                                        com,
+                                        damping,
+                                        gravity,
+                                        coulomb_fric,
+                                        inertia,
+                                        torque_limit)
 
 sim = Simulator(plant=double_pendulum)
 
@@ -43,9 +44,9 @@ controller.set_goal([np.pi, 0, 0, 0])
 par = [9.0, 3.0, 1.0]  # undamped
 print(par)
 
-controller.set_hyperpar(kpos=par[0],
-                        kvel=par[1],
-                        ken=par[2])
+controller.set_cost_parameters(kpos=par[0],
+                               kvel=par[1],
+                               ken=par[2])
 
 dt = 0.01
 t_final = 6.0
