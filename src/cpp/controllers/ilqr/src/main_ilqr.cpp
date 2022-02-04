@@ -134,7 +134,6 @@ int main(int argc, char *argv[], char *envp[]){
     ilqr ilqr_calc(N);
 
     ilqr_calc.set_verbose(verbose);
-
     ilqr_calc.set_parameters(integrator_ind, dt);
     ilqr_calc.set_model_parameters(mass1, mass2,
                                    length1, length2,
@@ -151,7 +150,6 @@ int main(int argc, char *argv[], char *envp[]){
                                   fCp1, fCp2,
                                   fCv1, fCv2,
                                   fCen);
-
 
     ilqr_calc.set_start(start_pos1, start_pos2,
                         start_vel1, start_vel2);
@@ -183,8 +181,8 @@ int main(int argc, char *argv[], char *envp[]){
     //    traj_file << ilqr_calc.x_traj[i](0) << ", " << ilqr_calc.x_traj[i](1) << ", " << ilqr_calc.x_traj[i](2) << ", " << ilqr_calc.x_traj[i](3) << ", " << 0.0 << ", " << ilqr_calc.u_traj[i](0) << "\n";
     //}
 
-    //Eigen::Vector<double, ilqr_calc.n_x> xf = ilqr_calc.x_traj[N-1];
-    //printf("Final state %f %f %f %f \n", xf(0), xf(1), xf(2), xf(3));
+    Eigen::Vector<double, ilqr_calc.n_x> xf = ilqr_calc.x_traj[N-1];
+    printf("Final state %f %f %f %f \n", xf(0), xf(1), xf(2), xf(3));
     //traj_file << ilqr_calc.x_traj[N-1](0) << ", " << ilqr_calc.x_traj[N-1](1) << ", "<< ilqr_calc.x_traj[N-1](2) << ", " << ilqr_calc.x_traj[N-1](3) << ", " << 0.0 << ", " << 0.0;
     // printf("Random state %f %f %f %f \n", p1_traj_doubles[4],
     //                                       p2_traj_doubles[4],

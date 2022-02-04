@@ -37,7 +37,7 @@ void ilqr_mpc::set_parameters(int integrator_ind, double delta_t,
         integrator = "runge_kutta";
     }
     dt = delta_t;
-    ilqr_calc->set_parameters(integrator_ind, dt);
+    //ilqr_calc->set_parameters(integrator_ind, dt);
     max_iter = max_it;
     break_cost_redu = break_cost_red;
     regu_init = regu_ini;
@@ -113,22 +113,22 @@ void ilqr_mpc::read_parameter_file(std::string configfile){
     if (config["min_regu"]) {min_regu=config["min_regu"].as<double>();}
 
 
-    ilqr_calc->set_parameters(integrator_ind, dt);
-    ilqr_calc->set_cost_parameters(sCu1, sCu2,
-                                   sCp1, sCp2,
-                                   sCv1, sCv2,
-                                   sCen,
-                                   fCp1, fCp2,
-                                   fCv2, fCv2,
-                                   fCen);
-    ilqr_calc->set_model_parameters(mass1, mass2,
-                                    length1, length2,
-                                    com1, com2,
-                                    inertia1, inertia2,
-                                    damping1, damping2,
-                                    coulomb_friction1, coulomb_friction2,
-                                    gravity,
-                                    torque_limit1, torque_limit2);
+    //ilqr_calc->set_parameters(integrator_ind, dt);
+    //ilqr_calc->set_cost_parameters(sCu1, sCu2,
+    //                               sCp1, sCp2,
+    //                               sCv1, sCv2,
+    //                               sCen,
+    //                               fCp1, fCp2,
+    //                               fCv2, fCv2,
+    //                               fCen);
+    //ilqr_calc->set_model_parameters(mass1, mass2,
+    //                                length1, length2,
+    //                                com1, com2,
+    //                                inertia1, inertia2,
+    //                                damping1, damping2,
+    //                                coulomb_friction1, coulomb_friction2,
+    //                                gravity,
+    //                                torque_limit1, torque_limit2);
 
 }
 void ilqr_mpc::set_cost_parameters(double su1, double su2,
@@ -151,13 +151,13 @@ void ilqr_mpc::set_cost_parameters(double su1, double su2,
     fCv2 = fv2;
     fCen = fen;
 
-    ilqr_calc->set_cost_parameters(su1, su2,
-                                   sp1, sp2,
-                                   sv1, sv2,
-                                   sen,
-                                   fp1, fp2,
-                                   fv2, fv2,
-                                   fen);
+    //ilqr_calc->set_cost_parameters(su1, su2,
+    //                               sp1, sp2,
+    //                               sv1, sv2,
+    //                               sen,
+    //                               fp1, fp2,
+    //                               fv2, fv2,
+    //                               fen);
 
 }
 
@@ -186,14 +186,14 @@ void ilqr_mpc::set_model_parameters(double m1, double m2,
     torque_limit1 = tl1;
     torque_limit2 = tl2;
 
-    ilqr_calc->set_model_parameters(m1, m2,
-                                    l1, l2,
-                                    cm1, cm2,
-                                    I1, I2,
-                                    d1, d2,
-                                    cf1, cf2,
-                                    g,
-                                    tl1, tl2);
+    //ilqr_calc->set_model_parameters(m1, m2,
+    //                                l1, l2,
+    //                                cm1, cm2,
+    //                                I1, I2,
+    //                                d1, d2,
+    //                                cf1, cf2,
+    //                                g,
+    //                                tl1, tl2);
 
 }
 
@@ -201,7 +201,7 @@ void ilqr_mpc::set_model_parameters(double m1, double m2,
 
 void ilqr_mpc::set_start(Eigen::Vector<double, ilqr::n_x> x){
     x0 = x;
-    ilqr_calc->set_start(x0);
+    //ilqr_calc->set_start(x0);
 }
 
 void ilqr_mpc::set_start(double pos1, double pos2,
@@ -210,12 +210,12 @@ void ilqr_mpc::set_start(double pos1, double pos2,
     x0(1) = pos2;
     x0(2) = vel1;
     x0(3) = vel2;
-    ilqr_calc->set_start(x0);
+    //ilqr_calc->set_start(x0);
 }
 
 void ilqr_mpc::set_goal(Eigen::Vector<double, ilqr::n_x> x){
     goal = x;
-    ilqr_calc->set_goal(x);
+    //ilqr_calc->set_goal(goal);
 }
 
 void ilqr_mpc::set_goal(double pos1, double pos2,
@@ -224,7 +224,7 @@ void ilqr_mpc::set_goal(double pos1, double pos2,
     goal(1) = std::fmod(pos2+M_PI, 2.*M_PI) - M_PI;
     goal(2) = vel1;
     goal(3) = vel2;
-    ilqr_calc->set_goal(goal);
+    //ilqr_calc->set_goal(goal);
 }
 
 void ilqr_mpc::set_u_init_traj(double u1[], double u2[]){
@@ -237,7 +237,7 @@ void ilqr_mpc::set_u_init_traj(double u1[], double u2[]){
         u_traj[i] = u_init_traj[i];
     }
 
-    ilqr_calc->set_u_init_traj(u_traj);
+    //ilqr_calc->set_u_init_traj(u_traj);
 }
 
 void ilqr_mpc::set_u_init_traj(Eigen::Vector<double, ilqr::n_u> utrj[]){
@@ -248,7 +248,7 @@ void ilqr_mpc::set_u_init_traj(Eigen::Vector<double, ilqr::n_u> utrj[]){
     for(int i=0; i<Nmin-1; i++){
         u_traj[i] = u_init_traj[i];
     }
-    ilqr_calc->set_u_init_traj(u_traj);
+    //ilqr_calc->set_u_init_traj(u_traj);
 }
 
 void ilqr_mpc::set_x_init_traj(double p1[], double p2[],
@@ -263,7 +263,7 @@ void ilqr_mpc::set_x_init_traj(double p1[], double p2[],
     for(int i=0; i<Nmin; i++){
         x_traj[i] = x_init_traj[i];
     }
-    ilqr_calc->set_x_init_traj(x_traj);
+    //ilqr_calc->set_x_init_traj(x_traj);
 }
 
 void ilqr_mpc::set_x_init_traj(Eigen::Vector<double, ilqr::n_x> xtrj[]){
@@ -275,7 +275,7 @@ void ilqr_mpc::set_x_init_traj(Eigen::Vector<double, ilqr::n_x> xtrj[]){
     for(int i=0; i<Nmin; i++){
         x_traj[i] = x_init_traj[i];
     }
-    ilqr_calc->set_x_init_traj(x_traj);
+    //ilqr_calc->set_x_init_traj(x_traj);
 }
 
 void ilqr_mpc::shift_trajs(int s){
@@ -306,7 +306,24 @@ void ilqr_mpc::shift_trajs(int s){
 double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
 
 
+    ilqr_calc->set_parameters(integrator_ind, dt);
+    ilqr_calc->set_model_parameters(mass1, mass2,
+                                    length1, length2,
+                                    com1, com2,
+                                    inertia1, inertia2,
+                                    damping1, damping2,
+                                    coulomb_friction1, coulomb_friction2,
+                                    gravity,
+                                    torque_limit1, torque_limit2);
+    ilqr_calc->set_cost_parameters(sCu1, sCu2,
+                                   sCp1, sCp2,
+                                   sCv1, sCv2,
+                                   sCen,
+                                   fCp1, fCp2,
+                                   fCv2, fCv2,
+                                   fCen);
     ilqr_calc->set_start(x);
+    ilqr_calc->set_goal(goal);
     ilqr_calc->set_u_init_traj(u_traj);
     ilqr_calc->set_x_init_traj(x_traj);
     ilqr_calc->run_ilqr(max_iter, break_cost_redu, regu_init, max_regu, min_regu);

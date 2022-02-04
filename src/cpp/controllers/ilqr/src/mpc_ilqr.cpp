@@ -166,7 +166,12 @@ int main(int argc, char *argv[], char *envp[]){
     state(1) = start_pos2;
     state(2) = start_vel1;
     state(3) = start_vel2;
-    sim.set_state(0.0, state);
+    //sim.set_state(0.0, state);
+    Eigen::Vector<double, ilqr::n_x> goal;
+    goal(0) = goal_pos1;
+    goal(1) = goal_pos2;
+    goal(2) = goal_vel1;
+    goal(3) = goal_vel2;
 
     // load initial trajectory
     CSVReader reader(trajfile, ",");
@@ -188,19 +193,26 @@ int main(int argc, char *argv[], char *envp[]){
     }
 
     int n_steps = (int) (T / dt);
-    Eigen::Vector<double, ilqr::n_u> u;
+    //Eigen::Vector<double, ilqr::n_u> u;
     Eigen::Vector<double, DPPlant::n_u> u_full;
-    u_full(0) = 0.;
-    u_full(1) = 0.;
+    //u_full(0) = 0.;
+    //u_full(1) = 0.;
 
     //ilqr ilqr_calc(N);
     //ilqr_calc.read_parameter_file(configfile);
     //ilqr_mpc ilmpc = ilqr_mpc();
     ilqr_mpc ilmpc = ilqr_mpc(N, TN);
     ilmpc.read_parameter_file(configfile);
-    ilmpc.set_start(state);
+    //ilmpc.set_start(state);
+    ilmpc.set_goal(goal);
     ilmpc.set_u_init_traj(u_traj);
     ilmpc.set_x_init_traj(x_traj);
+
+
+    std::ofstream traj_file;
+    traj_file.open (foldername+"/trajectory_mpc.csv");
+    traj_file << "time, pos1, pos2, vel1, vel2, tau1, tau2\n";
+
     for (int s=0; s<n_steps; s++){
         u_full(0) = 0.;
         u_full(1) = ilmpc.get_control_output(state); //(0);
@@ -217,8 +229,20 @@ int main(int argc, char *argv[], char *envp[]){
         std::cout << u_full(1);
         if (s<TN){
             std::cout << ", (" << trajectory[s][5] << ")";
+            if(pow(pow(u_full(1) - trajectory[s][5], 2.0), 0.5) > 0.01){
+                std::cout << " <-------------";
+            }
         }
         std::cout << std::endl;
+
+        traj_file << dt*s << ", "
+                  << state(0) << ", "
+                  << state(1) << ", "
+                  << state(2) << ", "
+                  << state(3) << ", "
+                  << u_full(0) << ", "
+                  << u_full(1) << "\n";
     }
+    traj_file.close();
 }
 

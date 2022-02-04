@@ -213,8 +213,8 @@ void ilqr::set_u_init_traj(double u1[], double u2[]){
     for(int i=0; i<N-1; i++){
         u_traj[i](0) = u1[i];
         u_traj[i](1) = u2[i];
-        u1_traj_doubles[i] = u1[i];
-        u2_traj_doubles[i] = u2[i];
+        //u1_traj_doubles[i] = u1[i];
+        //u2_traj_doubles[i] = u2[i];
     }
     warm_start_u = true;
 }
@@ -234,10 +234,10 @@ void ilqr::set_x_init_traj(double p1[], double p2[],
         x_traj[i](1) = p2[i];
         x_traj[i](2) = v1[i];
         x_traj[i](3) = v2[i];
-        p1_traj_doubles[i] = p1[i];
-        p2_traj_doubles[i] = p2[i];
-        v1_traj_doubles[i] = v1[i];
-        v2_traj_doubles[i] = v2[i];
+        //p1_traj_doubles[i] = p1[i];
+        //p2_traj_doubles[i] = p2[i];
+        //v1_traj_doubles[i] = v1[i];
+        //v2_traj_doubles[i] = v2[i];
     }
     warm_start_x = true;
 }
@@ -751,7 +751,8 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
                 u_traj[i] = u_traj_new[i];
             }
             x_traj[N-1] = x_traj_new[N-1];
-            regu *= 0.7;
+            //regu *= 0.7;
+            regu *= 0.9;
         }
         else{
             //no improvement
@@ -765,7 +766,8 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
                 }
                 break;
             }
-            regu *= 2.0;
+            //regu *= 2.0;
+            regu *= 1.1;
         }
         if (regu < min_regu){
             regu = min_regu;
