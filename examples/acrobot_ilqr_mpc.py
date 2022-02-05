@@ -23,31 +23,30 @@ t_final = 10.0
 integrator = "runge_kutta"
 
 # controller parameters
-N = 1000
+N = 200
 N_init = 1000
-max_iter = 100
+max_iter = 10
+max_iter_init = 100
 regu_init = 100
 max_regu = 10000.
 min_regu = 0.01
 break_cost_redu = 1e-6
-# sCu = [0.005, 0.005]
-# sCp = [0., 0.]
-# sCv = [0., 0.]
-# sCen = 0.
-# fCp = [1000., 1000.]
-# fCv = [10., 10.]
-# fCen = 0.
 
-sCu = [9.64008003e-04, 3.69465206e-04]
-sCp = [9.00160028e-04, 8.52634075e-04]
-sCv = [3.62146682e-03, 3.49079107e-02]
-sCen = 1.08953921e-05
-fCp = [9.88671633e+02, 0.0]
-fCv = [6.75242351e+00, 9.95354381e+00]
-fCen = 6.36798375e+00
-# fCp = [0.0, 0.0]
-fCv = [0.0, 0.0]
-fCen = 0.0
+sCu = [0.1, 0.1]
+sCp = [0., 0.]
+sCv = [0.01, 0.01]
+sCen = 0.
+fCp = [10000., 1000.]
+fCv = [100., 100.]
+fCen = 0.
+
+# sCu = [9.64008003e-04, 3.69465206e-04]
+# sCp = [9.00160028e-04, 8.52634075e-04]
+# sCv = [3.62146682e-03, 3.49079107e-02]
+# sCen = 1.08953921e-05
+# fCp = [9.88671633e+02, 0.0]
+# fCv = [6.75242351e+00, 9.95354381e+00]
+# fCen = 6.36798375e+00
 
 init_sCu = [9.64008003e-04, 3.69465206e-04]
 init_sCp = [9.00160028e-04, 8.52634075e-04]
@@ -86,7 +85,7 @@ controller.set_start(start)
 controller.set_goal(goal)
 controller.set_parameters(N=N,
                           dt=dt,
-                          max_iter=100,
+                          max_iter=max_iter,
                           regu_init=regu_init,
                           max_regu=max_regu,
                           min_regu=min_regu,
@@ -101,7 +100,7 @@ controller.set_parameters(N=N,
                           integrator=integrator)
 controller.compute_init_traj(N=N_init,
                              dt=dt,
-                             max_iter=max_iter,
+                             max_iter=max_iter_init,
                              regu_init=regu_init,
                              max_regu=max_regu,
                              min_regu=min_regu,
@@ -117,7 +116,8 @@ controller.compute_init_traj(N=N_init,
 controller.init()
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
                                    tf=t_final, dt=dt, controller=controller,
-                                   integrator="runge_kutta", phase_plot=False)
+                                   integrator="runge_kutta", phase_plot=False,
+                                   plot_forecast=True)
 # T, X, U = sim.simulate(t0=0.0, x0=start,
 #                        tf=t_final, dt=dt, controller=controller,
 #                        integrator="runge_kutta")
