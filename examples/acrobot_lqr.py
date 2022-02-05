@@ -6,16 +6,28 @@ from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.utils.plotting import plot_timeseries
 
-
+# tmotors
 mass = [0.608, 0.630]
 length = [0.3, 0.2]
 com = [0.275, 0.166]
 damping = [0.081, 0.0]
-#cfric = [0.093, 0.186]
+# cfric = [0.093, 0.186]
 cfric = [0., 0.]
 gravity = 9.81
 inertia = [0.05472, 0.2522]
 torque_limit = [0.0, 4.0]
+
+# mjbots
+# mass = [0.608, 0.6268]
+# length = [0.3, 0.2]
+# com = [0.317763, 0.186981]
+# damping = [7.480e-02, 1.602e-08]
+# # cfric = [7.998e-02, 6.336e-02]
+# cfric = [0., 0.]
+# gravity = 9.81
+# inertia = [0.0280354, 0.0183778]
+# torque_limit = [0.0, 10.0]
+
 
 plant = SymbolicDoublePendulum(mass=mass,
                                length=length,

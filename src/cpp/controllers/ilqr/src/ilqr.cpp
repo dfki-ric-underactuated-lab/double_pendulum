@@ -47,6 +47,8 @@ void ilqr::set_verbose(int ver){
 
 void ilqr::read_parameter_file(std::string configfile){
 
+    int integrator_ind;
+
     YAML::Node config = YAML::LoadFile(configfile);
     if (config["mass1"]) {mass1=config["mass1"].as<double>();}
     if (config["mass2"]) {mass2=config["mass2"].as<double>();}
@@ -75,7 +77,7 @@ void ilqr::read_parameter_file(std::string configfile){
     if (config["torque_limit2"]) {torque_limit2=config["torque_limit2"].as<double>();}
     if (config["deltaT"]) {dt=config["deltaT"].as<double>();}
     if (config["integrator"]){
-        int integrator_ind = config["integrator"].as<int>();
+        integrator_ind = config["integrator"].as<int>();
         if(integrator_ind == 0){
             integrator = "euler";
         }
@@ -87,8 +89,8 @@ void ilqr::read_parameter_file(std::string configfile){
     if (config["start_pos2"]) {x0(1)=config["start_pos2"].as<double>();}
     if (config["start_vel1"]) {x0(2)=config["start_vel1"].as<double>();}
     if (config["start_vel2"]) {x0(3)=config["start_vel2"].as<double>();}
-    if (config["goal_pos1"]) {goal(0)=config["goal_pos1"].as<double>();}
-    if (config["goal_pos2"]) {goal(1)=config["goal_pos2"].as<double>();}
+    if (config["goal_pos1"]) {goal(0)=std::fmod(config["goal_pos1"].as<double>(), 2.*M_PI);}
+    if (config["goal_pos2"]) {goal(1)=std::fmod(config["goal_pos2"].as<double>() + M_PI, 2.*M_PI) - M_PI;}
     if (config["goal_vel1"]) {goal(2)=config["goal_vel1"].as<double>();}
     if (config["goal_vel2"]) {goal(3)=config["goal_vel2"].as<double>();}
     if (config["sCu1"]) {sCu1=config["sCu1"].as<double>();}
@@ -196,6 +198,8 @@ void ilqr::set_start(double pos1, double pos2,
 
 void ilqr::set_goal(Eigen::Vector<double, n_x> x){
     goal = x;
+    goal(0) = std::fmod(goal(0), 2.*M_PI);
+    goal(1) = std::fmod(goal(1)+M_PI, 2.*M_PI) - M_PI;
     goal_energy = plant.calculate_total_energy(goal);
 }
 
@@ -308,7 +312,7 @@ double ilqr::final_cost(Eigen::Vector<double, n_x> x){
 }
 
 double ilqr::calculate_cost(bool new_traj){
-    if (verbose>1){
+    if (verbose > 3){
         printf("calculate cost\n");
     }
     double total = 0.;
@@ -325,7 +329,7 @@ double ilqr::calculate_cost(bool new_traj){
         }
         total += final_cost(x_traj[N-1]);
     }
-    if (verbose>1){
+    if (verbose > 3){
         printf("calculate cost done \n");
     }
     return total;
@@ -333,7 +337,7 @@ double ilqr::calculate_cost(bool new_traj){
 
 void ilqr::compute_dynamics_x(Eigen::Vector<double, n_x> x,
                               Eigen::Vector<double, n_u> u){
-    if (verbose>2){
+    if (verbose > 3){
         printf("    compute dynamics x\n");
     }
 
@@ -371,7 +375,7 @@ void ilqr::compute_dynamics_x(Eigen::Vector<double, n_x> x,
 
 void ilqr::compute_dynamics_u(Eigen::Vector<double, n_x> x,
                               Eigen::Vector<double, n_u> u){
-    if (verbose>2){
+    if (verbose > 3){
         printf("    compute dynamics u\n");
     }
 
@@ -390,7 +394,7 @@ void ilqr::compute_dynamics_u(Eigen::Vector<double, n_x> x,
 
 void ilqr::compute_stage_x(Eigen::Vector<double, n_x> x,
                            Eigen::Vector<double, n_u> u){
-    if (verbose>2){
+    if (verbose > 3){
         printf("    compute stage x\n");
     }
 
@@ -410,7 +414,7 @@ void ilqr::compute_stage_x(Eigen::Vector<double, n_x> x,
 
 void ilqr::compute_stage_u(Eigen::Vector<double, n_x> x,
                            Eigen::Vector<double, n_u> u){
-    if (verbose>2){
+    if (verbose > 3){
         printf("    compute stage u\n");
     }
     //TODO: acro-/pendubot switch
@@ -420,7 +424,7 @@ void ilqr::compute_stage_u(Eigen::Vector<double, n_x> x,
 
 void ilqr::compute_stage_xx(Eigen::Vector<double, n_x> x,
                             Eigen::Vector<double, n_u> u){
-    if (verbose>2){
+    if (verbose > 3){
         printf("    compute stage xx\n");
     }
 
@@ -443,7 +447,7 @@ void ilqr::compute_stage_xx(Eigen::Vector<double, n_x> x,
 
 void ilqr::compute_stage_ux(Eigen::Vector<double, n_x> x,
                             Eigen::Vector<double, n_u> u){
-    if (verbose>2){
+    if (verbose > 3){
         printf("    compute stage ux\n");
     }
     stage_ux(0,0) = 0.;
@@ -454,7 +458,7 @@ void ilqr::compute_stage_ux(Eigen::Vector<double, n_x> x,
 
 void ilqr::compute_stage_uu(Eigen::Vector<double, n_x> x,
                             Eigen::Vector<double, n_u> u){
-    if (verbose>2){
+    if (verbose > 3){
         printf("    compute stage uu\n");
     }
     //TODO: acro-/pendubot switch
@@ -465,7 +469,7 @@ void ilqr::compute_stage_uu(Eigen::Vector<double, n_x> x,
 }
 
 void ilqr::compute_final_x(Eigen::Vector<double, n_x> x){
-    if (verbose>2){
+    if (verbose > 3){
         printf("    compute final x\n");
     }
     double eps = 1e-6;
@@ -481,13 +485,13 @@ void ilqr::compute_final_x(Eigen::Vector<double, n_x> x){
     final_x(3) = 2.*fCv2*(x(3) - goal(3))
                  + 2.*fCen*en_diff*E_x(3);
 
-    if (verbose > 4){
+    if (verbose > 3){
         std::cout << "final_x " << final_x << std::endl;
     }
 }
 
 void ilqr::compute_final_xx(Eigen::Vector<double, n_x> x){
-    if (verbose>2){
+    if (verbose > 3){
         printf("    compute final xx\n");
     }
     en_diff = plant.calculate_total_energy(x) - goal_energy;
@@ -504,15 +508,15 @@ void ilqr::compute_final_xx(Eigen::Vector<double, n_x> x){
     final_xx(1,1) += 2.*fCp2;
     final_xx(2,2) += 2.*fCv1;
     final_xx(3,3) += 2.*fCv2;
-    if (verbose > 4){
+    if (verbose > 3){
         std::cout << "final_xx " << final_xx << std::endl;
     }
 }
 
 void ilqr::compute_derivatives(Eigen::Vector<double, n_x> x,
                                Eigen::Vector<double, n_u> u){
-    if (verbose>2){
-        printf("    compute derivatives\n");
+    if (verbose > 3){
+        printf("compute derivatives\n");
     }
 
     //en_diff = plant.calculate_total_energy(x) - goal_energy;
@@ -542,8 +546,8 @@ void ilqr::compute_derivatives(Eigen::Vector<double, n_x> x,
 }
 
 void ilqr::rollout(){
-    if (verbose>1){
-        printf("    rollout\n");
+    if (verbose > 2){
+        printf("rollout\n");
     }
     x_traj[0] = x0;
     for (int i=0; i<N-1; i++){
@@ -552,9 +556,9 @@ void ilqr::rollout(){
 }
 
 void ilqr::calculate_Q_terms(){
-    if (verbose>2){
-        printf("    calculate Q terms\n");
-        printf("        inputs: ");
+    if (verbose > 3){
+        printf("calculate Q terms\n");
+        printf("inputs: ");
         std::cout << "      stage_x" << stage_x << std::endl;
         std::cout << "      dyn_x" << dyn_x << std::endl;
         std::cout << "      V_x" << V_x << std::endl;
@@ -577,7 +581,7 @@ void ilqr::calculate_Q_terms(){
 }
 
 void ilqr::calculate_gains(double regu){
-    if (verbose>2){
+    if (verbose > 3){
         printf("    calculate gains\n");
     }
 
@@ -595,7 +599,7 @@ void ilqr::calculate_gains(double regu){
 }
 
 void ilqr::calculate_V_terms(){
-    if (verbose>2){
+    if (verbose > 3){
         printf("    calculate V terms\n");
     }
     //V_x = Q_x - K.transpose()*Q_uu*k;
@@ -611,7 +615,7 @@ void ilqr::calculate_V_terms(){
 }
 
 double ilqr::expected_cost_reduction(){
-    if (verbose>2){
+    if (verbose > 3){
         printf("    expected cost reduction\n");
     }
     //printf("expected_cost_redu: Q_u %f, Q_uu %f, k %f\n", Q_u, Q_uu, k);
@@ -619,7 +623,7 @@ double ilqr::expected_cost_reduction(){
 }
 
 void ilqr::forward_pass(){
-    if (verbose>1){
+    if (verbose > 3){
         printf("forward pass\n");
     }
     //Eigen::Vector2d xdiff;
@@ -636,7 +640,7 @@ void ilqr::forward_pass(){
 }
 
 double ilqr::backward_pass(double regu){
-    if (verbose>1){
+    if (verbose > 3){
         printf("backward pass\n");
     }
     double expected_cost_redu = 0.0;
@@ -653,7 +657,7 @@ double ilqr::backward_pass(double regu){
         K_traj[i] = K;
         calculate_V_terms();
         expected_cost_redu += expected_cost_reduction();
-        if (verbose > 2){
+        if (verbose > 4){
             printf("bw pass step %d expected_cost_redu %f\n", i, expected_cost_redu);
         }
     }
@@ -673,7 +677,7 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
         rollout();
     }
 
-    if (verbose > 2){
+    if (verbose > 1){
         std::cout << "############################\n Parameters\n############################\n" << std::endl;
         std::cout << "mass1 " << mass1 << std::endl;
         std::cout << "mass2 " << mass2 << std::endl;
@@ -713,12 +717,14 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
         std::cout << "max_iter " << max_iter << std::endl;
         std::cout << "break_cost_redu " << break_cost_redu << std::endl;
         std::cout << "regu_init " << regu_init << std::endl;
+        std::cout << "max_regu " << max_regu << std::endl;
+        std::cout << "min_regu " << min_regu << std::endl;
         std::cout << "N " << N << std::endl;
         std::cout << "\n\n";
     }
 
-    double total_cost = calculate_cost(false);
-    double last_cost = total_cost;
+    double last_cost = calculate_cost(false);
+    double total_cost;
 
     double regu = regu_init;
     // double max_regu = 10000.;
@@ -730,7 +736,7 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
         forward_pass();
         total_cost = calculate_cost(true);
 
-        if (verbose > 1){
+        if (verbose > 2){
             printf("iteration %d, ", n);
             printf("last_pos1 %f, ", x_traj_new[N-1](0));
             printf("last_pos2 %f, ", x_traj_new[N-1](1));
@@ -756,7 +762,7 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
         }
         else{
             //no improvement
-            if (verbose > 1){
+            if (verbose > 2){
                 printf("no improvement");
             }
             //printf("n ");
@@ -775,7 +781,7 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
         if (regu > max_regu){
             regu = max_regu;
         }
-        if (verbose > 1){
+        if (verbose > 2){
             printf(" regu %f", regu);
             //printf("expected cost redu %f, regu: %f\n", expected_cost_redu, regu);
         }
@@ -785,7 +791,7 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
             }
             break;
         }
-        if (verbose > 1){
+        if (verbose > 2){
             printf("\n");
         }
     }
@@ -843,9 +849,14 @@ Eigen::Vector<double, n_x>* ilqr::get_x_traj(){
 }
 
 void ilqr::save_trajectory_csv(){
+    std::string filename = "trajectory.csv";
+    save_trajectory_csv(filename);
+}
+
+void ilqr::save_trajectory_csv(std::string filename){
 
     std::ofstream traj_file;
-    traj_file.open ("trajectory.csv");
+    traj_file.open (filename);
     traj_file << "time, pos1, pos2, vel1, vel2, tau1, tau2, K11, K12, K13, K14, K21, K22, K23, K24, k1, k2\n";
 
     for(int i=0; i<N-1; i++){

@@ -19,6 +19,12 @@ ilqr_mpc::ilqr_mpc(int n, int n_init) : N(n), N_init(n_init){
 }
 
 ilqr_mpc::~ilqr_mpc(){
+    delete [] u1_mpctraj_doubles;
+    delete [] u2_mpctraj_doubles;
+    delete [] p1_mpctraj_doubles;
+    delete [] p2_mpctraj_doubles;
+    delete [] v1_mpctraj_doubles;
+    delete [] v2_mpctraj_doubles;
     delete [] u_traj;
     delete [] x_traj;
     delete [] u_init_traj;
@@ -26,18 +32,28 @@ ilqr_mpc::~ilqr_mpc(){
     delete ilqr_calc;
 }
 
+void ilqr_mpc::set_verbose(int ver, int ver_il){
+    verbose = ver;
+    verbose_il = ver_il;
+    ilqr_calc->set_verbose(verbose_il);
+}
 
-void ilqr_mpc::set_parameters(int integrator_ind, double delta_t,
+int ilqr_mpc::get_N(){
+    return N;
+}
+
+void ilqr_mpc::set_parameters(int integ_ind, double delta_t,
                               int max_it, double break_cost_red, double regu_ini,
                               double max_reg, double min_reg){
-    if(integrator_ind == 0){
+    integrator_ind = integ_ind;
+    if(integ_ind == 0){
         integrator = "euler";
     }
     else{
         integrator = "runge_kutta";
     }
     dt = delta_t;
-    //ilqr_calc->set_parameters(integrator_ind, dt);
+    ilqr_calc->set_parameters(integrator_ind, dt);
     max_iter = max_it;
     break_cost_redu = break_cost_red;
     regu_init = regu_ini;
@@ -75,7 +91,7 @@ void ilqr_mpc::read_parameter_file(std::string configfile){
     if (config["torque_limit2"]) {torque_limit2=config["torque_limit2"].as<double>();}
     if (config["deltaT"]) {dt=config["deltaT"].as<double>();}
     if (config["integrator"]){
-        int integrator_ind = config["integrator"].as<int>();
+        integrator_ind = config["integrator"].as<int>();
         if(integrator_ind == 0){
             integrator = "euler";
         }
@@ -87,8 +103,10 @@ void ilqr_mpc::read_parameter_file(std::string configfile){
     if (config["start_pos2"]) {x0(1)=config["start_pos2"].as<double>();}
     if (config["start_vel1"]) {x0(2)=config["start_vel1"].as<double>();}
     if (config["start_vel2"]) {x0(3)=config["start_vel2"].as<double>();}
-    if (config["goal_pos1"]) {goal(0)=config["goal_pos1"].as<double>();}
-    if (config["goal_pos2"]) {goal(1)=config["goal_pos2"].as<double>();}
+    //if (config["goal_pos1"]) {goal(0)=config["goal_pos1"].as<double>();}
+    //if (config["goal_pos2"]) {goal(1)=config["goal_pos2"].as<double>();}
+    if (config["goal_pos1"]) {goal(0)=std::fmod(config["goal_pos1"].as<double>(), 2.*M_PI);}
+    if (config["goal_pos2"]) {goal(1)=std::fmod(config["goal_pos2"].as<double>() + M_PI, 2.*M_PI) - M_PI;}
     if (config["goal_vel1"]) {goal(2)=config["goal_vel1"].as<double>();}
     if (config["goal_vel2"]) {goal(3)=config["goal_vel2"].as<double>();}
     if (config["sCu1"]) {sCu1=config["sCu1"].as<double>();}
@@ -106,6 +124,7 @@ void ilqr_mpc::read_parameter_file(std::string configfile){
     if (config["N"]) {N=config["N"].as<int>();}
 
     if (config["verbose"]) {verbose=config["verbose"].as<int>();}
+    if (config["verbose_il"]) {verbose_il=config["verbose_il"].as<int>();}
     if (config["max_iter"]) {max_iter=config["max_iter"].as<int>();}
     if (config["break_cost_redu"]) {break_cost_redu=config["break_cost_redu"].as<double>();}
     if (config["regu_init"]) {regu_init=config["regu_init"].as<double>();}
@@ -113,22 +132,23 @@ void ilqr_mpc::read_parameter_file(std::string configfile){
     if (config["min_regu"]) {min_regu=config["min_regu"].as<double>();}
 
 
-    //ilqr_calc->set_parameters(integrator_ind, dt);
-    //ilqr_calc->set_cost_parameters(sCu1, sCu2,
-    //                               sCp1, sCp2,
-    //                               sCv1, sCv2,
-    //                               sCen,
-    //                               fCp1, fCp2,
-    //                               fCv2, fCv2,
-    //                               fCen);
-    //ilqr_calc->set_model_parameters(mass1, mass2,
-    //                                length1, length2,
-    //                                com1, com2,
-    //                                inertia1, inertia2,
-    //                                damping1, damping2,
-    //                                coulomb_friction1, coulomb_friction2,
-    //                                gravity,
-    //                                torque_limit1, torque_limit2);
+    ilqr_calc->set_verbose(verbose_il);
+    ilqr_calc->set_parameters(integrator_ind, dt);
+    ilqr_calc->set_cost_parameters(sCu1, sCu2,
+                                   sCp1, sCp2,
+                                   sCv1, sCv2,
+                                   sCen,
+                                   fCp1, fCp2,
+                                   fCv2, fCv2,
+                                   fCen);
+    ilqr_calc->set_model_parameters(mass1, mass2,
+                                    length1, length2,
+                                    com1, com2,
+                                    inertia1, inertia2,
+                                    damping1, damping2,
+                                    coulomb_friction1, coulomb_friction2,
+                                    gravity,
+                                    torque_limit1, torque_limit2);
 
 }
 void ilqr_mpc::set_cost_parameters(double su1, double su2,
@@ -151,13 +171,13 @@ void ilqr_mpc::set_cost_parameters(double su1, double su2,
     fCv2 = fv2;
     fCen = fen;
 
-    //ilqr_calc->set_cost_parameters(su1, su2,
-    //                               sp1, sp2,
-    //                               sv1, sv2,
-    //                               sen,
-    //                               fp1, fp2,
-    //                               fv2, fv2,
-    //                               fen);
+    ilqr_calc->set_cost_parameters(su1, su2,
+                                   sp1, sp2,
+                                   sv1, sv2,
+                                   sen,
+                                   fp1, fp2,
+                                   fv2, fv2,
+                                   fen);
 
 }
 
@@ -186,14 +206,14 @@ void ilqr_mpc::set_model_parameters(double m1, double m2,
     torque_limit1 = tl1;
     torque_limit2 = tl2;
 
-    //ilqr_calc->set_model_parameters(m1, m2,
-    //                                l1, l2,
-    //                                cm1, cm2,
-    //                                I1, I2,
-    //                                d1, d2,
-    //                                cf1, cf2,
-    //                                g,
-    //                                tl1, tl2);
+    ilqr_calc->set_model_parameters(m1, m2,
+                                    l1, l2,
+                                    cm1, cm2,
+                                    I1, I2,
+                                    d1, d2,
+                                    cf1, cf2,
+                                    g,
+                                    tl1, tl2);
 
 }
 
@@ -201,7 +221,7 @@ void ilqr_mpc::set_model_parameters(double m1, double m2,
 
 void ilqr_mpc::set_start(Eigen::Vector<double, ilqr::n_x> x){
     x0 = x;
-    //ilqr_calc->set_start(x0);
+    ilqr_calc->set_start(x0);
 }
 
 void ilqr_mpc::set_start(double pos1, double pos2,
@@ -210,12 +230,14 @@ void ilqr_mpc::set_start(double pos1, double pos2,
     x0(1) = pos2;
     x0(2) = vel1;
     x0(3) = vel2;
-    //ilqr_calc->set_start(x0);
+    ilqr_calc->set_start(x0);
 }
 
 void ilqr_mpc::set_goal(Eigen::Vector<double, ilqr::n_x> x){
     goal = x;
-    //ilqr_calc->set_goal(goal);
+    goal(0) = std::fmod(goal(0), 2.*M_PI);
+    goal(1) = std::fmod(goal(1)+M_PI, 2.*M_PI) - M_PI;
+    ilqr_calc->set_goal(goal);
 }
 
 void ilqr_mpc::set_goal(double pos1, double pos2,
@@ -224,7 +246,7 @@ void ilqr_mpc::set_goal(double pos1, double pos2,
     goal(1) = std::fmod(pos2+M_PI, 2.*M_PI) - M_PI;
     goal(2) = vel1;
     goal(3) = vel2;
-    //ilqr_calc->set_goal(goal);
+    ilqr_calc->set_goal(goal);
 }
 
 void ilqr_mpc::set_u_init_traj(double u1[], double u2[]){
@@ -289,44 +311,52 @@ void ilqr_mpc::shift_trajs(int s){
         x_traj[i](3) = x_traj[i+1](3);
     }
 
-    if (N+s < N_init){
-        u_traj[N-2](0) = u_init_traj[N+s-1](0);
-        x_traj[N-1](0) = x_init_traj[N+s](0);
-        x_traj[N-1](1) = x_init_traj[N+s](1);
-        x_traj[N-1](2) = x_init_traj[N+s](2);
-        x_traj[N-1](3) = x_init_traj[N+s](3);
-    }
-    else{
-        u_traj[N-2](0) = 0.0; // todo: acro/pendu
-    }
+    //if (N+s < N_init){
+    //    u_traj[N-2](0) = u_init_traj[N+s-1](0);
+    //    x_traj[N-1](0) = x_init_traj[N+s](0);
+    //    x_traj[N-1](1) = x_init_traj[N+s](1);
+    //    x_traj[N-1](2) = x_init_traj[N+s](2);
+    //    x_traj[N-1](3) = x_init_traj[N+s](3);
+    //}
+    //else{
+    //    u_traj[N-2](0) = 0.0; // todo: acro/pendu
+    //}
 
 }
 
 //Eigen::Vector<double, ilqr::n_u> ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
 double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
 
-
-    ilqr_calc->set_parameters(integrator_ind, dt);
-    ilqr_calc->set_model_parameters(mass1, mass2,
-                                    length1, length2,
-                                    com1, com2,
-                                    inertia1, inertia2,
-                                    damping1, damping2,
-                                    coulomb_friction1, coulomb_friction2,
-                                    gravity,
-                                    torque_limit1, torque_limit2);
-    ilqr_calc->set_cost_parameters(sCu1, sCu2,
-                                   sCp1, sCp2,
-                                   sCv1, sCv2,
-                                   sCen,
-                                   fCp1, fCp2,
-                                   fCv2, fCv2,
-                                   fCen);
-    ilqr_calc->set_start(x);
-    ilqr_calc->set_goal(goal);
+    Eigen::Vector<double, ilqr::n_x> y = x;
+    y(0) = std::fmod(y(0), 2.*M_PI);
+    y(1) = std::fmod(y(1)+M_PI, 2.*M_PI) - M_PI;
+    
+    //std::cout << "MPC get output: integrator_ind " << integrator_ind << std::endl;
+    //std::cout << "MPC get output: max_iter " << max_iter << std::endl;
+    //ilqr_calc->set_parameters(integrator_ind, dt);
+    //ilqr_calc->set_model_parameters(mass1, mass2,
+    //                                length1, length2,
+    //                                com1, com2,
+    //                                inertia1, inertia2,
+    //                                damping1, damping2,
+    //                                coulomb_friction1, coulomb_friction2,
+    //                                gravity,
+    //                                torque_limit1, torque_limit2);
+    //ilqr_calc->set_cost_parameters(sCu1, sCu2,
+    //                               sCp1, sCp2,
+    //                               sCv1, sCv2,
+    //                               sCen,
+    //                               fCp1, fCp2,
+    //                               fCv2, fCv2,
+    //                               fCen);
+    ilqr_calc->set_start(y);
     ilqr_calc->set_u_init_traj(u_traj);
-    ilqr_calc->set_x_init_traj(x_traj);
+    //ilqr_calc->set_x_init_traj(x_traj);
+    ilqr_calc->set_goal(goal);
     ilqr_calc->run_ilqr(max_iter, break_cost_redu, regu_init, max_regu, min_regu);
+
+    //std::string filename = "data/mpc_traj_files/trajectory_"+ std::to_string(counter) + ".csv";
+    //ilqr_calc->save_trajectory_csv(filename);
 
     //u_traj = ilqr_calc->get_u_traj();
     //x_traj = ilqr_calc->get_x_traj();
@@ -350,6 +380,23 @@ double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
     shift_trajs(counter);
     counter += 1;
 
+    if (verbose > 0){
+        std::cout << "Step " << counter << " ";
+        std::cout << x(0) << ", ";
+        std::cout << x(1) << ", ";
+        std::cout << x(2) << ", ";
+        std::cout << x(3) << ", ";
+        std::cout << 0.0 << ", ";
+        std::cout << u;
+        if (counter < N_init){
+            std::cout << ", (" << u_init_traj[counter][0] << ")";
+            if(pow(pow(u - u_init_traj[counter][0], 2.0), 0.5) > 0.01){
+                std::cout << " <-------------";
+            }
+        }
+        std::cout << std::endl;
+    }
+
     return u;
 }
 
@@ -362,3 +409,46 @@ double ilqr_mpc::get_control_output(double p1, double p2, double v1, double v2){
     double u = get_control_output(x);
     return u;
 }
+
+double* ilqr_mpc::get_u1_traj(){
+    for (int i=0; i<N-1; i++){
+        u1_mpctraj_doubles[i] = 0.0;
+    }
+    return u1_mpctraj_doubles;
+}
+
+double* ilqr_mpc::get_u2_traj(){
+    for (int i=0; i<N-1; i++){
+        u2_mpctraj_doubles[i] = ilqr_calc->u_traj[i](0);
+    }
+    return u2_mpctraj_doubles;
+}
+
+double* ilqr_mpc::get_p1_traj(){
+    for (int i=0; i<N; i++){
+        p1_mpctraj_doubles[i] = ilqr_calc->x_traj[i](0);
+    }
+    return p1_mpctraj_doubles;
+}
+
+double* ilqr_mpc::get_p2_traj(){
+    for (int i=0; i<N; i++){
+        p2_mpctraj_doubles[i] = ilqr_calc->x_traj[i](1);
+    }
+    return p2_mpctraj_doubles;
+}
+
+double* ilqr_mpc::get_v1_traj(){
+    for (int i=0; i<N; i++){
+        v1_mpctraj_doubles[i] = ilqr_calc->x_traj[i](2);
+    }
+    return v1_mpctraj_doubles;
+}
+
+double* ilqr_mpc::get_v2_traj(){
+    for (int i=0; i<N; i++){
+        v2_mpctraj_doubles[i] = ilqr_calc->x_traj[i](3);
+    }
+    return v2_mpctraj_doubles;
+}
+

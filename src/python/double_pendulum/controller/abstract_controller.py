@@ -67,3 +67,6 @@ class AbstractController(ABC):
         """
 
         self.goal = x
+
+    def get_forecast(self):
+        return [], [], []

@@ -54,7 +54,7 @@ class ILQRMPCCPPController(AbstractController):
                        fCen=0.,
                        integrator="runge_kutta"):
         self.N = N
-        self.dt = 0.005
+        self.dt = dt
         self.max_iter = max_iter
         self.regu_init = regu_init
         self.max_regu = max_regu
@@ -130,14 +130,6 @@ class ILQRMPCCPPController(AbstractController):
         self.v1_init_traj = il.get_v1_traj()
         self.v2_init_traj = il.get_v2_traj()
 
-        # self.u1_traj = np.copy(self.u1_init_traj[:self.N-1])
-        # self.u2_traj = np.copy(self.u2_init_traj[:self.N-1])
-        # self.p1_traj = self.p1_init_traj[:self.N]
-        # self.p2_traj = self.p2_init_traj[:self.N]
-        # self.v1_traj = self.v1_init_traj[:self.N]
-        # self.v2_traj = self.v2_init_traj[:self.N]
-        # print(self.u1_traj, self.u2_traj)
-
     def init(self):
         self.ilmpc = cppilqr.cppilqrmpc(self.N, self.N_init)
         self.ilmpc.set_parameters(self.integrator_int,
@@ -171,26 +163,35 @@ class ILQRMPCCPPController(AbstractController):
                                    self.v1_init_traj, self.v2_init_traj)
 
     def get_control_output(self, x, t=None):
-        # print("setup ilqr")
-        # self.il.set_start(self.start[0], self.start[1],
-        #                   self.start[2], self.start[3])
-
         # print("get control output")
         u2 = self.ilmpc.get_control_output(x[0], x[1], x[2], x[3])
-        # print("run")
-
-        # print("get trajs")
-        # self.u1_traj = self.il.get_u1_traj()
-        # self.u2_traj = self.il.get_u2_traj()
-        # self.p1_traj = self.il.get_p1_traj()
-        # self.p2_traj = self.il.get_p2_traj()
-        # self.v1_traj = self.il.get_v1_traj()
-        # self.v2_traj = self.il.get_v2_traj()
 
         # u = [self.u1_traj[0], self.u2_traj[0]]
         u = [0.0, u2]
 
         self.counter += 1
         # print(self.counter)
-
         return u
+
+    def get_forecast(self):
+
+        # throws seg fault
+        # u1_traj = self.ilmpc.get_u1_traj()
+        # u2_traj = self.ilmpc.get_u2_traj()
+        # p1_traj = self.ilmpc.get_p1_traj()
+        # p2_traj = self.ilmpc.get_p2_traj()
+        # v1_traj = self.ilmpc.get_v1_traj()
+        # v2_traj = self.ilmpc.get_v2_traj()
+
+        u1_traj = self.u1_init_traj
+        u2_traj = self.u2_init_traj
+        p1_traj = self.p1_init_traj
+        p2_traj = self.p2_init_traj
+        v1_traj = self.v1_init_traj
+        v2_traj = self.v2_init_traj
+
+        T = np.linspace(0, self.N*self.dt, self.N)
+        X = np.asarray([p1_traj, p2_traj, v1_traj, v2_traj]).T
+        U = np.asarray([u1_traj, u2_traj]).T
+
+        return T, X, U
