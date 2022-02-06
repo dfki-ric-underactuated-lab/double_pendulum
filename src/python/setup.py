@@ -17,7 +17,7 @@ setup(
         'scipy',
         'sympy',
         'cma',
-        # 'mini-cheetah-motor-driver-socketcan',
+        'mini-cheetah-motor-driver-socketcan',
         # 'moteus',
 
         # c++ python bindings
