@@ -203,6 +203,7 @@ cdef class cppilqr:
     def save_trajectory_csv(self):
         self.il.save_trajectory_csv();
 
+
 cdef class cppilqrmpc:
     cdef ilqr_mpc *ilmpc
 
@@ -210,7 +211,7 @@ cdef class cppilqrmpc:
         self.ilmpc = new ilqr_mpc(N, N_init)
 
     # def __dealloc__(self):
-    #     del self.il
+    #     del self.ilmpc
 
     def set_parameters(self, integrator_ind, delta_t,
                        max_it, break_cost_red, regu_ini,
@@ -284,3 +285,82 @@ cdef class cppilqrmpc:
     def get_control_output(self, p1, p2, v1, v2):
         u = self.ilmpc.get_control_output(p1, p2, v1, v2)
         return u
+
+    def get_u1_traj(self):
+        N = self.ilmpc.get_N()
+        cdef double *vec
+        cdef np.ndarray ar
+        vec = self.ilmpc.get_u1_traj()
+
+        array_wrapper = ArrayWrapper()
+        array_wrapper.set_data(N-1, <void*> vec)
+        ar = np.array(array_wrapper, copy=False)
+        ar.base = <PyObject*> array_wrapper
+        Py_INCREF(array_wrapper)
+        return ar
+
+    def get_u2_traj(self):
+        N = self.ilmpc.get_N()
+        cdef double *vec
+        cdef np.ndarray ar
+        vec = self.ilmpc.get_u2_traj()
+
+        array_wrapper = ArrayWrapper()
+        array_wrapper.set_data(N-1, <void*> vec)
+        ar = np.array(array_wrapper, copy=False)
+        ar.base = <PyObject*> array_wrapper
+        Py_INCREF(array_wrapper)
+        return ar
+
+    def get_p1_traj(self):
+        N = self.ilmpc.get_N()
+        cdef double *vec
+        cdef np.ndarray ar
+        vec = self.ilmpc.get_p1_traj()
+
+        array_wrapper = ArrayWrapper()
+        array_wrapper.set_data(N, <void*> vec)
+        ar = np.array(array_wrapper, copy=False)
+        ar.base = <PyObject*> array_wrapper
+        Py_INCREF(array_wrapper)
+        return ar
+
+    def get_p2_traj(self):
+        N = self.ilmpc.get_N()
+        cdef double *vec
+        cdef np.ndarray ar
+        vec = self.ilmpc.get_p2_traj()
+
+        array_wrapper = ArrayWrapper()
+        array_wrapper.set_data(N, <void*> vec)
+        ar = np.array(array_wrapper, copy=False)
+        ar.base = <PyObject*> array_wrapper
+        Py_INCREF(array_wrapper)
+        return ar
+
+    def get_v1_traj(self):
+        N = self.ilmpc.get_N()
+        cdef double *vec
+        cdef np.ndarray ar
+        vec = self.ilmpc.get_v1_traj()
+
+        array_wrapper = ArrayWrapper()
+        array_wrapper.set_data(N, <void*> vec)
+        ar = np.array(array_wrapper, copy=False)
+        ar.base = <PyObject*> array_wrapper
+        Py_INCREF(array_wrapper)
+        return ar
+
+    def get_v2_traj(self):
+        N = self.ilmpc.get_N()
+        cdef double *vec
+        cdef np.ndarray ar
+        vec = self.ilmpc.get_v2_traj()
+
+        array_wrapper = ArrayWrapper()
+        array_wrapper.set_data(N, <void*> vec)
+        ar = np.array(array_wrapper, copy=False)
+        ar.base = <PyObject*> array_wrapper
+        Py_INCREF(array_wrapper)
+        return ar
+

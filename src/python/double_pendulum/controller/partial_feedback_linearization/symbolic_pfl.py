@@ -144,7 +144,7 @@ class SymbolicPFLController(AbstractController):
 
         self.u_out_la = smp.utilities.lambdify(self.plant.x, u_out)
 
-    def get_control_output(self, x):
+    def get_control_output(self, x, t=None):
         pos = np.copy(x[:2])
         vel = np.copy(x[2:])
 
@@ -208,12 +208,6 @@ class SymbolicPFLAndLQRController(AbstractController):
         self.active_controller = "energy"
         self.en = []
 
-    def set_lqr_parameters(self, failure_value):
-        self.lqr_controller.set_parameters(failure_value)
-
-    def set_cost_parameters(self, kpos=0.3, kvel=0.005, ken=1.0):
-        self.en_controller.set_cost_parameters(kpos, kvel, ken)
-
     def set_cost_parameters_(self, pars=[0.3, 0.005, 1.0]):
         self.en_controller.set_cost_parameters_(pars)
 
@@ -226,8 +220,8 @@ class SymbolicPFLAndLQRController(AbstractController):
         self.en_controller.init()
         self.lqr_controller.init()
 
-    def get_control_output(self, x, verbose=False):
-        u = self.lqr_controller.get_control_output(x)
+    def get_control_output(self, x, t=None, verbose=False):
+        u = self.lqr_controller.get_control_output(x, t)
 
         energy = self.en_controller.plant.total_energy(x)
         self.en.append(energy)
@@ -237,7 +231,7 @@ class SymbolicPFLAndLQRController(AbstractController):
                 self.active_controller = "energy"
                 if verbose:
                     print("Switching to energy shaping control")
-            u = self.en_controller.get_control_output(x)
+            u = self.en_controller.get_control_output(x, t)
         else:
             if self.active_controller == "energy":
                 self.active_controller = "lqr"

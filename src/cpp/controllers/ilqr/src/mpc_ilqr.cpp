@@ -23,6 +23,7 @@ int main(int argc, char *argv[], char *envp[]){
     // default parameters
 
     int verbose = 0;
+    int verbose_il = 0;
 
     //pendulum parameters
     double mass1 = 0.5;
@@ -110,7 +111,7 @@ int main(int argc, char *argv[], char *envp[]){
     if (config["T"]) {T=config["T"].as<double>();}
     if (config["integrator"]){integrator_ind = config["integrator"].as<int>();}
     if (config["integrator"]){
-        int integrator_ind = config["integrator"].as<int>();
+        integrator_ind = config["integrator"].as<int>();
         if(integrator_ind == 0){
             integrator = "euler";
         }
@@ -142,6 +143,7 @@ int main(int argc, char *argv[], char *envp[]){
     if (config["Ninit"]) {N_init=config["Ninit"].as<int>();}
 
     if (config["verbose"]) {verbose=config["verbose"].as<int>();}
+    if (config["verbose_il"]) {verbose_il=config["verbose_il"].as<int>();}
 
     if (config["max_iter"]) {max_iter=config["max_iter"].as<int>();}
     if (config["break_cost_redu"]) {break_cost_redu=config["break_cost_redu"].as<double>();}
@@ -166,7 +168,12 @@ int main(int argc, char *argv[], char *envp[]){
     state(1) = start_pos2;
     state(2) = start_vel1;
     state(3) = start_vel2;
-    sim.set_state(0.0, state);
+    //sim.set_state(0.0, state);
+    Eigen::Vector<double, ilqr::n_x> goal;
+    goal(0) = goal_pos1;
+    goal(1) = goal_pos2;
+    goal(2) = goal_vel1;
+    goal(3) = goal_vel2;
 
     // load initial trajectory
     CSVReader reader(trajfile, ",");
@@ -178,47 +185,101 @@ int main(int argc, char *argv[], char *envp[]){
     //int Nmin = std::min(N_init, TN);
 
     for (int i=0; i<TN-1; i++){
-        u_traj[i](0) = trajectory[i][5];
+        u_traj[i](0) = trajectory[i][6];
     }
     for (int i=0; i<TN; i++){
-        x_traj[i](0) = trajectory[i][0];
-        x_traj[i](1) = trajectory[i][1];
-        x_traj[i](2) = trajectory[i][2];
-        x_traj[i](3) = trajectory[i][3];
+        x_traj[i](0) = trajectory[i][1];
+        x_traj[i](1) = trajectory[i][2];
+        x_traj[i](2) = trajectory[i][3];
+        x_traj[i](3) = trajectory[i][4];
+        //std::cout << "xtraj " << x_traj[i] << std::endl;
     }
 
     int n_steps = (int) (T / dt);
-    Eigen::Vector<double, ilqr::n_u> u;
+    //Eigen::Vector<double, ilqr::n_u> u;
     Eigen::Vector<double, DPPlant::n_u> u_full;
-    u_full(0) = 0.;
-    u_full(1) = 0.;
+    //u_full(0) = 0.;
+    //u_full(1) = 0.;
 
     //ilqr ilqr_calc(N);
     //ilqr_calc.read_parameter_file(configfile);
     //ilqr_mpc ilmpc = ilqr_mpc();
     ilqr_mpc ilmpc = ilqr_mpc(N, TN);
     ilmpc.read_parameter_file(configfile);
-    ilmpc.set_start(state);
+    //ilmpc.set_start(state);
+    ilmpc.set_goal(goal);
+    std::cout << "init state: ";
+    std::cout << state(0) << ", ";
+    std::cout << state(1) << ", ";
+    std::cout << state(2) << ", ";
+    std::cout << state(3) << ", ";
+    std::cout << std::endl;
     ilmpc.set_u_init_traj(u_traj);
     ilmpc.set_x_init_traj(x_traj);
+
+    //double* u1_mpctraj_doubles = new double[N-1];
+    //double* u2_mpctraj_doubles = new double[N-1];
+    //double* p1_mpctraj_doubles = new double[N];
+    //double* p2_mpctraj_doubles = new double[N];
+    //double* v1_mpctraj_doubles = new double[N];
+    //double* v2_mpctraj_doubles = new double[N];
+
+    std::ofstream traj_file;
+    traj_file.open (foldername+"/trajectory_mpc.csv");
+    traj_file << "time, pos1, pos2, vel1, vel2, tau1, tau2\n";
+
     for (int s=0; s<n_steps; s++){
         u_full(0) = 0.;
         u_full(1) = ilmpc.get_control_output(state); //(0);
+
+        //u1_mpctraj_doubles = ilmpc.get_u1_traj();
+        //std::cout << "Got u1 traj: " << u1_mpctraj_doubles[0];
+        //u2_mpctraj_doubles = ilmpc.get_u2_traj();
+        //std::cout << "Got u2 traj: " << u2_mpctraj_doubles[0];
+        //p1_mpctraj_doubles = ilmpc.get_p1_traj();
+        //std::cout << "Got p1 traj: " << p1_mpctraj_doubles[10];
+        //p2_mpctraj_doubles = ilmpc.get_p2_traj();
+        //std::cout << "Got p2 traj: " << p2_mpctraj_doubles[10];
+        //v1_mpctraj_doubles = ilmpc.get_v1_traj();
+        //std::cout << "Got v1 traj: " << v1_mpctraj_doubles[10];
+        //v2_mpctraj_doubles = ilmpc.get_v2_traj();
+        //std::cout << "Got v2 traj: " << v2_mpctraj_doubles[10];
+        //std::cout << std::endl;
+
         sim.set_state(0.0, state);
         sim.step(u_full, dt, integrator);
-        state = sim.get_state();
 
-        std::cout << "Step " << s << " ";
-        std::cout << state(0) << ", ";
-        std::cout << state(1) << ", ";
-        std::cout << state(2) << ", ";
-        std::cout << state(3) << ", ";
-        std::cout << u_full(0) << ", ";
-        std::cout << u_full(1);
-        if (s<TN){
-            std::cout << ", (" << trajectory[s][5] << ")";
-        }
-        std::cout << std::endl;
+        // std::cout << "Step " << s << " ";
+        // std::cout << state(0) << ", ";
+        // std::cout << state(1) << ", ";
+        // std::cout << state(2) << ", ";
+        // std::cout << state(3) << ", ";
+        // std::cout << u_full(0) << ", ";
+        // std::cout << u_full(1);
+        // if (s<TN){
+        //     std::cout << ", (" << trajectory[s][6] << ")";
+        //     if(pow(pow(u_full(1) - trajectory[s][6], 2.0), 0.5) > 0.01){
+        //         std::cout << " <-------------";
+        //     }
+        // }
+        // std::cout << std::endl;
+
+        traj_file << dt*s << ", "
+                  << state(0) << ", "
+                  << state(1) << ", "
+                  << state(2) << ", "
+                  << state(3) << ", "
+                  << u_full(0) << ", "
+                  << u_full(1) << "\n";
+        state = sim.get_state();
     }
+    traj_file.close();
+
+    //delete [] u1_mpctraj_doubles;
+    //delete [] u2_mpctraj_doubles;
+    //delete [] p1_mpctraj_doubles;
+    //delete [] p2_mpctraj_doubles;
+    //delete [] v1_mpctraj_doubles;
+    //delete [] v2_mpctraj_doubles;
 }
 

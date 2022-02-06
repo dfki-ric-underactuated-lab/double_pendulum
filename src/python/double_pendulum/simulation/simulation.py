@@ -103,12 +103,15 @@ class Simulator:
         """
         simulation of a single step which also updates the animation plot
         """
-        t0 = time.time()
         dt = par_dict["dt"]
         controller = par_dict["controller"]
         integrator = par_dict["integrator"]
+        realtime = True
         if controller is not None:
+            t0 = time.time()
             tau = controller.get_control_output(x=self.x, t=self.t)
+            if time.time() - t0 > dt:
+                realtime = False
         else:
             tau = np.zeros(self.plant.n_actuators)
         self.step(tau, dt, integrator=integrator)
@@ -131,16 +134,29 @@ class Simulator:
                                  ee_pos[link][0],
                                  ee_pos[link][1])
 
+        if self.plot_forecast:
+            T, X, U = controller.get_forecast()
+            coords = []
+            for x in X:
+                coords.append(
+                    self.plant.forward_kinematics(x[:self.plant.dof])[-1])
+
+            coords = np.asarray(coords)
+            self.animation_plots[ani_plot_counter].set_data(coords.T[0],
+                                                            coords.T[1])
+            ani_plot_counter += 1
+
         t = float(self.animation_plots[ani_plot_counter].get_text()[4:])
         t = round(t+dt, 3)
         self.animation_plots[ani_plot_counter].set_text(f"t = {t}")
 
         # if the animation runs slower than real time
         # the time display will be red
-        if time.time() - t0 > dt:
+        if (not realtime):
             self.animation_plots[ani_plot_counter].set_color("red")
         else:
             self.animation_plots[ani_plot_counter].set_color("black")
+
         return self.animation_plots + self.tau_arrowarcs + self.tau_arrowheads
 
     def _ps_init(self):
@@ -166,18 +182,23 @@ class Simulator:
         return self.ps_plots
 
     def simulate_and_animate(self, t0, x0, tf, dt, controller=None,
-                             integrator="runge_kutta", phase_plot=False,
-                             save_video=False, video_name="pendulum_swingup"):
+                             integrator="runge_kutta", plot_forecast=False,
+                             phase_plot=False, save_video=False,
+                             video_name="pendulum_swingup"):
         """
         Simulation and animation of the pendulum motion
         The animation is only implemented for 2d serial chains
         """
+
+        self.plot_forecast = plot_forecast
         self.set_state(t0, x0)
         self.reset_data_recorder()
 
         fig = plt.figure(figsize=(20, 20))
         self.animation_ax = plt.axes()
         self.animation_plots = []
+        if self.plot_forecast:
+            self.forecast_plots = []
 
         for link in range(self.plant.n_links):
             ee_plot, = self.animation_ax.plot([], [], "o",
@@ -187,6 +208,11 @@ class Simulator:
             bar_plot, = self.animation_ax.plot([], [], "-",
                                                lw=5, color="black")
             self.animation_plots.append(bar_plot)
+
+        if self.plot_forecast:
+            fc_plot, = self.animation_ax.plot([], [], "--",
+                                              lw=1, color="gray")
+            self.animation_plots.append(fc_plot)
 
         text_plot = self.animation_ax.text(0.15, 0.85, [],
                                            fontsize=40,

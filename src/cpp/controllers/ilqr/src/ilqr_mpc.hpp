@@ -44,9 +44,17 @@ private:
     int counter = 0;
 
     int verbose = 0;
+    int verbose_il = 0;
+
+    double* u1_mpctraj_doubles = new double[N-1];
+    double* u2_mpctraj_doubles = new double[N-1];
+    double* p1_mpctraj_doubles = new double[N];
+    double* p2_mpctraj_doubles = new double[N];
+    double* v1_mpctraj_doubles = new double[N];
+    double* v2_mpctraj_doubles = new double[N];
 
 public:
-
+    void set_verbose(int, int);
     void set_parameters(int, double, int, double, double,
                         double, double);
     void read_parameter_file(std::string);
@@ -75,6 +83,14 @@ public:
     //Eigen::Vector<double, ilqr::n_u> get_control_output(Eigen::Vector<double, ilqr::n_x>);
     double get_control_output(Eigen::Vector<double, ilqr::n_x>);
     double get_control_output(double, double, double, double);
+
+    int get_N();
+    double* get_u1_traj();
+    double* get_u2_traj();
+    double* get_p1_traj();
+    double* get_p2_traj();
+    double* get_v1_traj();
+    double* get_v2_traj();
 };
 
 #endif // ILQR_MPC_HPP

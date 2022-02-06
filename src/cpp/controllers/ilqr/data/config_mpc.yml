@@ -1,18 +1,20 @@
-mass1: 0.57288
-mass2: 0.57288
-length1: 0.5
-length2: 0.5
-com1: 0.5
-com2: 0.5
-damping1: 0.15
-damping2: 0.15
-coulomb_friction1: 0.0
-coulomb_friction2: 0.0
+mass1: 0.608
+mass2: 0.630
+length1: 0.3
+length2: 0.2
+com1: 0.275
+com2: 0.166
+inertia1: 0.05472
+inertia2: 0.2522
+damping1: 0.081
+damping2: 0.0
+coulomb_friction1: 0.0  # 0.093
+coulomb_friction2: 0.0  # 0.186
 gravity: 9.81
-torque_limit1: 10.0
-torque_limit2: 10.0
+torque_limit1: 0.0
+torque_limit2: 6.0
 
-deltaT: 0.001
+deltaT: 0.005
 integrator: 1 # 0: euler, 1: runge_kutta
 T: 10.0
 
@@ -25,23 +27,39 @@ goal_pos2: 0.0
 goal_vel1: 0.0
 goal_vel2: 0.0
 
-sCu1: 0.005
-sCu2: 0.0
-sCp1: 0.0
-sCp2: 0.0
+# sCu1: 9.64008003e-04
+# sCu2: 3.69465206e-04
+# sCp1: 9.00160028e-04
+# sCp2: 8.52634075e-04
+# sCv1: 3.62146682e-05
+# sCv2: 3.49079107e-04
+# sCen: 1.08953921e-05
+# fCp1: 9.88671633e+03
+# fCp2: 7.27311031e+03
+# fCv1: 6.75242351e+01
+# fCv2: 9.95354381e+01
+# fCen: 6.36798375e+01
+
+sCu1: 0.001
+sCu2: 0.001
+sCp1: 0.0001
+sCp2: 0.0001
 sCv1: 0.0
 sCv2: 0.0
 sCen: 0.0
-fCp1: 1000.0
-fCp2: 1000.0
-fCv1: 10.0
-fCv2: 10.0
+fCp1: 10000.
+fCp2: 10000.0
+fCv1: 100.0
+fCv2: 100.0
 fCen: 0.0
 
-max_iter: 1
+max_iter: 10
 break_cost_redu: 0.000001
 regu_init: 100.0
-N: 5000
-Ninit: 5000
+min_regu: 0.01
+max_regu: 10000
+N: 1000
+Ninit: 1000
 
-verbose: 0
+verbose: 1
+verbose_il: 0

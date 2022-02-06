@@ -153,6 +153,7 @@ public:
 
 
     void save_trajectory_csv();
+    void save_trajectory_csv(std::string);
 };
 
 #endif // ILQR_HPP

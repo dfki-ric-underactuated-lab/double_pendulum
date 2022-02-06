@@ -81,6 +81,13 @@ cdef extern from "../controllers/ilqr/src/ilqr_mpc.hpp":
                              double v1[], double v2[])
         double get_control_output(double p1, double p2,
                                   double v1, double v2)
+        double *get_u1_traj()
+        double *get_u2_traj()
+        double *get_p1_traj()
+        double *get_p2_traj()
+        double *get_v1_traj()
+        double *get_v2_traj()
 
+        int get_N()
         const int N
         const int N_init

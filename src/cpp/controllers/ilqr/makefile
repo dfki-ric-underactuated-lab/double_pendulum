@@ -1,5 +1,5 @@
-#CXX       := g++
-CXX       := clang++-9
+CXX       := g++
+#CXX       := clang++-9
 CXX_FLAGS := -Wall -Wextra -std=c++17 -g -O3
 
 BIN     := bin
