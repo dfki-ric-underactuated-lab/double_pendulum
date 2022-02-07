@@ -9,10 +9,9 @@ import matplotlib.pyplot as plt
 
 from double_pendulum.experiments.canmotorlib import CanMotorController
 from double_pendulum.experiments.experimental_utils import (yb_friction_matrix,
-                                                            prepare_empty_data,
                                                             plot_figure,
+                                                            plot_figure_single,
                                                             save_data,
-                                                            setZeroPosition,
                                                             rev2rad,
                                                             rad2rev)
 
@@ -34,36 +33,61 @@ async def run_experiment(controller,
 
     n = int(t_final/dt)
 
-    (shoulder_meas_pos,
-     shoulder_meas_vel,
-     shoulder_meas_tau,
-     elbow_meas_pos,
-     elbow_meas_vel,
-     elbow_meas_tau,
-     meas_time,
-     gear_ratio,
-     rad2outputrev,
-     shoulder_on) = prepare_empty_data(n+1)
+    T_des, X_des, U_des = controller.get_init_trajectory()
+    if len(X_des) > 0:
+        shoulder_des_pos = X_des.T[0]
+        shoulder_des_vel = X_des.T[2]
+        elbow_des_pos = X_des.T[1]
+        elbow_des_vel = X_des.T[3]
+    else:
+        shoulder_des_pos = None
+        shoulder_des_vel = None
+        elbow_des_pos = None
+        elbow_des_vel = None
 
-    shoulder_filtered_meas_vel = np.copy(shoulder_meas_vel)
-    elbow_filtered_meas_vel = np.copy(elbow_meas_vel)
+    if len(U_des) > 0:
+        shoulder_des_tau = U_des.T[0]
+        elbow_des_tau = U_des.T[1]
+    else:
+        shoulder_des_tau = None
+        elbow_des_tau = None
 
-    shoulder_calc_meas_vel = np.copy(shoulder_meas_vel)
-    elbow_calc_meas_vel = np.copy(elbow_meas_vel)
+    # (shoulder_meas_pos,
+    #  shoulder_meas_vel,
+    #  shoulder_meas_tau,
+    #  elbow_meas_pos,
+    #  elbow_meas_vel,
+    #  elbow_meas_tau,
+    #  meas_time,
+    #  gear_ratio,
+    #  rad2outputrev,
+    #  shoulder_on) = prepare_empty_data(n+1)
+    meas_time = np.zeros(n+1)
+    shoulder_meas_pos = np.zeros(n+1)
+    shoulder_meas_vel = np.zeros(n+1)
+    shoulder_meas_tau = np.zeros(n)
+    elbow_meas_pos = np.zeros(n+1)
+    elbow_meas_vel = np.zeros(n+1)
+    elbow_meas_tau = np.zeros(n)
+    shoulder_tau_controller = np.zeros(n)
+    elbow_tau_controller = np.zeros(n)
+    shoulder_fric_tau = np.zeros(n)
+    elbow_fric_tau = np.zeros(n)
+    shoulder_filtered_meas_vel = np.zeros(n+1)
+    elbow_filtered_meas_vel = np.zeros(n+1)
 
-    shoulder_id = motor_ids[0]
-    elbow_id = motor_ids[1]
+    tau_fric = np.zeros(2)
 
     print("Enabling Motors..")
+    shoulder_id = motor_ids[0]
+    elbow_id = motor_ids[1]
     sh_motor = moteus.Controller(id=shoulder_id)
-    # Elbow motor
     el_motor = moteus.Controller(id=elbow_id)
     # stop both motors
     await sh_motor.set_stop()
     await el_motor.set_stop()
 
     hz = int(1 / dt)
-    #os.system(f"sudo -E env PATH=$PATH moteus_tool -t{shoulder_id},{elbow_id} --calibrate --cal-bw-hz {hz}")
     os.system(f"sudo -E env PATH=$PATH moteus_tool --zero-offset -t{shoulder_id},{elbow_id}")
 
     if input('Do you want to proceed for real time execution?(y) ') == 'y':
@@ -77,14 +101,15 @@ async def run_experiment(controller,
         elbow_pos = rev2rad(el_state.values[moteus.Register.POSITION])
         elbow_vel = rev2rad(el_state.values[moteus.Register.VELOCITY])
 
+        meas_time[0] = 0.0
         shoulder_meas_pos[0] = shoulder_pos
         shoulder_meas_vel[0] = shoulder_vel
         shoulder_filtered_meas_vel[0] = shoulder_vel
-        shoulder_calc_meas_vel[0] = 0.0
+        #shoulder_calc_meas_vel[0] = 0.0
         elbow_meas_pos[0] = elbow_pos
         elbow_meas_vel[0] = elbow_vel
         elbow_filtered_meas_vel[0] = elbow_vel
-        elbow_calc_meas_vel[0] = 0.0
+        #elbow_calc_meas_vel[0] = 0.0
 
         last_shoulder_pos = shoulder_pos
         last_elbow_pos = elbow_pos
@@ -102,7 +127,6 @@ async def run_experiment(controller,
         # defining running index variables
         index = 0
         t = 0.
-        tau_fric = np.zeros(2)
 
         print("Starting Experiment...")
         # start_time = time.time()
@@ -111,15 +135,6 @@ async def run_experiment(controller,
                 start_loop = time.time()
 
                 if velocity_filter == "lowpass":
-                    # n_filter = min(index+1, filter_args["filter_size"])
-
-                    # shoulder_filtered_vel = lowpass_filter(
-                    #     shoulder_meas_vel[max(index-n_filter, 0):index+1],
-                    #     0.3)[-1]
-                    # elbow_filtered_vel = lowpass_filter(
-                    #     elbow_meas_vel[max(index-n_filter, 0):index+1],
-                    #     0.3)[-1]
-
                     # the lowpass filter needs only the last filtered vel
                     # and the latest vel value
                     sfv = [shoulder_filtered_meas_vel[max(0, index-1)],
@@ -130,13 +145,6 @@ async def run_experiment(controller,
                         sfv, filter_args["alpha"])[-1]
                     elbow_filtered_vel = lowpass_filter(
                         efv, filter_args["alpha"])[-1]
-
-                    # n_filter = min(index+1, filter_args["filter_size"])
-                    # shoulder_filtered_vel = np.mean(
-                    #     shoulder_filtered_meas_vel[max(index-n_filter, 0):index+1])
-                    # elbow_filtered_vel = np.mean(
-                    #     elbow_filtered_meas_vel[max(index-n_filter, 0):index+1])
-
                 elif velocity_filter == "medianfilter":
                     n_filter = min(index+1, filter_args["filter_size"])
                     shoulder_filtered_vel = medfilt(
@@ -160,7 +168,6 @@ async def run_experiment(controller,
                               shoulder_filtered_vel,
                               elbow_filtered_vel])
 
-                #print(x[0], x[1])
                 # get control command from controller
                 tau_cmd = controller.get_control_output(x)
 
@@ -168,11 +175,14 @@ async def run_experiment(controller,
                 tau_cmd[0] = np.clip(tau_cmd[0], -tau_limit[0], tau_limit[0])
                 tau_cmd[1] = np.clip(tau_cmd[1], -tau_limit[1], tau_limit[1])
 
+                shoulder_tau_controller[index] = tau_cmd[0]
+                elbow_tau_controller[index] = tau_cmd[1]
+                shoulder_fric_tau[index] = tau_fric[0]
+                elbow_fric_tau[index] = tau_fric[1]
+
                 # add friction compensation (0 if turned off)
                 tau_cmd[0] += tau_fric[0]
                 tau_cmd[1] += tau_fric[1]
-
-                #print(x, tau_cmd)
 
                 # Send tau command to motors
                 sh_state = await sh_motor.set_position(position=0,
@@ -205,8 +215,8 @@ async def run_experiment(controller,
                 shoulder_vel = shoulder_vel if np.abs(shoulder_vel) > shoulder_thresh_vel else 0.0
                 elbow_vel = elbow_vel if np.abs(elbow_vel) > elbow_thresh_vel else 0.0
 
-                shoulder_calc_meas_vel[index+1] = (shoulder_pos - shoulder_meas_pos[index]) / dt
-                elbow_calc_meas_vel[index+1] = (elbow_pos - elbow_meas_pos[index]) / dt
+                #shoulder_calc_meas_vel[index+1] = (shoulder_pos - shoulder_meas_pos[index]) / dt
+                #elbow_calc_meas_vel[index+1] = (elbow_pos - elbow_meas_pos[index]) / dt
 
 
                 # friction compensation
@@ -250,9 +260,9 @@ async def run_experiment(controller,
                     pass
 
                 # store times
-                meas_time[index] = t
                 index += 1
                 t += time.time() - start_loop
+                meas_time[index+1] = t
 
         except BaseException as e:
             print("Exeception Block", e)
@@ -275,29 +285,64 @@ async def run_experiment(controller,
                       elbow_meas_pos[:index-1],
                       elbow_meas_vel[:index-1],
                       elbow_meas_tau[:index-1],
-                      meas_time[:index-1],
-                      shoulder_on[:index-1])
-            date = plot_figure(save_dir_time,
-                               date,
-                               shoulder_meas_pos[:index-1],
-                               shoulder_meas_vel[:index-1],
-                               shoulder_meas_tau[:index-1],
-                               elbow_meas_pos[:index-1],
-                               elbow_meas_vel[:index-1],
-                               elbow_meas_tau[:index-1],
-                               meas_time[:index-1],
-                               shoulder_on[:index-1])
-            plt.figure()
-            plt.plot(meas_time, shoulder_meas_vel)
-            plt.plot(meas_time, shoulder_filtered_meas_vel)
-            plt.plot(meas_time, shoulder_calc_meas_vel)
-            plt.plot(meas_time, elbow_meas_vel)
-            plt.plot(meas_time, elbow_filtered_meas_vel)
-            plt.plot(meas_time, elbow_calc_meas_vel)
-            plt.legend(["shoulder meas vel",
-                        "shoulder vel filtered",
-                        "shoulder calc vel",
-                        "elbow meas vel",
-                        "elbow vel filtered",
-                        "elbow calc vel"])
-            plt.show()
+                      meas_time[:index-1])
+            date = plot_figure(save_dir=save_dir_time,
+                               date=date,
+                               index=index-1,
+                               meas_time=meas_time,
+                               shoulder_meas_pos=shoulder_meas_pos,
+                               shoulder_meas_vel=shoulder_meas_vel,
+                               shoulder_meas_tau=shoulder_meas_tau,
+                               elbow_meas_pos=elbow_meas_pos,
+                               elbow_meas_vel=elbow_meas_vel,
+                               elbow_meas_tau=elbow_meas_tau,
+                               shoulder_tau_controller=shoulder_tau_controller,
+                               elbow_tau_controller=elbow_tau_controller,
+                               shoulder_filtered_vel=shoulder_filtered_meas_vel,
+                               elbow_filtered_vel=elbow_filtered_meas_vel,
+                               shoulder_des_pos=shoulder_des_pos,
+                               shoulder_des_vel=shoulder_des_vel,
+                               shoulder_des_tau=shoulder_des_tau,
+                               elbow_des_pos=elbow_des_pos,
+                               elbow_des_vel=elbow_des_vel,
+                               elbow_des_tau=elbow_des_tau,
+                               shoulder_fric_tau=shoulder_fric_tau,
+                               elbow_fric_tau=elbow_fric_tau,
+                               error=None)
+            plot_figure_single(save_dir=save_dir_time,
+                               date=date,
+                               index=index-1,
+                               meas_time=meas_time,
+                               shoulder_meas_pos=shoulder_meas_pos,
+                               shoulder_meas_vel=shoulder_meas_vel,
+                               shoulder_meas_tau=shoulder_meas_tau,
+                               elbow_meas_pos=elbow_meas_pos,
+                               elbow_meas_vel=elbow_meas_vel,
+                               elbow_meas_tau=elbow_meas_tau,
+                               shoulder_tau_controller=shoulder_tau_controller,
+                               elbow_tau_controller=elbow_tau_controller,
+                               shoulder_filtered_vel=shoulder_filtered_meas_vel,
+                               elbow_filtered_vel=elbow_filtered_meas_vel,
+                               shoulder_des_pos=shoulder_des_pos,
+                               shoulder_des_vel=shoulder_des_vel,
+                               shoulder_des_tau=shoulder_des_tau,
+                               elbow_des_pos=elbow_des_pos,
+                               elbow_des_vel=elbow_des_vel,
+                               elbow_des_tau=elbow_des_tau,
+                               shoulder_fric_tau=shoulder_fric_tau,
+                               elbow_fric_tau=elbow_fric_tau,
+                               error=None)
+            # plt.figure()
+            # plt.plot(meas_time, shoulder_meas_vel)
+            # plt.plot(meas_time, shoulder_filtered_meas_vel)
+            # plt.plot(meas_time, shoulder_calc_meas_vel)
+            # plt.plot(meas_time, elbow_meas_vel)
+            # plt.plot(meas_time, elbow_filtered_meas_vel)
+            # plt.plot(meas_time, elbow_calc_meas_vel)
+            # plt.legend(["shoulder meas vel",
+            #             "shoulder vel filtered",
+            #             "shoulder calc vel",
+            #             "elbow meas vel",
+            #             "elbow vel filtered",
+            #             "elbow calc vel"])
+            # plt.show()

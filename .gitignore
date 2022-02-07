@@ -6,3 +6,4 @@ src/cpp/controllers/ilqr/bin/*
 src/cpp/controllers/ilqr/obj/*
 src/cpp/python/*.so
 examples/data/*
+experiments/data/*
