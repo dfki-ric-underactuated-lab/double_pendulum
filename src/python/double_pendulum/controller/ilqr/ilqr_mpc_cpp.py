@@ -173,6 +173,21 @@ class ILQRMPCCPPController(AbstractController):
         # print(self.counter)
         return u
 
+    def get_init_trajectory(self):
+
+        u1_traj = self.u1_init_traj
+        u2_traj = self.u2_init_traj
+        p1_traj = self.p1_init_traj
+        p2_traj = self.p2_init_traj
+        v1_traj = self.v1_init_traj
+        v2_traj = self.v2_init_traj
+
+        T = np.linspace(0, self.N*self.dt, self.N)
+        X = np.asarray([p1_traj, p2_traj, v1_traj, v2_traj]).T
+        U = np.asarray([u1_traj, u2_traj]).T
+
+        return T, X, U
+
     def get_forecast(self):
 
         # throws seg fault

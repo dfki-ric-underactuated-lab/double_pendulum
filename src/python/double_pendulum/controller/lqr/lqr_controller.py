@@ -40,8 +40,10 @@ class LQRController(AbstractController):
         y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi
         self.xd = np.asarray(y)
 
-    def set_parameters(self, failure_value=np.nan):
+    def set_parameters(self, failure_value=np.nan,
+                       cost_to_go_cut=15.):
         self.failure_value = failure_value
+        self.cost_to_go_cut = cost_to_go_cut
 
     def set_cost_parameters(self,
                             p1p1_cost=1.,     # 1000., 0.001
@@ -106,7 +108,7 @@ class LQRController(AbstractController):
         # print("fric comp", friction_compensation, end="")
         # u += friction_compensation
 
-        if y.dot(np.asarray(self.S.dot(y))[0]) > 15.0:  # old value:0.1
+        if y.dot(np.asarray(self.S.dot(y))[0]) > self.cost_to_go_cut:  # old value:0.1
             u = [self.failure_value, self.failure_value]
 
         # u = [0., u[0]]

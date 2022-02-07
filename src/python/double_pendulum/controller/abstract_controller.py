@@ -70,3 +70,6 @@ class AbstractController(ABC):
 
     def get_forecast(self):
         return [], [], []
+
+    def get_init_trajectory(self):
+        return [], [], []

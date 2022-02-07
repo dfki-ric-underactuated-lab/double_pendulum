@@ -16,6 +16,9 @@ def plot_timeseries(T, X=None, U=None, energy=None,
                     tau_y_lines=[],
                     energy_x_lines=[],
                     energy_y_lines=[],
+                    T_des=None,
+                    X_des=None,
+                    U_des=None,
                     ):
 
     n_subplots = np.sum([plot_pos, plot_vel, plot_tau, plot_energy])
@@ -39,8 +42,11 @@ def plot_timeseries(T, X=None, U=None, energy=None,
 
     i = 0
     if plot_pos:
-        ax[i].plot(T, np.asarray(X).T[0], label="q1")
-        ax[i].plot(T, np.asarray(X).T[1], label="q2")
+        ax[i].plot(T, np.asarray(X).T[0], label="q1", color="blue")
+        ax[i].plot(T, np.asarray(X).T[1], label="q2", color="green")
+        if not (X_des is None):
+            ax[i].plot(T_des, np.asarray(X_des).T[0], ls="--", label="q1 desired", color="lightblue")
+            ax[i].plot(T_des, np.asarray(X_des).T[1], ls="--", label="q2 desired", color="lightgreen")
         for line in pos_x_lines:
             ax[i].plot([line, line], [np.min(X.T[:2]), np.max(X.T[:2])],
                        ls="--", color="gray")
@@ -51,8 +57,11 @@ def plot_timeseries(T, X=None, U=None, energy=None,
         ax[i].legend(loc="best")
     if plot_vel:
         i += 1
-        ax[i].plot(T, np.asarray(X).T[2], label="q1 dot")
-        ax[i].plot(T, np.asarray(X).T[3], label="q2 dot")
+        ax[i].plot(T, np.asarray(X).T[2], label="q1 dot", color="blue")
+        ax[i].plot(T, np.asarray(X).T[3], label="q2 dot", color="green")
+        if not (X_des is None):
+            ax[i].plot(T_des, np.asarray(X_des).T[2], label="q1 dot desired", color="lightblue")
+            ax[i].plot(T_des, np.asarray(X_des).T[3], label="q2 dot desired", color="lightgreen")
         for line in vel_x_lines:
             ax[i].plot([line, line], [np.min(X.T[2:]), np.max(X.T[2:])],
                        ls="--", color="gray")
@@ -63,8 +72,11 @@ def plot_timeseries(T, X=None, U=None, energy=None,
         ax[i].legend(loc="best")
     if plot_tau:
         i += 1
-        ax[i].plot(T, np.asarray(U).T[0], label="u1")
-        ax[i].plot(T, np.asarray(U).T[1], label="u2")
+        ax[i].plot(T, np.asarray(U).T[0], label="u1", color="blue")
+        ax[i].plot(T, np.asarray(U).T[1], label="u2", color="green")
+        if not (U_des is None):
+            ax[i].plot(T_des, np.asarray(U_des).T[0], label="u1 desired", color="lightblue")
+            ax[i].plot(T_des, np.asarray(U_des).T[1], label="u2 desired", color="lightgreen")
         for line in tau_x_lines:
             ax[i].plot([line, line], [np.min(U), np.max(U)],
                        ls="--", color="gray")
