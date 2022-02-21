@@ -80,12 +80,14 @@ The actuator requires an input voltage of $`\small{24\,V}`$ and consumes up to $
 The reverse current resulting from switching motor speeds from high to low is called backEMF (Electro Magnetic Force). When the motor speed decreases the motor works as a generator, which converts mechanical energy into electrical energy and hence the additional current needs some path to flow. The energy recycled back into the input power supply causes a voltage spike and potential risk. It is necessary to add enough input capacitance to absorb this energy. A sufficiently large input capacitance is important in the desgin of the electric curcuit. It is beneficial to have more bulk capacitance, but the disadvantages are increased cost and physical size.
 
 If the power source were a perfect battery, then energy would flow back into the battery and be recycled. However, in our case the power source is a DC power supply. Especially power supplies with an inverse-polarity protection diode can only source current and cannot sink current, hence the only place the energy can go is into the bulk capacitor. The amount of energy stored in the bulk capacitor can be calculated with
+
 $`\small{E = \frac{1}{2} \cdot C \cdot (V_{max}^2 - V_{nom}^2)}`$,
 
 
 where **_C_** is the capacitance and **_V_** is the voltage. In the case of a Simple Pendulum max. backEMF can be estimated from the kinetic energy of the pendulum 
 
 $`\small{E_{k_{in}} = \frac{1}{2}  m \cdot v^2}`$,
+
 where **_m_** is the payload attached to the rod and **_v_** is the velocity of the payload. The voltage across the capacitor increases as energy flows into it, so the capacitor should be sized accordingly to the specific application requirements. Nevertheless tuning a capacitor to the acceptable min. capacity is tricky, because it depends on many factors including:
 - External load
 - Capacitance of the power supply to source current
