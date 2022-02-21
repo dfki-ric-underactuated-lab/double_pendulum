@@ -11,6 +11,11 @@
 ## Introduction #
 This project offers an open-source and low-cost kit to test control algorithms for underactuated robots with strongly non-linear dynamics. It implements a **double pendulum** platform built using two quasi-direct drive actuators (QDDs). Due to low friction and high mechanical transparency offered by QDDs, one of the actuators can be kept passive and be used as an encoder. When the shoulder motor is passive and elbow motor is active, the system serves as an **acrobot** and when the shoulder is active and elbow is passive, the system serves as a **pendubot** setup. This project describes the _offline_ and _online_ control methods which can be studied using this dual purpose kit, lists its components, discusses best practices for implementation, presents results from experiments with the simulator and the real system. This repository describes the hardware (CAD, Bill Of Materials (BOM) etc.) required to build the physical system and provides the software (URDF models, simulation and controller) to control it.
 
+
+## Documentation
+
+The [hardware setup](hardware/testbench_description.md) and the [motor configuration](hardware/motor_configuration.md) are described in their respective readme files.
+The dynamics of the pendulum are explained [here](docs/sp_equations.md).
 ## Authors #
 
 <img align="right" img width="350" src="hardware/acrobot_swingup_gravity.gif" />
