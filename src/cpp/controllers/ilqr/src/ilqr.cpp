@@ -757,13 +757,13 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
                 u_traj[i] = u_traj_new[i];
             }
             x_traj[N-1] = x_traj_new[N-1];
-            //regu *= 0.7;
-            regu *= 0.9;
+            regu *= 0.7;
+            //regu *= 0.9;
         }
         else{
             //no improvement
-            if (verbose > 2){
-                printf("no improvement");
+            if (verbose > 1){
+                printf("noimprovement");
             }
             //printf("n ");
             if (regu >= max_regu){
@@ -772,8 +772,8 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
                 }
                 break;
             }
-            //regu *= 2.0;
-            regu *= 1.1;
+            regu *= 2.0;
+            //regu *= 1.1;
         }
         if (regu < min_regu){
             regu = min_regu;

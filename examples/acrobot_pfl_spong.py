@@ -14,7 +14,8 @@ damping = [0.0, 0.0]
 gravity = 9.8
 com = [0.5, 0.5]
 coulomb_fric = [0.0, 0.0]
-inertia = [0.2, 1.0]
+# inertia = [0.2, 1.0]
+inertia = [0.45, 1.25]
 torque_limit = [0.0, 20.0]
 
 double_pendulum = SymbolicDoublePendulum(mass=mass,
@@ -41,7 +42,7 @@ sim = Simulator(plant=double_pendulum)
 controller.set_goal([np.pi, 0, 0, 0])
 
 
-par = [9.0, 3.0, 1.0]  # undamped
+par = [9.0, 6.0, 1.0]  # undamped
 print(par)
 
 controller.set_cost_parameters(kpos=par[0],
@@ -49,7 +50,7 @@ controller.set_cost_parameters(kpos=par[0],
                                ken=par[2])
 
 dt = 0.01
-t_final = 6.0
+t_final = 8.0
 
 print("dt: ", dt)
 print("t final: ", t_final)

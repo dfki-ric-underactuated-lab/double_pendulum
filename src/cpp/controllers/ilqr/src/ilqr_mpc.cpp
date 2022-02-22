@@ -327,9 +327,9 @@ void ilqr_mpc::shift_trajs(int s){
 //Eigen::Vector<double, ilqr::n_u> ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
 double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
 
-    Eigen::Vector<double, ilqr::n_x> y = x;
-    y(0) = std::fmod(y(0), 2.*M_PI);
-    y(1) = std::fmod(y(1)+M_PI, 2.*M_PI) - M_PI;
+    //Eigen::Vector<double, ilqr::n_x> y = x;
+    //y(0) = std::fmod(y(0), 2.*M_PI);
+    //y(1) = std::fmod(y(1)+M_PI, 2.*M_PI) - M_PI;
     
     //std::cout << "MPC get output: integrator_ind " << integrator_ind << std::endl;
     //std::cout << "MPC get output: max_iter " << max_iter << std::endl;
@@ -349,10 +349,19 @@ double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
     //                               fCp1, fCp2,
     //                               fCv2, fCv2,
     //                               fCen);
-    ilqr_calc->set_start(y);
+
+    // set the running goal to N steps in the future on the precomputed traj
+    Eigen::Vector<double, ilqr::n_x> x0, running_goal;
+    int N_hor = std::min(counter+N, N_init-1);
+    running_goal(0) = x_init_traj[N_hor](0);
+    running_goal(1) = x_init_traj[N_hor](1);
+    running_goal(2) = x_init_traj[N_hor](2);
+    running_goal(3) = x_init_traj[N_hor](3);
+
+    ilqr_calc->set_start(x);
     ilqr_calc->set_u_init_traj(u_traj);
     //ilqr_calc->set_x_init_traj(x_traj);
-    ilqr_calc->set_goal(goal);
+    ilqr_calc->set_goal(running_goal);
     ilqr_calc->run_ilqr(max_iter, break_cost_redu, regu_init, max_regu, min_regu);
 
     //std::string filename = "data/mpc_traj_files/trajectory_"+ std::to_string(counter) + ".csv";

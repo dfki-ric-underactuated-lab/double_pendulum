@@ -1,8 +1,9 @@
-import sys
+# import sys
 import numpy as np
 
 # sys.path.append("../../../../cpp/python/")
-sys.path.append("/home/vhuser/Git/underactuated-robotics/caprr-release-version/src/cpp/python")
+# sys.path.append("/home/vhuser/Git/underactuated-robotics/caprr-release-version/src/cpp/python")
+# sys.path.append("/home/felix/Work/DFKI/Development/underactuated_lab/double_pendulum/caprr-release-version/src/cpp/python")
 from cppilqr import cppilqr
 
 
@@ -71,21 +72,35 @@ class ilqr_calculator():
         self.fCv = fCv
         self.fCen = fCen
 
+    # def set_cost_parameters_(self,
+    #                          pars=[0.005,  # sCu
+    #                                0., 0.,        # sCp
+    #                                0., 0.,        # sCv
+    #                                0.,            # sCen
+    #                                1000., 1000.,  # fCp
+    #                                10., 10.,      # fCv
+    #                                0.]):          # fCen
+    #     self.sCu = [pars[0], pars[0]]
+    #     self.sCp = [pars[1], pars[2]]
+    #     self.sCv = [pars[3], pars[4]]
+    #     self.sCen = pars[5]
+    #     self.fCp = [pars[6], pars[7]]
+    #     self.fCv = [pars[8], pars[9]]
+    #     self.fCen = pars[10]
+
     def set_cost_parameters_(self,
-                             pars=[0.005, 0.005,  # sCu
+                             pars=[0.005,  # sCu
                                    0., 0.,        # sCp
                                    0., 0.,        # sCv
-                                   0.,            # sCen
                                    1000., 1000.,  # fCp
-                                   10., 10.,      # fCv
-                                   0.]):          # fCen
-        self.sCu = [pars[0], pars[1]]
-        self.sCp = [pars[2], pars[3]]
-        self.sCv = [pars[4], pars[5]]
-        self.sCen = pars[6]
-        self.fCp = [pars[7], pars[8]]
-        self.fCv = [pars[9], pars[10]]
-        self.fCen = pars[11]
+                                   10., 10.]):    # fCv
+        self.sCu = [pars[0], pars[0]]
+        self.sCp = [pars[1], pars[2]]
+        self.sCv = [pars[3], pars[4]]
+        self.sCen = 0.0
+        self.fCp = [pars[5], pars[6]]
+        self.fCv = [pars[7], pars[8]]
+        self.fCen = 0.0
 
     # def set_cost_parameters_(self,
     #                          pars=[0.005,         # sCu

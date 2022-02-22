@@ -45,6 +45,9 @@ class Simulator:
     def step(self, tau, dt, integrator="runge_kutta"):
         tau = np.clip(tau, -np.asarray(self.plant.torque_limit),
                       np.asarray(self.plant.torque_limit))
+
+        self.record_data(self.t, self.x.copy(), tau)
+
         if integrator == "runge_kutta":
             self.x += dt * self.runge_integrator(self.t, self.x, dt, tau)
         elif integrator == "euler":
@@ -53,7 +56,7 @@ class Simulator:
             raise NotImplementedError(
                    f'Sorry, the integrator {integrator} is not implemented.')
         self.t += dt
-        self.record_data(self.t, self.x.copy(), tau)
+        # self.record_data(self.t, self.x.copy(), tau)
 
     def simulate(self, t0, x0, tf, dt, controller=None,
                  integrator="runge_kutta"):

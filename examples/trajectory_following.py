@@ -11,13 +11,13 @@ mass = [0.608, 0.630]
 length = [0.3, 0.2]
 com = [0.275, 0.166]
 damping = [0.081, 0.0]
-#cfric = [0.093, 0.186]
+# cfric = [0.093, 0.186]
 cfric = [0., 0.]
 gravity = 9.81
-inertia = [0.05472, 0.2522]
+inertia = [0.05472, 0.02522]
 torque_limit = [0.0, 6.0]
 
-csv_path = "data/ilqr/trajectory.csv"
+csv_path = "data/acrobot/ilqr/trajectory.csv"
 
 dt = 0.005
 t_final = 5.0
@@ -40,7 +40,8 @@ controller.init()
 
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=[0.0, 0.0, 0.0, 0.0],
                                    tf=t_final, dt=dt, controller=controller,
-                                   integrator="runge_kutta", phase_plot=False)
+                                   integrator="runge_kutta", phase_plot=False,
+                                   plot_forecast=True)
 
 plot_timeseries(T, X, U, None,
                 plot_energy=False,

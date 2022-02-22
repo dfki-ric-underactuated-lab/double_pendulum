@@ -25,6 +25,11 @@ setup(
 
         # optimal control
         # 'drake',
+        # 'pyyaml',
+        # 'umsgpack',
+        # 'zmq',
+        # 'IPython',
+        # 'tornado',
         # 'crocoddyl',
 
         # # reinforcement learning

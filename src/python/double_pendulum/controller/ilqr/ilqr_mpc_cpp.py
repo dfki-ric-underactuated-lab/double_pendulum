@@ -1,9 +1,10 @@
-import sys
+# import sys
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
 # sys.path.append("../../../../cpp/python/")
-sys.path.append("/home/vhuser/Git/underactuated-robotics/caprr-release-version/src/cpp/python")
+# sys.path.append("/home/vhuser/Git/underactuated-robotics/caprr-release-version/src/cpp/python")
+# sys.path.append("/home/felix/Work/DFKI/Development/underactuated_lab/double_pendulum/caprr-release-version/src/cpp/python")
 import cppilqr
 
 
@@ -45,13 +46,6 @@ class ILQRMPCCPPController(AbstractController):
                        max_regu=10000.,
                        min_regu=0.01,
                        break_cost_redu=1e-6,
-                       sCu=[0.005, 0.005],
-                       sCp=[0., 0.],
-                       sCv=[0., 0.],
-                       sCen=0.,
-                       fCp=[1000., 1000.],
-                       fCv=[10., 10.],
-                       fCen=0.,
                        integrator="runge_kutta"):
         self.N = N
         self.dt = dt
@@ -61,6 +55,19 @@ class ILQRMPCCPPController(AbstractController):
         self.min_regu = min_regu
         self.break_cost_redu = break_cost_redu
 
+        if integrator == "euler":
+            self.integrator_int = 0
+        else:
+            self.integrator_int = 1
+
+    def set_cost_parameters(self,
+                            sCu=[0.005, 0.005],
+                            sCp=[0., 0.],
+                            sCv=[0., 0.],
+                            sCen=0.,
+                            fCp=[1000., 1000.],
+                            fCv=[10., 10.],
+                            fCen=0.):
         self.sCu = sCu
         self.sCp = sCp
         self.sCv = sCv
@@ -69,10 +76,19 @@ class ILQRMPCCPPController(AbstractController):
         self.fCv = fCv
         self.fCen = fCen
 
-        if integrator == "euler":
-            self.integrator_int = 0
-        else:
-            self.integrator_int = 1
+    def set_cost_parameters_(self,
+                             pars=[0.005,
+                                   0., 0.,
+                                   0., 0.,
+                                   1000., 1000.,
+                                   10., 10.]):
+        self.sCu = [pars[0], pars[0]]
+        self.sCp = [pars[1], pars[2]]
+        self.sCv = [pars[3], pars[4]]
+        self.sCen = 0.0
+        self.fCp = [pars[5], pars[6]]
+        self.fCv = [pars[7], pars[8]]
+        self.fCen = 0.0
 
     def compute_init_traj(self,
                           N=1000,
@@ -102,8 +118,6 @@ class ILQRMPCCPPController(AbstractController):
         il.set_parameters(integrator_int, dt)
         il.set_start(self.start[0], self.start[1],
                      self.start[2], self.start[3])
-        il.set_goal(self.goal[0], self.goal[1],
-                    self.goal[2], self.goal[3])
         il.set_model_parameters(
             self.mass[0], self.mass[1],
             self.length[0], self.length[1],
@@ -120,6 +134,8 @@ class ILQRMPCCPPController(AbstractController):
                                fCp[0], fCp[1],
                                fCv[0], fCv[1],
                                fCen)
+        il.set_goal(self.goal[0], self.goal[1],
+                    self.goal[2], self.goal[3])
         il.run_ilqr(max_iter, break_cost_redu, regu_init,
                     max_regu, min_regu)
 
@@ -129,6 +145,19 @@ class ILQRMPCCPPController(AbstractController):
         self.p2_init_traj = il.get_p2_traj()
         self.v1_init_traj = il.get_v1_traj()
         self.v2_init_traj = il.get_v2_traj()
+
+    def load_init_traj(self,
+                       csv_path):
+        trajectory = np.loadtxt(csv_path, skiprows=1, delimiter=",")
+
+        self.N_init = np.shape(trajectory)[0]
+
+        self.u1_init_traj = np.ascontiguousarray(trajectory.T[5])
+        self.u2_init_traj = np.ascontiguousarray(trajectory.T[6])
+        self.p1_init_traj = np.ascontiguousarray(trajectory.T[1])
+        self.p2_init_traj = np.ascontiguousarray(trajectory.T[2])
+        self.v1_init_traj = np.ascontiguousarray(trajectory.T[3])
+        self.v2_init_traj = np.ascontiguousarray(trajectory.T[4])
 
     def init(self):
         self.ilmpc = cppilqr.cppilqrmpc(self.N, self.N_init)

@@ -9,7 +9,7 @@ from double_pendulum.utils.plotting import plot_timeseries
 
 
 robot = "acrobot"
-csv_path = "data/dircol/acrobot_swingup_1000Hz.csv"
+csv_path = "data/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
 urdf_path = "../data/urdfs/acrobot.urdf"
 
 # model parameters
@@ -20,7 +20,7 @@ damping = [0.081, 0.0]
 # cfric = [0.093, 0.186]
 cfric = [0., 0.]
 gravity = 9.81
-inertia = [0.05472, 0.2522]
+inertia = [0.05472, 0.02522]
 torque_limit = [0.0, 6.0]
 
 # simulation parameters
@@ -43,7 +43,7 @@ x0 = [0.0, 0.0, 0.0, 0.0]
 
 # controller parameters
 Q = np.diag([30., 20., 8, 8])
-R = 16*np.eye(1)
+R = 1*np.eye(1)
 Qf = np.diag([11.67, 3.87, 0.1, 0.11])
 Rf = 0.18*np.eye(1)
 
@@ -61,7 +61,7 @@ sim = Simulator(plant=plant)
 controller = TVLQRController(csv_path=csv_path,
                              urdf_path=urdf_path,
                              dt=dt,
-                             max_t = t_final,
+                             max_t=t_final,
                              torque_limit=torque_limit,
                              robot=robot)
 

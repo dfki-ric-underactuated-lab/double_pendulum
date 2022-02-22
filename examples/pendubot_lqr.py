@@ -13,8 +13,8 @@ damping = [0.081, 0.0]
 #cfric = [0.093, 0.186]
 cfric = [0., 0.]
 gravity = 9.81
-inertia = [0.05472, 0.2522]
-torque_limit = [5.0, 0.0]
+inertia = [0.05472, 0.02522]
+torque_limit = [4.0, 0.0]
 
 plant = SymbolicDoublePendulum(mass=mass,
                                length=length,
@@ -28,7 +28,7 @@ plant = SymbolicDoublePendulum(mass=mass,
 sim = Simulator(plant=plant)
 
 dt = 0.01
-t_final = 5.0
+t_final = 2.0
 
 controller = LQRController(mass=mass,
                            length=length,
@@ -41,16 +41,18 @@ controller = LQRController(mass=mass,
 
 controller.set_goal([np.pi, 0., 0., 0.])
 # [0.01251931 6.51187283 6.87772744 9.35785251 0.02354949]
-controller.set_cost_parameters(p1p1_cost=0.01251931,
-                               p2p2_cost=6.87772744,
-                               v1v1_cost=6.51187283,
-                               v2v2_cost=9.35785251,
+# [8.74006242e+01 1.12451099e-02 9.59966065e+01 8.99725246e-01 2.37517689e-01]
+# [1.16402700e+01 7.95782007e+01 7.29021272e-02 3.02202319e-04 1.29619149e-01]
+controller.set_cost_parameters(p1p1_cost=11.64,
+                               p2p2_cost=79.58,
+                               v1v1_cost=0.073,
+                               v2v2_cost=0.0003,
                                p1v1_cost=0.,
                                p1v2_cost=0.,
                                p2v1_cost=0.,
                                p2v2_cost=0.,
-                               u1u1_cost=1.02354949,
-                               u2u2_cost=1.02354949,
+                               u1u1_cost=0.13,
+                               u2u2_cost=0.13,
                                u1u2_cost=0.)
 controller.set_parameters(failure_value=0.0)
 controller.init()
@@ -61,8 +63,8 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=[2.9, 0.25, 0.0, 0.0],  # 2.83, 0.
 
 plot_timeseries(T, X, U, None,
                 plot_energy=False,
-                pos_y_lines=[0.0, np.pi])#,
-                #tau_y_lines=[-torque_limit[1], torque_limit[1]])
+                pos_y_lines=[0.0, np.pi],
+                tau_y_lines=[-torque_limit[1], torque_limit[1]])
 
 # fig, ax = plt.subplots(3, 1, figsize=(18, 6), sharex="all")
 # 

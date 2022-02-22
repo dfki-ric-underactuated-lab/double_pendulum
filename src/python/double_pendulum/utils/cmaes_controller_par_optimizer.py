@@ -133,7 +133,13 @@ class traj_opt_loss():
         return loss
 
 
-def cma_par_optimization(loss_func, init_pars, bounds, save_dir="outcmaes/"):
+def cma_par_optimization(loss_func, init_pars, bounds,
+                         save_dir="outcmaes/",
+                         popsize_factor=3,
+                         maxfevals=10000,
+                         tolfun=1e-11,
+                         tolx=1e-11,
+                         tolstagnation=100):
     if save_dir[-1] != "/":
         sd = save_dir + "/"
     else:
@@ -142,8 +148,12 @@ def cma_par_optimization(loss_func, init_pars, bounds, save_dir="outcmaes/"):
                                   0.4,
                                   {'bounds': bounds,
                                    'verbose': -3,
-                                   'popsize_factor': 3,
-                                   'verb_filenameprefix': sd})
+                                   'popsize_factor': popsize_factor,
+                                   'verb_filenameprefix': sd,
+                                   'maxfevals': maxfevals,
+                                   'tolfun': tolfun,
+                                   'tolx': tolx,
+                                   'tolstagnation': tolstagnation})
     es.optimize(loss_func)
     return es.result.xbest
 

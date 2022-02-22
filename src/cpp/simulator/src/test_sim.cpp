@@ -15,25 +15,44 @@ int main(int argc, char *argv[], char *envp[]){
     if (argc >= 1){csv_file = std::string(argv[1]);}
 
 
+    ////pendulum parameters
+    //double mass1 = 0.57288;
+    //double mass2 = 0.57288;
+    //double length1 = 0.5;
+    //double length2 = 0.5;
+    //double com1 = 0.5;
+    //double com2 = 0.5;
+    //double inertia1 = mass1*com1*com1;
+    //double inertia2 = mass2*com2*com2;
+    //double damping1 = 0.15;
+    //double damping2 = 0.15;
+    //double coulomb_friction1 = 0.0;
+    //double coulomb_friction2 = 0.0;
+    //double gravity = 9.81;
+    //double torque_limit1 = 10.0;
+    //double torque_limit2 = 10.0;
+
+    //double dt = 0.005;
+    //std::string integrator = "runge_kutta";
+
     //pendulum parameters
-    double mass1 = 0.57288;
-    double mass2 = 0.57288;
-    double length1 = 0.5;
-    double length2 = 0.5;
-    double com1 = 0.5;
-    double com2 = 0.5;
-    double inertia1 = mass1*com1*com1;
-    double inertia2 = mass2*com2*com2;
-    double damping1 = 0.15;
-    double damping2 = 0.15;
+    double mass1 = 0.608;
+    double mass2 = 0.630;
+    double length1 = 0.3;
+    double length2 = 0.2;
+    double com1 = 0.275;
+    double com2 = 0.166;
+    double inertia1 = 0.05472;
+    double inertia2 = 0.02522;
+    double damping1 = 0.0;
+    double damping2 = 0.0;
     double coulomb_friction1 = 0.0;
     double coulomb_friction2 = 0.0;
     double gravity = 9.81;
-    double torque_limit1 = 10.0;
-    double torque_limit2 = 10.0;
+    double torque_limit1 = 0.0;
+    double torque_limit2 = 3.0;
 
-
-    double dt = 0.005;
+    double dt = 0.01;
     std::string integrator = "runge_kutta";
 
     DPPlant plant = DPPlant(true, true);
@@ -54,7 +73,7 @@ int main(int argc, char *argv[], char *envp[]){
     std::cout << "N " << N << std::endl;
     std::cout << "len " << trajectory[0].size() << std::endl;
 
-    //double pos_diff;
+    double diff, diff_tmp;
     Eigen::Vector<double, 4> s;
     for (int i=0; i<4; i++){
         s(i) = trajectory[0][1+i];
@@ -69,18 +88,27 @@ int main(int argc, char *argv[], char *envp[]){
     Eigen::Vector<double, 2> u = {0., 0.};
     //sim.set_state(trajectory[0][0], trajectory[0][1], trajectory[0][2]);
     sim.set_state(0., s);
-    for (int i=0; i<N; i++){
+    for (int i=0; i<N-1; i++){
         for (int j=0; j<2; j++){
             u(j) = trajectory[i][5+j];
         }
         sim.step(u, dt, integrator);
         s = sim.get_state();
-        std::cout << "State (" << s(0) << ", " << s(1) << ", " << s(2) << ", " << s(3) << ")";
-        std::cout << "Action (" << u(0) << ", " << u(1) << ")" << std::endl;
-        //pos_diff = sim.get_position() - trajectory[i+1][1];
-        //if (pos_diff > 0.001){
-        //    std::cout << trajectory[i][0] << ", " << sim.get_position() << ", " << trajectory[i+1][1] << ", " << pos_diff << std::endl;
-        //}
+        std::cout << "State (" << s(0) << ", " << s(1) << ", " << s(2) << ", " << s(3) << ")  ";
+        //std::cout << "State (" << trajectory[i+1][1] << ", " << trajectory[i+1][2] << ", " << trajectory[i+1][3] << ", " << trajectory[i+1][4] << ")  ";
+        std::cout << "Action (" << u(0) << ", " << u(1) << ")";
+        diff = 9999.;
+        for (int j=0; j<4; j++){
+            diff_tmp = pow(pow(s(j) - trajectory[i+1][j+1], 2.0), 0.5);
+            if(diff > diff_tmp){
+                diff = diff_tmp;
+            }
+        }
+        if (diff > 0.001){
+            //std::cout << trajectory[i][0] << ", " << sim.get_position() << ", " << trajectory[i+1][1] << ", " << pos_diff << std::endl;
+            std::cout << "State (" << trajectory[i+1][1] << ", " << trajectory[i+1][2] << ", " << trajectory[i+1][3] << ", " << trajectory[i+1][4] << ")  ";
+            std::cout << "  <------";
+        }
+        std::cout << std::endl;
     }
-
 }

@@ -25,7 +25,7 @@ damping = [0.081, 0.0]
 # cfric = [0.093, 0.186]
 cfric = [0., 0.]
 gravity = 9.81
-inertia = [0.05472, 0.2522]
+inertia = [0.05472, 0.02522]
 
 if robot == "acrobot":
     torque_limit = [0.0, 4.0]

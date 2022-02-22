@@ -1,10 +1,10 @@
 PYTHON_ROOT = "src/python"
 CPP_ROOT = "src/cpp/python"
 
-default: dp_python dp_cpp
+default: python cpp
 
-dp_python:
+python:
 	make -C $(PYTHON_ROOT)
 
-dp_cpp:
+cpp:
 	make -C $(CPP_ROOT)

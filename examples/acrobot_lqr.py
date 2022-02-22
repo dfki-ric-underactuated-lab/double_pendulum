@@ -14,7 +14,7 @@ damping = [0.081, 0.0]
 # cfric = [0.093, 0.186]
 cfric = [0., 0.]
 gravity = 9.81
-inertia = [0.05472, 0.2522]
+inertia = [0.05472, 0.02522]
 torque_limit = [0.0, 4.0]
 
 # mjbots
@@ -54,21 +54,23 @@ controller = LQRController(mass=mass,
 
 controller.set_goal([np.pi, 0., 0., 0.])
 # 11.67044417  0.10076462  3.86730188  0.11016735  0.18307841
-controller.set_cost_parameters(p1p1_cost=11.67,
-                               p2p2_cost=3.87,
-                               v1v1_cost=0.10,
-                               v2v2_cost=0.11,
+# [6.60845661 0.0203263  1.59384209 0.11347305 0.08903846]
+# 1.649609700742603735e+01 9.094310297259731612e+01 7.128663050519863653e-02 1.116726623434960083e-02 3.647472178659907360e+00
+controller.set_cost_parameters(p1p1_cost=16.50,
+                               p2p2_cost=90.94,
+                               v1v1_cost=0.07,
+                               v2v2_cost=0.01,
                                p1v1_cost=0.,
                                p1v2_cost=0.,
                                p2v1_cost=0.,
                                p2v2_cost=0.,
-                               u1u1_cost=0.18,
-                               u2u2_cost=0.18,
+                               u1u1_cost=3.65,
+                               u2u2_cost=3.65,
                                u1u2_cost=0.)
 controller.set_parameters(failure_value=0.0)
 controller.init()
 
-T, X, U = sim.simulate_and_animate(t0=0.0, x0=[2.32, 1.87, 0.0, 0.0],
+T, X, U = sim.simulate_and_animate(t0=0.0, x0=[3.0, 0.55, 0.0, 0.0],
                                    tf=t_final, dt=dt, controller=controller,
                                    integrator="runge_kutta", phase_plot=False,
                                    save_video=False,

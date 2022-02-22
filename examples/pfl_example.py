@@ -1,27 +1,34 @@
+import os
 import numpy as np
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.utils.plotting import plot_timeseries
+from double_pendulum.utils.saving import save_trajectory
 from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl import (SymbolicPFLController,
                                                                                     SymbolicPFLAndLQRController)
 
 
-robot = "pendubot"
-pfl_method = "noncollocated"
+robot = "acrobot"
+pfl_method = "collocated"
 with_cfric = False
-with_lqr = True
+with_lqr = False
 
 x0 = [0.1, 0.0, 0.0, 0.0]
 dt = 0.01
-t_final = 30.0
+t_final = 3.2
 
 if robot == "acrobot":
     if pfl_method == "collocated":
         if with_cfric:
             par = [9.94271982, 1.56306923, 3.27636175]  # ok
         else:
-            par = [9.94246152, 9.84124115, 9.81120166]  # good
+            # par = [9.94246152, 9.84124115, 9.81120166]  # good
+            # par = [8.62246575,  5.69727126, 13.92682243]
+            # par = [9.94341926, 5.03014971, 9.99622511]
+            # par = [15.0, 8.0, 9.0]
+            par = [9.98906556, 5.40486824, 7.28776292]  # best
+            # par = [81.63674422, 17.77758626, 49.83576241] # meh
     elif pfl_method == "noncollocated":
         par = [9.19534629, 2.24529733, 5.90567362]  # good
     else:
@@ -48,13 +55,14 @@ else:
 mass = [0.608, 0.630]
 length = [0.3, 0.2]
 com = [0.275, 0.166]
-damping = [0.081, 0.0]
+#damping = [0.081, 0.0]
+damping = [0.0, 0.0]
 if with_cfric:
     cfric = [0.093, 0.186]
 else:
     cfric = [0.0, 0.0]
 gravity = 9.81
-inertia = [0.05472, 0.2522]
+inertia = [0.05472, 0.02522]
 if robot == "acrobot":
     torque_limit = [0.0, 3.0]
 if robot == "pendubot":
@@ -152,6 +160,11 @@ plot_timeseries(T, X, U, energy,
                 energy_y_lines=[des_energy])
 
 # Save Trajectory to a csv file to be sent to the motor.
+filename = os.path.join("data", robot, "pfl", pfl_method, "trajectory.csv")
+save_trajectory(filename=filename,
+                T=T,
+                X=X,
+                U=U)
 
 # csv_data = np.vstack((T, np.asarray(X).T[0], np.asarray(X).T[1], U)).T
 # np.savetxt("traj_opt_traj.csv",
