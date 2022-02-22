@@ -48,14 +48,15 @@ The double pendulum has two fixpoints, one of them being stable (hanging down co
 * Potential Energy (U) 
 ```math
 \small{\begin{align*}
-       U = -m_1 g l_{c1} c_1 - m_2 g (l_1 c_1 +
+       U_1 = -m_1 g l_{c1} c_1 
+       \\U_2 = - m_2 g (l_1 c_1 +
       l_{c2} c_{1+2})
       \end{align*}}
 ```
 * Total Energy (E) 
 ```math 
 \small{\begin{align*}
-E = K_1 + K_2 + U
+E = K_1 + K_2 + U_1 + U_2
       \end{align*}}
 ```
 
