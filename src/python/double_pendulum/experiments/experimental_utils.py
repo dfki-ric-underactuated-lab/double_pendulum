@@ -342,12 +342,22 @@ def save_data(save_dir,
     print("CSV file saved\n")
 
 
-def setZeroPosition(motor, initPos):
-    pos = initPos
-    while abs(np.rad2deg(pos)) > 0.5:
-        pos, vel, curr = motor.set_zero_position()
-        print("Position: {}, Velocity: {}, Torque: {}".format(
-            np.rad2deg(pos), np.rad2deg(vel), curr))
+# def setZeroPosition(motor, initPos):
+#     pos = initPos
+#     while abs(np.rad2deg(pos)) > 0.5:
+#         pos, vel, curr = motor.set_zero_position()
+#         print("Position: {}, Velocity: {}, Torque: {}".format(
+#             np.rad2deg(pos), np.rad2deg(vel), curr))
+
+def setZeroPosition(motor, initPos, initVel, initTau):
+    pos = np.copy(initPos)
+    vel = np.copy(initVel)
+    tau = np.copy(initTau)
+    while (abs(np.rad2deg(pos)) > 0.5 or abs(np.rad2deg(vel)) > 0.5 or abs(tau) > 0.1):
+        motor.set_zero_position()
+        pos, vel, tau = motor.send_rad_command(0.0, 0.0, 0.0, 0.0, 0.0)
+        print("Position: {}, Velocity: {}, Torque: {}".format(np.rad2deg(pos), np.rad2deg(vel),
+                                                                tau))
 
 def rad2rev(angle_in_radians):
     return angle_in_radians * (1 / (2 * np.pi))

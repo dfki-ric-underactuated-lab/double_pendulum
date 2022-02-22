@@ -105,10 +105,10 @@ def run_experiment(controller,
         elbow_pos, elbow_vel, elbow_torque))
 
     print("Setting Shoulder Motor to Zero Position...")
-    setZeroPosition(motor_shoulder_controller, shoulder_pos)
+    setZeroPosition(motor_shoulder_controller, shoulder_pos, shoulder_vel, shoulder_torque)
 
     print("Setting Elbow Motor to Zero Position...")
-    setZeroPosition(motor_elbow_controller, elbow_pos)
+    setZeroPosition(motor_elbow_controller, elbow_pos, elbow_vel, elbow_torque)
 
     if input('Do you want to proceed for real time execution?(y) ') == 'y':
 
@@ -116,13 +116,23 @@ def run_experiment(controller,
         index = 0
         t = 0.
 
+        (shoulder_pos,
+         shoulder_vel,
+         shoulder_tau) = motor_shoulder_controller.send_rad_command(
+            0.0, 0.0, 0.0, 0.0, 0.0)
+
+        (elbow_pos,
+         elbow_vel,
+         elbow_tau) = motor_elbow_controller.send_rad_command(
+            0.0, 0.0, 0.0, 0.0, 0.0)
+
         meas_time[0] = t
-        shoulder_meas_pos[0] = 0.0
-        shoulder_meas_vel[0] = 0.0
-        shoulder_filtered_meas_vel[0] = 0.0
-        elbow_meas_pos[0] = 0.0
-        elbow_meas_vel[0] = 0.0
-        elbow_filtered_meas_vel[0] = 0.0
+        shoulder_meas_pos[0] = shoulder_pos
+        shoulder_meas_vel[0] = shoulder_vel
+        shoulder_filtered_meas_vel[0] = shoulder_vel
+        elbow_meas_pos[0] = elbow_pos
+        elbow_meas_vel[0] = elbow_vel
+        elbow_filtered_meas_vel[0] = elbow_vel
 
         print("Starting Experiment...")
         # start_time = time.time()
@@ -167,10 +177,9 @@ def run_experiment(controller,
                 # get control command from controller
                 tau_cmd = controller.get_control_output(x, t)
 
-
-                # safety command
-                tau_cmd[0] = np.clip(tau_cmd[0], -tau_limit[0], tau_limit[0])
-                tau_cmd[1] = np.clip(tau_cmd[1], -tau_limit[1], tau_limit[1])
+                #tau_cmd = [0.0, 0.0]
+                #tau_cmd[0] = 0.0
+                #tau_cmd[1] = 0.0
 
                 shoulder_tau_controller[index] = tau_cmd[0]
                 elbow_tau_controller[index] = tau_cmd[1]
@@ -181,16 +190,20 @@ def run_experiment(controller,
                 tau_cmd[0] += tau_fric[0]
                 tau_cmd[1] += tau_fric[1]
 
+                # safety command
+                tau_cmd[0] = np.clip(tau_cmd[0], -tau_limit[0], tau_limit[0])
+                tau_cmd[1] = np.clip(tau_cmd[1], -tau_limit[1], tau_limit[1])
+
                 # Send tau command to motors
                 (shoulder_pos,
                  shoulder_vel,
                  shoulder_tau) = motor_shoulder_controller.send_rad_command(
-                    0.0, 0.0, 0.0, 0.0, tau_cmd[0])
+                    0.0, 0.0, 0.0, 0.0, -tau_cmd[0])
 
                 (elbow_pos,
                  elbow_vel,
                  elbow_tau) = motor_elbow_controller.send_rad_command(
-                    0.0, 0.0, 0.0, 0.0, tau_cmd[1])
+                    0.0, 0.0, 0.0, 0.0, -tau_cmd[1])
 
                 # friction compensation
                 if friction_compensation:
@@ -202,14 +215,10 @@ def run_experiment(controller,
                          elbow_filtered_vel])
                     tau_fric = np.dot(friction_regressor_mat,
                                       np.array(friction_terms))
-                    if np.abs(shoulder_filtered_vel) > 0.25:
-                        tau_fric[0] = np.clip(tau_fric[0], -1.0, 1.0)
-                    else:
-                        tau_fric[0] = 0.0
-                    if np.abs(elbow_filtered_vel) > 0.25:
-                        tau_fric[1] = np.clip(tau_fric[1], -1.0, 1.0)
-                    else:
-                        tau_fric[1] = 0.0
+                    # if np.abs(shoulder_filtered_vel) < 0.25:
+                    #     tau_fric[0] = 0.0
+                    # if np.abs(elbow_filtered_vel) < 0.25:
+                    #     tau_fric[1] = 0.0
 
                 # store the measured sensor data of
                 # position, velocity and torque in each time step
@@ -293,29 +302,6 @@ def run_experiment(controller,
                       elbow_meas_vel[:index-1],
                       elbow_meas_tau[:index-1],
                       meas_time[:index-1])
-            plot_figure(save_dir=save_dir_time,
-                        date=date,
-                        index=index-1,
-                        meas_time=meas_time,
-                        shoulder_meas_pos=shoulder_meas_pos,
-                        shoulder_meas_vel=shoulder_meas_vel,
-                        shoulder_meas_tau=shoulder_meas_tau,
-                        elbow_meas_pos=elbow_meas_pos,
-                        elbow_meas_vel=elbow_meas_vel,
-                        elbow_meas_tau=elbow_meas_tau,
-                        shoulder_tau_controller=shoulder_tau_controller,
-                        elbow_tau_controller=elbow_tau_controller,
-                        shoulder_filtered_vel=shoulder_filtered_meas_vel,
-                        elbow_filtered_vel=elbow_filtered_meas_vel,
-                        shoulder_des_pos=shoulder_des_pos,
-                        shoulder_des_vel=shoulder_des_vel,
-                        shoulder_des_tau=shoulder_des_tau,
-                        elbow_des_pos=elbow_des_pos,
-                        elbow_des_vel=elbow_des_vel,
-                        elbow_des_tau=elbow_des_tau,
-                        shoulder_fric_tau=shoulder_fric_tau,
-                        elbow_fric_tau=elbow_fric_tau,
-                        error=None)
             plot_figure_single(save_dir=save_dir_time,
                                date=date,
                                index=index-1,
@@ -339,6 +325,29 @@ def run_experiment(controller,
                                shoulder_fric_tau=shoulder_fric_tau,
                                elbow_fric_tau=elbow_fric_tau,
                                error=None)
+            plot_figure(save_dir=save_dir_time,
+                        date=date,
+                        index=index-1,
+                        meas_time=meas_time,
+                        shoulder_meas_pos=shoulder_meas_pos,
+                        shoulder_meas_vel=shoulder_meas_vel,
+                        shoulder_meas_tau=shoulder_meas_tau,
+                        elbow_meas_pos=elbow_meas_pos,
+                        elbow_meas_vel=elbow_meas_vel,
+                        elbow_meas_tau=elbow_meas_tau,
+                        shoulder_tau_controller=shoulder_tau_controller,
+                        elbow_tau_controller=elbow_tau_controller,
+                        shoulder_filtered_vel=shoulder_filtered_meas_vel,
+                        elbow_filtered_vel=elbow_filtered_meas_vel,
+                        shoulder_des_pos=shoulder_des_pos,
+                        shoulder_des_vel=shoulder_des_vel,
+                        shoulder_des_tau=shoulder_des_tau,
+                        elbow_des_pos=elbow_des_pos,
+                        elbow_des_vel=elbow_des_vel,
+                        elbow_des_tau=elbow_des_tau,
+                        shoulder_fric_tau=shoulder_fric_tau,
+                        elbow_fric_tau=elbow_fric_tau,
+                        error=None)
 
             # plt.figure()
             # plt.plot(meas_time[:index-1], shoulder_meas_vel[:index-1], color="red")
