@@ -16,6 +16,15 @@ This project offers an open-source and low-cost kit to test control algorithms f
 
 The [hardware setup](hardware/testbench_description.md) and the [motor configuration](hardware/motor_configuration.md) are described in their respective readme files.
 The dynamics of the pendulum are explained [here](docs/sp_equations.md).
+
+In order to work with this repository you can [get started here](docs/installation_guide.md) and read the [usage instructions here](docs/usage_instructions.md) for a description of how to use this repository on a real system. The instructions for testing the code can be found [here](docs/code_testing.md).
+
+
+* [Hardware & Testbench Description](hardware/testbench_description.md)
+* [Motor Configuration](hardware/motor_configuration.md)
+* [Software Installation Guide](docs/installation_guide.md)
+* [Usage Instructions](docs/usage_instructions.md)
+* [Code Testing](docs/code_testing.md)
 ## Authors #
 
 <img align="right" img width="350" src="hardware/acrobot_swingup_gravity.gif" />
