@@ -60,8 +60,6 @@ class Lyapunov_function():
 
         self.fixpoint = fixpoint
 
-        print(self.plant.rhs(0., [np.pi+0.1, 0., 0., 0.], [0., 0.]))
-
     def get_V(self, x):
         x_error = x - self.fixpoint
         V = np.dot(x_error, np.dot(self.S, x_error))
@@ -80,7 +78,7 @@ length = [0.3, 0.2]
 gravity = 9.81
 torque_limit = [0.0, 4.0]
 
-N = 0
+N = 10000
 fixpoint = np.array([np.pi, 0., 0., 0.])
 sample_range = np.array([0.1, 0.1, 0.1, 0.1])
 

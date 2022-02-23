@@ -13,6 +13,7 @@ from double_pendulum.utils.cmaes_controller_par_optimizer import (cma_par_optimi
 
 
 # interactive = False
+num_proc = 0
 
 # model parameters
 robot = "acrobot"
@@ -84,7 +85,8 @@ best_par = cma_par_optimization(loss_func=loss_func,
                                 maxfevals=maxfevals,
 #                                tolfun=tolfun,
                                 tolx=tolx,
-                                tolstagnation=tolstagnation)
+                                tolstagnation=tolstagnation,
+                                num_proc=num_proc)
 opt_time = (time.time() - t0) / 3600  # time in h
 
 best_par *= par_prefactors

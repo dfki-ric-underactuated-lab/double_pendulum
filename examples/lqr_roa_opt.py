@@ -14,18 +14,33 @@ from double_pendulum.utils.cmaes_controller_par_optimizer import (cma_par_optimi
 
 # interactive = False
 
-# model parameters
-robot = "pendubot"
+num_proc = 0
 
+# model parameters
+robot = "acrobot"
+
+# mass = [0.608, 0.630]
+# length = [0.3, 0.2]
+# com = [0.275, 0.166]
+# # damping = [0.081, 0.0]
+# damping = [0.0, 0.0]
+# # cfric = [0.093, 0.186]
+# cfric = [0., 0.]
+# gravity = 9.81
+# inertia = [0.05472, 0.02522]
+# if robot == "acrobot":
+#     torque_limit = [0.0, 6.0]
+# if robot == "pendubot":
+#     torque_limit = [6.0, 0.0]
 mass = [0.608, 0.630]
 length = [0.3, 0.2]
-com = [0.275, 0.166]
+com = [length[0], length[1]]
 # damping = [0.081, 0.0]
 damping = [0.0, 0.0]
 # cfric = [0.093, 0.186]
 cfric = [0., 0.]
 gravity = 9.81
-inertia = [0.05472, 0.02522]
+inertia = [mass[0]*length[0]**2.0, mass[0]*length[1]**2.0]
 if robot == "acrobot":
     torque_limit = [0.0, 6.0]
 if robot == "pendubot":
@@ -40,14 +55,14 @@ if robot == "pendubot":
 goal = [np.pi, 0, 0, 0]
 
 # controller parameters
-par_prefactors = np.asarray([100, 100, 100, 100, 10])
+par_prefactors = np.asarray([20, 20, 10, 10, 10])
 
 # roa parameters
 roa_backend = "sos"
 
 # optimization parameters
 popsize_factor = 4
-maxfevals = 3000
+maxfevals = 1000
 #tolfun = 0.01
 tolx = 0.01
 tolstagnation = 100
@@ -78,7 +93,8 @@ best_par = cma_par_optimization(loss_func=loss_func,
                                 maxfevals=maxfevals,
 #                                tolfun=tolfun,
                                 tolx=tolx,
-                                tolstagnation=tolstagnation)
+                                tolstagnation=tolstagnation,
+                                num_proc=num_proc)
 opt_time = (time.time() - t0) / 3600  # time in h
 
 best_par *= par_prefactors
