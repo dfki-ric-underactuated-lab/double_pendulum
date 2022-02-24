@@ -1,7 +1,9 @@
+import os
 import numpy as np
 import cma
 from cma.fitness_transformations import EvalParallel2
 from scipy.optimize import minimize
+import matplotlib.pyplot as plt
 
 from double_pendulum.utils.wrap_angles import wrap_angles_top
 
@@ -182,10 +184,28 @@ def cma_par_optimization(loss_func, init_pars, bounds,
             X = es.ask()
             es.tell(X, eval_all(X))
             es.disp()
-            # es.logger.add()  # doctest:+ELLIPSIS
+            es.logger.add()  # doctest:+ELLIPSIS
 
     #es.optimize(loss_func)
     return es.result.xbest
+
+
+def plot_cma_results(data_path, sign=1., save_to=None, show=False):
+    fit_path = os.path.join(data_path, "fit.dat")
+
+    data = np.loadtxt(fit_path, skiprows=1)
+
+    evaluations = data.T[1]
+    best = data.T[4]*sign
+
+    plt.plot(evaluations, best)
+    plt.xlabel("Evaluations")
+    plt.ylabel("ROA Volume")
+    if not (save_to is None):
+        plt.savefig(save_to)
+    if show:
+        plt.show()
+    plt.close()
 
 
 def scipy_par_optimization(loss_func,

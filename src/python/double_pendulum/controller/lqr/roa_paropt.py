@@ -1,6 +1,12 @@
+import os
+import time
 import numpy as np
+import yaml
 
 from roatools.obj_fcts import caprr_coopt_interface
+from roatools.vis import plotEllipse
+
+from double_pendulum.utils.cmaes_controller_par_optimizer import cma_par_optimization, plot_cma_results
 
 
 class roa_lqrpar_lossfunc():
@@ -19,7 +25,7 @@ class roa_lqrpar_lossfunc():
                              coulomb_fric=[0.093, 0.186],
                              gravity=9.81,
                              inertia=[0.05472, 0.02522],
-                             torque_limit=[0.0, 6.0]):
+                             torque_limit=[0.0, 5.0]):
 
         self.design_params = {"m": mass,
                               "l": length,
@@ -47,6 +53,11 @@ class roa_lqrpar_lossfunc():
         p *= self.par_prefactors
         return p
 
+    def unscale_pars(self, pars):
+        p = np.copy(pars)
+        p /= self.par_prefactors
+        return p
+
 
 class roa_modelpar_lossfunc():
     def __init__(self,
@@ -66,7 +77,7 @@ class roa_modelpar_lossfunc():
                              coulomb_fric=[0.093, 0.186],
                              gravity=9.81,
                              inertia=[0.05472, 0.02522],
-                             torque_limit=[0.0, 6.0]):
+                             torque_limit=[0.0, 5.0]):
 
         # mass2, length1 and length2 will be overwritten during optimization
 
@@ -119,7 +130,15 @@ class roa_modelpar_lossfunc():
         p = np.copy(pars)
         p = self.bounds.T[0] + p*(self.bounds.T[1]-self.bounds.T[0])
         p *= self.par_prefactors
-        p[-1] = p[-1]*(p[-2] - 0.1)
+        p[-1] = p[-1]*(p[-2] + 0.1)
+        return p
+
+    def unscale_pars(self, pars):
+        p = np.copy(pars)
+
+        p[-1] = p[-1]/(p[-2] + 0.1)
+        p /= self.par_prefactors
+        p = (p - self.bounds.T[0]) / (self.bounds.T[1]-self.bounds.T[0])
         return p
 
 
@@ -172,8 +191,429 @@ class roa_lqrandmodelpar_lossfunc():
         return loss
 
     def rescale_pars(self, pars):
+        # [0, 1] -> real values
         p = np.copy(pars)
         p = self.bounds.T[0] + p*(self.bounds.T[1]-self.bounds.T[0])
         p *= self.par_prefactors
-        p[-1] = p[-1]*(p[-2] - 0.1)
+        p[-1] = p[-1]*(p[-2] + 0.1)
         return p
+
+    def unscale_pars(self, pars):
+        # real values -> [0, 1]
+        p = np.copy(pars)
+
+        p[-1] = p[-1]/(p[-2] + 0.1)
+        p /= self.par_prefactors
+        p = (p - self.bounds.T[0]) / (self.bounds.T[1]-self.bounds.T[0])
+        return p
+
+
+def calc_roa(c_par=[1., 1., 1., 1., 1.],
+             m_par=[0.63, 0.3, 0.2],
+             roa_backend="najafi",
+             robot="acrobot",
+             save_dir="data/"):
+
+    os.makedirs(save_dir)
+
+    mass = [0.608, m_par[0]]
+    length = [m_par[1], m_par[2]]
+    com = [length[0], length[1]]
+    damping = [0.0, 0.0]
+    cfric = [0., 0.]
+    gravity = 9.81
+    inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
+    if robot == "acrobot":
+        torque_limit = [0.0, 5.0]
+    if robot == "pendubot":
+        torque_limit = [5.0, 0.0]
+
+    goal = [np.pi, 0, 0, 0]
+
+    design_params = {"m": mass,
+                     "l": length,
+                     "lc": com,
+                     "b": damping,
+                     "fc": cfric,
+                     "g": gravity,
+                     "I": inertia,
+                     "tau_max": torque_limit}
+
+    Q = np.diag((c_par[0], c_par[1], c_par[2], c_par[3]))
+    R = np.diag((c_par[4], c_par[4]))
+
+    roa_calc = caprr_coopt_interface(design_params=design_params,
+                                     Q=Q,
+                                     R=R,
+                                     backend=roa_backend)
+    roa_calc._update_lqr(Q=Q, R=R)
+    vol, rho_f, S = roa_calc._estimate()
+
+    np.savetxt(os.path.join(save_dir, "rho"), [rho_f])
+    np.savetxt(os.path.join(save_dir, "vol"), [vol])
+    # np.savetxt(os.path.join(save_dir, "rhohist"), rhoHist)
+
+    plotEllipse(goal[0], goal[1], 0, 1, rho_f, S,
+                save_to=os.path.join(save_dir, "roaplot"),
+                show=False)
+
+    np.savetxt(os.path.join(save_dir, "controller_par.csv"),
+               [Q[0, 0], Q[1, 1], Q[2, 2], Q[3, 3], R[0, 0]])
+
+    par_dict = {"mass1": mass[0],
+                "mass2": mass[1],
+                "length1": length[0],
+                "length2": length[1],
+                "com1": com[0],
+                "com2": com[1],
+                "inertia1": inertia[0],
+                "inertia2": inertia[1],
+                "damping1": damping[0],
+                "damping2": damping[1],
+                "coulomb_friction1": cfric[0],
+                "coulomb_friction2": cfric[1],
+                "gravity": gravity,
+                "torque_limit1": torque_limit[0],
+                "torque_limit2": torque_limit[1],
+                "goal_pos1": goal[0],
+                "goal_pos2": goal[1],
+                "goal_vel1": goal[2],
+                "goal_vel2": goal[3],
+                "Q": c_par[:4],
+                "R": c_par[4],
+                }
+
+    with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
+        yaml.dump(par_dict, f)
+
+
+def roa_lqr_opt(model_pars=[0.63, 0.3, 0.2],
+                init_pars=[1., 1., 1., 1., 1.],
+                par_prefactors=[20., 20., 10., 10., 10.],
+                bounds=[[0, 1], [0, 1], [0, 1], [0, 1], [0, 1]],
+                maxfevals=1000,
+                roa_backend="najafi",
+                robot="acrobot",
+                save_dir="data/",
+                num_proc=0):
+
+    mass = [0.608, model_pars[0]]
+    length = [model_pars[2], model_pars[2]]
+    com = [length[0], length[1]]
+    damping = [0.0, 0.0]
+    cfric = [0., 0.]
+    # damping = [0.081, 0.0]
+    # cfric = [0.093, 0.186]
+    gravity = 9.81
+    inertia = [mass[0]*length[0]**2.0, mass[0]*length[1]**2.0]
+    if robot == "acrobot":
+        torque_limit = [0.0, 5.0]
+    if robot == "pendubot":
+        torque_limit = [5.0, 0.0]
+
+    goal = [np.pi, 0, 0, 0]
+
+    popsize_factor = 4
+
+    #timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
+    #save_dir = os.path.join("data", robot, "lqr", "roa_paropt", timestamp)
+    os.makedirs(save_dir)
+
+    # loss function setup
+    loss_func = roa_lqrpar_lossfunc(par_prefactors=par_prefactors,
+                                    roa_backend=roa_backend)
+    loss_func.set_model_parameters(mass=mass,
+                                   length=length,
+                                   com=com,
+                                   damping=damping,
+                                   gravity=gravity,
+                                   coulomb_fric=cfric,
+                                   inertia=inertia,
+                                   torque_limit=torque_limit)
+
+    inits = loss_func.unscale_pars(init_pars)
+
+    # optimization
+    t0 = time.time()
+    best_par = cma_par_optimization(loss_func=loss_func,
+                                    init_pars=inits,
+                                    bounds=[0, 1],
+                                    save_dir=os.path.join(save_dir, "outcmaes"),
+                                    popsize_factor=popsize_factor,
+                                    maxfevals=maxfevals,
+                                    num_proc=num_proc)
+    opt_time = (time.time() - t0) / 3600  # time in h
+
+    best_par = loss_func.rescale_pars(best_par)
+    print(best_par)
+
+    np.savetxt(os.path.join(save_dir, "controller_par.csv"), best_par)
+    np.savetxt(os.path.join(save_dir, "time.txt"), [opt_time])
+
+    par_dict = {"optimization": "lqr",
+                "mass1": mass[0],
+                "mass2": mass[1],
+                "length1": length[0],
+                "length2": length[1],
+                "com1": com[0],
+                "com2": com[1],
+                "inertia1": inertia[0],
+                "inertia2": inertia[1],
+                "damping1": damping[0],
+                "damping2": damping[1],
+                "coulomb_friction1": cfric[0],
+                "coulomb_friction2": cfric[1],
+                "gravity": gravity,
+                "torque_limit1": torque_limit[0],
+                "torque_limit2": torque_limit[1],
+                "goal_pos1": goal[0],
+                "goal_pos2": goal[1],
+                "goal_vel1": goal[2],
+                "goal_vel2": goal[3],
+                "Q_init": init_pars[:4],
+                "R_init": init_pars[4],
+                "par_prefactors": par_prefactors,
+                "popsize_factor": popsize_factor,
+                "maxfevals": maxfevals,
+                # "tolfun": tolfun,
+                # "tolx": tolx,
+                # "tolstagnation": tolstagnation
+                }
+
+    with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
+        yaml.dump(par_dict, f)
+
+    # recalculate the roa for the best parameters and save plot
+    best_Q = np.diag((best_par[0], best_par[1], best_par[2], best_par[3]))
+    best_R = np.diag((best_par[4], best_par[4]))
+
+    design_params = {"m": mass,
+                     "l": length,
+                     "lc": com,
+                     "b": damping,
+                     "fc": cfric,
+                     "g": gravity,
+                     "I": inertia,
+                     "tau_max": torque_limit}
+
+    roa_calc = caprr_coopt_interface(design_params=design_params,
+                                     Q=best_Q,
+                                     R=best_R,
+                                     backend=roa_backend)
+    roa_calc._update_lqr(Q=best_Q, R=best_R)
+    vol, rho_f, S = roa_calc._estimate()
+
+    np.savetxt(os.path.join(save_dir, "rho"), [rho_f])
+    np.savetxt(os.path.join(save_dir, "vol"), [vol])
+    # np.savetxt(os.path.join(save_dir, "rhohist"), rhoHist)
+
+    plotEllipse(goal[0], goal[1], 0, 1, rho_f, S,
+                save_to=os.path.join(save_dir, "roaplot"),
+                show=False)
+
+    plot_cma_results(data_path=os.path.join(save_dir, "outcmaes"),
+                     sign=-1.,
+                     save_to=os.path.join(save_dir, "history"),
+                     show=False)
+
+    return best_par
+
+
+def roa_design_opt(lqr_pars=[1., 1., 1., 1., 1.],
+                   init_pars=[0.63, 0.3, 0.2],
+                   par_prefactors=[1., 1., 1.],
+                   bounds=[[0.3, 1], [0.3, 0.5], [0.5, 1.]],
+                   maxfevals=1000,
+                   roa_backend="najafi",
+                   robot="acrobot",
+                   save_dir="data/",
+                   num_proc=0):
+
+    mass = [0.608, init_pars[0]]
+    length = [init_pars[2], init_pars[2]]
+    com = [length[0], length[1]]
+    damping = [0.0, 0.0]
+    cfric = [0., 0.]
+    # damping = [0.081, 0.0]
+    # cfric = [0.093, 0.186]
+    gravity = 9.81
+    inertia = [mass[0]*length[0]**2.0, mass[0]*length[1]**2.0]
+    if robot == "acrobot":
+        torque_limit = [0.0, 5.0]
+    if robot == "pendubot":
+        torque_limit = [5.0, 0.0]
+
+    goal = [np.pi, 0, 0, 0]
+
+    popsize_factor = 4
+
+    #timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
+    #save_dir = os.path.join("data", robot, "lqr", "roa_paropt", timestamp)
+    os.makedirs(save_dir)
+
+    # loss function setup
+    loss_func = roa_modelpar_lossfunc(par_prefactors=par_prefactors,
+                                      roa_backend=roa_backend,
+                                      bounds=bounds)
+    loss_func.set_model_parameters(mass=mass,
+                                   length=length,
+                                   com=com,
+                                   damping=damping,
+                                   gravity=gravity,
+                                   coulomb_fric=cfric,
+                                   inertia=inertia,
+                                   torque_limit=torque_limit)
+
+    Q = np.diag((lqr_pars[0], lqr_pars[1], lqr_pars[2], lqr_pars[3]))
+    R = np.diag((lqr_pars[4], lqr_pars[4]))
+
+    loss_func.set_cost_parameters(p1p1_cost=Q[0, 0],
+                                  p2p2_cost=Q[1, 1],
+                                  v1v1_cost=Q[2, 2],
+                                  v2v2_cost=Q[3, 3],
+                                  p1v1_cost=0.,
+                                  p1v2_cost=0.,
+                                  p2v1_cost=0.,
+                                  p2v2_cost=0.,
+                                  u1u1_cost=R[0, 0],
+                                  u2u2_cost=R[1, 1],
+                                  u1u2_cost=0.)
+
+    # optimization
+    t0 = time.time()
+    best_par = cma_par_optimization(loss_func=loss_func,
+                                    init_pars=init_pars,
+                                    bounds=[0, 1],
+                                    save_dir=os.path.join(save_dir, "outcmaes"),
+                                    popsize_factor=popsize_factor,
+                                    maxfevals=maxfevals,
+                                    num_proc=num_proc)
+    opt_time = (time.time() - t0) / 3600  # time in h
+
+    best_par = loss_func.rescale_pars(best_par)
+    print(best_par)
+
+    np.savetxt(os.path.join(save_dir, "model_par.csv"), best_par)
+    np.savetxt(os.path.join(save_dir, "time.txt"), [opt_time])
+
+    par_dict = {"optimization": "design",
+                "mass1": mass[0],
+                "mass2": mass[1],
+                "length1": length[0],
+                "length2": length[1],
+                "com1": com[0],
+                "com2": com[1],
+                "inertia1": inertia[0],
+                "inertia2": inertia[1],
+                "damping1": damping[0],
+                "damping2": damping[1],
+                "coulomb_friction1": cfric[0],
+                "coulomb_friction2": cfric[1],
+                "gravity": gravity,
+                "torque_limit1": torque_limit[0],
+                "torque_limit2": torque_limit[1],
+                "goal_pos1": goal[0],
+                "goal_pos2": goal[1],
+                "goal_vel1": goal[2],
+                "goal_vel2": goal[3],
+                "Q": lqr_pars[:4],
+                "R": lqr_pars[4],
+                "par_prefactors": par_prefactors,
+                "init_pars": init_pars,
+                "bounds": bounds,
+                "popsize_factor": popsize_factor,
+                "maxfevals": maxfevals,
+                # "tolfun": tolfun,
+                # "tolx": tolx,
+                # "tolstagnation": tolstagnation
+                }
+
+    with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
+        yaml.dump(par_dict, f)
+
+    # recalculate the roa for the best parameters and save plot
+
+    design_params = {"m": [mass[0], best_par[0]],
+                     "l": [best_par[1], best_par[2]],
+                     "lc": [best_par[1], best_par[2]],
+                     "b": damping,
+                     "fc": cfric,
+                     "g": gravity,
+                     "I": [mass[0]*best_par[1]**2, best_par[0]*best_par[2]**2],
+                     "tau_max": torque_limit}
+
+    roa_calc = caprr_coopt_interface(design_params=design_params,
+                                     Q=Q,
+                                     R=R,
+                                     backend=roa_backend)
+    roa_calc._update_lqr(Q=Q, R=R)
+    vol, rho_f, S = roa_calc._estimate()
+
+    np.savetxt(os.path.join(save_dir, "rho"), [rho_f])
+    np.savetxt(os.path.join(save_dir, "vol"), [vol])
+    # np.savetxt(os.path.join(save_dir, "rhohist"), rhoHist)
+
+    plotEllipse(goal[0], goal[1], 0, 1, rho_f, S,
+                save_to=os.path.join(save_dir, "roaplot"),
+                show=False)
+
+    plot_cma_results(data_path=os.path.join(save_dir, "outcmaes"),
+                     sign=-1.,
+                     save_to=os.path.join(save_dir, "history"),
+                     show=False)
+
+    return best_par
+
+
+def roa_alternate_opt(init_pars=[1., 1., 1., 1., 1., 0.63, 0.3, 0.2],
+                      par_prefactors=[20., 20., 10., 10., 10.,
+                                      1., 1., 1.],
+                      bounds=[[0, 1], [0, 1], [0, 1], [0, 1], [0, 1],
+                              [0.3, 1], [0.3, 0.5], [0.5, 1.]],
+                      maxfevals_per_opt=1000,
+                      opt_order=["d", "c"],
+                      roa_backend="najafi",
+                      robot="acrobot",
+                      save_dir="data/",
+                      num_proc=0):
+
+    c_par = init_pars[:5]
+    m_par = init_pars[5:]
+
+    counter = 0
+    calc_roa(c_par=c_par,
+             m_par=m_par,
+             roa_backend=roa_backend,
+             robot=robot,
+             save_dir=os.path.join(save_dir, str(counter).zfill(2)+"_init"))
+
+    counter += 1
+    for o in opt_order:
+        if o == "d":
+            print("starting design optimization")
+            m_par = roa_design_opt(lqr_pars=c_par,
+                                   init_pars=m_par,
+                                   par_prefactors=par_prefactors[5:],
+                                   bounds=bounds[5:],
+                                   maxfevals=maxfevals_per_opt,
+                                   roa_backend=roa_backend,
+                                   robot=robot,
+                                   save_dir=os.path.join(save_dir, str(counter).zfill(2)+"_design"),
+                                   num_proc=num_proc)
+        elif o == "c":
+            print("starting controller optimization")
+            c_par = roa_lqr_opt(model_pars=m_par,
+                                init_pars=c_par,
+                                par_prefactors=par_prefactors[:5],
+                                bounds=bounds[:5],
+                                maxfevals=maxfevals_per_opt,
+                                roa_backend=roa_backend,
+                                robot=robot,
+                                save_dir=os.path.join(save_dir, str(counter).zfill(2)+"_lqr"),
+                                num_proc=num_proc)
+        counter += 1
+    best_par = [c_par[0], c_par[1], c_par[2], c_par[3], c_par[4],
+                m_par[0], m_par[1], m_par[2]]
+    return best_par
+
+
