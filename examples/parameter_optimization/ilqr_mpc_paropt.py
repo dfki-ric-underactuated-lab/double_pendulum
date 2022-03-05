@@ -12,7 +12,7 @@ from double_pendulum.utils.cmaes_controller_par_optimizer import (cma_par_optimi
 # interactive = False
 
 # model parameters
-robot = "acrobot"
+robot = "pendubot"
 
 mass = [0.608, 0.630]
 length = [0.3, 0.2]
@@ -56,7 +56,7 @@ init_csv_path = "data/acrobot/ilqr/trajectory.csv"
 optimization_method = "cma"  # "Nelder-Mead"
 loss_weights = [0.2, 0.6, 0.2]
 popsize_factor = 4
-maxfevals = 1000
+maxfevals = 10
 tolfun = 0.01
 tolx = 0.01
 tolstagnation = 100

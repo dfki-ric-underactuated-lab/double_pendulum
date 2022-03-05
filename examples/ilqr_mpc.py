@@ -9,18 +9,34 @@ from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.saving import save_trajectory
 
+robot = "pendubot"
+
+# # model parameters
+# mass = [0.608, 0.630]
+# length = [0.3, 0.2]
+# com = [0.275, 0.166]
+# # damping = [0.081, 0.0]
+# damping = [0.0, 0.0]
+# # cfric = [0.093, 0.186]
+# cfric = [0., 0.]
+# gravity = 9.81
+# inertia = [0.05472, 0.02522]
+# torque_limit = [0.0, 4.0]
 
 # model parameters
-mass = [0.608, 0.630]
-length = [0.3, 0.2]
-com = [0.275, 0.166]
+mass = [0.608, 0.5]
+length = [0.3, 0.4]
+com = [length[0], length[1]]
 # damping = [0.081, 0.0]
 damping = [0.0, 0.0]
 # cfric = [0.093, 0.186]
 cfric = [0., 0.]
 gravity = 9.81
-inertia = [0.05472, 0.02522]
-torque_limit = [0.0, 4.0]
+inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
+if robot == "acrobot":
+    torque_limit = [0.0, 4.0]
+if robot == "pendubot":
+    torque_limit = [4.0, 0.0]
 
 # simulation parameter
 dt = 0.005
@@ -62,7 +78,7 @@ fCen = 0.0
 # fCen = 6.36798375e+00
 
 # init trajectory
-init_csv_path = "data/acrobot/ilqr/trajectory.csv"
+init_csv_path = "data/"+robot+"/ilqr/trajectory.csv"
 
 # init_sCu = [9.64008003e-04, 3.69465206e-04]
 # init_sCp = [9.00160028e-04, 8.52634075e-04]
@@ -86,7 +102,7 @@ goal = [np.pi, 0., 0., 0.]
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", "acrobot", "ilqr", "mpc", timestamp)
+save_dir = os.path.join("data", robot, "ilqr", "mpc", timestamp)
 os.makedirs(save_dir)
 
 # construct simulaiton objects

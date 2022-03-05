@@ -32,6 +32,11 @@ class ILQRMPCCPPController(AbstractController):
 
         self.counter = 0
 
+        if torque_limit[0] > 0.0:
+            self.active_act = 0
+        elif torque_limit[1] > 0.0:
+            self.active_act = 1
+
     def set_start(self, x=[0., 0., 0., 0.]):
         self.start = np.asarray(x)
 
@@ -193,10 +198,12 @@ class ILQRMPCCPPController(AbstractController):
 
     def get_control_output(self, x, t=None):
         # print("get control output")
-        u2 = self.ilmpc.get_control_output(x[0], x[1], x[2], x[3])
+        u_act = self.ilmpc.get_control_output(x[0], x[1], x[2], x[3])
 
         # u = [self.u1_traj[0], self.u2_traj[0]]
-        u = [0.0, u2]
+        u = [0.0, 0.0]
+        u[self.active_act] = u_act
+        # u = [0.0, u_act]
 
         self.counter += 1
         # print(self.counter)

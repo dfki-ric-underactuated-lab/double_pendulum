@@ -35,6 +35,8 @@ ilqr::~ilqr(){
     delete [] x_traj_new;
     delete [] k_traj;
     delete [] K_traj;
+    delete [] best_k_traj;
+    delete [] best_K_traj;
 }
 
 int ilqr::get_N(){
@@ -170,8 +172,13 @@ void ilqr::set_model_parameters(double m1, double m2,
     torque_limit1 = tl1;
     torque_limit2 = tl2;
 
-    // TODO: acrobot-/pendubot switch
-    plant = DPPlant(false, true);
+    if (torque_limit1 > 0.){
+        active_act = 0;
+    }
+    else if (torque_limit2 > 0.){
+        active_act = 1;
+    }
+    plant = DPPlant(bool(1-active_act), bool(active_act));
     plant.set_parameters(mass1, mass2,
                          length1, length2,
                          com1, com2,
@@ -261,11 +268,11 @@ Eigen::Vector<double, n_x> ilqr::discrete_dynamics(Eigen::Vector<double, n_x> x,
     // the dp plant has 2 inputs and regulates whether the motors are active with the B matrix
     // the ilqr class should use n_u = 1 to keep the search space as small as possible
     // hence, the broadcasting of u to u_full
-    // TODO: acro/pendubot switch
     //Eigen::Vector<double, plant.n_u> u_full;
     Eigen::Vector<double, DPPlant::n_u> u_full;
     u_full(0) = 0.;
-    u_full(1) = u(0);
+    u_full(1) = 0.;
+    u_full(active_act) = u(0);
     
     sim.set_state(0.0, x);
     sim.step(u_full, dt, integrator);
@@ -285,11 +292,21 @@ double ilqr::stage_cost(Eigen::Vector<double, n_x> x,
     vel2_error = pow((x(3) - goal(3)), 2.);
     u1_cost = pow(u(0), 2.);
     //u2_cost = pow(u(1), 2.);
-    en_error = pow(plant.calculate_total_energy(x) - goal_energy, 2.);
+
     // TODO: acro/pendubot switch
+    //double sCu_act;
+    // if (active_act == 0){
+    //     sCu_act = sCu1;
+    // }
+    // else{
+    //     sCu_act = sCu2;
+    // }
+
+    en_error = pow(plant.calculate_total_energy(x) - goal_energy, 2.);
     scost = sCp1*pos1_error + sCp2*pos2_error + 
             sCv1*vel1_error + sCv2*vel2_error + 
             sCu1*u1_cost + // sCu2*u2_cost + 
+            //sCu_act*u1_cost + 
             sCen*en_error;
     return scost; 
 }
@@ -344,7 +361,8 @@ void ilqr::compute_dynamics_x(Eigen::Vector<double, n_x> x,
     // TODO: acro/pendubot switch
     Eigen::Vector<double, DPPlant::n_u> u_full;
     u_full(0) = 0.;
-    u_full(1) = u(0);
+    u_full(1) = 0.;
+    u_full(active_act) = u(0);
 
     Eigen::Matrix<double, n_x, n_x> xd_x;
     Eigen::Matrix<double, n_x, n_x> identity;
@@ -379,15 +397,15 @@ void ilqr::compute_dynamics_u(Eigen::Vector<double, n_x> x,
         printf("    compute dynamics u\n");
     }
 
-    // TODO: acro/pendubot switch
     Eigen::Vector<double, DPPlant::n_u> u_full;
     u_full(0) = 0.;
-    u_full(1) = u(0);
+    u_full(1) = 0.;
+    u_full(active_act) = u(0);
 
     Eigen::Matrix<double, n_x, DPPlant::n_u> dynu = plant.get_dynu(x, u_full);
 
     for (int i=0; i<n_x; i++){
-        dyn_u(i,0) = dynu(i,1)*dt; //acrobot
+        dyn_u(i,0) = dynu(i,active_act)*dt; //acrobot
     }
 }
 
@@ -417,9 +435,16 @@ void ilqr::compute_stage_u(Eigen::Vector<double, n_x> x,
     if (verbose > 3){
         printf("    compute stage u\n");
     }
-    //TODO: acro-/pendubot switch
+    //double sCu_act;
+    //if (active_act == 0){
+    //    sCu_act = sCu1;
+    //}
+    //else{
+    //    sCu_act = sCu2;
+    //}
     stage_u(0) = 2*sCu1*u(0);
     //stage_u(1) = 2.*sCu2*u(1);
+    //stage_u(0) = 2*sCu_act*u(0);
 }
 
 void ilqr::compute_stage_xx(Eigen::Vector<double, n_x> x,
@@ -462,10 +487,18 @@ void ilqr::compute_stage_uu(Eigen::Vector<double, n_x> x,
         printf("    compute stage uu\n");
     }
     //TODO: acro-/pendubot switch
+    //double sCu_act;
+    //if (active_act == 0){
+    //    sCu_act = sCu1;
+    //}
+    //else{
+    //    sCu_act = sCu2;
+    //}
     stage_uu(0,0) = 2.*sCu1;
     //stage_uu(0,1) = 0.;
     //stage_uu(1,0) = 0.;
     //stage_uu(1,1) = 2.*sCu2;
+    //stage_uu(0,0) = 2.*sCu_act;
 }
 
 void ilqr::compute_final_x(Eigen::Vector<double, n_x> x){
@@ -752,11 +785,15 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
             last_cost = total_cost;
             //x_traj = x_traj_new;
             //u_traj = u_traj_new;
-            for (int i=0; i<N-1; i++){
+            for (int i=0; i<N; i++){
                 x_traj[i] = x_traj_new[i];
+                best_k_traj[i] = k_traj[i];
+                best_K_traj[i] = K_traj[i];
+            }
+            //x_traj[N-1] = x_traj_new[N-1];
+            for (int i=0; i<N-1; i++){
                 u_traj[i] = u_traj_new[i];
             }
-            x_traj[N-1] = x_traj_new[N-1];
             regu *= 0.7;
             //regu *= 0.9;
         }
@@ -798,15 +835,29 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
 }
 
 double* ilqr::get_u1_traj(){
-    for (int i=0; i<N-1; i++){
-        u1_traj_doubles[i] = 0.; // u_traj[i](0);
+    if (active_act == 0){
+        for (int i=0; i<N-1; i++){
+            u1_traj_doubles[i] = u_traj[i](0);
+        }
+    }
+    else{
+        for (int i=0; i<N-1; i++){
+            u1_traj_doubles[i] = 0.;
+        }
     }
     return u1_traj_doubles;
 }
 
 double* ilqr::get_u2_traj(){
-    for (int i=0; i<N-1; i++){
-        u2_traj_doubles[i] = u_traj[i](0);
+    if (active_act == 1){
+        for (int i=0; i<N-1; i++){
+            u2_traj_doubles[i] = u_traj[i](0);
+        }
+    }
+    else{
+        for (int i=0; i<N-1; i++){
+            u2_traj_doubles[i] = 0.;
+        }
     }
     return u2_traj_doubles;
 }
@@ -860,24 +911,59 @@ void ilqr::save_trajectory_csv(std::string filename){
     traj_file << "time, pos1, pos2, vel1, vel2, tau1, tau2, K11, K12, K13, K14, K21, K22, K23, K24, k1, k2\n";
 
     for(int i=0; i<N-1; i++){
-        traj_file << dt*i << ", "
-                  << x_traj[i](0) << ", "
-                  << x_traj[i](1) << ", "
-                  << x_traj[i](2) << ", "
-                  << x_traj[i](3) << ", "
-                  << 0.0 << ", "
-                  << u_traj[i](0) << ", "
-                  << 0.0 << ", "
-                  << 0.0 << ", "
-                  << 0.0 << ", "
-                  << 0.0 << ", "
-		  << K_traj[i](0,0) << ", "
-		  << K_traj[i](0,1) << ", "
-		  << K_traj[i](0,2) << ", "
-		  << K_traj[i](0,3) << ", "
-		  << 0.0 << ", "
-		  << k_traj[i](0) << "\n";
+        traj_file << dt*i << ", ";
+        for (int j=0; j<n_x; j++){
+            traj_file << x_traj[i](j) << ", ";
+        }
+        if (active_act == 0){
+            traj_file << u_traj[i](0) << ", ";
+            traj_file << 0.0 << ", ";
+            traj_file << best_K_traj[i](0,0) << ", ";
+            traj_file << best_K_traj[i](0,1) << ", ";
+            traj_file << best_K_traj[i](0,2) << ", ";
+            traj_file << best_K_traj[i](0,3) << ", ";
+            traj_file << 0.0 << ", ";
+            traj_file << 0.0 << ", ";
+            traj_file << 0.0 << ", ";
+            traj_file << 0.0 << ", ";
+            traj_file << best_k_traj[i](0) << ", ";
+            traj_file << 0.0 << "\n";
+        }
+        else if (active_act == 1){
+            traj_file << 0.0 << ", ";
+            traj_file << u_traj[i](0) << ", ";
+            traj_file << 0.0 << ", ";
+            traj_file << 0.0 << ", ";
+            traj_file << 0.0 << ", ";
+            traj_file << 0.0 << ", ";
+            traj_file << best_K_traj[i](0,0) << ", ";
+            traj_file << best_K_traj[i](0,1) << ", ";
+            traj_file << best_K_traj[i](0,2) << ", ";
+            traj_file << best_K_traj[i](0,3) << ", ";
+            traj_file << 0.0 << ", ";
+            traj_file << best_k_traj[i](0) << "\n";
+        }
     }
+
+    //for(int i=0; i<N-1; i++){
+    //    traj_file << dt*i << ", "
+    //              << x_traj[i](0) << ", "
+    //              << x_traj[i](1) << ", "
+    //              << x_traj[i](2) << ", "
+    //              << x_traj[i](3) << ", "
+    //              << 0.0 << ", "
+    //              << u_traj[i](0) << ", "
+    //              << 0.0 << ", "
+    //              << 0.0 << ", "
+    //              << 0.0 << ", "
+    //              << 0.0 << ", "
+	//	  << best_K_traj[i](0,0) << ", "
+	//	  << best_K_traj[i](0,1) << ", "
+	//	  << best_K_traj[i](0,2) << ", "
+	//	  << best_K_traj[i](0,3) << ", "
+	//	  << 0.0 << ", "
+	//	  << best_k_traj[i](0) << "\n";
+    //}
     //traj_file << (N-1)*dt << ", "
     //          << x_traj[N-1](0) << ", "
     //          << x_traj[N-1](1) << ", "

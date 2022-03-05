@@ -9,7 +9,7 @@ par_prefactors = [20., 20., 10., 10., 10.,
                   1., 1., 1.]
 bounds = [[0, 1], [0, 1], [0, 1], [0, 1], [0, 1],
           [0.3, 1], [0.3, 0.5], [0.5, 1.]]
-maxfevals_per_opt = 5000
+maxfevals_per_opt = 50
 opt_order = ["d", "c"]
 roa_backend = "najafi"
 robot = "acrobot"

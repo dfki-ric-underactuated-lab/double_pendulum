@@ -10,22 +10,34 @@ from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.saving import save_trajectory
 from double_pendulum.controller.trajectory_following.trajectory_controller import TrajectoryController
 
+robot = "pendubot"
+
+# # model parameters
+# mass = [0.608, 0.630]
+# length = [0.3, 0.2]
+# com = [0.275, 0.166]
+# damping = [0.081, 0.0]
+# # damping = [0.0, 0.0]
+# # cfric = [0.093, 0.186]
+# cfric = [0., 0.]
+# gravity = 9.81
+# inertia = [0.05472, 0.02522]
+# torque_limit = [0.0, 6.0]
+
 # model parameters
-mass = [0.608, 0.630]
-length = [0.3, 0.2]
-com = [0.275, 0.166]
-damping = [0.081, 0.0]
-# damping = [0.0, 0.0]
+mass = [0.608, 0.5]
+length = [0.3, 0.4]
+com = [length[0], length[1]]
+# damping = [0.081, 0.0]
+damping = [0.0, 0.0]
 # cfric = [0.093, 0.186]
 cfric = [0., 0.]
 gravity = 9.81
-inertia = [0.05472, 0.02522]
-torque_limit = [0.0, 6.0]
-
-# simulation parameter
-dt = 0.005
-t_final = 5.0
-integrator = "runge_kutta"
+inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
+if robot == "acrobot":
+    torque_limit = [0.0, 4.0]
+if robot == "pendubot":
+    torque_limit = [4.0, 0.0]
 
 # controller parameters
 N = 1000
@@ -35,46 +47,60 @@ max_regu = 10000.
 min_regu = 0.01
 break_cost_redu = 1e-6
 
-# looking good
-# [9.97938814e-02 2.06969312e-02 7.69967729e-02 1.55726136e-04
-#  5.42226523e-03 3.82623819e+02 7.05315590e+03 5.89790058e+01
-#  9.01459500e+01]
-sCu = [9.97938814e-02, 9.97938814e-02]
-sCp = [2.06969312e-02, 7.69967729e-02]
-sCv = [1.55726136e-04, 5.42226523e-03]
-sCen = 0.0
-fCp = [3.82623819e+02, 7.05315590e+03]
-fCv = [5.89790058e+01, 9.01459500e+01]
-fCen = 0.0
+# simulation parameter
+dt = 0.005
+#t_final = 5.0
+t_final = N*dt
+integrator = "runge_kutta"
 
-# looking good
-# [9.96090757e-02 2.55362809e-02 9.65397113e-02 2.17121720e-05
-#  6.80616778e-03 2.56167942e+02 7.31751057e+03 9.88563736e+01
-#  9.67149494e+01]
-# sCu = [9.96090757e-02, 9.96090757e-02]
-# sCp = [2.55362809e-02, 9.65397113e-02]
-# sCv = [2.17121720e-05, 6.80616778e-03]
-# sCen = 0.0
-# fCp = [2.56167942e+02, 7.31751057e+03]
-# fCv = [9.88563736e+01, 9.67149494e+01]
-# fCen = 0.0
+if robot == "acrobot":
+    # looking good
+    # [9.97938814e-02 2.06969312e-02 7.69967729e-02 1.55726136e-04
+    #  5.42226523e-03 3.82623819e+02 7.05315590e+03 5.89790058e+01
+    #  9.01459500e+01]
+    sCu = [9.97938814e-02, 9.97938814e-02]
+    sCp = [2.06969312e-02, 7.69967729e-02]
+    sCv = [1.55726136e-04, 5.42226523e-03]
+    sCen = 0.0
+    fCp = [3.82623819e+02, 7.05315590e+03]
+    fCv = [5.89790058e+01, 9.01459500e+01]
+    fCen = 0.0
 
-# sCu = [0.2, 0.2]
-# sCp = [0.1, 0.2]
-# sCv = [0.2, 0.2]
-# sCen = 0.0
-# fCp = [1500., 500.]
-# fCv = [10., 10.]
-# fCen = 0.
+    # looking good
+    # [9.96090757e-02 2.55362809e-02 9.65397113e-02 2.17121720e-05
+    #  6.80616778e-03 2.56167942e+02 7.31751057e+03 9.88563736e+01
+    #  9.67149494e+01]
+    # sCu = [9.96090757e-02, 9.96090757e-02]
+    # sCp = [2.55362809e-02, 9.65397113e-02]
+    # sCv = [2.17121720e-05, 6.80616778e-03]
+    # sCen = 0.0
+    # fCp = [2.56167942e+02, 7.31751057e+03]
+    # fCv = [9.88563736e+01, 9.67149494e+01]
+    # fCen = 0.0
 
-# [9.64008003e-04 3.69465206e-04 9.00160028e-04 8.52634075e-04
-#  3.62146682e-05 3.49079107e-04 1.08953921e-05 9.88671633e+03
-#  7.27311031e+03 6.75242351e+01 9.95354381e+01 6.36798375e+01]
+    # sCu = [0.2, 0.2]
+    # sCp = [0.1, 0.2]
+    # sCv = [0.2, 0.2]
+    # sCen = 0.
+    # fCp = [1500., 500.]
+    # fCv = [10., 10.]
+    # fCen = 0.
 
-# [6.83275883e-01 8.98205799e-03 5.94690881e-04 2.60169706e-03
-# 4.84307636e-03 7.78152311e-03 2.69548072e+02 9.99254272e+03
-# 8.55215256e+02 2.50563565e+02 2.57191000e+01]
+    # [9.64008003e-04 3.69465206e-04 9.00160028e-04 8.52634075e-04
+    #  3.62146682e-05 3.49079107e-04 1.08953921e-05 9.88671633e+03
+    #  7.27311031e+03 6.75242351e+01 9.95354381e+01 6.36798375e+01]
 
+    # [6.83275883e-01 8.98205799e-03 5.94690881e-04 2.60169706e-03
+    # 4.84307636e-03 7.78152311e-03 2.69548072e+02 9.99254272e+03
+    # 8.55215256e+02 2.50563565e+02 2.57191000e+01]
+if robot == "pendubot":
+    sCu = [0.2, 0.2]
+    sCp = [0.1, 0.2]
+    sCv = [0., 0.]
+    sCen = 0.
+    fCp = [2500., 500.]
+    fCv = [100., 100.]
+    fCen = 0.
 
 # swingup parameters
 start = [0., 0., 0., 0.]
@@ -114,7 +140,7 @@ T, X, U = il.compute_trajectory()
 
 # saving and plotting
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", "acrobot", "ilqr", "trajopt", timestamp)
+save_dir = os.path.join("data", robot, "ilqr", "trajopt", timestamp)
 os.makedirs(save_dir)
 
 traj_file = os.path.join(save_dir, "trajectory.csv")

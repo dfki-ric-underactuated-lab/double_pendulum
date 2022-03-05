@@ -27,6 +27,7 @@ private:
 
     DPPlant plant;
     Simulator sim;
+    int active_act = 1;
 
     std::string integrator;
     double dt;
@@ -94,6 +95,8 @@ private:
     int N;
     Eigen::Vector<double, n_u>* k_traj = new Eigen::Vector<double, n_u>[N];
     Eigen::Matrix<double, n_u, n_x>* K_traj = new Eigen::Matrix<double, n_u, n_x>[N];
+    Eigen::Vector<double, n_u>* best_k_traj = new Eigen::Vector<double, n_u>[N];
+    Eigen::Matrix<double, n_u, n_x>* best_K_traj = new Eigen::Matrix<double, n_u, n_x>[N];
 
     ////double regu;
     //// make n dimensional (for now as double for python bindings)
