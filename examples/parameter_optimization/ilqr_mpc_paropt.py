@@ -12,7 +12,7 @@ from double_pendulum.utils.cmaes_controller_par_optimizer import (cma_par_optimi
 # interactive = False
 
 # model parameters
-robot = "pendubot"
+robot = "acrobot"
 
 mass = [0.608, 0.630]
 length = [0.3, 0.2]
@@ -41,32 +41,40 @@ max_regu = 10000.
 min_regu = 0.01
 break_cost_redu = 1e-6
 
-par_prefactors = [1.0,
-                  1.0, 1.0,
-                  1.0, 1.0,
-                  100., 100.,
-                  100., 100.]
+bounds = [[0.001, 1.0],
+          [0., 1.],
+          [0., 1.],
+          [0., 1.],
+          [0., 1.],
+          [0., 10000.],
+          [0., 10000.],
+          [0., 100.],
+          [0., 100.]]
+
+init_pars = [0.1, 0., 0., 0., 0., 100., 100., 10., 10.]
 
 # swingup parameters
 start = [0.0, 0.0, 0.0, 0.0]
 goal = [np.pi, 0, 0, 0]
-init_csv_path = "data/acrobot/ilqr/trajectory.csv"
+if robot == "acrobot":
+    init_csv_path = "../data/acrobot/ilqr/trajopt/20220307-115818/trajectory.csv"
 
 # optimization parameters
 optimization_method = "cma"  # "Nelder-Mead"
-loss_weights = [0.2, 0.6, 0.2]
+loss_weights = [0.1, 0.0, 0.0, 0.9]
 popsize_factor = 4
-maxfevals = 10
+maxfevals = 1000
 tolfun = 0.01
 tolx = 0.01
 tolstagnation = 100
+num_proc = 0
 
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
 save_dir = os.path.join("data", robot, "ilqr", "mpc_paropt", timestamp)
 os.makedirs(save_dir)
 
 # loss object
-loss_func = ilqrmpc_swingup_loss(par_prefactors=par_prefactors,
+loss_func = ilqrmpc_swingup_loss(bounds=bounds,
                                  loss_weights=loss_weights,
                                  start=start,
                                  goal=np.asarray(goal),
@@ -91,27 +99,28 @@ loss_func.set_parameters(N=N,
 loss_func.init()
 
 # optimization
+ipars = loss_func.unscale_pars(init_pars)
 t0 = time.time()
 if optimization_method == "cma":
     best_par = cma_par_optimization(
         loss_func=loss_func,
-        init_pars=[0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+        init_pars=ipars,
         bounds=[0, 1],
         save_dir=os.path.join(save_dir, "outcmaes"),
         popsize_factor=popsize_factor,
         maxfevals=maxfevals,
         tolfun=tolfun,
         tolx=tolx,
-        tolstagnation=tolstagnation)
+        tolstagnation=tolstagnation,
+        num_proc=num_proc)
 else:
     best_par = scipy_par_optimization(loss_func=loss_func,
-                                      init_pars=[0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+                                      init_pars=ipars,
                                       bounds=[[0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]],
                                       method=optimization_method)
 opt_time = (time.time() - t0) / 3600  # time in h
 
-best_par = np.asarray(best_par)*np.asarray(par_prefactors)
-
+best_par = loss_func.rescale_pars(best_par)
 print(best_par)
 
 # saving
@@ -151,7 +160,7 @@ par_dict = {"mass1": mass[0],
             "max_regu": max_regu,
             "min_regu": min_regu,
             "break_cost_redu": break_cost_redu,
-            "par_prefactors": par_prefactors,
+            "bounds": list(bounds),
             "optimization_method": optimization_method,
             "loss_weights": loss_weights,
             "popsize_factor": popsize_factor,

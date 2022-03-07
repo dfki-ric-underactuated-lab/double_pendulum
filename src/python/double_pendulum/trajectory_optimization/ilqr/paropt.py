@@ -6,11 +6,11 @@ from double_pendulum.trajectory_optimization.ilqr.ilqr_cpp import ilqr_calculato
 
 class ilqr_trajopt_loss():
     def __init__(self,
-                 par_prefactors,
+                 bounds,
                  loss_weights,
                  start,
                  goal):
-        self.par_prefactors = par_prefactors
+        self.bounds = np.asarray(bounds)
         self.weights = loss_weights
         self.start = start
         self.goal = goal
@@ -52,6 +52,18 @@ class ilqr_trajopt_loss():
         self.break_cost_redu = break_cost_redu
         self.integrator = integrator
 
+    def rescale_pars(self, pars):
+        # [0, 1] -> real values
+        p = np.copy(pars)
+        p = self.bounds.T[0] + p*(self.bounds.T[1]-self.bounds.T[0])
+        return p
+
+    def unscale_pars(self, pars):
+        # real values -> [0, 1]
+        p = np.copy(pars)
+        p = (p - self.bounds.T[0]) / (self.bounds.T[1]-self.bounds.T[0])
+        return p
+
     def __call__(self, pars):
         il = ilqr_calculator()
         il.set_model_parameters(mass=self.mass,
@@ -70,7 +82,8 @@ class ilqr_trajopt_loss():
                           min_regu=self.min_regu,
                           break_cost_redu=self.break_cost_redu,
                           integrator=self.integrator)
-        il.set_cost_parameters_(self.par_prefactors*pars)
+        p = self.rescale_pars(pars)
+        il.set_cost_parameters_(p)
         il.set_start(self.start)
         il.set_goal(self.goal)
 
@@ -81,5 +94,8 @@ class ilqr_trajopt_loss():
         U1 = np.asarray(U).T[0]
         U2 = np.asarray(U).T[1]
         smooth = np.max(np.abs(np.diff(U1))) + np.max(np.abs(np.diff(U2)))
-        loss = float(self.weights[0]*dist + self.weights[1]*smooth)
+        max_vel = np.max(np.abs(X.T[2:]))
+        loss = float(self.weights[0]*dist +
+                     self.weights[1]*smooth +
+                     self.weights[2]*max_vel)
         return loss

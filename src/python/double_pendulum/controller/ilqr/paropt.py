@@ -8,7 +8,7 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top, wrap_angles_diff
 
 class ilqrmpc_swingup_loss():
     def __init__(self,
-                 par_prefactors,
+                 bounds,
                  loss_weights,
                  start,
                  goal,
@@ -16,7 +16,7 @@ class ilqrmpc_swingup_loss():
 
         self.start = np.asarray(start)
         self.goal = np.asarray(goal)
-        self.par_prefactors = np.asarray(par_prefactors)
+        self.bounds = np.asarray(bounds)
         self.csv_path = csv_path
         self.loss_weights = loss_weights
 
@@ -58,6 +58,18 @@ class ilqrmpc_swingup_loss():
         self.break_cost_redu = break_cost_redu
         self.integrator = integrator
 
+    def rescale_pars(self, pars):
+        # [0, 1] -> real values
+        p = np.copy(pars)
+        p = self.bounds.T[0] + p*(self.bounds.T[1]-self.bounds.T[0])
+        return p
+
+    def unscale_pars(self, pars):
+        # real values -> [0, 1]
+        p = np.copy(pars)
+        p = (p - self.bounds.T[0]) / (self.bounds.T[1]-self.bounds.T[0])
+        return p
+
     def init(self):
         self.plant = SymbolicDoublePendulum(mass=self.mass,
                                             length=self.length,
@@ -90,7 +102,8 @@ class ilqrmpc_swingup_loss():
                                   min_regu=self.min_regu,
                                   break_cost_redu=self.break_cost_redu,
                                   integrator=self.integrator)
-        controller.set_cost_parameters_(np.asarray(pars)*self.par_prefactors)
+        p = self.rescale_pars(pars)
+        controller.set_cost_parameters_(p)
         controller.load_init_traj(csv_path=self.csv_path)
         controller.init()
 
@@ -103,9 +116,10 @@ class ilqrmpc_swingup_loss():
         t, x = self.simulator.get_state()
         # closest_state = np.copy(x0)
 
-        closest_dist = 99999.
-        max_traj_dist = 0.0
-        smoothness = 0.0
+        closest_dist = np.inf
+        max_traj_dist = 0.
+        smoothness = 0.
+        max_vel = 0.
         last_u = np.asarray(controller.get_control_output(self.start))
 
         while (time <= self.t_final):
@@ -126,16 +140,19 @@ class ilqrmpc_swingup_loss():
             if traj_dist > max_traj_dist:
                 max_traj_dist = np.copy(traj_dist)
 
+            if np.abs(y[2]) > max_vel:
+                max_vel = np.abs(y[2])
+            if np.abs(y[3]) > max_vel:
+                max_vel = np.abs(y[3])
+
             u_jump = np.max(np.abs(last_u - np.asarray(tau)))
             if u_jump > smoothness:
                 smoothness = u_jump
             last_u = np.copy(tau)
 
-            # if np.max(np.abs(y - goal) - goal_accuracy) < 0:
-            #     break
-
         loss = (self.loss_weights[0]*goal_dist +
-                self.loss_weights[1]*max_traj_dist +
-                self.loss_weights[2]*smoothness)
+                self.loss_weights[1]*smoothness +
+                self.loss_weights[2]*max_vel +
+                self.loss_weights[3]*max_traj_dist)
 
         return float(loss)

@@ -1,8 +1,8 @@
 import os
 import time
-import numpy as np
 from datetime import datetime
 import yaml
+import numpy as np
 
 from double_pendulum.trajectory_optimization.ilqr.paropt import ilqr_trajopt_loss
 from double_pendulum.utils.cmaes_controller_par_optimizer import (cma_par_optimization,
@@ -40,31 +40,39 @@ max_regu = 10000.
 min_regu = 0.01
 break_cost_redu = 1e-6
 
-par_prefactors = [0.1,
-                  0.1, 0.1,
-                  0.1, 0.1,
-                  10000, 10000,
-                  100, 100]
+bounds = [
+          [0.001, 0.1],
+          [0., 0.1],
+          [0., 0.1],
+          [0., 0.1],
+          [0., 0.1],
+          [0., 10000.],
+          [0., 10000.],
+          [0., 100.],
+          [0., 100.]
+         ]
+init_pars = [0.01, 0., 0., 0., 0., 100, 100, 10, 10]
 
 # swingup parameters
 start = [0.0, 0.0, 0.0, 0.0]
 goal = [np.pi, 0, 0, 0]
 
 # optimization parameters
-loss_weights = [1.0, 0.0]
+opt_method = "cma"  # "Nelder-Mead"
+loss_weights = [1.0, 0.0, 0.0]
 popsize_factor = 4
-maxfevals = 10
+maxfevals = 1000
 tolfun = 0.01
 tolx = 0.01
 tolstagnation = 100
-
+num_proc = 2
 
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
 save_dir = os.path.join("data", robot, "ilqr", "trajopt_paropt", timestamp)
 os.makedirs(save_dir)
 
 # loss function setup
-loss_func = ilqr_trajopt_loss(par_prefactors=par_prefactors,
+loss_func = ilqr_trajopt_loss(bounds=bounds,
                               loss_weights=loss_weights,
                               start=start,
                               goal=np.asarray(goal))
@@ -87,28 +95,30 @@ loss_func.set_parameters(N=N,
                          integrator=integrator)
 
 # optimization
+ipar = loss_func.unscale_pars(init_pars)
 
 t0 = time.time()
 
-best_par = cma_par_optimization(
-    loss_func=loss_func,
-    init_pars=[0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
-    bounds=[0, 1],
-    save_dir=os.path.join(save_dir, "outcmaes"),
-    popsize_factor=popsize_factor,
-    maxfevals=maxfevals,
-    tolfun=tolfun,
-    tolx=tolx,
-    tolstagnation=tolstagnation)
-
-# best_par = scipy_par_optimization(loss_func=loss_func,
-#                                   init_pars=[1.0, 1.0, 1.0],
-#                                   bounds=[[0, 1], [0, 1], [0, 1]],
-#                                   method="Nelder-Mead")
+if opt_method == "cma":
+    best_par = cma_par_optimization(
+        loss_func=loss_func,
+        init_pars=ipar,
+        bounds=[0, 1],
+        save_dir=os.path.join(save_dir, "outcmaes"),
+        popsize_factor=popsize_factor,
+        maxfevals=maxfevals,
+        tolfun=tolfun,
+        tolx=tolx,
+        tolstagnation=tolstagnation)
+else:
+    best_par = scipy_par_optimization(loss_func=loss_func,
+                                      init_pars=[1.0, 1.0, 1.0],
+                                      bounds=[[0, 1], [0, 1], [0, 1]],
+                                      method=opt_method)
 
 opt_time = (time.time() - t0) / 3600  # time in h
 
-best_par = np.asarray(best_par)*np.asarray(par_prefactors)
+best_par = loss_func.rescale_pars(best_par)
 print(best_par)
 
 np.savetxt(os.path.join(save_dir, "controller_par.csv"), best_par)
@@ -146,13 +156,16 @@ par_dict = {"mass1": mass[0],
             "max_regu": max_regu,
             "min_regu": min_regu,
             "break_cost_redu": break_cost_redu,
-            "par_prefactors": par_prefactors,
+            "opt_method": opt_method,
+            "bounds": list(bounds),
+            "init_pars": list(init_pars),
             "loss_weights": loss_weights,
             "popsize_factor": popsize_factor,
             "maxfevals": maxfevals,
             "tolfun": tolfun,
             "tolx": tolx,
-            "tolstagnation": tolstagnation
+            "tolstagnation": tolstagnation,
+            "num_proc": num_proc,
             }
 
 with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
