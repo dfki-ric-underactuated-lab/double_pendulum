@@ -149,6 +149,12 @@ void ilqr_mpc::read_parameter_file(std::string configfile){
                                     coulomb_friction1, coulomb_friction2,
                                     gravity,
                                     torque_limit1, torque_limit2);
+    if (torque_limit1 > 0.){
+        active_act = 0;
+    }
+    else if (torque_limit2 > 0.){
+        active_act = 1;
+    }
 
 }
 void ilqr_mpc::set_cost_parameters(double su1, double su2,
@@ -214,6 +220,12 @@ void ilqr_mpc::set_model_parameters(double m1, double m2,
                                     cf1, cf2,
                                     g,
                                     tl1, tl2);
+    if (torque_limit1 > 0.){
+        active_act = 0;
+    }
+    else if (torque_limit2 > 0.){
+        active_act = 1;
+    }
 
 }
 
@@ -353,6 +365,8 @@ double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
     // set the running goal to N steps in the future on the precomputed traj
     Eigen::Vector<double, ilqr::n_x> x0, running_goal;
     int N_hor = std::min(counter+N, N_init-1);
+    int counter_cap = std::min(counter, N_init-1);
+    int N_hor_cap = std::min(counter+N, N-1);
     running_goal(0) = x_init_traj[N_hor](0);
     running_goal(1) = x_init_traj[N_hor](1);
     running_goal(2) = x_init_traj[N_hor](2);
@@ -361,7 +375,10 @@ double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
     ilqr_calc->set_start(x);
     ilqr_calc->set_u_init_traj(u_traj);
     //ilqr_calc->set_x_init_traj(x_traj);
+
     ilqr_calc->set_goal(running_goal);
+    ilqr_calc->set_goal_traj(x_init_traj, counter_cap, N_hor_cap);
+
     ilqr_calc->run_ilqr(max_iter, break_cost_redu, regu_init, max_regu, min_regu);
 
     //std::string filename = "data/mpc_traj_files/trajectory_"+ std::to_string(counter) + ".csv";
@@ -420,15 +437,29 @@ double ilqr_mpc::get_control_output(double p1, double p2, double v1, double v2){
 }
 
 double* ilqr_mpc::get_u1_traj(){
-    for (int i=0; i<N-1; i++){
-        u1_mpctraj_doubles[i] = 0.0;
+    if (active_act == 0){
+        for (int i=0; i<N-1; i++){
+            u1_mpctraj_doubles[i] = ilqr_calc->u_traj[i](0);
+        }
+    }
+    else{
+        for (int i=0; i<N-1; i++){
+            u1_mpctraj_doubles[i] = 0.0;
+        }
     }
     return u1_mpctraj_doubles;
 }
 
 double* ilqr_mpc::get_u2_traj(){
-    for (int i=0; i<N-1; i++){
-        u2_mpctraj_doubles[i] = ilqr_calc->u_traj[i](0);
+    if (active_act == 1){
+        for (int i=0; i<N-1; i++){
+            u2_mpctraj_doubles[i] = ilqr_calc->u_traj[i](0);
+        }
+    }
+    else{
+        for (int i=0; i<N-1; i++){
+            u2_mpctraj_doubles[i] = 0.0;
+        }
     }
     return u2_mpctraj_doubles;
 }

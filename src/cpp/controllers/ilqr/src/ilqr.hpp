@@ -38,7 +38,7 @@ private:
     double goal_energy;
 
     double sCu1, sCu2, sCp1, sCp2, sCv1, sCv2, sCen, fCp1, fCp2, fCv1, fCv2, fCen;
-    double stage_cost(Eigen::Vector<double, n_x>, Eigen::Vector<double, n_u>);
+    double stage_cost(Eigen::Vector<double, n_x>, Eigen::Vector<double, n_u>, int);
     double final_cost(Eigen::Vector<double, n_x>);
     double calculate_cost(bool);
 
@@ -57,19 +57,25 @@ private:
     void compute_dynamics_u(Eigen::Vector<double, n_x>,
                             Eigen::Vector<double, n_u>);
     void compute_stage_x(Eigen::Vector<double, n_x>,
-                         Eigen::Vector<double, n_u>);
+                         Eigen::Vector<double, n_u>,
+                         int);
     void compute_stage_u(Eigen::Vector<double, n_x>,
-                         Eigen::Vector<double, n_u>);
+                         Eigen::Vector<double, n_u>,
+                         int);
     void compute_stage_xx(Eigen::Vector<double, n_x>,
-                          Eigen::Vector<double, n_u>);
+                          Eigen::Vector<double, n_u>,
+                          int);
     void compute_stage_ux(Eigen::Vector<double, n_x>,
-                          Eigen::Vector<double, n_u>);
+                          Eigen::Vector<double, n_u>,
+                          int);
     void compute_stage_uu(Eigen::Vector<double, n_x>,
-                          Eigen::Vector<double, n_u>);
+                          Eigen::Vector<double, n_u>,
+                          int);
     void compute_final_x(Eigen::Vector<double, n_x>);
     void compute_final_xx(Eigen::Vector<double, n_x>);
     void compute_derivatives(Eigen::Vector<double, n_x>,
-                             Eigen::Vector<double, n_u>);
+                             Eigen::Vector<double, n_u>,
+                             int);
 
 
     void rollout();
@@ -126,6 +132,9 @@ public:
     void set_start(double, double, double, double);
     void set_goal(Eigen::Vector<double, n_x>);
     void set_goal(double, double, double, double);
+    void load_goal_traj(std::string);
+    void set_goal_traj(double p1[], double p2[], double v1[], double v2[], int from, int to);
+    void set_goal_traj(Eigen::Vector<double, n_x> x_tr[], int from, int to);
     void set_u_init_traj(double u1[], double u2[]);
     void set_u_init_traj(Eigen::Vector<double, n_u> utrj[]);
     void set_x_init_traj(double p1[], double p2[], double v1[], double v2[]);
@@ -137,6 +146,9 @@ public:
     Eigen::Vector<double, n_u>* u_traj_new = new Eigen::Vector<double, n_u>[N-1];
     Eigen::Vector<double, n_x>* x_traj = new Eigen::Vector<double, n_x>[N];
     Eigen::Vector<double, n_x>* x_traj_new = new Eigen::Vector<double, n_x>[N];
+
+    Eigen::Vector<double, n_x>* goal_traj = new Eigen::Vector<double, n_x>[N];
+    double* goal_traj_energy = new double[N];
 
     bool warm_start_x = false;
     bool warm_start_u = false;

@@ -8,6 +8,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include "ilqr.hpp"
+//#include "../../../utils/src/csv_reader.hpp"
 #include "../../../model/src/dp_plant.hpp"
 #include "../../../simulator/src/simulator.hpp"
 
@@ -37,6 +38,8 @@ ilqr::~ilqr(){
     delete [] K_traj;
     delete [] best_k_traj;
     delete [] best_K_traj;
+    delete [] goal_traj;
+    delete [] goal_traj_energy;
 }
 
 int ilqr::get_N(){
@@ -208,6 +211,14 @@ void ilqr::set_goal(Eigen::Vector<double, n_x> x){
     goal(0) = std::fmod(goal(0), 2.*M_PI);
     goal(1) = std::fmod(goal(1)+M_PI, 2.*M_PI) - M_PI;
     goal_energy = plant.calculate_total_energy(goal);
+
+    for (int i=0; i<N; i++){
+        for (int j=0; j<n_x; j++){
+            goal_traj[i](j) = goal(j);
+        }
+        //goal_traj_energy[i] = plant.calculate_total_energy(goal_traj[i]);
+        goal_traj_energy[i] = goal_energy; // save computing time (do not use energy for now)
+    }
 }
 
 void ilqr::set_goal(double pos1, double pos2,
@@ -217,8 +228,42 @@ void ilqr::set_goal(double pos1, double pos2,
     goal(2) = vel1;
     goal(3) = vel2;
     goal_energy = plant.calculate_total_energy(goal);
+
+    for (int i=0; i<N; i++){
+        for (int j=0; j<n_x; j++){
+            goal_traj[i](j) = goal(j);
+        }
+        //goal_traj_energy[i] = plant.calculate_total_energy(goal_traj[i]);
+        goal_traj_energy[i] = goal_energy; // save computing time (do not use energy for now)
+    }
 }
 
+
+// void ilqr::load_goal_traj(std::string filename){
+//     CSVReader reader(filename, ",");
+//     std::vector<std::vector<double> > trajectory = reader.getDataDouble(1);
+// 
+//     for (int i=0; i<N; i++){
+//         for (int j=0; j<n_x; j++){
+//             goal_traj[i](j) = trajectory[i][j];
+//         }
+//     }
+// }
+
+void ilqr::set_goal_traj(double p1[], double p2[], double v1[], double v2[], int from, int to){
+    for (int i=from; i<to; i++){
+        goal_traj[i](0) = p1[i];
+        goal_traj[i](1) = p2[i];
+        goal_traj[i](2) = v1[i];
+        goal_traj[i](3) = v2[i];
+    }
+}
+
+void ilqr::set_goal_traj(Eigen::Vector<double, n_x> x_tr[], int from, int to){
+    for (int i=from; i<to; i++){
+        goal_traj[i] = x_tr[i];
+    }
+}
 
 void ilqr::set_u_init_traj(double u1[], double u2[]){
     for(int i=0; i<N-1; i++){
@@ -280,16 +325,17 @@ Eigen::Vector<double, n_x> ilqr::discrete_dynamics(Eigen::Vector<double, n_x> x,
 }
 
 double ilqr::stage_cost(Eigen::Vector<double, n_x> x,
-                        Eigen::Vector<double, n_u> u){
+                        Eigen::Vector<double, n_u> u,
+                        int idx){
     double eps = 1e-6;
     double pos1_error, pos2_error;
     double vel1_error, vel2_error;
     double u1_cost;//, u2_cost;
     double en_error, scost;
-    pos1_error = pow((std::fmod(x(0), 2.*M_PI) - goal(0) + eps), 2.);
-    pos2_error = pow((std::fmod(x(1)+M_PI, 2.*M_PI)- M_PI - goal(1) + eps), 2.);
-    vel1_error = pow((x(2) - goal(2)), 2.);
-    vel2_error = pow((x(3) - goal(3)), 2.);
+    pos1_error = pow((std::fmod(x(0), 2.*M_PI) - goal_traj[idx](0) + eps), 2.);
+    pos2_error = pow((std::fmod(x(1)+M_PI, 2.*M_PI)- M_PI - goal_traj[idx](1) + eps), 2.);
+    vel1_error = pow((x(2) - goal_traj[idx](2)), 2.);
+    vel2_error = pow((x(3) - goal_traj[idx](3)), 2.);
     u1_cost = pow(u(0), 2.);
     //u2_cost = pow(u(1), 2.);
 
@@ -335,13 +381,13 @@ double ilqr::calculate_cost(bool new_traj){
     double total = 0.;
     if (new_traj){
         for (int i=0; i<N-1; i++){
-            total += stage_cost(x_traj_new[i], u_traj_new[i]);// / (1.*(N-1));
+            total += stage_cost(x_traj_new[i], u_traj_new[i], i);// / (1.*(N-1));
         }
         total += final_cost(x_traj_new[N-1]);
     }
     else{
         for (int i=0; i<N-1; i++){
-            total += stage_cost(x_traj[i], u_traj[i]);// / (1.*(N-1));
+            total += stage_cost(x_traj[i], u_traj[i], i);// / (1.*(N-1));
             //printf("stage cost %e\n", total);
         }
         total += final_cost(x_traj[N-1]);
@@ -411,27 +457,29 @@ void ilqr::compute_dynamics_u(Eigen::Vector<double, n_x> x,
 
 
 void ilqr::compute_stage_x(Eigen::Vector<double, n_x> x,
-                           Eigen::Vector<double, n_u> u){
+                           Eigen::Vector<double, n_u> u,
+                           int idx){
     if (verbose > 3){
         printf("    compute stage x\n");
     }
 
     double eps = 1e-6;
-    en_diff = plant.calculate_total_energy(x) - goal_energy;
+    en_diff = plant.calculate_total_energy(x) - goal_traj_energy[idx];
     Eigen::Vector<double, n_x> E_x = plant.get_Ex(x);
 
-    stage_x(0) = 2.*sCp1*(std::fmod(x(0), 2.*M_PI) - goal(0) + eps)
+    stage_x(0) = 2.*sCp1*(std::fmod(x(0), 2.*M_PI) - goal_traj[idx](0) + eps)
                  + 2.*sCen*en_diff*E_x(0); 
-    stage_x(1) = 2.*sCp2*(std::fmod(x(1) + M_PI, 2.*M_PI) - M_PI - goal(1) + eps)
+    stage_x(1) = 2.*sCp2*(std::fmod(x(1) + M_PI, 2.*M_PI) - M_PI - goal_traj[idx](1) + eps)
                  + 2.*sCen*en_diff*E_x(1);
-    stage_x(2) = 2.*sCv1*(x(2) - goal(2))
+    stage_x(2) = 2.*sCv1*(x(2) - goal_traj[idx](2))
                  + 2.*sCen*en_diff*E_x(2);
-    stage_x(3) = 2.*sCv2*(x(3) - goal(3))
+    stage_x(3) = 2.*sCv2*(x(3) - goal_traj[idx](3))
                  + 2.*sCen*en_diff*E_x(3);
 }
 
 void ilqr::compute_stage_u(Eigen::Vector<double, n_x> x,
-                           Eigen::Vector<double, n_u> u){
+                           Eigen::Vector<double, n_u> u,
+                           int idx){
     if (verbose > 3){
         printf("    compute stage u\n");
     }
@@ -448,12 +496,13 @@ void ilqr::compute_stage_u(Eigen::Vector<double, n_x> x,
 }
 
 void ilqr::compute_stage_xx(Eigen::Vector<double, n_x> x,
-                            Eigen::Vector<double, n_u> u){
+                            Eigen::Vector<double, n_u> u,
+                            int idx){
     if (verbose > 3){
         printf("    compute stage xx\n");
     }
 
-    en_diff = plant.calculate_total_energy(x) - goal_energy;
+    en_diff = plant.calculate_total_energy(x) - goal_traj_energy[idx];
     Eigen::Vector<double, n_x> E_x = plant.get_Ex(x);
     Eigen::Matrix<double, n_x, n_x> E_xx = plant.get_Exx(x);
 
@@ -471,7 +520,8 @@ void ilqr::compute_stage_xx(Eigen::Vector<double, n_x> x,
 }
 
 void ilqr::compute_stage_ux(Eigen::Vector<double, n_x> x,
-                            Eigen::Vector<double, n_u> u){
+                            Eigen::Vector<double, n_u> u,
+                            int idx){
     if (verbose > 3){
         printf("    compute stage ux\n");
     }
@@ -482,7 +532,8 @@ void ilqr::compute_stage_ux(Eigen::Vector<double, n_x> x,
 }
 
 void ilqr::compute_stage_uu(Eigen::Vector<double, n_x> x,
-                            Eigen::Vector<double, n_u> u){
+                            Eigen::Vector<double, n_u> u,
+                            int idx){
     if (verbose > 3){
         printf("    compute stage uu\n");
     }
@@ -547,7 +598,8 @@ void ilqr::compute_final_xx(Eigen::Vector<double, n_x> x){
 }
 
 void ilqr::compute_derivatives(Eigen::Vector<double, n_x> x,
-                               Eigen::Vector<double, n_u> u){
+                               Eigen::Vector<double, n_u> u,
+                               int idx){
     if (verbose > 3){
         printf("compute derivatives\n");
     }
@@ -555,11 +607,11 @@ void ilqr::compute_derivatives(Eigen::Vector<double, n_x> x,
     //en_diff = plant.calculate_total_energy(x) - goal_energy;
     compute_dynamics_x(x, u);
     compute_dynamics_u(x, u);
-    compute_stage_x(x, u);
-    compute_stage_u(x, u);
-    compute_stage_xx(x, u);
-    compute_stage_ux(x, u);
-    compute_stage_uu(x, u);
+    compute_stage_x(x, u, idx);
+    compute_stage_u(x, u, idx);
+    compute_stage_xx(x, u, idx);
+    compute_stage_ux(x, u, idx);
+    compute_stage_uu(x, u, idx);
     //compute_final_x(x);
     //compute_final_xx(x);
 
@@ -683,7 +735,7 @@ double ilqr::backward_pass(double regu){
     V_xx = final_xx;
     for(int i=N-2; i>-1; i--){ // TODO: i>0 or i>-1? i=N-1 or i=N-2?
         //std::cout << "x " << x_traj[i] << ". u " << u_traj[i] << std::endl;
-        compute_derivatives(x_traj[i], u_traj[i]);
+        compute_derivatives(x_traj[i], u_traj[i], i);
         calculate_Q_terms();
         calculate_gains(regu);
         k_traj[i] = k;

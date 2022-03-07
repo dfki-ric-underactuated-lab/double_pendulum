@@ -9,7 +9,7 @@ from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.saving import save_trajectory
 
-robot = "pendubot"
+robot = "acrobot"
 
 # # model parameters
 # mass = [0.608, 0.630]
@@ -44,22 +44,30 @@ t_final = 6.0
 integrator = "runge_kutta"
 
 # controller parameters
-N = 200
+N = 100
 N_init = 1000
-max_iter = 8
+max_iter = 5
 max_iter_init = 1000
 regu_init = 100
 max_regu = 10000.
 min_regu = 0.01
 break_cost_redu = 1e-6
 
-sCu = [9.96090757e-02, 9.96090757e-02]
-sCp = [2.55362809e-02, 9.65397113e-02]
-sCv = [2.17121720e-05, 6.80616778e-03]
+sCu = [9.97938814e-02, 9.97938814e-02]
+sCp = [2.06969312e-02, 7.69967729e-02]
+sCv = [1.55726136e-04, 5.42226523e-03]
 sCen = 0.0
-fCp = [2.56167942e+02, 7.31751057e+03]
-fCv = [9.88563736e+01, 9.67149494e+01]
+fCp = [3.82623819e+02, 7.05315590e+03]
+fCv = [5.89790058e+01, 9.01459500e+01]
 fCen = 0.0
+
+# sCu = [9.96090757e-02, 9.96090757e-02]
+# sCp = [2.55362809e-02, 9.65397113e-02]
+# sCv = [2.17121720e-05, 6.80616778e-03]
+# sCen = 0.0
+# fCp = [2.56167942e+02, 7.31751057e+03]
+# fCv = [9.88563736e+01, 9.67149494e+01]
+# fCen = 0.0
 
 # sCu = [0.01, 0.01]
 # sCp = [0., 0.]
@@ -78,7 +86,7 @@ fCen = 0.0
 # fCen = 6.36798375e+00
 
 # init trajectory
-init_csv_path = "data/"+robot+"/ilqr/trajectory.csv"
+init_csv_path = "data/"+robot+"/ilqr/trajopt/20220307-115818/trajectory.csv"
 
 # init_sCu = [9.64008003e-04, 3.69465206e-04]
 # init_sCp = [9.00160028e-04, 8.52634075e-04]

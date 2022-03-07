@@ -10,7 +10,7 @@ from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.saving import save_trajectory
 from double_pendulum.controller.trajectory_following.trajectory_controller import TrajectoryController
 
-robot = "pendubot"
+robot = "acrobot"
 
 # # model parameters
 # mass = [0.608, 0.630]

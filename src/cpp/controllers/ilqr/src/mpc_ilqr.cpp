@@ -275,6 +275,9 @@ int main(int argc, char *argv[], char *envp[]){
     }
     traj_file.close();
 
+    delete [] u_traj;
+    delete [] x_traj;
+
     //delete [] u1_mpctraj_doubles;
     //delete [] u2_mpctraj_doubles;
     //delete [] p1_mpctraj_doubles;

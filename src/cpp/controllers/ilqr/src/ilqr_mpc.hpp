@@ -28,6 +28,7 @@ private:
     double coulomb_friction1, coulomb_friction2;
     double gravity;
     double torque_limit1, torque_limit2;
+    int active_act = 1;
 
     double sCu1, sCu2, sCp1, sCp2, sCv1, sCv2, sCen, fCp1, fCp2, fCv1, fCv2, fCen;
 
