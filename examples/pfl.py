@@ -1,4 +1,7 @@
+import sys
 import os
+from datetime import datetime
+import yaml
 import numpy as np
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
@@ -8,53 +11,13 @@ from double_pendulum.utils.saving import save_trajectory
 from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl import (SymbolicPFLController,
                                                                                     SymbolicPFLAndLQRController)
 
-
+# model parameters
 robot = "acrobot"
-pfl_method = "collocated"
 with_cfric = False
-with_lqr = False
 
-x0 = [0.1, 0.0, 0.0, 0.0]
-dt = 0.01
-t_final = 3.2
-
-if robot == "acrobot":
-    if pfl_method == "collocated":
-        if with_cfric:
-            par = [9.94271982, 1.56306923, 3.27636175]  # ok
-        else:
-            # par = [9.94246152, 9.84124115, 9.81120166]  # good
-            # par = [8.62246575,  5.69727126, 13.92682243]
-            # par = [9.94341926, 5.03014971, 9.99622511]
-            # par = [15.0, 8.0, 9.0]
-            par = [9.98906556, 5.40486824, 7.28776292]  # best
-            # par = [81.63674422, 17.77758626, 49.83576241] # meh
-    elif pfl_method == "noncollocated":
-        par = [9.19534629, 2.24529733, 5.90567362]  # good
-    else:
-        print(f"pfl_method {pfl_method} not found. Please set eigher" +
-              "pfl_method='collocated' or pfl_method='noncollocated'")
-        exit()
-elif robot == "pendubot":
-    if pfl_method == "collocated":
-        par = [6.97474837, 9.84031538, 9.1297417]  # bad
-    elif pfl_method == "noncollocated":
-        # par = [6.97474837, 9.84031538, 9.1297417]  # bad
-        # par = [4.91129641, 10., 1.64418209]
-        par = [26.34039456, 99.99876263, 11.89097532]
-        # par = [15.64747394, 19.5291726, 3.71447987]
-    else:
-        print(f"pfl_method {pfl_method} not found. Please set eigher" +
-              "pfl_method='collocated' or pfl_method='noncollocated'")
-        exit()
-else:
-    print(f"robot {robot} not found. Please set eigher" +
-          "robot='acrobot' or robot='pendubot'")
-    exit()
-
-mass = [0.608, 0.630]
-length = [0.3, 0.2]
-com = [0.275, 0.166]
+mass = [0.608, 0.5]
+length = [0.3, 0.4]
+com = [length[0], length[1]]
 #damping = [0.081, 0.0]
 damping = [0.0, 0.0]
 if with_cfric:
@@ -62,11 +25,61 @@ if with_cfric:
 else:
     cfric = [0.0, 0.0]
 gravity = 9.81
-inertia = [0.05472, 0.02522]
+inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
 if robot == "acrobot":
-    torque_limit = [0.0, 3.0]
+    torque_limit = [0.0, 5.0]
+    active_act = 1
 if robot == "pendubot":
-    torque_limit = [3.0, 0.0]
+    torque_limit = [5.0, 0.0]
+    active_act = 0
+
+# simulation parameters
+integrator = "runge_kutta"
+goal = [np.pi, 0., 0., 0.]
+dt = 0.01
+x0 = [0.1, 0.0, 0.0, 0.0]
+t_final = 10.0
+
+# controller parameters
+pfl_method = "collocated"
+with_lqr = True
+
+if robot == "acrobot":
+    # lqr parameters
+    Q = np.diag((0.97, 0.93, 0.39, 0.26))
+    R = np.diag((0.11, 0.11))
+    if pfl_method == "collocated":
+        if with_cfric:
+            par = [9.94271982, 1.56306923, 3.27636175]  # ok
+        else:
+            #par = [9.98906556, 5.40486824, 7.28776292]  # similar to the one below
+            par = [7.5, 4.4, 7.3]  # best
+            #par = [0.5, 0.44, 0.6]
+            #par = [9.39406094, 8.45818256, 0.82061105]
+            #par = [14.07071258, 4.31253548, 16.77354333] # quick start
+    elif pfl_method == "noncollocated":
+        par = [9.19534629, 2.24529733, 5.90567362]  # good
+    else:
+        print(f"pfl_method {pfl_method} not found. Please set eigher" +
+              "pfl_method='collocated' or pfl_method='noncollocated'")
+        sys.exit()
+elif robot == "pendubot":
+    # lqr parameters
+    Q = np.diag((11.64, 79.58, 0.073, 0.0003))
+    R = np.diag((0.13, 0.13))
+    if pfl_method == "collocated":
+        par = [6.97474837, 9.84031538, 9.1297417]  # bad
+    elif pfl_method == "noncollocated":
+        par = [26.34039456, 99.99876263, 11.89097532]
+    else:
+        print(f"pfl_method {pfl_method} not found. Please set eigher" +
+              "pfl_method='collocated' or pfl_method='noncollocated'")
+        sys.exit()
+else:
+    print(f"robot {robot} not found. Please set eigher" +
+          "robot='acrobot' or robot='pendubot'")
+    sys.exit()
+
 
 double_pendulum = SymbolicDoublePendulum(mass=mass,
                                          length=length,
@@ -88,31 +101,17 @@ if with_lqr:
                                              torque_limit,
                                              robot,
                                              pfl_method)
-    if robot == "acrobot":
-        controller.lqr_controller.set_cost_parameters(p1p1_cost=11.67,
-                                                      p2p2_cost=3.87,
-                                                      v1v1_cost=0.10,
-                                                      v2v2_cost=0.11,
-                                                      p1v1_cost=0.,
-                                                      p1v2_cost=0.,
-                                                      p2v1_cost=0.,
-                                                      p2v2_cost=0.,
-                                                      u1u1_cost=0.18,
-                                                      u2u2_cost=0.18,
-                                                      u1u2_cost=0.)
-    else:
-        controller.lqr_controller.set_cost_parameters(p1p1_cost=0.01251931,
-                                                      p2p2_cost=6.87772744,
-                                                      v1v1_cost=6.51187283,
-                                                      v2v2_cost=9.35785251,
-                                                      p1v1_cost=0.,
-                                                      p1v2_cost=0.,
-                                                      p2v1_cost=0.,
-                                                      p2v2_cost=0.,
-                                                      u1u1_cost=1.02354949,
-                                                      u2u2_cost=1.02354949,
-                                                      u1u2_cost=0.)
-
+    controller.lqr_controller.set_cost_parameters(p1p1_cost=Q[0, 0],
+                                                  p2p2_cost=Q[1, 1],
+                                                  v1v1_cost=Q[2, 2],
+                                                  v2v2_cost=Q[3, 3],
+                                                  p1v1_cost=0.,
+                                                  p1v2_cost=0.,
+                                                  p2v1_cost=0.,
+                                                  p2v2_cost=0.,
+                                                  u1u1_cost=R[0, 0],
+                                                  u2u2_cost=R[1, 1],
+                                                  u1u2_cost=0.)
 else:  # without lqr
     controller = SymbolicPFLController(mass,
                                        length,
@@ -127,12 +126,11 @@ else:  # without lqr
 
 sim = Simulator(plant=double_pendulum)
 
-controller.set_goal([np.pi, 0, 0, 0])
-
+controller.set_goal(goal)
 controller.set_cost_parameters_(par)
 
 print(f"Simulating {pfl_method} PFL controller for {robot}")
-print(f"Coulomb Friction:  {with_cfric}")
+print(f"Coulomb Friction: {with_cfric}")
 print(f"LQR: {with_lqr}")
 print(f"dt: {dt}")
 print(f"t final: {t_final}")
@@ -145,7 +143,7 @@ T, X, U = sim.simulate_and_animate(t0=0.0,
                                    tf=t_final,
                                    dt=dt,
                                    controller=controller,
-                                   integrator="runge_kutta",
+                                   integrator=integrator,
                                    phase_plot=False,
                                    save_video=False)
 
@@ -153,22 +151,50 @@ T, X, U = sim.simulate_and_animate(t0=0.0,
 energy = controller.en
 des_energy = controller.desired_energy
 
-plot_timeseries(T, X, U, energy,
-                plot_energy=True,
-                pos_y_lines=[-np.pi, np.pi],
-                tau_y_lines=[-torque_limit[1], torque_limit[1]],
-                energy_y_lines=[des_energy])
+# saving and plotting
+timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
+save_dir = os.path.join("data", robot, "pfl", pfl_method, timestamp)
+os.makedirs(save_dir)
 
-# Save Trajectory to a csv file to be sent to the motor.
-filename = os.path.join("data", robot, "pfl", pfl_method, "trajectory.csv")
-save_trajectory(filename=filename,
+save_trajectory(filename=os.path.join(save_dir, "trajectory.csv"),
                 T=T,
                 X=X,
                 U=U)
 
-# csv_data = np.vstack((T, np.asarray(X).T[0], np.asarray(X).T[1], U)).T
-# np.savetxt("traj_opt_traj.csv",
-#              csv_data,
-#              delimiter=',',
-#              header="time,pos,vel,torque",
-#              comments="")
+plot_timeseries(T, X, U, energy,
+                plot_energy=True,
+                pos_y_lines=[-np.pi, np.pi],
+                tau_y_lines=[-torque_limit[active_act], torque_limit[active_act]],
+                energy_y_lines=[des_energy],
+                save_to=os.path.join(save_dir, "time_series"))
+
+par_dict = {"mass1": mass[0],
+            "mass2": mass[1],
+            "length1": length[0],
+            "length2": length[1],
+            "com1": com[0],
+            "com2": com[1],
+            "inertia1": inertia[0],
+            "inertia2": inertia[1],
+            "damping1": damping[0],
+            "damping2": damping[1],
+            "coulomb_friction1": cfric[0],
+            "coulomb_friction2": cfric[1],
+            "gravity": gravity,
+            "torque_limit1": torque_limit[0],
+            "torque_limit2": torque_limit[1],
+            "dt": dt,
+            "t_final": t_final,
+            "integrator": integrator,
+            "start_pos1": x0[0],
+            "start_pos2": x0[1],
+            "start_vel1": x0[2],
+            "start_vel2": x0[3],
+            "goal_pos1": goal[0],
+            "goal_pos2": goal[1],
+            "goal_vel1": goal[2],
+            "goal_vel2": goal[3],
+            }
+
+with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
+    yaml.dump(par_dict, f)

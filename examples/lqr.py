@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.simulation.simulation import Simulator
@@ -39,10 +38,12 @@ damping = [0.0, 0.0]
 cfric = [0., 0.]
 gravity = 9.81
 inertia = [mass[0]*length[0]**2., mass[1]*length[1]**2.]
-if robot == "acrobot":
-    torque_limit = [0.0, 5.0]
 if robot == "pendubot":
     torque_limit = [5.0, 0.0]
+    active_act = 0
+elif robot == "acrobot":
+    torque_limit = [0.0, 5.0]
+    active_act = 1
 
 # simulation parameters
 dt = 0.005
@@ -78,6 +79,7 @@ if robot == "acrobot":
     # 11.67044417  0.10076462  3.86730188  0.11016735  0.18307841
     # [6.60845661 0.0203263  1.59384209 0.11347305 0.08903846]
     # 1.649609700742603735e+01 9.094310297259731612e+01 7.128663050519863653e-02 1.116726623434960083e-02 3.647472178659907360e+00
+    #c[7.568227051118126880e+00, 1.851805841833500610e+00, 9.989157089721836247e-01, 9.994476149737525628e-01, 7.567700329462909714e-01]
     Q = np.diag((0.97, 0.93, 0.39, 0.26))
     R = np.diag((0.11, 0.11))
 elif robot == "pendubot":
@@ -101,7 +103,6 @@ controller.set_cost_parameters(p1p1_cost=Q[0, 0],
 controller.set_parameters(failure_value=0.0,
                           cost_to_go_cut=15.0)
 controller.init()
-
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    tf=t_final, dt=dt, controller=controller,
                                    integrator="runge_kutta", phase_plot=False,
@@ -111,4 +112,4 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
 plot_timeseries(T, X, U, None,
                 plot_energy=False,
                 pos_y_lines=[0.0, np.pi],
-                tau_y_lines=[-torque_limit[1], torque_limit[1]])
+                tau_y_lines=[-torque_limit[active_act], torque_limit[active_act]])
