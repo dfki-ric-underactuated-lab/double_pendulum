@@ -8,47 +8,47 @@ import matplotlib.pyplot as plt
 from double_pendulum.utils.wrap_angles import wrap_angles_top
 
 
-def swingup_test(pars,
-                 simulator,
-                 controller,
-                 t_final,
-                 dt,
-                 x0,
-                 integrator,
-                 goal,
-                 goal_accuracy,
-                 par_prefactors):  # kpos_pre, kvel_pre, ken_pre):
-
-    # controller.set_cost_parameters_([kpos_pre*pars[0],
-    #                                  kvel_pre*pars[1],
-    #                                  ken_pre*pars[2]])
-    controller.set_cost_parameters_(par_prefactors*pars)
-
-    controller.init()
-
-    time = 0.0
-    simulator.set_state(time, x0)
-    # sim.set_state(time, 0.1*np.random.uniform(size=4))
-    simulator.reset_data_recorder()
-    t, x = simulator.get_state()
-    # closest_state = np.copy(x0)
-    closest_dist = 99999.
-
-    while (time <= t_final):
-        tau = controller.get_control_output(x)
-        simulator.step(tau, dt, integrator=integrator)
-        t, x = simulator.get_state()
-
-        y = wrap_angles_top(x)
-
-        time = np.copy(t)
-        goal_dist = np.max(np.abs(y - goal))
-        if goal_dist < closest_dist:
-            closest_dist = np.copy(goal_dist)
-            # closest_state = np.copy(y)
-        # if np.max(np.abs(y - goal) - goal_accuracy) < 0:
-        #     break
-    return float(closest_dist)
+# def swingup_test(pars,
+#                  simulator,
+#                  controller,
+#                  t_final,
+#                  dt,
+#                  x0,
+#                  integrator,
+#                  goal,
+#                  goal_accuracy,
+#                  par_prefactors):  # kpos_pre, kvel_pre, ken_pre):
+# 
+#     # controller.set_cost_parameters_([kpos_pre*pars[0],
+#     #                                  kvel_pre*pars[1],
+#     #                                  ken_pre*pars[2]])
+#     controller.set_cost_parameters_(par_prefactors*pars)
+# 
+#     controller.init()
+# 
+#     time = 0.0
+#     simulator.set_state(time, x0)
+#     # sim.set_state(time, 0.1*np.random.uniform(size=4))
+#     simulator.reset_data_recorder()
+#     t, x = simulator.get_state()
+#     # closest_state = np.copy(x0)
+#     closest_dist = 99999.
+# 
+#     while (time <= t_final):
+#         tau = controller.get_control_output(x)
+#         simulator.step(tau, dt, integrator=integrator)
+#         t, x = simulator.get_state()
+# 
+#         y = wrap_angles_top(x)
+# 
+#         time = np.copy(t)
+#         goal_dist = np.max(np.abs(y - goal))
+#         if goal_dist < closest_dist:
+#             closest_dist = np.copy(goal_dist)
+#             # closest_state = np.copy(y)
+#         # if np.max(np.abs(y - goal) - goal_accuracy) < 0:
+#         #     break
+#     return float(closest_dist)
 
 
 class swingup_loss():
@@ -61,7 +61,7 @@ class swingup_loss():
                  integrator,
                  goal,
                  goal_accuracy,
-                 par_prefactors,
+                 bounds,
                  repetitions=1,
                  loss_weights=[1.0, 0.0]):
 
@@ -73,12 +73,25 @@ class swingup_loss():
         self.integrator = integrator
         self.goal = np.asarray(goal)
         self.goal_accuracy = goal_accuracy
-        self.par_prefactors = np.asarray(par_prefactors)
+        # self.par_prefactors = np.asarray(par_prefactors)
+        self.bounds = bounds
         self.repetitions = repetitions
         self.weights = loss_weights
 
+    def rescale_pars(self, pars):
+        # [0, 1] -> real values
+        p = np.copy(pars)
+        p = self.bounds.T[0] + p*(self.bounds.T[1]-self.bounds.T[0])
+        return p
+
+    def unscale_pars(self, pars):
+        # real values -> [0, 1]
+        p = np.copy(pars)
+        p = (p - self.bounds.T[0]) / (self.bounds.T[1]-self.bounds.T[0])
+        return p
+
     def __call__(self, pars):
-        p = self.par_prefactors*np.asarray(pars)
+        p = self.rescale_pars(pars)
         self.controller.set_cost_parameters_(p)
         self.controller.init()
 
@@ -91,7 +104,7 @@ class swingup_loss():
             self.simulator.reset_data_recorder()
             t, x = self.simulator.get_state()
             # closest_state = np.copy(x0)
-            closest_dist = 99999.
+            closest_dist = np.inf
             s = 0.
 
             last_tau = np.asarray([0., 0.])

@@ -2,7 +2,7 @@ import os
 import shutil
 import numpy as np
 from datetime import datetime
-from functools import partial
+# from functools import partial
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.simulation.simulation import Simulator
@@ -10,11 +10,11 @@ from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl import SymbolicPFLController
 from double_pendulum.utils.cmaes_controller_par_optimizer import (swingup_loss,
                                                                   cma_par_optimization,
-                                                                  scipy_par_optimization,
-                                                                  swingup_test)
+                                                                  scipy_par_optimization)
 
 interactive = False
 
+# model parameter
 robot = "acrobot"
 pfl_method = "collocated"
 
@@ -31,15 +31,19 @@ if robot == "acrobot":
     torque_limit = [0.0, 4.0]
 if robot == "pendubot":
     torque_limit = [4.0, 0.0]
-
+# simulation parameter
 dt = 0.01
 t_final = 5.00
 x0 = [0.1, 0.0, 0.0, 0.0]
 goal = np.array([np.pi, 0, 0, 0])
 
-kpos_pre = 1e1
-kvel_pre = 1e1
-ken_pre = 1e1
+# optimizaiton parameters
+opt_method = "Nelder-Mead"
+maxfevals = 100
+bounds = np.asarray([[0., 100.],
+                     [0., 100.],
+                     [0., 100.]])
+
 
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
 save_dir = os.path.join("data", robot, pfl_method, timestamp)
@@ -67,48 +71,31 @@ controller = SymbolicPFLController(mass,
                                    robot,
                                    pfl_method)
 
-
 controller.set_goal(goal)
-controller.set_lqr_parameters(failure_value=np.nan)
 
-loss_func = partial(swingup_test,
-                    simulator=sim,
-                    controller=controller,
-                    t_final=t_final,
-                    dt=dt,
-                    x0=x0,
-                    integrator="runge_kutta",
-                    goal=goal,
-                    goal_accuracy=[0.1, 0.1, 0.2, 0.2],
-                    par_prefactors=[kpos_pre, kvel_pre, ken_pre])
-# kpos_pre=kpos_pre,
-# kvel_pre=kvel_pre,
-# ken_pre=ken_pre)
+loss_func = swingup_loss(simulator=sim,
+                         controller=controller,
+                         t_final=t_final,
+                         dt=dt,
+                         x0=x0,
+                         integrator="runge_kutta",
+                         goal=goal,
+                         goal_accuracy=[0.1, 0.1, 0.2, 0.2],
+                         bounds=bounds)
 
+if opt_method == "cma":
+    best_par = cma_par_optimization(loss_func=loss_func,
+                                    init_pars=[0.5, 0.5, 0.5],
+                                    bounds=[0, 1],
+                                    save_dir=os.path.join(save_dir, "outcmaes"),
+                                    maxfevals=maxfevals)
+elif opt_method == "Nelder-Mead":
+    best_par = scipy_par_optimization(loss_func=loss_func,
+                                      init_pars=[1.0, 1.0, 1.0],
+                                      bounds=[[0, 1], [0, 1], [0, 1]],
+                                      method="Nelder-Mead")
 
-# loss_func = swingup_loss(simulator=sim,
-#                          controller=controller,
-#                          t_final=t_final,
-#                          dt=dt,
-#                          x0=x0,
-#                          integrator="runge_kutta",
-#                          goal=goal,
-#                          goal_accuracy=[0.1, 0.1, 0.2, 0.2],
-#                          par_prefactors=[kpos_pre, kvel_pre, ken_pre])
-
-best_par = cma_par_optimization(loss_func=loss_func,
-                                init_pars=[1.0, 1.0, 1.0],
-                                bounds=[0, 1],
-                                save_dir=os.path.join(save_dir, "outcmaes"))
-# best_par = scipy_par_optimization(loss_func=loss_func,
-#                                   init_pars=[1.0, 1.0, 1.0],
-#                                   bounds=[[0, 1], [0, 1], [0, 1]],
-#                                   method="Nelder-Mead")
-
-best_par[0] *= kpos_pre
-best_par[1] *= kvel_pre
-best_par[2] *= ken_pre
-
+best_par = loss_func.rescale_pars(best_par)
 print(best_par)
 
 controller.set_cost_parameters(best_par[0], best_par[1], best_par[2])
