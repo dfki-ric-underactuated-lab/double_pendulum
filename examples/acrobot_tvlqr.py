@@ -24,19 +24,6 @@ inertia = [0.05472, 0.02522]
 torque_limit = [0.0, 6.0]
 
 # simulation parameters
-
-trajectory = np.loadtxt(csv_path, skiprows=1, delimiter=",")
-T_des = trajectory.T[0]
-pos1_des = trajectory.T[1]
-vel1_des = trajectory.T[2]
-tau1_des = trajectory.T[5]
-pos2_des = trajectory.T[6]
-vel2_des = trajectory.T[7]
-tau2_des = trajectory.T[10]
-
-U_des = np.vstack((tau1_des, tau2_des)).T
-X_des = np.vstack((pos1_des, pos2_des, vel1_des, vel2_des)).T
-
 dt = 0.001
 t_final = 11
 x0 = [0.0, 0.0, 0.0, 0.0]
@@ -70,7 +57,20 @@ controller.init()
 
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    tf=t_final, dt=dt, controller=controller,
-                                   integrator="runge_kutta", phase_plot=False)
+                                   integrator="runge_kutta", phase_plot=False,
+                                   plot_inittraj=True)
+
+trajectory = np.loadtxt(csv_path, skiprows=1, delimiter=",")
+T_des = trajectory.T[0]
+pos1_des = trajectory.T[1]
+vel1_des = trajectory.T[2]
+tau1_des = trajectory.T[5]
+pos2_des = trajectory.T[6]
+vel2_des = trajectory.T[7]
+tau2_des = trajectory.T[10]
+
+U_des = np.vstack((tau1_des, tau2_des)).T
+X_des = np.vstack((pos1_des, pos2_des, vel1_des, vel2_des)).T
 
 plot_timeseries(T, X, U, None,
                 plot_energy=False,

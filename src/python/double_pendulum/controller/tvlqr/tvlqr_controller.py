@@ -124,13 +124,13 @@ class TVLQRController(AbstractController):
                                                            options=options)
 
     def get_init_trajectory(self):
-        T = self.time_traj.flatten()
-        X = np.asarray([self.pos1_traj.flatten(),
-                        self.pos2_traj.flatten(),
-                        self.vel1_traj.flatten(),
-                        self.vel2_traj.flatten()]).T
-        U = np.asarray([self.tau1_traj.flatten(),
-                        self.tau2_traj.flatten()]).T
+        T = self.time_traj
+        X = np.asarray([self.pos1_traj,
+                        self.pos2_traj,
+                        self.vel1_traj,
+                        self.vel2_traj]).T
+        U = np.asarray([self.tau1_traj,
+                        self.tau2_traj]).T
 
         return T, X, U
         
