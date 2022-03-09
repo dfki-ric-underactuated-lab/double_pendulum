@@ -226,20 +226,20 @@ class ILQRMPCCPPController(AbstractController):
 
     def get_forecast(self):
 
-        # throws seg fault
-        # u1_traj = self.ilmpc.get_u1_traj()
-        # u2_traj = self.ilmpc.get_u2_traj()
-        # p1_traj = self.ilmpc.get_p1_traj()
-        # p2_traj = self.ilmpc.get_p2_traj()
-        # v1_traj = self.ilmpc.get_v1_traj()
-        # v2_traj = self.ilmpc.get_v2_traj()
+        # throws seg fault (fixed)
+        u1_traj = self.ilmpc.get_u1_traj()
+        u2_traj = self.ilmpc.get_u2_traj()
+        p1_traj = self.ilmpc.get_p1_traj()
+        p2_traj = self.ilmpc.get_p2_traj()
+        v1_traj = self.ilmpc.get_v1_traj()
+        v2_traj = self.ilmpc.get_v2_traj()
 
-        u1_traj = self.u1_init_traj
-        u2_traj = self.u2_init_traj
-        p1_traj = self.p1_init_traj
-        p2_traj = self.p2_init_traj
-        v1_traj = self.v1_init_traj
-        v2_traj = self.v2_init_traj
+        # u1_traj = np.zeros(self.N)
+        # u2_traj = np.zeros(self.N)
+        # p1_traj = np.zeros(self.N)
+        # p2_traj = np.zeros(self.N)
+        # v1_traj = np.zeros(self.N)
+        # v2_traj = np.zeros(self.N)
 
         T = np.linspace(0, self.N*self.dt, self.N)
         X = np.asarray([p1_traj, p2_traj, v1_traj, v2_traj]).T

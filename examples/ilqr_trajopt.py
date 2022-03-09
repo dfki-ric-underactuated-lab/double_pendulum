@@ -228,4 +228,4 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
                                    integrator=integrator, phase_plot=False,
                                    save_video=False,
                                    video_name=os.path.join(save_dir, "simulation"),
-                                   plot_forecast=True)
+                                   plot_inittraj=True)

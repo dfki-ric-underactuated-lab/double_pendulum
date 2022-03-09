@@ -53,6 +53,7 @@ max_regu = 10000.
 min_regu = 0.01
 break_cost_redu = 1e-6
 
+# acrobot good par
 sCu = [9.97938814e-02, 9.97938814e-02]
 sCp = [2.06969312e-02, 7.69967729e-02]
 sCv = [1.55726136e-04, 5.42226523e-03]
@@ -60,6 +61,14 @@ sCen = 0.0
 fCp = [3.82623819e+02, 7.05315590e+03]
 fCv = [5.89790058e+01, 9.01459500e+01]
 fCen = 0.0
+
+# sCu = [9.97938814e-02, 9.97938814e-02]
+# sCp = [2.06969312e+02, 7.69967729e+02]
+# sCv = [1.55726136e+01, 5.42226523e+01]
+# sCen = 0.0
+# fCp = [0., 0.]
+# fCv = [0., 0.]
+# fCen = 0.0
 
 # sCu = [9.96090757e-02, 9.96090757e-02]
 # sCp = [2.55362809e-02, 9.65397113e-02]
@@ -86,7 +95,8 @@ fCen = 0.0
 # fCen = 6.36798375e+00
 
 # init trajectory
-init_csv_path = "data/"+robot+"/ilqr/trajopt/20220307-115818/trajectory.csv"
+latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
+init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
 
 # init_sCu = [9.64008003e-04, 3.69465206e-04]
 # init_sCp = [9.00160028e-04, 8.52634075e-04]
@@ -113,7 +123,7 @@ timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
 save_dir = os.path.join("data", robot, "ilqr", "mpc", timestamp)
 os.makedirs(save_dir)
 
-# construct simulaiton objects
+# construct simulation objects
 plant = SymbolicDoublePendulum(mass=mass,
                                length=length,
                                com=com,
@@ -171,9 +181,9 @@ controller.init()
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
                                    tf=t_final, dt=dt, controller=controller,
                                    integrator="runge_kutta", phase_plot=False,
-                                   plot_forecast=True,
+                                   plot_inittraj=True, plot_forecast=True,
                                    save_video=False,
-                                   video_name=os.path.join(save_dir, "simulaiton"))
+                                   video_name=os.path.join(save_dir, "simulation"))
 
 # T, X, U = sim.simulate(t0=0.0, x0=start,
 #                        tf=t_final, dt=dt, controller=controller,
@@ -236,8 +246,21 @@ with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
 
 save_trajectory(os.path.join(save_dir, "trajectory.csv"), T, X, U)
 
+trajectory = np.loadtxt(init_csv_path, skiprows=1, delimiter=",")
+T_des = trajectory.T[0]
+pos1_des = trajectory.T[1]
+pos2_des = trajectory.T[2]
+vel1_des = trajectory.T[3]
+vel2_des = trajectory.T[4]
+tau1_des = trajectory.T[5]
+tau2_des = trajectory.T[6]
+
+U_des = np.vstack((tau1_des, tau2_des)).T
+X_des = np.vstack((pos1_des, pos2_des, vel1_des, vel2_des)).T
+
 plot_timeseries(T, X, U, None,
                 plot_energy=False,
                 pos_y_lines=[0.0, np.pi],
                 tau_y_lines=[-torque_limit[1], torque_limit[1]],
+                T_des=T_des, X_des=X_des, U_des=U_des,
                 save_to=os.path.join(save_dir, "timeseries"))

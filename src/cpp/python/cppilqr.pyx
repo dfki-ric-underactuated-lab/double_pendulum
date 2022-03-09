@@ -46,7 +46,8 @@ cdef class ArrayWrapper:
     def __dealloc__(self):
         """ Frees the array. This is called by Python when all the
         references to the object are gone. """
-        free(<void*>self.data_ptr)
+        #free(<void*>self.data_ptr)
+        pass
 
 
 cdef class cppilqr:

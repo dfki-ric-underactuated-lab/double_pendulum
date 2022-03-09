@@ -1,5 +1,5 @@
+import os
 import numpy as np
-import matplotlib.pyplot as plt
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.simulation.simulation import Simulator
@@ -7,20 +7,30 @@ from double_pendulum.controller.trajectory_following.trajectory_controller impor
 from double_pendulum.utils.plotting import plot_timeseries
 
 
-mass = [0.608, 0.630]
-length = [0.3, 0.2]
-com = [0.275, 0.166]
-damping = [0.081, 0.0]
+robot = "acrobot"
+trajopt = "ilqr"
+
+mass = [0.608, 0.5]
+length = [0.3, 0.4]
+com = [length[0], length[1]]
+#damping = [0.081, 0.0]
+damping = [0., 0.]
 # cfric = [0.093, 0.186]
 cfric = [0., 0.]
 gravity = 9.81
-inertia = [0.05472, 0.02522]
-torque_limit = [0.0, 6.0]
+inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
+torque_limit = [0.0, 4.0]
 
-csv_path = "data/acrobot/ilqr/trajectory.csv"
+latest_dir = sorted(os.listdir(os.path.join("data", robot, trajopt, "trajopt")))[-1]
+csv_path = os.path.join("data", robot, trajopt, "trajopt", latest_dir, "trajectory.csv")
+#csv_path = "data/acrobot/ilqr/trajopt/20220307-174420/trajectory.csv"
+trajectory = np.loadtxt(csv_path, skiprows=1, delimiter=",")
 
-dt = 0.005
-t_final = 5.0
+x0 = trajectory[0][1:5]
+dt = trajectory[1][0] - trajectory[0][0]
+t_final = trajectory[-1][0]
+# dt = 0.005
+# t_final = 5.0
 
 plant = SymbolicDoublePendulum(mass=mass,
                                length=length,
@@ -38,7 +48,7 @@ controller = TrajectoryController(csv_path=csv_path,
                                   kK_stabilization=True)
 controller.init()
 
-T, X, U = sim.simulate_and_animate(t0=0.0, x0=[0.0, 0.0, 0.0, 0.0],
+T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    tf=t_final, dt=dt, controller=controller,
                                    integrator="runge_kutta", phase_plot=False,
                                    plot_forecast=True)

@@ -137,6 +137,18 @@ class Simulator:
                                  ee_pos[link][0],
                                  ee_pos[link][1])
 
+        if self.plot_inittraj:
+            T, X, U = controller.get_init_trajectory()
+            coords = []
+            for x in X:
+                coords.append(
+                    self.plant.forward_kinematics(x[:self.plant.dof])[-1])
+
+            coords = np.asarray(coords)
+            self.animation_plots[ani_plot_counter].set_data(coords.T[0],
+                                                            coords.T[1])
+            ani_plot_counter += 1
+
         if self.plot_forecast:
             T, X, U = controller.get_forecast()
             coords = []
@@ -185,7 +197,8 @@ class Simulator:
         return self.ps_plots
 
     def simulate_and_animate(self, t0, x0, tf, dt, controller=None,
-                             integrator="runge_kutta", plot_forecast=False,
+                             integrator="runge_kutta",
+                             plot_inittraj=False, plot_forecast=False,
                              phase_plot=False, save_video=False,
                              video_name="pendulum_swingup"):
         """
@@ -193,6 +206,7 @@ class Simulator:
         The animation is only implemented for 2d serial chains
         """
 
+        self.plot_inittraj = plot_inittraj
         self.plot_forecast = plot_forecast
         self.set_state(t0, x0)
         self.reset_data_recorder()
@@ -200,8 +214,10 @@ class Simulator:
         fig = plt.figure(figsize=(20, 20))
         self.animation_ax = plt.axes()
         self.animation_plots = []
-        if self.plot_forecast:
-            self.forecast_plots = []
+        # if self.plot_inittraj:
+        #     self.inittraj_plots = []
+        # if self.plot_forecast:
+        #     self.forecast_plots = []
 
         for link in range(self.plant.n_links):
             ee_plot, = self.animation_ax.plot([], [], "o",
@@ -212,9 +228,13 @@ class Simulator:
                                                lw=5, color="black")
             self.animation_plots.append(bar_plot)
 
-        if self.plot_forecast:
-            fc_plot, = self.animation_ax.plot([], [], "--",
+        if self.plot_inittraj:
+            it_plot, = self.animation_ax.plot([], [], "--",
                                               lw=1, color="gray")
+            self.animation_plots.append(it_plot)
+        if self.plot_forecast:
+            fc_plot, = self.animation_ax.plot([], [], "-",
+                                              lw=1, color="green")
             self.animation_plots.append(fc_plot)
 
         text_plot = self.animation_ax.text(0.15, 0.85, [],
@@ -258,8 +278,10 @@ class Simulator:
             #     writer2 = Writer2(fps=60, bitrate=1800)
             #     animation2.save(video_name+'_phase.mp4', writer=writer2)
             print("Saving video done.")
-        self.set_state(t0, x0)
-        self.reset_data_recorder()
-        plt.show()
+        else:
+            self.set_state(t0, x0)
+            self.reset_data_recorder()
+            plt.show()
+        plt.close()
 
         return self.t_values, self.x_values, self.tau_values
