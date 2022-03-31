@@ -180,11 +180,11 @@ Eigen::Vector<double, n_x/2> DPPlant::get_F(Eigen::Vector<double, n_x> x){
 
     Eigen::Vector<double, n_x/2> F; // Coulomb vector
 
-    double sign_v1 = (double) (x(2) > 0) - (x(2) < 0);
-    double sign_v2 = (double) (x(3) > 0) - (x(3) < 0);
+    //double sign_v1 = (double) (x(2) > 0) - (x(2) < 0);
+    //double sign_v2 = (double) (x(3) > 0) - (x(3) < 0);
 
-    F(0) = damping1*x(2) + coulomb_friction1*sign_v1;
-    F(1) = damping2*x(3) + coulomb_friction2*sign_v2;
+    F(0) = damping1*x(2) + coulomb_friction1*atan(100*x(2));
+    F(1) = damping2*x(3) + coulomb_friction2*atan(100*x(3));
 
     ////std::cout << "F inputs: " << damping1 << " " << damping2 << " " << coulomb_friction1 << " " << coulomb_friction2 << " " << sign_v1 << " " << sign_v2 << std::endl;
     if (verbose > 0){

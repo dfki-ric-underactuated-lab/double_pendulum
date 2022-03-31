@@ -47,11 +47,12 @@ class ILQRMPCCPPController(AbstractController):
                        N=1000,
                        dt=0.005,
                        max_iter=1,
-                       regu_init=100,
+                       regu_init=1,
                        max_regu=10000.,
                        min_regu=0.01,
                        break_cost_redu=1e-6,
-                       integrator="runge_kutta"):
+                       integrator="runge_kutta",
+                       trajectory_stabilization=True):
         self.N = N
         self.dt = dt
         self.max_iter = max_iter
@@ -64,6 +65,7 @@ class ILQRMPCCPPController(AbstractController):
             self.integrator_int = 0
         else:
             self.integrator_int = 1
+        self.traj_stab = trajectory_stabilization
 
     def set_cost_parameters(self,
                             sCu=[0.005, 0.005],
@@ -194,7 +196,8 @@ class ILQRMPCCPPController(AbstractController):
         # self.il.set_start(x[0], x[1], x[2], x[3])
         self.ilmpc.set_u_init_traj(self.u1_init_traj, self.u2_init_traj)
         self.ilmpc.set_x_init_traj(self.p1_init_traj, self.p2_init_traj,
-                                   self.v1_init_traj, self.v2_init_traj)
+                                   self.v1_init_traj, self.v2_init_traj,
+                                   self.traj_stab)
 
     def get_control_output(self, x, t=None):
         # print("get control output")

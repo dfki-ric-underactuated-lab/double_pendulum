@@ -286,7 +286,8 @@ void ilqr_mpc::set_u_init_traj(Eigen::Vector<double, ilqr::n_u> utrj[]){
 }
 
 void ilqr_mpc::set_x_init_traj(double p1[], double p2[],
-                               double v1[], double v2[]){
+                               double v1[], double v2[],
+                               bool traj_stab){
     int Nmin = std::min(N_init, N);
     for(int i=0; i<N_init; i++){
         x_init_traj[i](0) = p1[i];
@@ -298,9 +299,11 @@ void ilqr_mpc::set_x_init_traj(double p1[], double p2[],
         x_traj[i] = x_init_traj[i];
     }
     //ilqr_calc->set_x_init_traj(x_traj);
+    trajectory_stabilization = traj_stab;
 }
 
-void ilqr_mpc::set_x_init_traj(Eigen::Vector<double, ilqr::n_x> xtrj[]){
+void ilqr_mpc::set_x_init_traj(Eigen::Vector<double, ilqr::n_x> xtrj[],
+                               bool traj_stab){
     //x_init_traj = xtrj;
     for(int i=0; i<N_init; i++){
         x_init_traj[i] = xtrj[i];
@@ -310,6 +313,7 @@ void ilqr_mpc::set_x_init_traj(Eigen::Vector<double, ilqr::n_x> xtrj[]){
         x_traj[i] = x_init_traj[i];
     }
     //ilqr_calc->set_x_init_traj(x_traj);
+    trajectory_stabilization = traj_stab;
 }
 
 void ilqr_mpc::shift_trajs(int s){
@@ -377,8 +381,9 @@ double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
     //ilqr_calc->set_x_init_traj(x_traj);
 
     ilqr_calc->set_goal(running_goal);
-    ilqr_calc->set_goal_traj(x_init_traj, counter_cap, N_hor_cap);
-
+    if (trajectory_stabilization){
+        ilqr_calc->set_goal_traj(x_init_traj, counter_cap, N_hor_cap);
+    }
     ilqr_calc->run_ilqr(max_iter, break_cost_redu, regu_init, max_regu, min_regu);
 
     //std::string filename = "data/mpc_traj_files/trajectory_"+ std::to_string(counter) + ".csv";

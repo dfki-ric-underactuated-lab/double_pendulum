@@ -272,7 +272,7 @@ cdef class cppilqrmpc:
         uu2 = u2
         self.ilmpc.set_u_init_traj(&uu1[0], &uu2[0])
 
-    def set_x_init_traj(self, p1, p2, v1, v2):
+    def set_x_init_traj(self, p1, p2, v1, v2, traj_stab):
         cdef np.ndarray[double, ndim=1, mode="c"] pp1
         cdef np.ndarray[double, ndim=1, mode="c"] pp2
         cdef np.ndarray[double, ndim=1, mode="c"] vv1
@@ -281,7 +281,7 @@ cdef class cppilqrmpc:
         pp2 = p2
         vv1 = v1
         vv2 = v2
-        self.ilmpc.set_x_init_traj(&pp1[0], &pp2[0], &vv1[0], &vv2[0])
+        self.ilmpc.set_x_init_traj(&pp1[0], &pp2[0], &vv1[0], &vv2[0], traj_stab)
 
     def get_control_output(self, p1, p2, v1, v2):
         u = self.ilmpc.get_control_output(p1, p2, v1, v2)

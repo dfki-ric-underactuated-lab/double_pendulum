@@ -3,6 +3,7 @@
 
 #cimport cython
 from libcpp.vector cimport vector
+from libcpp cimport bool
 
 cdef extern from "../model/src/dp_plant.cpp":
     pass
@@ -78,7 +79,8 @@ cdef extern from "../controllers/ilqr/src/ilqr_mpc.hpp":
                                   double tl1, double tl2)
         void set_u_init_traj(double u1[], double u2[])
         void set_x_init_traj(double p1[], double p2[],
-                             double v1[], double v2[])
+                             double v1[], double v2[],
+                             bool traj_stab)
         double get_control_output(double p1, double p2,
                                   double v1, double v2)
         double *get_u1_traj()

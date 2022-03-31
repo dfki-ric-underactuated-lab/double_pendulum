@@ -121,7 +121,10 @@ class SymbolicDoublePendulum():
 
     def symbolic_mass_matrix(self):
         # Spong eq. have additional self.m2*self.r2**2.0 term in all entries
+        # and self.m1*self.r1**2.0 in M11.
         # why? this has different results!
+        # Guess: The axes for the inertias I1, I2 are defined different
+        # Underactuated: center at rotation point, Spong: at com
         if self.formulas == "UnderactuatedLecture":
             M11 = self.I1 + self.I2 + self.m2*self.l1**2.0 + \
                 2*self.m2*self.l1*self.r2*smp.cos(self.q2)
@@ -172,8 +175,8 @@ class SymbolicDoublePendulum():
         return G
 
     def symbolic_coulomb_vector(self):
-        F1 = self.b1*self.qd1 + self.cf1*smp.sign(self.qd1)
-        F2 = self.b2*self.qd2 + self.cf2*smp.sign(self.qd2)
+        F1 = self.b1*self.qd1 + self.cf1*smp.atan(100*self.qd1)
+        F2 = self.b2*self.qd2 + self.cf2*smp.atan(100*self.qd2)
         F = smp.Matrix([[F1], [F2]])
         return F
 
@@ -218,15 +221,16 @@ class SymbolicDoublePendulum():
         return np.asarray(F, dtype=float).reshape(self.dof)
 
     def equation_of_motion(self, order="2nd"):
+        Minv = self.M.inv()
         if order == "2nd":
-            eom = (self.M*self.qdd
-                   + self.C*self.qd
-                   - self.G - self.B_sym*self.u - self.F)
+            # eom = (self.M*self.qdd
+            #        + self.C*self.qd
+            #        - self.G - self.B_sym*self.u + self.F)
+            eom = Minv*(-self.C*self.qd + self.G + self.B_sym*self.u - self.F)
             return eom
         elif order == "1st":
-            Minv = self.M.inv()
             f1 = self.qd
-            f2 = Minv*(-self.C*self.qd + self.G + self.B_sym*self.u)
+            f2 = Minv*(-self.C*self.qd + self.G + self.B_sym*self.u - self.F)
             f = smp.Matrix([f1, f2])
             return f
 
@@ -307,12 +311,14 @@ class SymbolicDoublePendulum():
         # print("C", C)
         # print("G", G)
         # print("F", F)
+        # print("Minv", Minv[0, 0], Minv[0, 1], Minv[1, 0], Minv[1, 1])
 
         force = G + self.B.dot(u) - C.dot(vel)
         # print("force", force)
-        friction = np.where(np.abs(F) > np.abs(force),
-                            np.abs(force)*np.sign(F),
-                            F)
+        # friction = np.where(np.abs(F) > np.abs(force),
+        #                     np.abs(force)*np.sign(F),
+        #                     F)
+        friction = F
 
         accn = Minv.dot(force - friction)
         # accn = Minv.dot(G + self.B.dot(tau) - C.dot(vel) - F)

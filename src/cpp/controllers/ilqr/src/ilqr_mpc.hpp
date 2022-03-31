@@ -41,6 +41,7 @@ private:
     int max_iter;
     double break_cost_redu;
     double regu_init, max_regu, min_regu;
+    bool trajectory_stabilization = false;
 
     int counter = 0;
 
@@ -72,8 +73,8 @@ public:
     void set_goal(double, double, double, double);
     void set_u_init_traj(double u1[], double u2[]);
     void set_u_init_traj(Eigen::Vector<double, ilqr::n_u> utrj[]);
-    void set_x_init_traj(double p1[], double p2[], double v1[], double v2[]);
-    void set_x_init_traj(Eigen::Vector<double, ilqr::n_x> xtrj[]);
+    void set_x_init_traj(double p1[], double p2[], double v1[], double v2[], bool);
+    void set_x_init_traj(Eigen::Vector<double, ilqr::n_x> xtrj[], bool);
     void shift_trajs(int);
 
     Eigen::Vector<double, ilqr::n_u>* u_traj = new Eigen::Vector<double, ilqr::n_u>[N-1];
