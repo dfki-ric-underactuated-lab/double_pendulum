@@ -70,17 +70,3 @@ class TrajectoryController(AbstractController):
         U = np.asarray([u1_traj, u2_traj]).T
 
         return T, X, U
-
-    def get_forecast(self):
-        u1_traj = self.trajectory.T[5]
-        u2_traj = self.trajectory.T[6]
-        p1_traj = self.trajectory.T[1]
-        p2_traj = self.trajectory.T[2]
-        v1_traj = self.trajectory.T[3]
-        v2_traj = self.trajectory.T[4]
-
-        T = self.trajectory.T[0]
-        X = np.asarray([p1_traj, p2_traj, v1_traj, v2_traj]).T
-        U = np.asarray([u1_traj, u2_traj]).T
-
-        return T, X, U
