@@ -200,21 +200,13 @@ pip3 --version
 <br>
 
 ## E) Install Requirements for this Repository
-Navigate inside your cloned git repo to `/caprr/software/python` and make sure your virtual environment is active `pyenv activate double-pendulum`. Now you can install version specific packages for all required packages from the `requirements.txt` file via:
+Navigate inside your cloned git repo to `/caprr/software/python` and make sure your virtual environment is active `pyenv activate double-pendulum`. Now you can install either all packages via 
 
 ```
-python3 -m pip install -r requirements.txt
+make
 ```
 
-Note 1: You can generate your own requirements.txt file with this command: `pip freeze > requirements.txt`
-Note 2: Yoiu can skip this step and directly install this package with the setup.py file as described in the next line. This will install the requirement packages as well. The setup.py will not install specific versions of the requirements, that have been tested by us, but instead, it will install the latest version.
-
-This package then can be installed from the [software/python](https://github.com/dfki-ric-underactuated-lab/torque_limited_simple_pendulum/tree/master/software/python) directory by typing:
-```
-pip install .
-```
-
-This was the final installation step. Your system is now prepared to run all code snippets from this repo. Have fun exploring all kind of different simple pendulum controllers!
+or select which specific packages you want to install by commenting out single packages in the 'setup.py' file and running 'make' afterwards. This was the final installation step. Your system is now prepared to run all code snippets from this repo. Have fun exploring all kind of different simple pendulum controllers!
 
 <br>
 
@@ -224,9 +216,3 @@ Drake and it's precompiled binaries can be installed with [different methods](ht
 
 **Check here for more detailed instructions:** https://drake.mit.edu/python_bindings.html 
 <br>    
-
-
-
-
-
- 
