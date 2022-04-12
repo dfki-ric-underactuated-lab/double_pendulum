@@ -73,8 +73,8 @@ def plot_timeseries(T, X=None, U=None, energy=None,
         ax[i].legend(loc="best")
     if plot_tau:
         i += 1
-        ax[i].plot(T, np.asarray(U).T[0], label="u1", color="blue")
-        ax[i].plot(T, np.asarray(U).T[1], label="u2", color="red")
+        ax[i].plot(T, np.asarray(U).T[0, :len(T)], label="u1", color="blue")
+        ax[i].plot(T, np.asarray(U).T[1, :len(T)], label="u2", color="red")
         if not (U_des is None):
             ax[i].plot(T_des, np.asarray(U_des).T[0], ls="--", label="u1 desired", color="lightblue")
             ax[i].plot(T_des, np.asarray(U_des).T[1], ls="--", label="u2 desired", color="orange")

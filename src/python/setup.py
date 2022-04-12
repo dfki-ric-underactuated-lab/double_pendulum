@@ -21,15 +21,12 @@ setup(
         # 'moteus',
 
         # c++ python bindings
-        'cython'
+        'cython',
 
         # optimal control
-        # 'drake',
-        # 'pyyaml',
-        # 'umsgpack',
-        # 'zmq',
-        # 'IPython',
-        # 'tornado',
+        'drake',
+        'meshcat',
+        'IPython'
         # 'crocoddyl',
 
         # # reinforcement learning
