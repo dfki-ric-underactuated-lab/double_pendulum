@@ -72,13 +72,13 @@ class TVLQRController(AbstractController):
         elif read_with == "numpy":
             self.data = np.loadtxt(csv_path, skiprows=1, delimiter=",")
 
-            self.time_traj = self.data[:,0]
-            self.pos1_traj = self.data[:,1]
-            self.pos2_traj = self.data[:,2]
-            self.vel1_traj = self.data[:,3]
-            self.vel2_traj = self.data[:,4]
-            self.tau1_traj = self.data[:,5]
-            self.tau2_traj = self.data[:,6]
+            self.time_traj = self.data[:, 0]
+            self.pos1_traj = self.data[:, 1]
+            self.pos2_traj = self.data[:, 2]
+            self.vel1_traj = self.data[:, 3]
+            self.vel2_traj = self.data[:, 4]
+            self.tau1_traj = self.data[:, 5]
+            self.tau2_traj = self.data[:, 6]
 
         self.max_t = self.time_traj[-1]
 
@@ -94,7 +94,7 @@ class TVLQRController(AbstractController):
     def set_cost_parameters(self,
                             Q=np.diag([4., 4., 0.1, 0.1]),
                             R=2*np.eye(1),
-                            Qf=np.zeros((4,4))):
+                            Qf=np.zeros((4, 4))):
 
         self.Q = np.asarray(Q)
         self.R = np.asarray(R)
@@ -142,15 +142,16 @@ class TVLQRController(AbstractController):
         return T, X, U
 
     def get_control_output(self, x, t):
-        #ti = float(np.min(t, self.max_t))
+        # ti = float(np.min(t, self.max_t))
 
-        error_state = np.reshape(x,(np.shape(x)[0], 1)) - self.tvlqr.x0.value(t)
+        error_state = np.reshape(x, (np.shape(x)[0], 1)) - self.tvlqr.x0.value(t)
 
         # tau = (self.tvlqr.u0.value(t) -
         #        self.tvlqr.K.value(t).dot(error_state) -
         #        self.tvlqr.k0.value(t))[0][0]
         tau = (self.tvlqr.u0.value(t) -
                self.tvlqr.K.value(t).dot(error_state))[0][0]
+        # print(self.tvlqr.u0.value(t), self.tvlqr.K.value(t).dot(error_state), self.tvlqr.k0.value(t))
 
         u = np.zeros(2)
         u[self.active_motor] = tau

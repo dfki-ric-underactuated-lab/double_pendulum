@@ -1,4 +1,3 @@
-import time
 import numpy as np
 import pandas as pd
 
@@ -30,14 +29,14 @@ class PIDController(AbstractController):
         elif read_with == "numpy":
             self.data = np.loadtxt(csv_path, skiprows=1, delimiter=",")
 
-            self.time_traj = self.data[:,0]
-            self.pos1_traj = self.data[:,1]
-            self.pos2_traj = self.data[:,2]
-            self.vel1_traj = self.data[:,3]
-            self.vel1_traj = self.data[:,4]
+            self.time_traj = self.data[:, 0]
+            self.pos1_traj = self.data[:, 1]
+            self.pos2_traj = self.data[:, 2]
+            self.vel1_traj = self.data[:, 3]
+            self.vel1_traj = self.data[:, 4]
             if self.use_ff:
-                self.tau1_traj = self.data[:,5]
-                self.tau2_traj = self.data[:,6]
+                self.tau1_traj = self.data[:, 5]
+                self.tau2_traj = self.data[:, 6]
 
         self.dt = self.time_traj[1] - self.time_traj[0]
         self.max_t = self.time_traj[-1]
