@@ -17,7 +17,8 @@ class SymbolicPFLController(AbstractController):
                  inertia=[None, None],
                  torque_limit=[np.inf, np.inf],
                  robot="acrobot",
-                 pfl_method="collocated"):
+                 pfl_method="collocated",
+                 reference="energy"):
 
         self.torque_limit = torque_limit
 
@@ -78,8 +79,13 @@ class SymbolicPFLController(AbstractController):
         desired_energy = desired_energy.subs(self.plant.x[2], self.goal[2])
         desired_energy = desired_energy.subs(self.plant.x[3], self.goal[3])
 
-        ubar = self.plant.x[2+self.eliminate_ind]*(energy - desired_energy)  # todo check index for non-collocated
-        #ubar = self.plant.x[2]*(energy - desired_energy)  # todo check index for non-collocated
+        if reference == "energy":
+            ubar = self.plant.x[2+self.eliminate_ind]*(energy - desired_energy)  # todo check index for non-collocated
+            #ubar = self.plant.x[2]*(energy - desired_energy)  # todo check index for non-collocated
+        elif reference == "energysat":
+            ubar = smp.functions.elementary.hyperbolic.tanh(self.plant.x[2+self.eliminate_ind]*(energy - desired_energy))
+        elif reference == "q1sat":
+            ubar = smp.functions.elementary.hyperbolic.tanh(self.plant.x[2+self.eliminate_ind])
 
         self.k1s, self.k2s, self.k3s = smp.symbols("k1 k2 k3")
 
@@ -182,7 +188,8 @@ class SymbolicPFLAndLQRController(AbstractController):
                  inertia=[None, None],
                  torque_limit=[np.inf, np.inf],
                  robot="acrobot",
-                 pfl_method="collocated"):
+                 pfl_method="collocated",
+                 reference="energy"):
 
         self.en_controller = SymbolicPFLController(
             mass=mass,
@@ -194,7 +201,8 @@ class SymbolicPFLAndLQRController(AbstractController):
             inertia=inertia,
             torque_limit=torque_limit,
             robot=robot,
-            pfl_method=pfl_method)
+            pfl_method=pfl_method,
+            reference=reference)
 
         self.lqr_controller = LQRController(mass=mass,
                                             length=length,

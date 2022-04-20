@@ -16,6 +16,7 @@ setup(
         # 'argparse',
         'scipy',
         'sympy',
+        'sklearn',
         'cma',
         'mini-cheetah-motor-driver-socketcan',
         # 'moteus',

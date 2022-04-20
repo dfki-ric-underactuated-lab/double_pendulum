@@ -36,6 +36,8 @@ class SymbolicDoublePendulum():
     l1, l2 = smp.symbols("l1 l2")
     r1, r2 = smp.symbols("r1 r2")  # center of masses
     I1, I2 = smp.symbols("I1 I2")
+    Ir_sym = smp.symbols("Ir")
+    gr_sym = smp.symbols("gr")
     g_sym = smp.symbols("g")
     b1, b2 = smp.symbols("b1 b2")
     cf1, cf2 = smp.symbols("cf1 cf2")
@@ -70,6 +72,8 @@ class SymbolicDoublePendulum():
                  gravity=9.81,
                  coulomb_fric=[0.0, 0.0],
                  inertia=[None, None],
+                 motor_inertia=0.,
+                 gear_ratio=6,
                  torque_limit=[np.inf, np.inf]):
         self.m = mass
         self.l = length
@@ -78,12 +82,15 @@ class SymbolicDoublePendulum():
         self.g = gravity
         self.coulomb_fric = coulomb_fric
         self.I = []
+        self.Ir = motor_inertia
+        self.gr = gear_ratio
         self.torque_limit = torque_limit
         for i in range(len(inertia)):
             if inertia[i] is None:
                 self.I.append(mass[i]*com[i]*com[i])
             else:
                 self.I.append(inertia[i])
+
 
         # Actuator selection Matrix
         if torque_limit[0] == 0:
@@ -127,10 +134,13 @@ class SymbolicDoublePendulum():
         # Underactuated: center at rotation point, Spong: at com
         if self.formulas == "UnderactuatedLecture":
             M11 = self.I1 + self.I2 + self.m2*self.l1**2.0 + \
-                2*self.m2*self.l1*self.r2*smp.cos(self.q2)
-            M12 = self.I2 + self.m2*self.l1*self.r2*smp.cos(self.q2)
-            M21 = self.I2 + self.m2*self.l1*self.r2*smp.cos(self.q2)
-            M22 = self.I2
+                2*self.m2*self.l1*self.r2*smp.cos(self.q2) + \
+                self.gr_sym**2.0*self.Ir_sym + self.Ir_sym
+            M12 = self.I2 + self.m2*self.l1*self.r2*smp.cos(self.q2) - \
+                    self.gr_sym*self.Ir_sym
+            M21 = self.I2 + self.m2*self.l1*self.r2*smp.cos(self.q2) - \
+                    self.gr_sym*self.Ir_sym
+            M22 = self.I2 + self.gr_sym**2.0*self.Ir_sym
         elif self.formulas == "Spong":
             M11 = self.I1 + self.I2 + self.m1*self.r1**2.0 + \
                   self.m2*(self.l1**2.0
@@ -259,6 +269,8 @@ class SymbolicDoublePendulum():
         mat_rep = sub_symbols(mat_rep, [self.g_sym], [self.g])
         mat_rep = sub_symbols(mat_rep, [self.b1, self.b2], self.b)
         mat_rep = sub_symbols(mat_rep, [self.cf1, self.cf2], self.coulomb_fric)
+        mat_rep = sub_symbols(mat_rep, [self.Ir_sym], [self.Ir])
+        mat_rep = sub_symbols(mat_rep, [self.gr_sym], [self.gr])
         return mat_rep
 
     def lambdify_matrices(self):

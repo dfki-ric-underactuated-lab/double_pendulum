@@ -7,16 +7,15 @@ from double_pendulum.system_identification.optimization import solve_least_squar
 from double_pendulum.system_identification.plotting import plot_torques
 
 
-def run_system_identification(measured_data_csv, g, n, L1, mp0, bounds):
+def run_system_identification(measured_data_csv, fixed_mpar, variable_mpar, mp0, bounds):
 
-    Q, phi = build_identification_matrices(g, n, L1, len(mp0), measured_data_csv)
+    Q, phi = build_identification_matrices(fixed_mpar, variable_mpar, measured_data_csv)
 
     mp_opt = solve_least_squares(Q, phi, mp0, bounds)
 
-    param_names = ["Lc1*m1", "I1", "Fc1", "Fv1", "Ir", "Lc2*m2", "m2", "I2", "Fc2", "Fv2"]
     print('Identified Parameters:')
-    for i in range(len(param_names)):
-        print("{:10s} = {:+.3e}".format(param_names[i], mp_opt[i]))
+    for i in range(len(variable_mpar)):
+        print("{:10s} = {:+.3e}".format(variable_mpar[i], mp_opt[i]))
 
     # calculate errors
     Q_opt = phi.dot(mp_opt)

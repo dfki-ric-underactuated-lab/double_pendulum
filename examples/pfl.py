@@ -161,7 +161,7 @@ save_trajectory(filename=os.path.join(save_dir, "trajectory.csv"),
                 X=X,
                 U=U)
 
-plot_timeseries(T, X, U, energy,
+plot_timeseries(T=T, X=X, U=U, energy=energy,
                 plot_energy=True,
                 pos_y_lines=[-np.pi, np.pi],
                 tau_y_lines=[-torque_limit[active_act], torque_limit[active_act]],

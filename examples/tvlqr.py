@@ -24,11 +24,11 @@ inertia = [0.05472, 0.02522]
 torque_limit = [0.0, 6.0]
 
 # trajectory parameters
-csv_path = "data/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
-read_with = "pandas"
+#csv_path = "data/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
+#read_with = "pandas"
 
-#csv_path = "data/acrobot/ilqr/trajopt/20220412-170342/trajectory.csv"
-#read_with = "numpy"
+csv_path = "data/acrobot/ilqr/trajopt/20220412-170342/trajectory.csv"
+read_with = "numpy"
 
 # simulation parameters
 x0 = [0.0, 0.0, 0.0, 0.0]

@@ -5,64 +5,106 @@ import matplotlib.pyplot as plt
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.utils.plotting import plot_timeseries
-from double_pendulum.controller.partial_feedback_linearization.pfl import (EnergyShapingPFLAndLQRController,
-                                                                           EnergyShapingPFLController)
+# from double_pendulum.controller.partial_feedback_linearization.pfl import (EnergyShapingPFLAndLQRController,
+#                                                                            EnergyShapingPFLController)
+from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl import (SymbolicPFLController,
+                                                                                    SymbolicPFLAndLQRController)
+
+with_lqr = True
 
 mass = [1.0, 1.0]
 length = [1.0, 1.0]
 damping = [0.0, 0.0]
 gravity = 9.8
 com = [0.5, 0.5]
-coulomb_fric = [0.0, 0.0]
-# inertia = [0.2, 1.0]
+cfric = [0.0, 0.0]
+#inertia = [0.2, 1.0]
 inertia = [0.45, 1.25]
-torque_limit = [0.0, 20.0]
+torque_limit = [0.0, 50.0]
+
+dt = 0.01
+t_final = 8.0
+integrator = "runge_kutta"
+x0 = [0.1, 0., 0., 0.]
+
+print("dt: ", dt)
+print("t final: ", t_final)
+
+par = [9.0, 3.0, 1.0]
+print(par)
+
 
 double_pendulum = SymbolicDoublePendulum(mass=mass,
                                          length=length,
                                          com=com,
                                          damping=damping,
                                          gravity=gravity,
-                                         coulomb_fric=coulomb_fric,
+                                         coulomb_fric=cfric,
                                          inertia=inertia,
                                          torque_limit=torque_limit)
 
 
-controller = EnergyShapingPFLController(mass,
-                                        length,
-                                        com,
-                                        damping,
-                                        gravity,
-                                        coulomb_fric,
-                                        inertia,
-                                        torque_limit)
+if with_lqr:
+    controller = SymbolicPFLAndLQRController(mass,
+                                             length,
+                                             com,
+                                             damping,
+                                             gravity,
+                                             cfric,
+                                             inertia,
+                                             torque_limit,
+                                             "acrobot",
+                                             "collocated",
+                                             "energy")
+    controller.lqr_controller.set_cost_parameters(p1p1_cost=1000.,
+                                                  p2p2_cost=1000.,
+                                                  v1v1_cost=1000.,
+                                                  v2v2_cost=1000.,
+                                                  p1p2_cost=-500.,
+                                                  v1v2_cost=-500.,
+                                                  u1u1_cost=0.5,
+                                                  u2u2_cost=0.5,
+                                                  u1u2_cost=0.)
+    controller.lqr_controller.set_parameters(failure_value=np.nan,
+                                             cost_to_go_cut=1000.)
+else:
+    controller = SymbolicPFLController(mass,
+                                       length,
+                                       com,
+                                       damping,
+                                       gravity,
+                                       cfric,
+                                       inertia,
+                                       torque_limit,
+                                       "acrobot",
+                                       "collocated")
+    # controller = EnergyShapingPFLController(mass,
+    #                                         length,
+    #                                         com,
+    #                                         damping,
+    #                                         gravity,
+    #                                         coulomb_fric,
+    #                                         inertia,
+    #                                         torque_limit)
 
 sim = Simulator(plant=double_pendulum)
 
 controller.set_goal([np.pi, 0, 0, 0])
 
 
-par = [9.0, 6.0, 1.0]  # undamped
-print(par)
-
-controller.set_cost_parameters(kpos=par[0],
-                               kvel=par[1],
-                               ken=par[2])
-
-dt = 0.01
-t_final = 8.0
-
-print("dt: ", dt)
-print("t final: ", t_final)
+# controller.set_cost_parameters(kpos=par[0],
+#                                kvel=par[1],
+#                                ken=par[2])
+controller.set_cost_parameters_(par)
 
 controller.init()
 
 T, X, U = sim.simulate_and_animate(t0=0.0,
-                                   x0=[0.1, 0.0, 0.0, 0.0],
+                                   x0=x0,
                                    tf=t_final,
                                    dt=dt,
                                    controller=controller,
-                                   integrator="runge_kutta",
+                                   integrator=integrator,
                                    phase_plot=False,
                                    save_video=False)
 
