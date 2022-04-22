@@ -38,12 +38,12 @@ def plot_torques(time,
     ax[0, 1].legend(loc="best", fontsize=MEDIUM_SIZE)
     ax[0, 1].set_title("elbow joint", fontsize=MEDIUM_SIZE)
 
-    ax[1, 0].plot(time, shoulder_fit_tau / shoulder_meas_tau, color="blue")
+    ax[1, 0].plot(time, shoulder_fit_tau - shoulder_meas_tau, color="blue")
     ax[1, 0].set_xlabel("time [s]", fontsize=MEDIUM_SIZE)
-    ax[1, 0].set_ylabel("torque [Nm]", fontsize=MEDIUM_SIZE)
+    ax[1, 0].set_ylabel("torque diff", fontsize=MEDIUM_SIZE)
 
-    ax[1, 1].plot(time, elbow_fit_tau / elbow_meas_tau, color="red")
-    ax[1, 1].set_ylim(-10, 10)
+    ax[1, 1].plot(time, elbow_fit_tau - elbow_meas_tau, color="red")
+    #ax[1, 1].set_ylim(-10, 10)
     ax[1, 1].set_xlabel("time [s]", fontsize=MEDIUM_SIZE)
 
     plt.subplots_adjust(left=0.1,

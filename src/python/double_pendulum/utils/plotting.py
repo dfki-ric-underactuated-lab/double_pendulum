@@ -138,13 +138,14 @@ def plot_timeseries_csv(csv_path, read_with="pandas"):
         if "shoulder_acc" in data.keys() and "elbow_acc" in data.keys():
             shoulder_acc = data["shoulder_acc"].tolist()
             elbow_acc = data["elbow_acc"].tolist()
+            ACC = np.asarray([shoulder_acc, elbow_acc]).T
             plot_acc = True
         else:
             plot_acc = False
+            ACC = None
 
     X = np.asarray([shoulder_pos, elbow_pos, shoulder_vel, elbow_vel]).T
     U = np.asarray([shoulder_trq, elbow_trq]).T
-    ACC = np.asarray([shoulder_acc, elbow_acc]).T
 
     plot_timeseries(T=time,
                     X=X,

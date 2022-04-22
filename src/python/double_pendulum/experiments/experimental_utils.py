@@ -337,7 +337,8 @@ def save_data(save_dir,
     np.savetxt(os.path.join(save_dir, f'{date}_measured.csv'),
                measured_csv_data,
                delimiter=',',
-               header="meas_time,shoulder_meas_pos,shoulder_meas_vel,shoulder_meas_tau,elbow_meas_pos,elbow_meas_vel,elbow_meas_tau",
+               # header="meas_time,shoulder_meas_pos,shoulder_meas_vel,shoulder_meas_tau,elbow_meas_pos,elbow_meas_vel,elbow_meas_tau",
+               header="time,shoulder_pos,shoulder_vel,shoulder_torque,elbow_pos,elbow_vel,elbow_tau",
                comments="")
     print("CSV file saved\n")
 
