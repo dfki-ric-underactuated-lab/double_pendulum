@@ -329,16 +329,16 @@ def save_data(save_dir,
     print("Saving data to .csv files.")
     measured_csv_data = np.array([np.array(meas_time),
                                   np.array(shoulder_meas_pos),
-                                  np.array(shoulder_meas_vel),
-                                  np.array(shoulder_meas_tau),
                                   np.array(elbow_meas_pos),
+                                  np.array(shoulder_meas_vel),
                                   np.array(elbow_meas_vel),
+                                  np.array(shoulder_meas_tau),
                                   np.array(elbow_meas_tau)]).T
     np.savetxt(os.path.join(save_dir, f'{date}_measured.csv'),
                measured_csv_data,
                delimiter=',',
-               # header="meas_time,shoulder_meas_pos,shoulder_meas_vel,shoulder_meas_tau,elbow_meas_pos,elbow_meas_vel,elbow_meas_tau",
-               header="time,shoulder_pos,shoulder_vel,shoulder_torque,elbow_pos,elbow_vel,elbow_tau",
+               #header="meas_time,shoulder_meas_pos,shoulder_meas_vel,shoulder_meas_tau,elbow_meas_pos,elbow_meas_vel,elbow_meas_tau",
+               header="time, pos1, pos2, vel1, vel2, tau1, tau2",
                comments="")
     print("CSV file saved\n")
 

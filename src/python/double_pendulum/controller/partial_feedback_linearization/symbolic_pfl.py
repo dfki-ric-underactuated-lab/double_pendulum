@@ -41,14 +41,14 @@ class SymbolicPFLController(AbstractController):
                 self.eliminate_ind = 0
                 self.desired_ind = 1
 
-        self.plant = SymbolicDoublePendulum(mass,
-                                            length,
-                                            com,
-                                            damping,
-                                            gravity,
-                                            coulomb_fric,
-                                            inertia,
-                                            torque_limit)
+        self.plant = SymbolicDoublePendulum(mass=mass,
+                                            length=length,
+                                            com=com,
+                                            damping=damping,
+                                            gravity=gravity,
+                                            coulomb_fric=coulomb_fric,
+                                            inertia=inertia,
+                                            torque_limit=torque_limit)
 
         M11, M12, M21, M22 = smp.symbols("M11 M12 M21 M22")
         C11, C12, C21, C22 = smp.symbols("C11 C12 C21 C22")

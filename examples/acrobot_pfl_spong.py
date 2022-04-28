@@ -9,15 +9,16 @@ from double_pendulum.utils.plotting import plot_timeseries
 #                                                                            EnergyShapingPFLController)
 from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl import (SymbolicPFLController,
                                                                                     SymbolicPFLAndLQRController)
-
 with_lqr = True
 
+# model parameters
+robot = "acrobot"
 mass = [1.0, 1.0]
 length = [1.0, 1.0]
-damping = [0.0, 0.0]
-gravity = 9.8
 com = [0.5, 0.5]
+damping = [0.0, 0.0]
 cfric = [0.0, 0.0]
+gravity = 9.81
 #inertia = [0.2, 1.0]
 inertia = [0.45, 1.25]
 torque_limit = [0.0, 50.0]
@@ -34,6 +35,16 @@ par = [9.0, 3.0, 1.0]
 print(par)
 
 
+# simulation parameters
+dt = 0.01
+t_final = 10.0
+
+# controller parameters
+pfl_method = "collocated"
+with_lqr = True
+Q = np.diag((0.97, 0.93, 0.39, 0.26))
+R = np.diag((0.11, 0.11))
+
 double_pendulum = SymbolicDoublePendulum(mass=mass,
                                          length=length,
                                          com=com,
@@ -42,7 +53,6 @@ double_pendulum = SymbolicDoublePendulum(mass=mass,
                                          coulomb_fric=cfric,
                                          inertia=inertia,
                                          torque_limit=torque_limit)
-
 
 if with_lqr:
     controller = SymbolicPFLAndLQRController(mass,
@@ -90,7 +100,6 @@ else:
 sim = Simulator(plant=double_pendulum)
 
 controller.set_goal([np.pi, 0, 0, 0])
-
 
 # controller.set_cost_parameters(kpos=par[0],
 #                                kvel=par[1],

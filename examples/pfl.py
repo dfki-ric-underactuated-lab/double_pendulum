@@ -7,7 +7,7 @@ import numpy as np
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.utils.plotting import plot_timeseries
-from double_pendulum.utils.saving import save_trajectory
+from double_pendulum.utils.csv_trajectory import save_trajectory
 from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl import (SymbolicPFLController,
                                                                                     SymbolicPFLAndLQRController)
 

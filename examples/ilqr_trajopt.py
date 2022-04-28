@@ -7,7 +7,7 @@ from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.trajectory_optimization.ilqr.ilqr_cpp import ilqr_calculator
 from double_pendulum.utils.plotting import plot_timeseries
-from double_pendulum.utils.saving import save_trajectory
+from double_pendulum.utils.csv_trajectory import save_trajectory
 from double_pendulum.controller.trajectory_following.trajectory_controller import TrajectoryController
 
 robot = "acrobot"
@@ -28,9 +28,10 @@ robot = "acrobot"
 mass = [0.608, 0.5]
 length = [0.3, 0.4]
 com = [length[0], length[1]]
-# damping = [0.081, 0.0]
+#damping = [0.081, 0.081]
+#damping = [0.0005, 0.0001]
 damping = [0.0, 0.0]
-# cfric = [0.093, 0.186]
+#cfric = [0.093, 0.186]
 cfric = [0., 0.]
 gravity = 9.81
 inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
@@ -41,9 +42,9 @@ if robot == "pendubot":
 
 # controller parameters
 N = 1000
-max_iter = 1000
+max_iter = 2000
 regu_init = 100
-max_regu = 10000.
+max_regu = 1000000.
 min_regu = 0.01
 break_cost_redu = 1e-6
 
@@ -58,6 +59,15 @@ if robot == "acrobot":
     # [9.97938814e-02 2.06969312e-02 7.69967729e-02 1.55726136e-04
     #  5.42226523e-03 3.82623819e+02 7.05315590e+03 5.89790058e+01
     #  9.01459500e+01]
+    # sCu = [9.97938814e-02, 9.97938814e-02]
+    # sCp = [2.06969312e-01, 7.69967729e-01]
+    # sCv = [1.55726136e-03, 5.42226523e-02]
+    # sCen = 0.0
+    # fCp = [3.82623819e+03, 7.05315590e+04]
+    # fCv = [5.89790058e+01, 9.01459500e+01]
+    # fCen = 0.0
+
+    # very good
     sCu = [9.97938814e-02, 9.97938814e-02]
     sCp = [2.06969312e-02, 7.69967729e-02]
     sCv = [1.55726136e-04, 5.42226523e-03]
@@ -147,7 +157,7 @@ traj_file = os.path.join(save_dir, "trajectory.csv")
 
 il.save_trajectory_csv()
 os.system("mv trajectory.csv " + traj_file)
-# save_trajectory(filename=filename,
+# save_trajectory(csv_path=filename,
 #                 T=T, X=X, U=U)
 
 par_dict = {"mass1": mass[0],

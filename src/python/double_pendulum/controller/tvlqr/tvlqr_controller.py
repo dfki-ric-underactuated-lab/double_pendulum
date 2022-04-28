@@ -8,6 +8,7 @@ from pydrake.multibody.parsing import Parser
 from pydrake.multibody.plant import MultibodyPlant
 
 from double_pendulum.controller.abstract_controller import AbstractController
+from double_pendulum.utils.csv_trajectory import load_trajectory
 
 
 #from pydrake... import LinearQuadraticRegulator
@@ -46,6 +47,7 @@ class TVLQRController(AbstractController):
                  csv_path,
                  urdf_path,
                  read_with="pandas",
+                 keys="shoulder-elbow",
                  torque_limit=[0.0, 3.0],
                  robot="acrobot"):
 
@@ -57,28 +59,18 @@ class TVLQRController(AbstractController):
         else:
             self.active_motor = 0
 
-        # read trajectory
-        if read_with == "pandas":
-            self.data = pd.read_csv(csv_path)
+        T, X, U = load_trajectory(csv_path=csv_path,
+                                  read_with=read_with,
+                                  with_tau=True,
+                                  keys=keys)
 
-            self.time_traj = np.asarray(self.data["time"])
-            self.pos1_traj = np.asarray(self.data["shoulder_pos"])
-            self.pos2_traj = np.asarray(self.data["elbow_pos"])
-            self.vel1_traj = np.asarray(self.data["shoulder_vel"])
-            self.vel2_traj = np.asarray(self.data["elbow_vel"])
-            self.tau1_traj = np.asarray(self.data["shoulder_torque"])
-            self.tau2_traj = np.asarray(self.data["elbow_torque"])
-
-        elif read_with == "numpy":
-            self.data = np.loadtxt(csv_path, skiprows=1, delimiter=",")
-
-            self.time_traj = self.data[:, 0]
-            self.pos1_traj = self.data[:, 1]
-            self.pos2_traj = self.data[:, 2]
-            self.vel1_traj = self.data[:, 3]
-            self.vel2_traj = self.data[:, 4]
-            self.tau1_traj = self.data[:, 5]
-            self.tau2_traj = self.data[:, 6]
+        self.time_traj = T
+        self.pos1_traj = X.T[0]
+        self.pos2_traj = X.T[1]
+        self.vel1_traj = X.T[2]
+        self.vel2_traj = X.T[3]
+        self.tau1_traj = U.T[0]
+        self.tau2_traj = U.T[1]
 
         self.max_t = self.time_traj[-1]
 

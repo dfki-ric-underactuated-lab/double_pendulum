@@ -109,15 +109,19 @@ class Simulator:
         dt = par_dict["dt"]
         controller = par_dict["controller"]
         integrator = par_dict["integrator"]
+        anim_dt = par_dict["anim_dt"]
+        sim_steps = int(anim_dt / dt)
+
         realtime = True
-        if controller is not None:
-            t0 = time.time()
-            tau = controller.get_control_output(x=self.x, t=self.t)
-            if time.time() - t0 > dt:
-                realtime = False
-        else:
-            tau = np.zeros(self.plant.n_actuators)
-        self.step(tau, dt, integrator=integrator)
+        for _ in range(sim_steps):
+            if controller is not None:
+                t0 = time.time()
+                tau = controller.get_control_output(x=self.x, t=self.t)
+                if time.time() - t0 > dt:
+                    realtime = False
+            else:
+                tau = np.zeros(self.plant.n_actuators)
+            self.step(tau, dt, integrator=integrator)
         ee_pos = self.plant.forward_kinematics(self.x[:self.plant.dof])
         ee_pos.insert(0, self.plant.base)
         ani_plot_counter = 0
@@ -162,7 +166,7 @@ class Simulator:
             ani_plot_counter += 1
 
         t = float(self.animation_plots[ani_plot_counter].get_text()[4:])
-        t = round(t+dt, 3)
+        t = round(t+dt*sim_steps, 3)
         self.animation_plots[ani_plot_counter].set_text(f"t = {t}")
 
         # if the animation runs slower than real time
@@ -200,7 +204,7 @@ class Simulator:
                              integrator="runge_kutta",
                              plot_inittraj=False, plot_forecast=False,
                              phase_plot=False, save_video=False,
-                             video_name="pendulum_swingup"):
+                             video_name="pendulum_swingup", anim_dt=0.02):
         """
         Simulation and animation of the pendulum motion
         The animation is only implemented for 2d serial chains
@@ -243,9 +247,10 @@ class Simulator:
 
         self.animation_plots.append(text_plot)
 
-        num_steps = int(tf / dt)
+        num_steps = int(tf / anim_dt)
         par_dict = {}
         par_dict["dt"] = dt
+        par_dict["anim_dt"] = anim_dt
         par_dict["controller"] = controller
         par_dict["integrator"] = integrator
         frames = num_steps*[par_dict]

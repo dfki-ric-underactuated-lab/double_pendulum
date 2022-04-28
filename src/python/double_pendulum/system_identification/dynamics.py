@@ -4,6 +4,7 @@ import pandas as pd
 
 from double_pendulum.system_identification.data_prep import smooth_data_butter
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
+from double_pendulum.utils.csv_trajectory import load_trajectory
 
 
 class yb_matrix_sym():
@@ -104,16 +105,36 @@ def build_identification_matrices(fixed_mpar, variable_mpar, measured_data_filep
 
     num_params = len(variable_mpar)
 
-    data = pd.read_csv(measured_data_filepath)
-    print("Measured Data Shape = ", data.shape)
-    time = data["time"].tolist()
-    shoulder_pos = data["shoulder_pos"].tolist()
-    shoulder_vel = data["shoulder_vel"].tolist()
-    shoulder_trq = data["shoulder_torque"].tolist()
+    # data = pd.read_csv(measured_data_filepath)
+    # print("Measured Data Shape = ", data.shape)
+    # time = data["time"].tolist()
+    # shoulder_pos = data["shoulder_pos"].tolist()
+    # shoulder_vel = data["shoulder_vel"].tolist()
+    # shoulder_trq = data["shoulder_torque"].tolist()
 
-    elbow_pos = data["elbow_pos"].tolist()
-    elbow_vel = data["elbow_vel"].tolist()
-    elbow_trq = data["elbow_torque"].tolist()
+    # elbow_pos = data["elbow_pos"].tolist()
+    # elbow_vel = data["elbow_vel"].tolist()
+    # elbow_trq = data["elbow_torque"].tolist()
+
+    # (filtered_time,
+    #  filtered_shoulder_pos,
+    #  filtered_elbow_pos,
+    #  filtered_shoulder_vel,
+    #  filtered_elbow_vel,
+    #  filtered_shoulder_acc,
+    #  filtered_elbow_acc,
+    #  filtered_shoulder_trq,
+    #  filtered_elbow_trq) = smooth_data_butter(time,
+    #                                           shoulder_pos,
+    #                                           shoulder_vel,
+    #                                           shoulder_trq,
+    #                                           elbow_pos,
+    #                                           elbow_vel,
+    #                                           elbow_trq,
+    #                                           )
+    T, X, U = load_trajectory(measured_data_filepath,
+                              read_with="pandas",
+                              with_tau=True)
 
     (filtered_time,
      filtered_shoulder_pos,
@@ -123,13 +144,13 @@ def build_identification_matrices(fixed_mpar, variable_mpar, measured_data_filep
      filtered_shoulder_acc,
      filtered_elbow_acc,
      filtered_shoulder_trq,
-     filtered_elbow_trq) = smooth_data_butter(time,
-                                              shoulder_pos,
-                                              shoulder_vel,
-                                              shoulder_trq,
-                                              elbow_pos,
-                                              elbow_vel,
-                                              elbow_trq,
+     filtered_elbow_trq) = smooth_data_butter(t=T.tolist(),
+                                              shoulder_pos=X.T[0],
+                                              shoulder_vel=X.T[2],
+                                              shoulder_trq=U.T[0],
+                                              elbow_pos=X.T[1],
+                                              elbow_vel=X.T[3],
+                                              elbow_trq=U.T[1],
                                               )
 
     yb_matrix_obj = yb_matrix_sym(fixed_mpar, variable_mpar)
@@ -140,7 +161,7 @@ def build_identification_matrices(fixed_mpar, variable_mpar, measured_data_filep
     b = 0
     for i in range(num_samples):
         # Q contains measured torques of both joints for every time step (target)
-        Q[b:b+2, 0] = np.array([filtered_shoulder_trq[i], elbow_trq[i]])
+        Q[b:b+2, 0] = np.array([filtered_shoulder_trq[i], filtered_elbow_trq[i]])
         q_vec = np.array([filtered_shoulder_pos[i], filtered_elbow_pos[i]])
         dq_vec = np.array([filtered_shoulder_vel[i], filtered_elbow_vel[i]])
         ddq_vec = np.array([filtered_shoulder_acc[i], filtered_elbow_acc[i]])
