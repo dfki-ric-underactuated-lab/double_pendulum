@@ -27,7 +27,7 @@ In order to work with this repository you can [get started here](docs/installati
 * [Code Testing](docs/code_testing.md)
 ## Authors #
 
-<img align="right" img width="350" src="hardware/acrobot_swingup_gravity.gif" />
+<img align="right" img width="350" src="hardware/double_pendulum_animation.gif" />
 
 * [Shivesh Kumar](https://robotik.dfki-bremen.de/en/about-us/staff/shku02.html) (Project Supervisor)
 * [Felix Wiebe](https://robotik.dfki-bremen.de/en/about-us/staff/fewi01.html) (Software Maintainer)

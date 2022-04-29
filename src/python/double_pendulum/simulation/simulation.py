@@ -80,12 +80,15 @@ class Simulator:
                                    self.plant.workspace_range[0][1])
         self.animation_ax.set_ylim(self.plant.workspace_range[1][0],
                                    self.plant.workspace_range[1][1])
-        self.animation_ax.set_xlabel("x position [m]")
-        self.animation_ax.set_ylabel("y position [m]")
+        self.animation_ax.get_xaxis().set_visible(False)
+        self.animation_ax.get_yaxis().set_visible(False)
+        plt.axis('off')
+        plt.tight_layout()
         for ap in self.animation_plots[:-1]:
             ap.set_data([], [])
         self.animation_plots[-1].set_text("t = 0.000")
 
+        self.ee_poses = []
         self.tau_arrowarcs = []
         self.tau_arrowheads = []
         for link in range(self.plant.n_links):
@@ -110,6 +113,7 @@ class Simulator:
         controller = par_dict["controller"]
         integrator = par_dict["integrator"]
         anim_dt = par_dict["anim_dt"]
+        trail_len = 25  # length of the trails
         sim_steps = int(anim_dt / dt)
 
         realtime = True
@@ -124,16 +128,36 @@ class Simulator:
             self.step(tau, dt, integrator=integrator)
         ee_pos = self.plant.forward_kinematics(self.x[:self.plant.dof])
         ee_pos.insert(0, self.plant.base)
-        ani_plot_counter = 0
-        for link in range(self.plant.n_links):
-            self.animation_plots[ani_plot_counter].set_data(ee_pos[link+1][0],
-                                                            ee_pos[link+1][1])
-            ani_plot_counter += 1
 
+        self.ee_poses.append(ee_pos)
+        if len(self.ee_poses) > trail_len:
+            self.ee_poses = np.delete(self.ee_poses, 0, 0).tolist()
+
+        ani_plot_counter = 0
+        # plot links
+        for link in range(self.plant.n_links):
             self.animation_plots[ani_plot_counter].set_data(
                             [ee_pos[link][0], ee_pos[link+1][0]],
                             [ee_pos[link][1], ee_pos[link+1][1]])
             ani_plot_counter += 1
+
+        # plot base
+        self.animation_plots[ani_plot_counter].set_data(ee_pos[0][0],
+                                                        ee_pos[0][1])
+        ani_plot_counter += 1
+
+        # plot bodies
+        for link in range(self.plant.n_links):
+
+            self.animation_plots[ani_plot_counter].set_data(ee_pos[link+1][0],
+                                                            ee_pos[link+1][1])
+            ani_plot_counter += 1
+
+            if self.plot_trail:
+                self.animation_plots[ani_plot_counter].set_data(
+                        np.asarray(self.ee_poses)[:, link+1, 0],
+                        np.asarray(self.ee_poses)[:, link+1, 1])
+                ani_plot_counter += 1
 
             set_arrow_properties(self.tau_arrowarcs[link],
                                  self.tau_arrowheads[link],
@@ -178,31 +202,10 @@ class Simulator:
 
         return self.animation_plots + self.tau_arrowarcs + self.tau_arrowheads
 
-    def _ps_init(self):
-        """
-        init of the phase space animation plot
-        """
-        self.ps_ax.set_xlim(-np.pi, np.pi)
-        self.ps_ax.set_ylim(-10, 10)
-        self.ps_ax.set_xlabel("degree [rad]")
-        self.ps_ax.set_ylabel("velocity [rad/s]")
-        for ap in self.ps_plots:
-            ap.set_data([], [])
-        return self.ps_plots
-
-    def _ps_update(self, i):
-        """
-        update of the phase space animation plot
-        """
-        for d in range(self.plant.dof):
-            self.ps_plots[d].set_data(
-                            np.asarray(self.x_values).T[d],
-                            np.asarray(self.x_values).T[self.plant.dof+d])
-        return self.ps_plots
-
     def simulate_and_animate(self, t0, x0, tf, dt, controller=None,
                              integrator="runge_kutta",
                              plot_inittraj=False, plot_forecast=False,
+                             plot_trail=True,
                              phase_plot=False, save_video=False,
                              video_name="pendulum_swingup", anim_dt=0.02):
         """
@@ -212,25 +215,42 @@ class Simulator:
 
         self.plot_inittraj = plot_inittraj
         self.plot_forecast = plot_forecast
+        self.plot_trail = plot_trail
         self.set_state(t0, x0)
         self.reset_data_recorder()
 
         fig = plt.figure(figsize=(20, 20))
         self.animation_ax = plt.axes()
         self.animation_plots = []
-        # if self.plot_inittraj:
-        #     self.inittraj_plots = []
-        # if self.plot_forecast:
-        #     self.forecast_plots = []
+
+        colors = ['#0077BE', '#f66338']
+        colors_trails = ['#d2eeff', '#ffebd8']
 
         for link in range(self.plant.n_links):
-            ee_plot, = self.animation_ax.plot([], [], "o",
-                                              markersize=25.0, color="blue")
-            self.animation_plots.append(ee_plot)
-
             bar_plot, = self.animation_ax.plot([], [], "-",
-                                               lw=5, color="black")
+                                               lw=10, color='k')
             self.animation_plots.append(bar_plot)
+
+        base_plot, = self.animation_ax.plot([], [], "s",
+                                            markersize=25.0, color="black")
+        self.animation_plots.append(base_plot)
+        for link in range(self.plant.n_links):
+            ee_plot, = self.animation_ax.plot(
+                    [], [], "o",
+                    markersize=50.0,
+                    color='k',
+                    markerfacecolor=colors[link % len(colors)])
+            self.animation_plots.append(ee_plot)
+            if self.plot_trail:
+                trail_plot, = self.animation_ax.plot(
+                        [], [], '-',
+                        color=colors[link],
+                        markersize=24,
+                        markerfacecolor=colors_trails[link % len(colors_trails)],
+                        lw=2,
+                        markevery=10000,
+                        markeredgecolor='None')
+                self.animation_plots.append(trail_plot)
 
         if self.plot_inittraj:
             it_plot, = self.animation_ax.plot([], [], "--",
@@ -241,8 +261,8 @@ class Simulator:
                                               lw=1, color="green")
             self.animation_plots.append(fc_plot)
 
-        text_plot = self.animation_ax.text(0.15, 0.85, [],
-                                           fontsize=40,
+        text_plot = self.animation_ax.text(0.1, 0.9, [],
+                                           fontsize=60,
                                            transform=fig.transFigure)
 
         self.animation_plots.append(text_plot)
@@ -259,29 +279,11 @@ class Simulator:
                                   init_func=self._animation_init, blit=True,
                                   repeat=False, interval=dt*1000)
 
-        if phase_plot:
-            ps_fig = plt.figure(figsize=(10, 10))
-            self.ps_ax = plt.axes()
-            self.ps_plots = []
-            for d in range(self.plant.dof):
-                ps_plot, = self.ps_ax.plot([], [], "-", lw=1.0, color="blue")
-                self.ps_plots.append(ps_plot)
-
-            animation2 = FuncAnimation(ps_fig, self._ps_update,
-                                       init_func=self._ps_init, blit=True,
-                                       repeat=False, interval=dt*1000)
-
         if save_video:
             print(f"Saving video to {video_name}.mp4")
             Writer = mplanimation.writers['ffmpeg']
             writer = Writer(fps=60, bitrate=1800)
             animation.save(video_name+'.mp4', writer=writer)
-            # if phase_plot:
-            #     self.set_state(t0, x0)
-            #     self.reset_data_recorder()
-            #     Writer2 = mplanimation.writers['ffmpeg']
-            #     writer2 = Writer2(fps=60, bitrate=1800)
-            #     animation2.save(video_name+'_phase.mp4', writer=writer2)
             print("Saving video done.")
         else:
             self.set_state(t0, x0)
