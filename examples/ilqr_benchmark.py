@@ -1,9 +1,11 @@
 import os
 from datetime import datetime
 import numpy as np
+import pickle
 
 from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.analysis.benchmark import benchmarker
+from double_pendulum.analysis.utils import get_par_list
 
 robot = "acrobot"
 
@@ -18,6 +20,7 @@ damping = [0.0, 0.0]
 cfric = [0., 0.]
 gravity = 9.81
 inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
+motor_inertia = 8.8e-5
 if robot == "acrobot":
     torque_limit = [0.0, 4.0]
 if robot == "pendubot":
@@ -58,6 +61,34 @@ Qf = np.array([[fCp[0], 0., 0., 0.],
 R = np.array([[sCu[0], 0.],
               [0., sCu[1]]])
 
+# benchmark parameters
+mpar_vars = ["Ir",
+             "m1r1", "I1", "b1", "cf1",
+             "m2r2", "m2", "I2", "b2", "cf2"]
+
+Ir_var_list = [0.0, motor_inertia, 2*motor_inertia]
+m1r1_var_list = get_par_list(mass[0]*com[0], 0.5, 1.5, 3)
+I1_var_list = get_par_list(inertia[0], 0.5, 1.5, 3)
+b1_var_list = [0.0, 0.081, 0.19]
+cf1_var_list = [0.0, 0.093, 0.186]
+m2r2_var_list = get_par_list(mass[1]*com[1], 0.5, 1.5, 3)
+m2_var_list = get_par_list(mass[1], 0.5, 1.5, 3)
+I2_var_list = get_par_list(inertia[1], 0.5, 1.5, 3)
+b2_var_list = [0.0, 0.081, 0.19]
+cf2_var_list = [0.0, 0.093, 0.186]
+
+modelpar_var_lists = {"Ir": Ir_var_list,
+                      "m1r1": m1r1_var_list,
+                      "I1": I1_var_list,
+                      "b1": b1_var_list,
+                      "cf1": cf1_var_list,
+                      "m2r2": m2r2_var_list,
+                      "m2": m2_var_list,
+                      "I2": I2_var_list,
+                      "b2": b2_var_list,
+                      "cf2": cf2_var_list}
+
+
 # init trajectory
 latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
 init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
@@ -69,7 +100,7 @@ goal = [np.pi, 0., 0., 0.]
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
 save_dir = os.path.join("data", robot, "ilqr", "mpc_benchmark", timestamp)
-#os.makedirs(save_dir)
+os.makedirs(save_dir)
 
 # construct simulation objects
 controller = ILQRMPCCPPController(mass=mass,
@@ -99,6 +130,7 @@ controller.set_cost_parameters(sCu=sCu,
                                fCv=fCv,
                                fCen=fCen)
 controller.load_init_traj(csv_path=init_csv_path)
+
 ben = benchmarker(controller=controller,
                   x0=start,
                   dt=dt,
@@ -113,9 +145,15 @@ ben.set_model_parameter(mass=mass,
                         gravity=gravity,
                         cfric=cfric,
                         inertia=inertia,
+                        motor_inertia=motor_inertia,
                         torque_limit=torque_limit)
 ben.set_init_traj(init_csv_path, read_with="numpy")
 ben.set_cost_par(Q=Q, R=R, Qf=Qf)
 ben.compute_ref_cost()
-C_free, C_tf, SUCC = ben.check_modelpar_diff(par="m2", vals=[0.5, 0.63, 0.8])
-print(C_free, C_tf, SUCC)
+res = ben.benchmark(compute_model_robustness=True,
+                    mpar_vars=mpar_vars,
+                    modelpar_var_lists=modelpar_var_lists)
+print(res)
+f = open(os.path.join(save_dir, "results.pkl"), 'wb')
+pickle.dump(res, f)
+f.close()

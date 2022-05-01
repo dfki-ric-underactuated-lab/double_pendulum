@@ -30,6 +30,7 @@ class benchmarker():
         self.gravity = None
         self.cfric = None
         self.inertia = None
+        self.motor_inertia = None
         self.torque_limit = None
 
         self.plant = None
@@ -55,6 +56,7 @@ class benchmarker():
                             gravity,
                             cfric,
                             inertia,
+                            motor_inertia,
                             torque_limit):
 
         self.mass = mass
@@ -64,6 +66,7 @@ class benchmarker():
         self.gravity = gravity
         self.cfric = cfric
         self.inertia = inertia
+        self.motor_inertia = motor_inertia
         self.torque_limit = torque_limit
 
         self.plant = SymbolicDoublePendulum(mass=mass,
@@ -73,8 +76,8 @@ class benchmarker():
                                             gravity=gravity,
                                             coulomb_fric=cfric,
                                             inertia=inertia,
+                                            motor_inertia=motor_inertia,
                                             torque_limit=torque_limit)
-
 
         self.simulator = Simulator(plant=self.plant)
 
@@ -146,46 +149,232 @@ class benchmarker():
         succ = self.check_goal_success(X)
         return cost_free, cost_tf, succ
 
-    def check_modelpar_diff(self, par="m1", vals=[0.5, 1.5]):
+    def simulate_and_get_cost(self,
+                              mass,
+                              length,
+                              com,
+                              damping,
+                              gravity,
+                              cfric,
+                              inertia,
+                              motor_inertia,
+                              torque_limit):
 
-        mass = self.mass
-        length = self.length
-        com = self.com
-        damping = self.damping
-        gravity = self.gravity
-        cfric = self.cfric
-        inertia = self.inertia
-        torque_limit = self.torque_limit
+        plant = SymbolicDoublePendulum(mass=mass,
+                                       length=length,
+                                       com=com,
+                                       damping=damping,
+                                       gravity=gravity,
+                                       coulomb_fric=cfric,
+                                       inertia=inertia,
+                                       motor_inertia=motor_inertia,
+                                       torque_limit=torque_limit)
 
-        C_free = []
-        C_tf = []
-        SUCC = []
-        for diff in vals:
+        simulator = Simulator(plant=plant)
+        self.controller.init()
 
-            if par == "m1":
-                mass[0] = diff
-            elif par == "m2":
-                mass[1] = diff
-            #tbc...
+        T, X, U = simulator.simulate(t0=0., x0=self.x0, tf=self.t_final,
+                                     dt=self.dt, controller=self.controller,
+                                     integrator=self.integrator)
 
-            plant = SymbolicDoublePendulum(mass=mass,
-                                           length=length,
-                                           com=com,
-                                           damping=damping,
-                                           gravity=gravity,
-                                           coulomb_fric=cfric,
-                                           inertia=inertia,
-                                           torque_limit=torque_limit)
+        cost_free, cost_tf, succ = self.compute_success_measure(X, U)
+        return cost_free, cost_tf, succ
 
-            simulator = Simulator(plant=self.plant)
-            self.controller.init()
+    def check_modelpar_variation(self,
+                                 mpar_vars=["Ir",
+                                            "m1r1", "I1", "b1", "cf1",
+                                            "m2r2", "m2", "I2", "b2", "cf2"],
+                                 var_lists={"Ir": [],
+                                            "m1r1": [],
+                                            "I1": [],
+                                            "b1": [],
+                                            "cf1": [],
+                                            "m2r2": [],
+                                            "m2": [],
+                                            "I2": [],
+                                            "b2": [],
+                                            "cf2": []},
+                                 ):
 
-            T, X, U = simulator.simulate(t0=0., x0=self.x0, tf=self.t_final,
-                                         dt=self.dt, controller=self.controller,
-                                         integrator=self.integrator)
+        print("computing model parameter robustness...")
 
-            cost_free, cost_tf, succ = self.compute_success_measure(X, U)
-            C_free.append(cost_free)
-            C_tf.append(cost_tf)
-            SUCC.append(succ)
-        return C_free, C_tf, SUCC
+        res_dict = {}
+        for mp in mpar_vars:
+            print("  ", mp)
+            C_free = []
+            C_tf = []
+            SUCC = []
+            for var in var_lists[mp]:
+                if mp == "Ir":
+                    cost_free, cost_tf, succ = self.simulate_and_get_cost(
+                            mass=self.mass,
+                            length=self.length,
+                            com=self.com,
+                            damping=self.damping,
+                            gravity=self.gravity,
+                            cfric=self.cfric,
+                            inertia=self.inertia,
+                            motor_inertia=var,
+                            torque_limit=self.torque_limit)
+                    C_free.append(cost_free)
+                    C_tf.append(cost_tf)
+                    SUCC.append(succ)
+                elif mp == "m1r1":
+                    m1 = self.mass[0]
+                    r1 = var/m1
+                    cost_free, cost_tf, succ = self.simulate_and_get_cost(
+                            mass=[m1, self.mass[1]],
+                            length=self.length,
+                            com=[r1, self.com[1]],
+                            damping=self.damping,
+                            gravity=self.gravity,
+                            cfric=self.cfric,
+                            inertia=self.inertia,
+                            motor_inertia=self.motor_inertia,
+                            torque_limit=self.torque_limit)
+                    C_free.append(cost_free)
+                    C_tf.append(cost_tf)
+                    SUCC.append(succ)
+                elif mp == "I1":
+                    cost_free, cost_tf, succ = self.simulate_and_get_cost(
+                            mass=self.mass,
+                            length=self.length,
+                            com=self.com,
+                            damping=self.damping,
+                            gravity=self.gravity,
+                            cfric=self.cfric,
+                            inertia=[var, self.inertia[1]],
+                            motor_inertia=self.motor_inertia,
+                            torque_limit=self.torque_limit)
+                    C_free.append(cost_free)
+                    C_tf.append(cost_tf)
+                    SUCC.append(succ)
+                elif mp == "b1":
+                    cost_free, cost_tf, succ = self.simulate_and_get_cost(
+                            mass=self.mass,
+                            length=self.length,
+                            com=self.com,
+                            damping=[var, self.damping[1]],
+                            gravity=self.gravity,
+                            cfric=self.cfric,
+                            inertia=self.inertia,
+                            motor_inertia=self.motor_inertia,
+                            torque_limit=self.torque_limit)
+                    C_free.append(cost_free)
+                    C_tf.append(cost_tf)
+                    SUCC.append(succ)
+                elif mp == "cf1":
+                    cost_free, cost_tf, succ = self.simulate_and_get_cost(
+                            mass=self.mass,
+                            length=self.length,
+                            com=self.com,
+                            damping=self.damping,
+                            gravity=self.gravity,
+                            cfric=[var, self.cfric[1]],
+                            inertia=self.inertia,
+                            motor_inertia=self.motor_inertia,
+                            torque_limit=self.torque_limit)
+                    C_free.append(cost_free)
+                    C_tf.append(cost_tf)
+                    SUCC.append(succ)
+                elif mp == "m2r2":
+                    m2 = self.mass[1]
+                    r2 = var/m2
+                    cost_free, cost_tf, succ = self.simulate_and_get_cost(
+                            mass=[self.mass[0], m2],
+                            length=self.length,
+                            com=[self.com[0], r2],
+                            damping=self.damping,
+                            gravity=self.gravity,
+                            cfric=self.cfric,
+                            inertia=self.inertia,
+                            motor_inertia=self.motor_inertia,
+                            torque_limit=self.torque_limit)
+                    C_free.append(cost_free)
+                    C_tf.append(cost_tf)
+                    SUCC.append(succ)
+                elif mp == "m2":
+                    cost_free, cost_tf, succ = self.simulate_and_get_cost(
+                            mass=[self.mass[0], var],
+                            length=self.length,
+                            com=self.com,
+                            damping=self.damping,
+                            gravity=self.gravity,
+                            cfric=self.cfric,
+                            inertia=self.inertia,
+                            motor_inertia=self.motor_inertia,
+                            torque_limit=self.torque_limit)
+                    C_free.append(cost_free)
+                    C_tf.append(cost_tf)
+                    SUCC.append(succ)
+                elif mp == "I2":
+                    cost_free, cost_tf, succ = self.simulate_and_get_cost(
+                            mass=self.mass,
+                            length=self.length,
+                            com=self.com,
+                            damping=self.damping,
+                            gravity=self.gravity,
+                            cfric=self.cfric,
+                            inertia=[self.inertia[0], var],
+                            motor_inertia=self.motor_inertia,
+                            torque_limit=self.torque_limit)
+                    C_free.append(cost_free)
+                    C_tf.append(cost_tf)
+                    SUCC.append(succ)
+                elif mp == "b2":
+                    cost_free, cost_tf, succ = self.simulate_and_get_cost(
+                            mass=self.mass,
+                            length=self.length,
+                            com=self.com,
+                            damping=[self.damping[0], var],
+                            gravity=self.gravity,
+                            cfric=self.cfric,
+                            inertia=self.inertia,
+                            motor_inertia=self.motor_inertia,
+                            torque_limit=self.torque_limit)
+                    C_free.append(cost_free)
+                    C_tf.append(cost_tf)
+                    SUCC.append(succ)
+                elif mp == "cf2":
+                    cost_free, cost_tf, succ = self.simulate_and_get_cost(
+                            mass=self.mass,
+                            length=self.length,
+                            com=self.com,
+                            damping=self.damping,
+                            gravity=self.gravity,
+                            cfric=[self.cfric[0], var],
+                            inertia=self.inertia,
+                            motor_inertia=self.motor_inertia,
+                            torque_limit=self.torque_limit)
+                    C_free.append(cost_free)
+                    C_tf.append(cost_tf)
+                    SUCC.append(succ)
+            res_dict[mp] = {}
+            res_dict[mp]["free_costs"] = C_free
+            res_dict[mp]["following_costs"] = C_free
+            res_dict[mp]["successes"] = SUCC
+        return res_dict
+
+    def benchmark(self,
+                  compute_model_robustness=True,
+                  mpar_vars=["Ir",
+                             "m1r1", "I1", "b1", "cf1",
+                             "m2r2", "m2", "I2", "b2", "cf2"],
+                  modelpar_var_lists={"Ir": [],
+                                      "m1r1": [],
+                                      "I1": [],
+                                      "b1": [],
+                                      "cf1": [],
+                                      "m2r2": [],
+                                      "m2": [],
+                                      "I2": [],
+                                      "b2": [],
+                                      "cf2": []}):
+
+        res = {}
+        if compute_model_robustness:
+            res_model = self.check_modelpar_variation(
+                    mpar_vars=mpar_vars,
+                    var_lists=modelpar_var_lists)
+            res["model_robustness"] = res_model
+        return res
