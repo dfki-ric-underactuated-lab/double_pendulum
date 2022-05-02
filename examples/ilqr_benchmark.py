@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 import numpy as np
 import pickle
+import pprint
 
 from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.analysis.benchmark import benchmarker
@@ -19,8 +20,9 @@ damping = [0.0, 0.0]
 # cfric = [0.093, 0.186]
 cfric = [0., 0.]
 gravity = 9.81
-inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
-motor_inertia = 8.8e-5
+#inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
+inertia = [0.05472, 0.02522]
+motor_inertia = 0.0  # 8.8e-5
 if robot == "acrobot":
     torque_limit = [0.0, 4.0]
 if robot == "pendubot":
@@ -28,7 +30,7 @@ if robot == "pendubot":
 
 # simulation parameter
 dt = 0.005
-t_final = 4.99
+t_final = 4.985
 integrator = "runge_kutta"
 
 # controller parameters
@@ -62,18 +64,20 @@ R = np.array([[sCu[0], 0.],
               [0., sCu[1]]])
 
 # benchmark parameters
+compute_model_robustness = False
 mpar_vars = ["Ir",
              "m1r1", "I1", "b1", "cf1",
              "m2r2", "m2", "I2", "b2", "cf2"]
 
-Ir_var_list = [0.0, motor_inertia, 2*motor_inertia]
-m1r1_var_list = get_par_list(mass[0]*com[0], 0.5, 1.5, 3)
-I1_var_list = get_par_list(inertia[0], 0.5, 1.5, 3)
+N_var = 3
+Ir_var_list = [0.0, 8.8e-5, 2*8.8e-5]
+m1r1_var_list = get_par_list(mass[0]*com[0], 0.5, 1.5, N_var)
+I1_var_list = get_par_list(inertia[0], 0.5, 1.5, N_var)
 b1_var_list = [0.0, 0.081, 0.19]
 cf1_var_list = [0.0, 0.093, 0.186]
-m2r2_var_list = get_par_list(mass[1]*com[1], 0.5, 1.5, 3)
-m2_var_list = get_par_list(mass[1], 0.5, 1.5, 3)
-I2_var_list = get_par_list(inertia[1], 0.5, 1.5, 3)
+m2r2_var_list = get_par_list(mass[1]*com[1], 0.5, 1.5, N_var)
+m2_var_list = get_par_list(mass[1], 0.5, 1.5, N_var)
+I2_var_list = get_par_list(inertia[1], 0.5, 1.5, N_var)
 b2_var_list = [0.0, 0.081, 0.19]
 cf2_var_list = [0.0, 0.093, 0.186]
 
@@ -88,10 +92,24 @@ modelpar_var_lists = {"Ir": Ir_var_list,
                       "b2": b2_var_list,
                       "cf2": cf2_var_list}
 
+compute_noise_robustness = False
+noise_mode = "vel"
+noise_amplitudes = [0.0, 0.1, 0.3, 0.5, 0.8, 1.0]
+noise_cut = 0.5
+noise_vfilter = "lowpass"
+noise_vfilter_args = {"alpha": 0.3}
+
+compute_unoise_robustness = True
+unoise_amplitudes = [0.0, 0.1, 0.5, 1.0, 2.0, 5.0]
+
+compute_delay_robustness = True
+delay_mode = "vel"
+delays = [0.0, dt, 2*dt, 5*dt, 10*dt]
 
 # init trajectory
-latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
-init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
+#latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
+#init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
+init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
 
 # swingup parameters
 start = [0., 0., 0., 0.]
@@ -150,10 +168,25 @@ ben.set_model_parameter(mass=mass,
 ben.set_init_traj(init_csv_path, read_with="numpy")
 ben.set_cost_par(Q=Q, R=R, Qf=Qf)
 ben.compute_ref_cost()
-res = ben.benchmark(compute_model_robustness=True,
+res = ben.benchmark(compute_model_robustness=compute_model_robustness,
+                    compute_noise_robustness=compute_noise_robustness,
+                    compute_unoise_robustness=compute_unoise_robustness,
+                    compute_delay_robustness=compute_delay_robustness,
                     mpar_vars=mpar_vars,
-                    modelpar_var_lists=modelpar_var_lists)
-print(res)
-f = open(os.path.join(save_dir, "results.pkl"), 'wb')
-pickle.dump(res, f)
-f.close()
+                    modelpar_var_lists=modelpar_var_lists,
+                    noise_mode=noise_mode,
+                    noise_amplitudes=noise_amplitudes,
+                    noise_cut=noise_cut,
+                    noise_vfilter=noise_vfilter,
+                    noise_vfilter_args=noise_vfilter_args,
+                    unoise_amplitudes=unoise_amplitudes,
+                    delay_mode=delay_mode,
+                    delays=delays)
+pprint.pprint(res)
+
+# saving
+#f = open(os.path.join(save_dir, "results.pkl"), 'wb')
+#pickle.dump(res, f)
+#f.close()
+
+# Todo: save all parameters

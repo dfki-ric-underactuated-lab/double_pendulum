@@ -1,9 +1,8 @@
-import os
 import numpy as np
-import pandas as pd
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.simulation.simulation import Simulator
+from double_pendulum.utils.csv_trajectory import load_trajectory
 
 
 class benchmarker():
@@ -16,10 +15,10 @@ class benchmarker():
                  integrator="runge_kutta",
                  save_dir="benchmark"):
         self.controller = controller
-        self.x0 = x0
+        self.x0 = np.asarray(x0)
         self.dt = dt
         self.t_final = t_final
-        self.goal = goal
+        self.goal = np.asarray(goal)
         self.integrator = integrator
         self.save_dir = save_dir
 
@@ -82,35 +81,9 @@ class benchmarker():
         self.simulator = Simulator(plant=self.plant)
 
     def set_init_traj(self, trajectory_csv, read_with):
-        if read_with == "pandas":
-            self.ref_trajectory = pd.read_csv(trajectory_csv)
-
-            time_traj = np.asarray(self.ref_trajectory["time"])
-            pos1_traj = np.asarray(self.ref_trajectory["shoulder_pos"])
-            pos2_traj = np.asarray(self.ref_trajectory["elbow_pos"])
-            vel1_traj = np.asarray(self.ref_trajectory["shoulder_vel"])
-            vel2_traj = np.asarray(self.ref_trajectory["elbow_vel"])
-            tau1_traj = np.asarray(self.ref_trajectory["shoulder_torque"])
-            tau2_traj = np.asarray(self.ref_trajectory["elbow_torque"])
-
-        elif read_with == "numpy":
-            self.ref_trajectory = np.loadtxt(trajectory_csv, skiprows=1, delimiter=",")
-
-            time_traj = self.ref_trajectory[:, 0]
-            pos1_traj = self.ref_trajectory[:, 1]
-            pos2_traj = self.ref_trajectory[:, 2]
-            vel1_traj = self.ref_trajectory[:, 3]
-            vel2_traj = self.ref_trajectory[:, 4]
-            tau1_traj = self.ref_trajectory[:, 5]
-            tau2_traj = self.ref_trajectory[:, 6]
-
-        self.t_traj = time_traj.T
-        self.x_traj = np.asarray([pos1_traj, pos2_traj,
-                                  vel1_traj, vel2_traj]).T
-        self.u_traj = np.asarray([tau1_traj, tau2_traj]).T
+        self.t_traj, self.x_traj, self.u_traj = load_trajectory(trajectory_csv, read_with)
 
     def set_cost_par(self, Q, R, Qf):
-
         self.Q = Q
         self.R = R
         self.Qf = Qf
@@ -137,9 +110,10 @@ class benchmarker():
         self.ref_cost_free = self.compute_cost(self.x_traj, self.u_traj, mode="free")
         self.ref_cost_tf = self.compute_cost(self.x_traj, self.u_traj, mode="trajectory_following")
 
-    def check_goal_success(self, x_traj, eps=0.1):
-        succ = np.max(np.diff(x_traj[-1] - self.goal)) < eps
-        return succ
+    def check_goal_success(self, x_traj, pos_eps=0.1, vel_eps=0.5):
+        pos_succ = np.max(x_traj[-1][:2] - self.goal[:2]) < pos_eps
+        vel_succ = np.max(x_traj[-1][2:] - self.goal[2:]) < vel_eps
+        return (pos_succ and vel_succ)
 
     def compute_success_measure(self, x_traj, u_traj):
         X = np.asarray(x_traj)
@@ -180,7 +154,7 @@ class benchmarker():
         cost_free, cost_tf, succ = self.compute_success_measure(X, U)
         return cost_free, cost_tf, succ
 
-    def check_modelpar_variation(self,
+    def check_modelpar_robustness(self,
                                  mpar_vars=["Ir",
                                             "m1r1", "I1", "b1", "cf1",
                                             "m2r2", "m2", "I2", "b2", "cf2"],
@@ -351,12 +325,130 @@ class benchmarker():
                     SUCC.append(succ)
             res_dict[mp] = {}
             res_dict[mp]["free_costs"] = C_free
-            res_dict[mp]["following_costs"] = C_free
+            res_dict[mp]["following_costs"] = C_tf
             res_dict[mp]["successes"] = SUCC
+        return res_dict
+
+    def check_perturbation_robustness(self,
+                                      time_stamps=[],
+                                      tau_perts=[]):
+        pass
+
+    def check_noise_robustness(self,
+                               noise_mode="vel",
+                               noise_amplitudes=[],
+                               noise_cut=0.5,
+                               noise_vfilter="lowpass",
+                               noise_vfilter_args={"alpha": 0.3}):
+        # maybe add noise frequency
+        # (on the real system noise frequency seems so be higher than
+        # control frequency -> no frequency neccessary here)
+        print("computing noise robustness...")
+
+        res_dict = {}
+        C_free = []
+        C_tf = []
+        SUCC = []
+        for na in noise_amplitudes:
+            self.controller.init()
+            self.simulator.set_imperfections(
+                    noise_amplitude=na,
+                    noise_mode=noise_mode,
+                    noise_cut=noise_cut,
+                    noise_vfilter=noise_vfilter,
+                    noise_vfilter_args=noise_vfilter_args)
+            T, X, U = self.simulator.simulate(t0=0.0,
+                    tf=self.t_final,
+                    dt=self.dt,
+                    x0=self.x0,
+                    controller=self.controller,
+                    integrator=self.integrator,
+                    imperfections=True)
+            self.simulator.reset_imperfections()
+
+            cost_free, cost_tf, succ = self.compute_success_measure(X, U)
+            C_free.append(cost_free)
+            C_tf.append(cost_tf)
+            SUCC.append(succ)
+        res_dict["noise_mode"] = noise_mode
+        res_dict["noise_cut"] = noise_cut
+        res_dict["noise_vfilter"] = noise_vfilter
+        res_dict["noise_vfilter_args"] = noise_vfilter_args
+        res_dict["noise_amplitudes"] = noise_amplitudes
+        res_dict["free_costs"] = C_free
+        res_dict["following_costs"] = C_tf
+        res_dict["successes"] = SUCC
+        return res_dict
+    
+    def check_unoise_robustness(self,
+                                unoise_amplitudes=[]):
+        # maybe add noise frequency
+        print("computing torque noise robustness...")
+
+        res_dict = {}
+        C_free = []
+        C_tf = []
+        SUCC = []
+        for na in unoise_amplitudes:
+            self.controller.init()
+            self.simulator.set_imperfections(unoise_amplitude=na)
+            T, X, U = self.simulator.simulate(t0=0.0,
+                    tf=self.t_final,
+                    dt=self.dt,
+                    x0=self.x0,
+                    controller=self.controller,
+                    integrator=self.integrator,
+                    imperfections=True)
+            self.simulator.reset_imperfections()
+
+            cost_free, cost_tf, succ = self.compute_success_measure(X, U)
+            C_free.append(cost_free)
+            C_tf.append(cost_tf)
+            SUCC.append(succ)
+        res_dict["unoise_amplitudes"] = unoise_amplitudes
+        res_dict["free_costs"] = C_free
+        res_dict["following_costs"] = C_tf
+        res_dict["successes"] = SUCC
+        return res_dict
+
+    def check_delay_robustness(self,
+                               delay_mode="posvel",
+                               delays=[]):
+        print("computing delay robustness...")
+        res_dict = {}
+        C_free = []
+        C_tf = []
+        SUCC = []
+        for de in delays:
+            self.controller.init()
+            self.simulator.set_imperfections(
+                    delay=de,
+                    delay_mode=delay_mode)
+            T, X, U = self.simulator.simulate(t0=0.0,
+                    tf=self.t_final,
+                    dt=self.dt,
+                    x0=self.x0,
+                    controller=self.controller,
+                    integrator=self.integrator,
+                    imperfections=True)
+            self.simulator.reset_imperfections()
+
+            cost_free, cost_tf, succ = self.compute_success_measure(X, U)
+            C_free.append(cost_free)
+            C_tf.append(cost_tf)
+            SUCC.append(succ)
+        res_dict["delay_mode"] = delay_mode
+        res_dict["measurement_delay"] = delays
+        res_dict["free_costs"] = C_free
+        res_dict["following_costs"] = C_tf
+        res_dict["successes"] = SUCC
         return res_dict
 
     def benchmark(self,
                   compute_model_robustness=True,
+                  compute_noise_robustness=True,
+                  compute_unoise_robustness=True,
+                  compute_delay_robustness=True,
                   mpar_vars=["Ir",
                              "m1r1", "I1", "b1", "cf1",
                              "m2r2", "m2", "I2", "b2", "cf2"],
@@ -369,12 +461,36 @@ class benchmarker():
                                       "m2": [],
                                       "I2": [],
                                       "b2": [],
-                                      "cf2": []}):
+                                      "cf2": []},
+                  noise_mode="vel",
+                  noise_amplitudes=[0.1, 0.3, 0.5],
+                  noise_cut=0.5,
+                  noise_vfilter="lowpass",
+                  noise_vfilter_args={"alpha":0.3},
+                  unoise_amplitudes=[0.1, 0.5, 1.0],
+                  delay_mode="vel",
+                  delays=[0.01, 0.02, 0.05, 0.1]):
 
         res = {}
         if compute_model_robustness:
-            res_model = self.check_modelpar_variation(
+            res_model = self.check_modelpar_robustness(
                     mpar_vars=mpar_vars,
                     var_lists=modelpar_var_lists)
             res["model_robustness"] = res_model
+        if compute_noise_robustness:
+            res_noise = self.check_noise_robustness(noise_mode=noise_mode,
+                    noise_amplitudes=noise_amplitudes,
+                    noise_cut=noise_cut,
+                    noise_vfilter=noise_vfilter,
+                    noise_vfilter_args=noise_vfilter_args)
+            res["noise_robustness"] = res_noise
+        if compute_unoise_robustness:
+            res_unoise = self.check_unoise_robustness(
+                    unoise_amplitudes=unoise_amplitudes)
+            res["unoise_robustness"] = res_unoise
+        if compute_delay_robustness:
+            res_delay = self.check_delay_robustness(
+                    delay_mode=delay_mode,
+                    delays=delays)
+            res["delay_robustness"] = res_delay
         return res
