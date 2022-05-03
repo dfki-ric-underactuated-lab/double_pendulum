@@ -1,3 +1,5 @@
+import os
+from datetime import datetime
 import numpy as np
 
 from double_pendulum.system_identification.sys_id import run_system_identification
@@ -12,9 +14,11 @@ plot_timeseries_csv(measured_data_csv, read_with="pandas")
 # fixed model parameters (will not be fitted)
 fixed_mpar = {"g": 9.81,
               "gr": 6,
-              "l1": 0.3}
+              "l1": 0.3,
+              "l2": 0.4}
 
-variable_mpar = ["m1r1", "I1", "cf1", "b1", "Ir", "m2r2", "m2", "I2", "cf2", "b2"]
+variable_mpar = ["m1r1", "I1", "cf1", "b1", "Ir",
+                 "m2r2", "m2", "I2", "cf2", "b2"]
 
 # initial model parameters
 m1 = 0.608
@@ -36,8 +40,18 @@ mp0 = [Lc1 * m1,  I1, Fc1, Fv1, Ir, Lc2 * m2, m2, I2, Fc2, Fv2]
 bounds = ([0.15, 0.0, 0.0, 0.0, 0.0, 0.1, 0.5, 0.0, 0.00, 0.000],
           [0.3, np.Inf, 0.093, 0.005, 0.003, 0.4, 0.7, np.Inf, 0.14, 0.005])
 
-mpar_opt = run_system_identification(measured_data_csv=measured_data_csv,
-                                     fixed_mpar=fixed_mpar,
-                                     variable_mpar=variable_mpar,
-                                     mp0=mp0,
-                                     bounds=bounds)
+mpar_opt, mpar = run_system_identification(
+        measured_data_csv=measured_data_csv,
+        fixed_mpar=fixed_mpar,
+        variable_mpar=variable_mpar,
+        mp0=mp0,
+        bounds=bounds)
+
+print(mpar)
+
+# saving
+timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
+save_dir = os.path.join("data", "system_identification", timestamp)
+os.makedirs(save_dir)
+
+mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))

@@ -4,6 +4,7 @@ from datetime import datetime
 import yaml
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
+from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.trajectory_optimization.ilqr.ilqr_cpp import ilqr_calculator
 from double_pendulum.utils.plotting import plot_timeseries
@@ -25,20 +26,29 @@ robot = "acrobot"
 # torque_limit = [0.0, 6.0]
 
 # model parameters
-mass = [0.608, 0.5]
-length = [0.3, 0.4]
-com = [length[0], length[1]]
-#damping = [0.081, 0.081]
-#damping = [0.0005, 0.0001]
-damping = [0.0, 0.0]
-#cfric = [0.093, 0.186]
+# mass = [0.608, 0.63]
+# length = [0.3, 0.4]
+# com = [length[0], length[1]]
+# damping = [0.081, 0.081]
+# damping = [0.0005, 0.0001]
+# damping = [0., 0.]
+# cfric = [0.093, 0.186]
 cfric = [0., 0.]
-gravity = 9.81
-inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
+# gravity = 9.81
+# inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
+motor_inertia = 0.
 if robot == "acrobot":
     torque_limit = [0.0, 4.0]
 if robot == "pendubot":
     torque_limit = [4.0, 0.0]
+
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters.yml"
+mpar = model_parameters()
+mpar.load_yaml(model_par_path)
+mpar.set_motor_inertia(motor_inertia)
+# mpar.set_damping(damping)
+mpar.set_cfric(cfric)
+mpar.set_torque_limit(torque_limit)
 
 # controller parameters
 N = 1000
@@ -50,7 +60,7 @@ break_cost_redu = 1e-6
 
 # simulation parameter
 dt = 0.005
-#t_final = 5.0
+# t_final = 5.0
 t_final = N*dt
 integrator = "runge_kutta"
 
@@ -67,15 +77,33 @@ if robot == "acrobot":
     # fCv = [5.89790058e+01, 9.01459500e+01]
     # fCen = 0.0
 
-    # very good
-    sCu = [9.97938814e-02, 9.97938814e-02]
-    sCp = [2.06969312e-02, 7.69967729e-02]
-    sCv = [1.55726136e-04, 5.42226523e-03]
+    # # very good
+    # sCu = [9.97938814e-02, 9.97938814e-02]
+    # sCp = [2.06969312e-02, 7.69967729e-02]
+    # sCv = [1.55726136e-04, 5.42226523e-03]
+    # sCen = 0.0
+    # fCp = [3.82623819e+02, 7.05315590e+03]
+    # fCv = [5.89790058e+01, 9.01459500e+01]
+    # fCen = 0.0
+
+    # [8.26303186e+01 2.64981012e+01 3.90215591e+01 3.87432205e+00
+    #  2.47715889e+00 5.72238144e+04 9.99737172e+04 7.16184205e+03
+    #  2.94688061e+03]
+    sCu = [89., 89.]
+    sCp = [40., 0.2]
+    sCv = [11., 1.0]
     sCen = 0.0
-    fCp = [3.82623819e+02, 7.05315590e+03]
-    fCv = [5.89790058e+01, 9.01459500e+01]
+    fCp = [66000., 210000.]
+    fCv = [55000., 92000.]
     fCen = 0.0
 
+    # sCu = [89.53168298604868, 89.53168298604868]
+    # sCp = [39.95840603845028, 0.220281011195961]
+    # sCv = [10.853380829038803, 0.9882211066793491]
+    # sCen = 0.
+    # fCp = [65596.70698843336, 208226.67812877183]
+    # fCv = [54863.83385207141, 91745.39489510724]
+    # fCen = 0.
     # looking good
     # [9.96090757e-02 2.55362809e-02 9.65397113e-02 2.17121720e-05
     #  6.80616778e-03 2.56167942e+02 7.31751057e+03 9.88563736e+01
@@ -117,14 +145,15 @@ start = [0., 0., 0., 0.]
 goal = [np.pi, 0., 0., 0.]
 
 il = ilqr_calculator()
-il.set_model_parameters(mass=mass,
-                        length=length,
-                        com=com,
-                        damping=damping,
-                        gravity=gravity,
-                        coulomb_fric=cfric,
-                        inertia=inertia,
-                        torque_limit=torque_limit)
+# il.set_model_parameters(mass=mass,
+#                         length=length,
+#                         com=com,
+#                         damping=damping,
+#                         gravity=gravity,
+#                         coulomb_fric=cfric,
+#                         inertia=inertia,
+#                         torque_limit=torque_limit)
+il.set_model_parameters(model_pars=mpar)
 il.set_parameters(N=N,
                   dt=dt,
                   max_iter=max_iter,
@@ -160,21 +189,22 @@ os.system("mv trajectory.csv " + traj_file)
 # save_trajectory(csv_path=filename,
 #                 T=T, X=X, U=U)
 
-par_dict = {"mass1": mass[0],
-            "mass2": mass[1],
-            "length1": length[0],
-            "length2": length[1],
-            "com1": com[0],
-            "com2": com[1],
-            "inertia1": inertia[0],
-            "inertia2": inertia[1],
-            "damping1": damping[0],
-            "damping2": damping[1],
-            "coulomb_friction1": cfric[0],
-            "coulomb_friction2": cfric[1],
-            "gravity": gravity,
-            "torque_limit1": torque_limit[0],
-            "torque_limit2": torque_limit[1],
+par_dict = {
+            # "mass1": mass[0],
+            # "mass2": mass[1],
+            # "length1": length[0],
+            # "length2": length[1],
+            # "com1": com[0],
+            # "com2": com[1],
+            # "inertia1": inertia[0],
+            # "inertia2": inertia[1],
+            # "damping1": damping[0],
+            # "damping2": damping[1],
+            # "coulomb_friction1": cfric[0],
+            # "coulomb_friction2": cfric[1],
+            # "gravity": gravity,
+            # "torque_limit1": torque_limit[0],
+            # "torque_limit2": torque_limit[1],
             "dt": dt,
             "t_final": t_final,
             "integrator": integrator,
@@ -209,6 +239,8 @@ par_dict = {"mass1": mass[0],
 with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
     yaml.dump(par_dict, f)
 
+mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
+
 # plotting
 U = np.append(U, [[0.0, 0.0]], axis=0)
 plot_timeseries(T, X, U, None,
@@ -218,14 +250,15 @@ plot_timeseries(T, X, U, None,
                 save_to=os.path.join(save_dir, "timeseries"))
 
 # simulation
-plant = SymbolicDoublePendulum(mass=mass,
-                               length=length,
-                               com=com,
-                               damping=damping,
-                               gravity=gravity,
-                               coulomb_fric=cfric,
-                               inertia=inertia,
-                               torque_limit=torque_limit)
+# plant = SymbolicDoublePendulum(mass=mass,
+#                                length=length,
+#                                com=com,
+#                                damping=damping,
+#                                gravity=gravity,
+#                                coulomb_fric=cfric,
+#                                inertia=inertia,
+#                                torque_limit=torque_limit)
+plant = SymbolicDoublePendulum(model_pars=mpar)
 
 sim = Simulator(plant=plant)
 

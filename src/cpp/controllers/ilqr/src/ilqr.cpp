@@ -381,13 +381,13 @@ double ilqr::calculate_cost(bool new_traj){
     double total = 0.;
     if (new_traj){
         for (int i=0; i<N-1; i++){
-            total += stage_cost(x_traj_new[i], u_traj_new[i], i);// / (1.*(N-1));
+            total += stage_cost(x_traj_new[i], u_traj_new[i], i) / (1.*(N-1));
         }
         total += final_cost(x_traj_new[N-1]);
     }
     else{
         for (int i=0; i<N-1; i++){
-            total += stage_cost(x_traj[i], u_traj[i], i);// / (1.*(N-1));
+            total += stage_cost(x_traj[i], u_traj[i], i) / (1.*(N-1));
             //printf("stage cost %e\n", total);
         }
         total += final_cost(x_traj[N-1]);

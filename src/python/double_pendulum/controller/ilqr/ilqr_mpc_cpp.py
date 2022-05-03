@@ -17,7 +17,8 @@ class ILQRMPCCPPController(AbstractController):
                  coulomb_fric=[0.093, 0.186],
                  gravity=9.81,
                  inertia=[0.05472, 0.02522],
-                 torque_limit=[0.0, 6.0]):
+                 torque_limit=[0.0, 6.0],
+                 model_pars=None):
 
         # n_x = 4
         # n_u = 1
@@ -29,6 +30,18 @@ class ILQRMPCCPPController(AbstractController):
         self.gravity = gravity
         self.inertia = inertia
         self.torque_limit = torque_limit
+
+        if model_pars is not None:
+            self.mass = model_pars.m
+            self.length = model_pars.l
+            self.com = model_pars.r
+            self.damping = model_pars.b
+            self.coulomb_fric = model_pars.cf
+            self.gravity = model_pars.g
+            self.inertia = model_pars.I
+            # self.Ir = model_pars.Ir
+            # self.gr = model_pars.gr
+            self.torque_limit = model_pars.tl
 
         self.counter = 0
 

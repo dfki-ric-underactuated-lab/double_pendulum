@@ -48,15 +48,16 @@ class benchmarker():
         self.ref_cost_tf = None
 
     def set_model_parameter(self,
-                            mass,
-                            length,
-                            com,
-                            damping,
-                            gravity,
-                            cfric,
-                            inertia,
-                            motor_inertia,
-                            torque_limit):
+                            mass=[0.608, 0.630],
+                            length=[0.3, 0.2],
+                            com=[0.275, 0.166],
+                            damping=[0.081, 0.0],
+                            cfric=[0.093, 0.186],
+                            gravity=9.81,
+                            inertia=[0.05472, 0.02522],
+                            motor_inertia=0.,
+                            torque_limit=[0.0, 6.0],
+                            model_pars=None):
 
         self.mass = mass
         self.length = length
@@ -68,15 +69,27 @@ class benchmarker():
         self.motor_inertia = motor_inertia
         self.torque_limit = torque_limit
 
-        self.plant = SymbolicDoublePendulum(mass=mass,
-                                            length=length,
-                                            com=com,
-                                            damping=damping,
-                                            gravity=gravity,
-                                            coulomb_fric=cfric,
-                                            inertia=inertia,
-                                            motor_inertia=motor_inertia,
-                                            torque_limit=torque_limit)
+        if model_pars is not None:
+            self.mass = model_pars.m
+            self.length = model_pars.l
+            self.com = model_pars.r
+            self.damping = model_pars.b
+            self.coulomb_fric = model_pars.cf
+            self.gravity = model_pars.g
+            self.inertia = model_pars.I
+            self.motor_inertia = model_pars.Ir
+            # self.gr = model_pars.gr
+            self.torque_limit = model_pars.tl
+
+        self.plant = SymbolicDoublePendulum(mass=self.mass,
+                                            length=self.length,
+                                            com=self.com,
+                                            damping=self.damping,
+                                            gravity=self.gravity,
+                                            coulomb_fric=self.cfric,
+                                            inertia=self.inertia,
+                                            motor_inertia=self.motor_inertia,
+                                            torque_limit=self.torque_limit)
 
         self.simulator = Simulator(plant=self.plant)
 
@@ -90,6 +103,8 @@ class benchmarker():
 
     def compute_cost(self, x_traj, u_traj, mode="free"):
 
+        len_traj = len(x_traj)
+
         if mode == "free":
             X = x_traj[:-1] - self.goal
             U = u_traj
@@ -99,8 +114,8 @@ class benchmarker():
             U = u_traj - self.u_traj
             xf = x_traj[-1] - self.x_traj[-1]
 
-        X_cost = np.einsum('jl, jk, lk', X.T, self.Q, X)
-        U_cost = np.einsum('jl, jk, lk', U.T, self.R, U)
+        X_cost = np.einsum('jl, jk, lk', X.T, self.Q, X) / (len_traj-1)
+        U_cost = np.einsum('jl, jk, lk', U.T, self.R, U) / (len_traj-1)
         Xf_cost = np.einsum('i, ij, j', xf, self.Qf, xf)
 
         cost = X_cost + U_cost + Xf_cost

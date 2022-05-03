@@ -4,6 +4,7 @@ import numpy as np
 import yaml
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
+from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.utils.plotting import plot_timeseries
@@ -24,19 +25,28 @@ robot = "acrobot"
 # torque_limit = [0.0, 4.0]
 
 # model parameters
-mass = [0.608, 0.5]
-length = [0.3, 0.4]
-com = [length[0], length[1]]
-#damping = [0.081, 0.081]
-damping = [0.0, 0.0]
+# mass = [0.608, 0.5]
+# length = [0.3, 0.4]
+# com = [length[0], length[1]]
+# damping = [0.081, 0.081]
+# damping = [0.0, 0.0]
 # cfric = [0.093, 0.186]
 cfric = [0., 0.]
-gravity = 9.81
-inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
+# gravity = 9.81
+# inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
+motor_inertia = 0.
 if robot == "acrobot":
     torque_limit = [0.0, 4.0]
 if robot == "pendubot":
     torque_limit = [4.0, 0.0]
+
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters.yml"
+mpar = model_parameters()
+mpar.load_yaml(model_par_path)
+mpar.set_motor_inertia(motor_inertia)
+# mpar.set_damping(damping)
+mpar.set_cfric(cfric)
+mpar.set_torque_limit(torque_limit)
 
 # simulation parameter
 dt = 0.005
@@ -52,24 +62,33 @@ regu_init = 100.
 max_regu = 10000.
 min_regu = 0.01
 break_cost_redu = 1e-6
+trajectory_stabilization = True
 
 # swingup parameters
 start = [0., 0., 0., 0.]
 goal = [np.pi, 0., 0., 0.]
 
-latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
-init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
+# latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
+# init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
+init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
 read_with = "numpy"
-trajectory_stabilization = True
 
 if robot == "acrobot":
     # acrobot good par
-    sCu = [9.97938814e-02, 9.97938814e-02]
-    sCp = [2.06969312e-02, 7.69967729e-02]
-    sCv = [1.55726136e-04, 5.42226523e-03]
+    # sCu = [9.97938814e-02, 9.97938814e-02]
+    # sCp = [2.06969312e-02, 7.69967729e-02]
+    # sCv = [1.55726136e-04, 5.42226523e-03]
+    # sCen = 0.0
+    # fCp = [3.82623819e+02, 7.05315590e+03]
+    # fCv = [5.89790058e+01, 9.01459500e+01]
+    # fCen = 0.0
+
+    sCu = [89., 89.]
+    sCp = [40., 0.2]
+    sCv = [11., 1.0]
     sCen = 0.0
-    fCp = [3.82623819e+02, 7.05315590e+03]
-    fCv = [5.89790058e+01, 9.01459500e+01]
+    fCp = [66000., 210000.]
+    fCv = [55000., 92000.]
     fCen = 0.0
 
     # sCu = [9.97938814e-02, 9.97938814e-02]
@@ -121,47 +140,33 @@ init_fCp = fCp
 init_fCv = fCv
 init_fCen = fCen
 
-# init_sCu = [9.64008003e-04, 3.69465206e-04]
-# init_sCp = [9.00160028e-04, 8.52634075e-04]
-# init_sCv = [3.62146682e-05, 3.49079107e-04]
-# init_sCen = 1.08953921e-05
-# init_fCp = [9.88671633e+03, 7.27311031e+03]
-# init_fCv = [6.75242351e+01, 9.95354381e+01]
-# init_fCen = 6.36798375e+01
-
-# init_sCu = [0.01, 0.01]
-# init_sCp = [0.0, 0.0]
-# init_sCv = [0.0, 0.0]
-# init_sCen = 0.0
-# init_fCp = [300, 10000]
-# init_fCv = [500, 100]
-# init_fCen = 0.0
-
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
 save_dir = os.path.join("data", robot, "ilqr", "mpc", timestamp)
 os.makedirs(save_dir)
 
 # construct simulation objects
-plant = SymbolicDoublePendulum(mass=mass,
-                               length=length,
-                               com=com,
-                               damping=damping,
-                               gravity=gravity,
-                               coulomb_fric=cfric,
-                               inertia=inertia,
-                               torque_limit=torque_limit)
+plant = SymbolicDoublePendulum(model_pars=mpar)
+# plant = SymbolicDoublePendulum(mass=mass,
+#                                length=length,
+#                                com=com,
+#                                damping=damping,
+#                                gravity=gravity,
+#                                coulomb_fric=cfric,
+#                                inertia=inertia,
+#                                torque_limit=torque_limit)
 
 sim = Simulator(plant=plant)
 
-controller = ILQRMPCCPPController(mass=mass,
-                                  length=length,
-                                  com=com,
-                                  damping=damping,
-                                  gravity=gravity,
-                                  coulomb_fric=cfric,
-                                  inertia=inertia,
-                                  torque_limit=torque_limit)
+controller = ILQRMPCCPPController(model_pars=mpar)
+# controller = ILQRMPCCPPController(mass=mass,
+#                                   length=length,
+#                                   com=com,
+#                                   damping=damping,
+#                                   gravity=gravity,
+#                                   coulomb_fric=cfric,
+#                                   inertia=inertia,
+#                                   torque_limit=torque_limit)
 
 controller.set_start(start)
 controller.set_goal(goal)
@@ -215,21 +220,24 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
 
 os.system(f"cp {init_csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))
 
-par_dict = {"mass1": mass[0],
-            "mass2": mass[1],
-            "length1": length[0],
-            "length2": length[1],
-            "com1": com[0],
-            "com2": com[1],
-            "inertia1": inertia[0],
-            "inertia2": inertia[1],
-            "damping1": damping[0],
-            "damping2": damping[1],
-            "coulomb_friction1": cfric[0],
-            "coulomb_friction2": cfric[1],
-            "gravity": gravity,
-            "torque_limit1": torque_limit[0],
-            "torque_limit2": torque_limit[1],
+mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
+
+par_dict = {
+            # "mass1": mass[0],
+            # "mass2": mass[1],
+            # "length1": length[0],
+            # "length2": length[1],
+            # "com1": com[0],
+            # "com2": com[1],
+            # "inertia1": inertia[0],
+            # "inertia2": inertia[1],
+            # "damping1": damping[0],
+            # "damping2": damping[1],
+            # "coulomb_friction1": cfric[0],
+            # "coulomb_friction2": cfric[1],
+            # "gravity": gravity,
+            # "torque_limit1": torque_limit[0],
+            # "torque_limit2": torque_limit[1],
             "dt": dt,
             "t_final": t_final,
             "integrator": integrator,
@@ -249,6 +257,7 @@ par_dict = {"mass1": mass[0],
             "max_regu": max_regu,
             "min_regu": min_regu,
             "break_cost_redu": break_cost_redu,
+            "trajectory_stabilization": trajectory_stabilization,
             "sCu1": sCu[0],
             "sCu2": sCu[1],
             "sCp1": sCp[0],

@@ -5,6 +5,7 @@ import yaml
 import pickle
 import pprint
 
+from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.analysis.benchmark import benchmarker
 from double_pendulum.analysis.utils import get_par_list
@@ -12,22 +13,19 @@ from double_pendulum.analysis.utils import get_par_list
 robot = "acrobot"
 
 # model parameters
-mass = [0.608, 0.63]
-length = [0.3, 0.4]
-com = [length[0], length[1]]
-com = [0.275, 0.166]
-# damping = [0.081, 0.0]
-damping = [0.0, 0.0]
-# cfric = [0.093, 0.186]
 cfric = [0., 0.]
-gravity = 9.81
-#inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
-inertia = [0.05472, 0.02522]
 motor_inertia = 0.0  # 8.8e-5
 if robot == "acrobot":
     torque_limit = [0.0, 4.0]
 if robot == "pendubot":
     torque_limit = [4.0, 0.0]
+
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters.yml"
+mpar = model_parameters()
+mpar.load_yaml(model_par_path)
+mpar.set_motor_inertia(motor_inertia)
+mpar.set_cfric(cfric)
+mpar.set_torque_limit(torque_limit)
 
 # simulation parameter
 dt = 0.005
@@ -46,13 +44,20 @@ break_cost_redu = 1e-6
 trajectory_stabilization = True
 
 # acrobot good par
-sCu = [9.97938814e-02, 9.97938814e-02]
-sCp = [2.06969312e-02, 7.69967729e-02]
-sCv = [1.55726136e-04, 5.42226523e-03]
+sCu = [89., 89.]
+sCp = [40., 0.2]
+sCv = [11., 1.0]
 sCen = 0.0
-fCp = [3.82623819e+02, 7.05315590e+03]
-fCv = [5.89790058e+01, 9.01459500e+01]
+fCp = [66000., 210000.]
+fCv = [55000., 92000.]
 fCen = 0.0
+# sCu = [9.97938814e-02, 9.97938814e-02]
+# sCp = [2.06969312e-02, 7.69967729e-02]
+# sCv = [1.55726136e-04, 5.42226523e-03]
+# sCen = 0.0
+# fCp = [3.82623819e+02, 7.05315590e+03]
+# fCv = [5.89790058e+01, 9.01459500e+01]
+# fCen = 0.0
 
 Q = np.array([[sCp[0], 0., 0., 0.],
               [0., sCp[1], 0., 0.],
@@ -66,20 +71,20 @@ R = np.array([[sCu[0], 0.],
               [0., sCu[1]]])
 
 # benchmark parameters
-compute_model_robustness = True
+compute_model_robustness = False
 mpar_vars = ["Ir",
              "m1r1", "I1", "b1", "cf1",
              "m2r2", "m2", "I2", "b2", "cf2"]
 
 N_var = 3
 Ir_var_list = [0.0, 8.8e-5, 2*8.8e-5]
-m1r1_var_list = get_par_list(mass[0]*com[0], 0.5, 1.5, N_var)
-I1_var_list = get_par_list(inertia[0], 0.5, 1.5, N_var)
+m1r1_var_list = get_par_list(mpar.m[0]*mpar.r[0], 0.5, 1.5, N_var)
+I1_var_list = get_par_list(mpar.I[0], 0.5, 1.5, N_var)
 b1_var_list = [0.0, 0.081, 0.19]
 cf1_var_list = [0.0, 0.093, 0.186]
-m2r2_var_list = get_par_list(mass[1]*com[1], 0.5, 1.5, N_var)
-m2_var_list = get_par_list(mass[1], 0.5, 1.5, N_var)
-I2_var_list = get_par_list(inertia[1], 0.5, 1.5, N_var)
+m2r2_var_list = get_par_list(mpar.m[1]*mpar.r[1], 0.5, 1.5, N_var)
+m2_var_list = get_par_list(mpar.m[1], 0.5, 1.5, N_var)
+I2_var_list = get_par_list(mpar.I[1], 0.5, 1.5, N_var)
 b2_var_list = [0.0, 0.081, 0.19]
 cf2_var_list = [0.0, 0.093, 0.186]
 
@@ -94,17 +99,17 @@ modelpar_var_lists = {"Ir": Ir_var_list,
                       "b2": b2_var_list,
                       "cf2": cf2_var_list}
 
-compute_noise_robustness = True
+compute_noise_robustness = False
 noise_mode = "vel"
 noise_amplitudes = [0.0, 0.1, 0.3, 0.5, 0.8, 1.0]
 noise_cut = 0.5
 noise_vfilter = "lowpass"
 noise_vfilter_args = {"alpha": 0.3}
 
-compute_unoise_robustness = True
+compute_unoise_robustness = False
 unoise_amplitudes = [0.0, 0.1, 0.5, 1.0, 2.0, 5.0]
 
-compute_uresponsiveness_robustness = True
+compute_uresponsiveness_robustness = False
 u_responses = [1.0, 1.3, 1.5, 2.0]
 
 compute_delay_robustness = True
@@ -127,15 +132,7 @@ save_dir = os.path.join("data", robot, "ilqr", "mpc_benchmark", timestamp)
 os.makedirs(save_dir)
 
 # construct simulation objects
-controller = ILQRMPCCPPController(mass=mass,
-                                  length=length,
-                                  com=com,
-                                  damping=damping,
-                                  gravity=gravity,
-                                  coulomb_fric=cfric,
-                                  inertia=inertia,
-                                  torque_limit=torque_limit)
-
+controller = ILQRMPCCPPController(model_pars=mpar)
 controller.set_start(start)
 controller.set_goal(goal)
 controller.set_parameters(N=N,
@@ -163,15 +160,7 @@ ben = benchmarker(controller=controller,
                   goal=goal,
                   integrator=integrator,
                   save_dir=save_dir)
-ben.set_model_parameter(mass=mass,
-                        length=length,
-                        com=com,
-                        damping=damping,
-                        gravity=gravity,
-                        cfric=cfric,
-                        inertia=inertia,
-                        motor_inertia=motor_inertia,
-                        torque_limit=torque_limit)
+ben.set_model_parameter(model_pars=mpar)
 ben.set_init_traj(init_csv_path, read_with=read_with)
 ben.set_cost_par(Q=Q, R=R, Qf=Qf)
 ben.compute_ref_cost()
@@ -199,22 +188,9 @@ pickle.dump(res, f)
 f.close()
 
 os.system(f"cp {init_csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))
+mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
 
-par_dict = {"mass1": mass[0],
-            "mass2": mass[1],
-            "length1": length[0],
-            "length2": length[1],
-            "com1": com[0],
-            "com2": com[1],
-            "inertia1": inertia[0],
-            "inertia2": inertia[1],
-            "damping1": damping[0],
-            "damping2": damping[1],
-            "coulomb_friction1": cfric[0],
-            "coulomb_friction2": cfric[1],
-            "gravity": gravity,
-            "torque_limit1": torque_limit[0],
-            "torque_limit2": torque_limit[1],
+par_dict = {
             "dt": dt,
             "t_final": t_final,
             "integrator": integrator,

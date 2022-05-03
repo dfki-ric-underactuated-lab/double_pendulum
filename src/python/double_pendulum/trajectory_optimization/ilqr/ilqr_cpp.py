@@ -1,9 +1,5 @@
-# import sys
 import numpy as np
 
-# sys.path.append("../../../../cpp/python/")
-# sys.path.append("/home/vhuser/Git/underactuated-robotics/caprr-release-version/src/cpp/python")
-# sys.path.append("/home/felix/Work/DFKI/Development/underactuated_lab/double_pendulum/caprr-release-version/src/cpp/python")
 from cppilqr import cppilqr
 
 
@@ -23,7 +19,8 @@ class ilqr_calculator():
                              coulomb_fric=[0.093, 0.186],
                              gravity=9.81,
                              inertia=[0.05472, 0.02522],
-                             torque_limit=[0.0, 6.0]):
+                             torque_limit=[0.0, 6.0],
+                             model_pars=None):
 
         self.mass = mass
         self.length = length
@@ -33,6 +30,18 @@ class ilqr_calculator():
         self.gravity = gravity
         self.inertia = inertia
         self.torque_limit = torque_limit
+
+        if model_pars is not None:
+            self.mass = model_pars.m
+            self.length = model_pars.l
+            self.com = model_pars.r
+            self.damping = model_pars.b
+            self.coulomb_fric = model_pars.cf
+            self.gravity = model_pars.g
+            self.inertia = model_pars.I
+            # self.Ir = model_pars.Ir
+            # self.gr = model_pars.gr
+            self.torque_limit = model_pars.tl
 
     def set_parameters(self,
                        N=1000,

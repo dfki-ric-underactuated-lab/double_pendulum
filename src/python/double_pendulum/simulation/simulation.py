@@ -8,6 +8,7 @@ from double_pendulum.simulation.visualization import get_arrow, \
                                                      set_arrow_properties
 from double_pendulum.experiments.filters.low_pass import lowpass_filter
 
+
 class Simulator:
     def __init__(self, plant):
         self.plant = plant
@@ -16,7 +17,7 @@ class Simulator:
         self.t = 0.0  # time
 
     def set_state(self, time, x):
-        self.x = x
+        self.x = np.copy(x)
         self.t = time
 
     def get_state(self):
@@ -40,16 +41,17 @@ class Simulator:
         return T, X, U
 
     def set_imperfections(self,
-            noise_amplitude=0.0,
-            noise_mode="None",
-            noise_cut=0.0,
-            noise_vfilter="lowpass",
-            noise_vfilter_args={"alpha": 0.3},
-            delay=0.0,
-            delay_mode="None",
-            unoise_amplitude=0.0,
-            perturbation_times=[],
-            perturbation_taus=[]):
+                          noise_amplitude=0.0,
+                          noise_mode="None",
+                          noise_cut=0.0,
+                          noise_vfilter="lowpass",
+                          noise_vfilter_args={"alpha": 0.3},
+                          delay=0.0,
+                          delay_mode="None",
+                          unoise_amplitude=0.0,
+                          u_responsiveness=1.0,
+                          perturbation_times=[],
+                          perturbation_taus=[]):
 
         self.noise_amplitude = noise_amplitude
         self.noise_mode = noise_mode
@@ -59,6 +61,7 @@ class Simulator:
         self.delay = delay
         self.delay_mode = delay_mode
         self.unoise_amplitude = unoise_amplitude
+        self.u_responsiveness = u_responsiveness
         self.perturbation_times = perturbation_times
         self.perturbation_taus = perturbation_taus
 
@@ -74,6 +77,7 @@ class Simulator:
         self.delay = 0.0
         self.delay_mode = "None"
         self.unoise_amplitude = 0.0
+        self.u_responsiveness = 1.0
         self.perturbation_times = []
         self.perturbation_taus = []
 
@@ -93,7 +97,7 @@ class Simulator:
         tau = np.clip(tau, -np.asarray(self.plant.torque_limit),
                       np.asarray(self.plant.torque_limit))
 
-        #self.record_data(self.t, self.x.copy(), tau)
+        # self.record_data(self.t, self.x.copy(), tau)
 
         if integrator == "runge_kutta":
             self.x += dt * self.runge_integrator(self.t, self.x, dt, tau)
@@ -118,9 +122,9 @@ class Simulator:
         return realtime
 
     def controller_step_with_imperfections(self,
-            dt,
-            controller=None,
-            integrator="runge_kutta"):
+                                           dt,
+                                           controller=None,
+                                           integrator="runge_kutta"):
 
         # delay
         n_delay = int(self.delay / dt) + 1
@@ -159,8 +163,12 @@ class Simulator:
                 vf2 = [self.vfilter[-1][1], xcon[3]]
 
                 if self.noise_vfilter == "lowpass":
-                    xcon[2] = lowpass_filter(vf1, self.noise_vfilter_args["alpha"])[-1]
-                    xcon[3] = lowpass_filter(vf2, self.noise_vfilter_args["alpha"])[-1]
+                    xcon[2] = lowpass_filter(
+                            vf1,
+                            self.noise_vfilter_args["alpha"])[-1]
+                    xcon[3] = lowpass_filter(
+                            vf2,
+                            self.noise_vfilter_args["alpha"])[-1]
 
             self.vfilter.append(xcon[2:])
 
@@ -173,9 +181,17 @@ class Simulator:
         else:
             u = np.zeros(self.plant.n_actuators)
 
-        # tau noise (unoise)
         nu = np.copy(u)
-        for i, tau in enumerate(u):
+
+        # tau responsiveness
+        if len(self.tau_values) > 0:
+            last_u = np.asarray(self.tau_values[-1])
+        else:
+            last_u = np.zeros(self.plant.n_actuators)
+        nu = last_u + self.u_responsiveness*(nu - last_u)
+
+        # tau noise (unoise)
+        for i, tau in enumerate(nu):
             if np.abs(tau) > 0:
                 nu[i] = tau + np.random.uniform(-self.unoise_amplitude,
                                                 self.unoise_amplitude,
@@ -187,7 +203,7 @@ class Simulator:
                  integrator="runge_kutta", imperfections=False):
         self.set_state(t0, x0)
         self.reset_data_recorder()
-        self.record_data(t0, x0, None)
+        self.record_data(t0, np.copy(x0), None)
 
         while (self.t <= tf):
             # if controller is not None:
@@ -198,7 +214,8 @@ class Simulator:
             if not imperfections:
                 _ = self.controller_step(dt, controller, integrator)
             else:
-                _ = self.controller_step_with_imperfections(dt, controller, integrator)
+                _ = self.controller_step_with_imperfections(
+                        dt, controller, integrator)
 
         return self.t_values, self.x_values, self.tau_values
 
@@ -260,7 +277,8 @@ class Simulator:
             if not imperfections:
                 rt = self.controller_step(dt, controller, integrator)
             else:
-                rt = self.controller_step_with_imperfections(dt, controller, integrator)
+                rt = self.controller_step_with_imperfections(
+                        dt, controller, integrator)
             if not rt:
                 realtime = False
         tau = self.tau_values[-1]

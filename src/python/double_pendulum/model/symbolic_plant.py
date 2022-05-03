@@ -74,7 +74,8 @@ class SymbolicDoublePendulum():
                  inertia=[None, None],
                  motor_inertia=0.,
                  gear_ratio=6,
-                 torque_limit=[np.inf, np.inf]):
+                 torque_limit=[np.inf, np.inf],
+                 model_pars=None):
         self.m = mass
         self.l = length
         self.com = com
@@ -91,6 +92,17 @@ class SymbolicDoublePendulum():
             else:
                 self.I.append(inertia[i])
 
+        if model_pars is not None:
+            self.m = model_pars.m
+            self.l = model_pars.l
+            self.com = model_pars.r
+            self.b = model_pars.b
+            self.coulomb_fric = model_pars.cf
+            self.g = model_pars.g
+            self.I = model_pars.I
+            self.Ir = model_pars.Ir
+            self.gr = model_pars.gr
+            self.torque_limit = model_pars.tl
 
         # Actuator selection Matrix
         if torque_limit[0] == 0:
