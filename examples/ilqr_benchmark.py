@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 import numpy as np
+import yaml
 import pickle
 import pprint
 
@@ -42,6 +43,7 @@ regu_init = 100
 max_regu = 10000.
 min_regu = 0.01
 break_cost_redu = 1e-6
+trajectory_stabilization = True
 
 # acrobot good par
 sCu = [9.97938814e-02, 9.97938814e-02]
@@ -64,7 +66,7 @@ R = np.array([[sCu[0], 0.],
               [0., sCu[1]]])
 
 # benchmark parameters
-compute_model_robustness = False
+compute_model_robustness = True
 mpar_vars = ["Ir",
              "m1r1", "I1", "b1", "cf1",
              "m2r2", "m2", "I2", "b2", "cf2"]
@@ -92,7 +94,7 @@ modelpar_var_lists = {"Ir": Ir_var_list,
                       "b2": b2_var_list,
                       "cf2": cf2_var_list}
 
-compute_noise_robustness = False
+compute_noise_robustness = True
 noise_mode = "vel"
 noise_amplitudes = [0.0, 0.1, 0.3, 0.5, 0.8, 1.0]
 noise_cut = 0.5
@@ -102,6 +104,9 @@ noise_vfilter_args = {"alpha": 0.3}
 compute_unoise_robustness = True
 unoise_amplitudes = [0.0, 0.1, 0.5, 1.0, 2.0, 5.0]
 
+compute_uresponsiveness_robustness = True
+u_responses = [1.0, 1.3, 1.5, 2.0]
+
 compute_delay_robustness = True
 delay_mode = "vel"
 delays = [0.0, dt, 2*dt, 5*dt, 10*dt]
@@ -110,6 +115,7 @@ delays = [0.0, dt, 2*dt, 5*dt, 10*dt]
 #latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
 #init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
 init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+read_with = "numpy"
 
 # swingup parameters
 start = [0., 0., 0., 0.]
@@ -139,7 +145,8 @@ controller.set_parameters(N=N,
                           max_regu=max_regu,
                           min_regu=min_regu,
                           break_cost_redu=break_cost_redu,
-                          integrator=integrator)
+                          integrator=integrator,
+                          trajectory_stabilization=trajectory_stabilization)
 controller.set_cost_parameters(sCu=sCu,
                                sCp=sCp,
                                sCv=sCv,
@@ -165,12 +172,13 @@ ben.set_model_parameter(mass=mass,
                         inertia=inertia,
                         motor_inertia=motor_inertia,
                         torque_limit=torque_limit)
-ben.set_init_traj(init_csv_path, read_with="numpy")
+ben.set_init_traj(init_csv_path, read_with=read_with)
 ben.set_cost_par(Q=Q, R=R, Qf=Qf)
 ben.compute_ref_cost()
 res = ben.benchmark(compute_model_robustness=compute_model_robustness,
                     compute_noise_robustness=compute_noise_robustness,
                     compute_unoise_robustness=compute_unoise_robustness,
+                    compute_uresponsiveness_robustness=compute_uresponsiveness_robustness,
                     compute_delay_robustness=compute_delay_robustness,
                     mpar_vars=mpar_vars,
                     modelpar_var_lists=modelpar_var_lists,
@@ -180,13 +188,66 @@ res = ben.benchmark(compute_model_robustness=compute_model_robustness,
                     noise_vfilter=noise_vfilter,
                     noise_vfilter_args=noise_vfilter_args,
                     unoise_amplitudes=unoise_amplitudes,
+                    u_responses=u_responses,
                     delay_mode=delay_mode,
                     delays=delays)
 pprint.pprint(res)
 
 # saving
-#f = open(os.path.join(save_dir, "results.pkl"), 'wb')
-#pickle.dump(res, f)
-#f.close()
+f = open(os.path.join(save_dir, "results.pkl"), 'wb')
+pickle.dump(res, f)
+f.close()
 
-# Todo: save all parameters
+os.system(f"cp {init_csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))
+
+par_dict = {"mass1": mass[0],
+            "mass2": mass[1],
+            "length1": length[0],
+            "length2": length[1],
+            "com1": com[0],
+            "com2": com[1],
+            "inertia1": inertia[0],
+            "inertia2": inertia[1],
+            "damping1": damping[0],
+            "damping2": damping[1],
+            "coulomb_friction1": cfric[0],
+            "coulomb_friction2": cfric[1],
+            "gravity": gravity,
+            "torque_limit1": torque_limit[0],
+            "torque_limit2": torque_limit[1],
+            "dt": dt,
+            "t_final": t_final,
+            "integrator": integrator,
+            "start_pos1": start[0],
+            "start_pos2": start[1],
+            "start_vel1": start[2],
+            "start_vel2": start[3],
+            "goal_pos1": goal[0],
+            "goal_pos2": goal[1],
+            "goal_vel1": goal[2],
+            "goal_vel2": goal[3],
+            "N": N,
+            "N_init": N_init,
+            "max_iter": max_iter,
+            "max_iter_init": max_iter_init,
+            "regu_init": regu_init,
+            "max_regu": max_regu,
+            "min_regu": min_regu,
+            "break_cost_redu": break_cost_redu,
+            "trajectory_stabilization": trajectory_stabilization,
+            "sCu1": sCu[0],
+            "sCu2": sCu[1],
+            "sCp1": sCp[0],
+            "sCp2": sCp[1],
+            "sCv1": sCv[0],
+            "sCv2": sCv[1],
+            "sCen": sCen,
+            "fCp1": fCp[0],
+            "fCp2": fCp[1],
+            "fCv1": fCv[0],
+            "fCv2": fCv[1],
+            "fCen": fCen
+            }
+
+with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
+    yaml.dump(par_dict, f)

@@ -154,21 +154,22 @@ class benchmarker():
         cost_free, cost_tf, succ = self.compute_success_measure(X, U)
         return cost_free, cost_tf, succ
 
-    def check_modelpar_robustness(self,
-                                 mpar_vars=["Ir",
-                                            "m1r1", "I1", "b1", "cf1",
-                                            "m2r2", "m2", "I2", "b2", "cf2"],
-                                 var_lists={"Ir": [],
-                                            "m1r1": [],
-                                            "I1": [],
-                                            "b1": [],
-                                            "cf1": [],
-                                            "m2r2": [],
-                                            "m2": [],
-                                            "I2": [],
-                                            "b2": [],
-                                            "cf2": []},
-                                 ):
+    def check_modelpar_robustness(
+            self,
+            mpar_vars=["Ir",
+                       "m1r1", "I1", "b1", "cf1",
+                       "m2r2", "m2", "I2", "b2", "cf2"],
+            var_lists={"Ir": [],
+                       "m1r1": [],
+                       "I1": [],
+                       "b1": [],
+                       "cf1": [],
+                       "m2r2": [],
+                       "m2": [],
+                       "I2": [],
+                       "b2": [],
+                       "cf2": []},
+            ):
 
         print("computing model parameter robustness...")
 
@@ -324,6 +325,7 @@ class benchmarker():
                     C_tf.append(cost_tf)
                     SUCC.append(succ)
             res_dict[mp] = {}
+            res_dict[mp]["values"] = var_lists[mp]
             res_dict[mp]["free_costs"] = C_free
             res_dict[mp]["following_costs"] = C_tf
             res_dict[mp]["successes"] = SUCC
@@ -357,7 +359,8 @@ class benchmarker():
                     noise_cut=noise_cut,
                     noise_vfilter=noise_vfilter,
                     noise_vfilter_args=noise_vfilter_args)
-            T, X, U = self.simulator.simulate(t0=0.0,
+            T, X, U = self.simulator.simulate(
+                    t0=0.0,
                     tf=self.t_final,
                     dt=self.dt,
                     x0=self.x0,
@@ -379,7 +382,7 @@ class benchmarker():
         res_dict["following_costs"] = C_tf
         res_dict["successes"] = SUCC
         return res_dict
-    
+
     def check_unoise_robustness(self,
                                 unoise_amplitudes=[]):
         # maybe add noise frequency
@@ -392,7 +395,8 @@ class benchmarker():
         for na in unoise_amplitudes:
             self.controller.init()
             self.simulator.set_imperfections(unoise_amplitude=na)
-            T, X, U = self.simulator.simulate(t0=0.0,
+            T, X, U = self.simulator.simulate(
+                    t0=0.0,
                     tf=self.t_final,
                     dt=self.dt,
                     x0=self.x0,
@@ -411,6 +415,37 @@ class benchmarker():
         res_dict["successes"] = SUCC
         return res_dict
 
+    def check_uresponsiveness_robustness(self,
+                                         u_responses=[]):
+        print("computing torque reponsiveness robustness...")
+
+        res_dict = {}
+        C_free = []
+        C_tf = []
+        SUCC = []
+        for ur in u_responses:
+            self.controller.init()
+            self.simulator.set_imperfections(u_responsiveness=ur)
+            T, X, U = self.simulator.simulate(
+                    t0=0.0,
+                    tf=self.t_final,
+                    dt=self.dt,
+                    x0=self.x0,
+                    controller=self.controller,
+                    integrator=self.integrator,
+                    imperfections=True)
+            self.simulator.reset_imperfections()
+
+            cost_free, cost_tf, succ = self.compute_success_measure(X, U)
+            C_free.append(cost_free)
+            C_tf.append(cost_tf)
+            SUCC.append(succ)
+        res_dict["u_reponsivenesses"] = u_responses
+        res_dict["free_costs"] = C_free
+        res_dict["following_costs"] = C_tf
+        res_dict["successes"] = SUCC
+        return res_dict
+
     def check_delay_robustness(self,
                                delay_mode="posvel",
                                delays=[]):
@@ -424,7 +459,8 @@ class benchmarker():
             self.simulator.set_imperfections(
                     delay=de,
                     delay_mode=delay_mode)
-            T, X, U = self.simulator.simulate(t0=0.0,
+            T, X, U = self.simulator.simulate(
+                    t0=0.0,
                     tf=self.t_final,
                     dt=self.dt,
                     x0=self.x0,
@@ -448,6 +484,7 @@ class benchmarker():
                   compute_model_robustness=True,
                   compute_noise_robustness=True,
                   compute_unoise_robustness=True,
+                  compute_uresponsiveness_robustness=True,
                   compute_delay_robustness=True,
                   mpar_vars=["Ir",
                              "m1r1", "I1", "b1", "cf1",
@@ -466,8 +503,9 @@ class benchmarker():
                   noise_amplitudes=[0.1, 0.3, 0.5],
                   noise_cut=0.5,
                   noise_vfilter="lowpass",
-                  noise_vfilter_args={"alpha":0.3},
+                  noise_vfilter_args={"alpha": 0.3},
                   unoise_amplitudes=[0.1, 0.5, 1.0],
+                  u_responses=[1.0, 1.1, 1.2, 1.3, 1.4, 1.5],
                   delay_mode="vel",
                   delays=[0.01, 0.02, 0.05, 0.1]):
 
@@ -478,7 +516,8 @@ class benchmarker():
                     var_lists=modelpar_var_lists)
             res["model_robustness"] = res_model
         if compute_noise_robustness:
-            res_noise = self.check_noise_robustness(noise_mode=noise_mode,
+            res_noise = self.check_noise_robustness(
+                    noise_mode=noise_mode,
                     noise_amplitudes=noise_amplitudes,
                     noise_cut=noise_cut,
                     noise_vfilter=noise_vfilter,
@@ -487,6 +526,10 @@ class benchmarker():
         if compute_unoise_robustness:
             res_unoise = self.check_unoise_robustness(
                     unoise_amplitudes=unoise_amplitudes)
+            res["unoise_robustness"] = res_unoise
+        if compute_uresponsiveness_robustness:
+            res_unoise = self.check_uresponsiveness_robustness(
+                    u_responses=u_responses)
             res["unoise_robustness"] = res_unoise
         if compute_delay_robustness:
             res_delay = self.check_delay_robustness(
