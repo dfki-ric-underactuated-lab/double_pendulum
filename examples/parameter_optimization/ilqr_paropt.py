@@ -23,6 +23,7 @@ robot = "acrobot"
 cfric = [0., 0.]
 # gravity = 9.81
 # inertia = [0.05472, 0.02522]
+motor_inertia = 0.
 if robot == "acrobot":
     torque_limit = [0.0, 6.0]
 if robot == "pendubot":
@@ -33,6 +34,7 @@ mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 # mpar.set_damping(damping)
 mpar.set_cfric(cfric)
+mpar.set_motor_inertia(motor_inertia)
 mpar.set_torque_limit(torque_limit)
 
 # simulation parameter
@@ -68,6 +70,7 @@ goal = [np.pi, 0., 0., 0.]
 # optimization parameters
 opt_method = "cma"  # "Nelder-Mead"
 loss_weights = [1.0, 0.0, 0.0]
+goal_weights = np.array([100., 1., 0.1, 0.1])
 popsize_factor = 4
 maxfevals = 1000
 tolfun = 0.01
@@ -83,7 +86,8 @@ os.makedirs(save_dir)
 loss_func = ilqr_trajopt_loss(bounds=bounds,
                               loss_weights=loss_weights,
                               start=start,
-                              goal=np.asarray(goal))
+                              goal=np.asarray(goal),
+                              goal_weights=goal_weights)
 
 # loss_func.set_model_parameters(mass=mass,
 #                                length=length,
@@ -132,10 +136,10 @@ print(best_par)
 print(f"sCu = [{best_par[0]}, {best_par[0]}]")
 print(f"sCp = [{best_par[1]}, {best_par[2]}]")
 print(f"sCv = [{best_par[3]}, {best_par[4]}]")
-print(f"sCen = 0.")
+print("sCen = 0.")
 print(f"fCp = [{best_par[5]}, {best_par[6]}]")
 print(f"fCv = [{best_par[7]}, {best_par[8]}]")
-print(f"fCen = 0.")
+print("fCen = 0.")
 
 
 np.savetxt(os.path.join(save_dir, "controller_par.csv"), best_par)
@@ -179,6 +183,7 @@ par_dict = {
             "bounds": list(bounds),
             "init_pars": list(init_pars),
             "loss_weights": loss_weights,
+            "goal_weights": goal_weights,
             "popsize_factor": popsize_factor,
             "maxfevals": maxfevals,
             "tolfun": tolfun,

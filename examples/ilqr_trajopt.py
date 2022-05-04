@@ -2,6 +2,7 @@ import os
 import numpy as np
 from datetime import datetime
 import yaml
+import time
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.model.model_parameters import model_parameters
@@ -42,7 +43,7 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [4.0, 0.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -53,7 +54,7 @@ mpar.set_torque_limit(torque_limit)
 # controller parameters
 N = 1000
 max_iter = 2000
-regu_init = 100
+regu_init = 100.
 max_regu = 1000000.
 min_regu = 0.01
 break_cost_redu = 1e-6
@@ -85,17 +86,41 @@ if robot == "acrobot":
     # fCp = [3.82623819e+02, 7.05315590e+03]
     # fCv = [5.89790058e+01, 9.01459500e+01]
     # fCen = 0.0
+    sCu = [9.97938814e+01, 9.97938814e+01]
+    sCp = [2.06969312e+01, 7.69967729e+01]
+    sCv = [1.55726136e-01, 5.42226523e-00]
+    sCen = 0.0
+    fCp = [3.82623819e+02, 7.05315590e+03]
+    fCv = [5.89790058e+01, 9.01459500e+01]
+    fCen = 0.0
+
+    # sCu = [100., 100.]
+    # sCp = [0.1, 0.1]
+    # sCv = [0.5, 0.5]
+    # sCen = 0.
+    # fCp = [50000., 50000.]
+    # fCv = [2000., 2000.]
+    # fCen = 0.
+
+    # sCu = [60., 60.]
+    # sCp = [3.6, 3.6]
+    # sCv = [50., 50.]
+    # sCen = 0.
+    # fCp = [20000., 35000.]
+    # fCv = [3651., 2068.]
+    # fCen = 0.
+
 
     # [8.26303186e+01 2.64981012e+01 3.90215591e+01 3.87432205e+00
     #  2.47715889e+00 5.72238144e+04 9.99737172e+04 7.16184205e+03
     #  2.94688061e+03]
-    sCu = [89., 89.]
-    sCp = [40., 0.2]
-    sCv = [11., 1.0]
-    sCen = 0.0
-    fCp = [66000., 210000.]
-    fCv = [55000., 92000.]
-    fCen = 0.0
+    # sCu = [89., 89.]
+    # sCp = [40., 0.2]
+    # sCv = [11., 1.0]
+    # sCen = 0.0
+    # fCp = [66000., 210000.]
+    # fCv = [55000., 92000.]
+    # fCen = 0.0
 
     # sCu = [89.53168298604868, 89.53168298604868]
     # sCp = [39.95840603845028, 0.220281011195961]
@@ -144,6 +169,7 @@ if robot == "pendubot":
 start = [0., 0., 0., 0.]
 goal = [np.pi, 0., 0., 0.]
 
+t0 = time.time()
 il = ilqr_calculator()
 # il.set_model_parameters(mass=mass,
 #                         length=length,
@@ -174,6 +200,7 @@ il.set_goal(goal)
 
 # computing the trajectory
 T, X, U = il.compute_trajectory()
+print("Computing time: ", time.time() - t0, "s")
 
 # saving
 

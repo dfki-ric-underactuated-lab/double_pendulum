@@ -13,6 +13,7 @@ from double_pendulum.analysis.utils import get_par_list
 robot = "acrobot"
 
 # model parameters
+# damping = [0., 0.]
 cfric = [0., 0.]
 motor_inertia = 0.0  # 8.8e-5
 if robot == "acrobot":
@@ -20,11 +21,12 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [4.0, 0.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
 mpar.set_cfric(cfric)
+# mpar.set_damping(damping)
 mpar.set_torque_limit(torque_limit)
 
 # simulation parameter
@@ -44,20 +46,13 @@ break_cost_redu = 1e-6
 trajectory_stabilization = True
 
 # acrobot good par
-sCu = [89., 89.]
-sCp = [40., 0.2]
-sCv = [11., 1.0]
+sCu = [9.97938814e+00, 9.97938814e+00]
+sCp = [2.06969312e+00, 7.69967729e+00]
+sCv = [1.55726136e-02, 5.42226523e-01]
 sCen = 0.0
-fCp = [66000., 210000.]
-fCv = [55000., 92000.]
+fCp = [3.82623819e+02, 7.05315590e+03]
+fCv = [5.89790058e+01, 9.01459500e+01]
 fCen = 0.0
-# sCu = [9.97938814e-02, 9.97938814e-02]
-# sCp = [2.06969312e-02, 7.69967729e-02]
-# sCv = [1.55726136e-04, 5.42226523e-03]
-# sCen = 0.0
-# fCp = [3.82623819e+02, 7.05315590e+03]
-# fCv = [5.89790058e+01, 9.01459500e+01]
-# fCen = 0.0
 
 Q = np.array([[sCp[0], 0., 0., 0.],
               [0., sCp[1], 0., 0.],
@@ -71,22 +66,22 @@ R = np.array([[sCu[0], 0.],
               [0., sCu[1]]])
 
 # benchmark parameters
-compute_model_robustness = False
+compute_model_robustness = True
 mpar_vars = ["Ir",
              "m1r1", "I1", "b1", "cf1",
              "m2r2", "m2", "I2", "b2", "cf2"]
 
-N_var = 3
-Ir_var_list = [0.0, 8.8e-5, 2*8.8e-5]
-m1r1_var_list = get_par_list(mpar.m[0]*mpar.r[0], 0.5, 1.5, N_var)
-I1_var_list = get_par_list(mpar.I[0], 0.5, 1.5, N_var)
-b1_var_list = [0.0, 0.081, 0.19]
-cf1_var_list = [0.0, 0.093, 0.186]
-m2r2_var_list = get_par_list(mpar.m[1]*mpar.r[1], 0.5, 1.5, N_var)
-m2_var_list = get_par_list(mpar.m[1], 0.5, 1.5, N_var)
-I2_var_list = get_par_list(mpar.I[1], 0.5, 1.5, N_var)
-b2_var_list = [0.0, 0.081, 0.19]
-cf2_var_list = [0.0, 0.093, 0.186]
+N_var = 21
+Ir_var_list = np.linspace(0., 1e-4, N_var)
+m1r1_var_list = get_par_list(mpar.m[0]*mpar.r[0], 0.75, 1.25, N_var)
+I1_var_list = get_par_list(mpar.I[0], 0.75, 1.25, N_var)
+b1_var_list = np.linspace(0., 0.01, N_var)
+cf1_var_list = np.linspace(0., 0.2, N_var)
+m2r2_var_list = get_par_list(mpar.m[1]*mpar.r[1], 0.75, 1.25, N_var)
+m2_var_list = get_par_list(mpar.m[1], 0.75, 1.25, N_var)
+I2_var_list = get_par_list(mpar.I[1], 0.75, 1.25, N_var)
+b2_var_list = np.linspace(0., 0.01, N_var)
+cf2_var_list = np.linspace(0., 0.2, N_var)
 
 modelpar_var_lists = {"Ir": Ir_var_list,
                       "m1r1": m1r1_var_list,
@@ -99,26 +94,26 @@ modelpar_var_lists = {"Ir": Ir_var_list,
                       "b2": b2_var_list,
                       "cf2": cf2_var_list}
 
-compute_noise_robustness = False
+compute_noise_robustness = True
 noise_mode = "vel"
-noise_amplitudes = [0.0, 0.1, 0.3, 0.5, 0.8, 1.0]
+noise_amplitudes = np.linspace(0.0, 0.5, N_var)  # [0.0, 0.05, 0.1, 0.3, 0.5]
 noise_cut = 0.5
 noise_vfilter = "lowpass"
 noise_vfilter_args = {"alpha": 0.3}
 
-compute_unoise_robustness = False
-unoise_amplitudes = [0.0, 0.1, 0.5, 1.0, 2.0, 5.0]
+compute_unoise_robustness = True
+unoise_amplitudes = np.linspace(0.0, 2.0, N_var)  # [0.0, 0.05, 0.1, 0.5, 1.0, 2.0]
 
-compute_uresponsiveness_robustness = False
-u_responses = [1.0, 1.3, 1.5, 2.0]
+compute_uresponsiveness_robustness = True
+u_responses = np.linspace(1.0, 2.0, N_var)  # [1.0, 1.3, 1.5, 2.0]
 
 compute_delay_robustness = True
 delay_mode = "vel"
-delays = [0.0, dt, 2*dt, 5*dt, 10*dt]
+delays = np.linspace(0.0, (N_var-1)*dt, N_var)  # [0.0, dt, 2*dt, 5*dt, 10*dt]
 
 # init trajectory
-#latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
-#init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
+# latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
+# init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
 init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
 read_with = "numpy"
 

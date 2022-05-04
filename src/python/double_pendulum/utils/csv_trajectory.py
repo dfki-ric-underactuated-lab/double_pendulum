@@ -6,6 +6,8 @@ def save_trajectory(csv_path, T, X, U):
     TT = np.asarray(T)
     XX = np.asarray(X)
     UU = np.asarray(U)
+    if len(UU) < len(XX):
+        UU = np.append(UU, [UU[-1]], axis=0)
     data = np.asarray([TT,
                        XX.T[0], XX.T[1], XX.T[2], XX.T[3],
                        UU.T[0], UU.T[1]]).T
@@ -34,8 +36,8 @@ def load_trajectory(csv_path, read_with="numpy",
             vel1_traj = np.asarray(data["vel1"])
             vel2_traj = np.asarray(data["vel2"])
             if with_tau:
-                tau1_traj = np.asarray(data["tau1"])[:-1]
-                tau2_traj = np.asarray(data["tau2"])[:-1]
+                tau1_traj = np.asarray(data["tau1"])
+                tau2_traj = np.asarray(data["tau2"])
 
     elif read_with == "numpy":
         data = np.loadtxt(csv_path, skiprows=1, delimiter=",")
@@ -46,8 +48,8 @@ def load_trajectory(csv_path, read_with="numpy",
         vel1_traj = data[:, 3]
         vel2_traj = data[:, 4]
         if with_tau:
-            tau1_traj = data[:-1, 5]
-            tau2_traj = data[:-1, 6]
+            tau1_traj = data[:, 5]
+            tau2_traj = data[:, 6]
 
     T = time_traj.T
     X = np.asarray([pos1_traj, pos2_traj,

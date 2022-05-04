@@ -40,7 +40,7 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [4.0, 0.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -52,6 +52,19 @@ mpar.set_torque_limit(torque_limit)
 dt = 0.005
 t_final = 6.0
 integrator = "runge_kutta"
+
+imperfections = False
+noise_mode = "vel"
+noise_amplitude = 0.1
+noise_cut = 0.0
+noise_vfilter = "lowpass"
+noise_vfilter_args = {"alpha": 0.3}
+delay_mode = "None"
+delay = 0.005
+unoise_amplitude = 0.0
+u_responsiveness = 1.0
+perturbation_times = []
+perturbation_taus = []
 
 # controller parameters
 N = 100
@@ -73,55 +86,17 @@ goal = [np.pi, 0., 0., 0.]
 init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
 read_with = "numpy"
 
+stage_prefac = 0.1
+final_prefac = 1.
 if robot == "acrobot":
-    # acrobot good par
-    # sCu = [9.97938814e-02, 9.97938814e-02]
-    # sCp = [2.06969312e-02, 7.69967729e-02]
-    # sCv = [1.55726136e-04, 5.42226523e-03]
-    # sCen = 0.0
-    # fCp = [3.82623819e+02, 7.05315590e+03]
-    # fCv = [5.89790058e+01, 9.01459500e+01]
-    # fCen = 0.0
-
-    sCu = [89., 89.]
-    sCp = [40., 0.2]
-    sCv = [11., 1.0]
+    sCu = [stage_prefac*9.97938814e+01, stage_prefac*9.97938814e+01]
+    sCp = [stage_prefac*2.06969312e+01, stage_prefac*7.69967729e+01]
+    sCv = [stage_prefac*1.55726136e-01, stage_prefac*5.42226523e-00]
     sCen = 0.0
-    fCp = [66000., 210000.]
-    fCv = [55000., 92000.]
+    fCp = [final_prefac*3.82623819e+02, final_prefac*7.05315590e+03]
+    fCv = [final_prefac*5.89790058e+01, final_prefac*9.01459500e+01]
     fCen = 0.0
 
-    # sCu = [9.97938814e-02, 9.97938814e-02]
-    # sCp = [2.06969312e+02, 7.69967729e+02]
-    # sCv = [1.55726136e+01, 5.42226523e+01]
-    # sCen = 0.0
-    # fCp = [0., 0.]
-    # fCv = [0., 0.]
-    # fCen = 0.0
-
-    # sCu = [9.96090757e-02, 9.96090757e-02]
-    # sCp = [2.55362809e-02, 9.65397113e-02]
-    # sCv = [2.17121720e-05, 6.80616778e-03]
-    # sCen = 0.0
-    # fCp = [2.56167942e+02, 7.31751057e+03]
-    # fCv = [9.88563736e+01, 9.67149494e+01]
-    # fCen = 0.0
-
-    # sCu = [0.01, 0.01]
-    # sCp = [0., 0.]
-    # sCv = [0.0, 0.0]
-    # sCen = 0.
-    # fCp = [300., 10000.]
-    # fCv = [500., 100.]
-    # fCen = 0.
-
-    # sCu = [9.64008003e-04, 3.69465206e-04]
-    # sCp = [9.00160028e-04, 8.52634075e-04]
-    # sCv = [3.62146682e-03, 3.49079107e-02]
-    # sCen = 1.08953921e-05
-    # fCp = [9.88671633e+02, 0.0]
-    # fCv = [6.75242351e+00, 9.95354381e+00]
-    # fCen = 6.36798375e+00
 if robot == "pendubot":
     sCu = [0.2, 0.2]
     sCp = [0.1, 0.2]
@@ -147,27 +122,20 @@ os.makedirs(save_dir)
 
 # construct simulation objects
 plant = SymbolicDoublePendulum(model_pars=mpar)
-# plant = SymbolicDoublePendulum(mass=mass,
-#                                length=length,
-#                                com=com,
-#                                damping=damping,
-#                                gravity=gravity,
-#                                coulomb_fric=cfric,
-#                                inertia=inertia,
-#                                torque_limit=torque_limit)
 
 sim = Simulator(plant=plant)
+sim.set_imperfections(noise_mode=noise_mode,
+                      noise_amplitude=noise_amplitude,
+                      noise_cut=noise_cut,
+                      noise_vfilter=noise_vfilter,
+                      noise_vfilter_args=noise_vfilter_args,
+                      delay=delay,
+                      delay_mode=delay_mode,
+                      unoise_amplitude=unoise_amplitude,
+                      u_responsiveness=u_responsiveness,
+                      perturbation_times=perturbation_times)
 
 controller = ILQRMPCCPPController(model_pars=mpar)
-# controller = ILQRMPCCPPController(mass=mass,
-#                                   length=length,
-#                                   com=com,
-#                                   damping=damping,
-#                                   gravity=gravity,
-#                                   coulomb_fric=cfric,
-#                                   inertia=inertia,
-#                                   torque_limit=torque_limit)
-
 controller.set_start(start)
 controller.set_goal(goal)
 controller.set_parameters(N=N,
@@ -207,14 +175,15 @@ else:
 controller.init()
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
                                    tf=t_final, dt=dt, controller=controller,
-                                   integrator="runge_kutta", phase_plot=False,
+                                   integrator="runge_kutta",
+                                   imperfections=imperfections,
                                    plot_inittraj=True, plot_forecast=True,
                                    save_video=False,
                                    video_name=os.path.join(save_dir, "simulation"))
 
 # T, X, U = sim.simulate(t0=0.0, x0=start,
 #                        tf=t_final, dt=dt, controller=controller,
-#                        integrator="runge_kutta")
+#                        integrator="runge_kutta", imperfections=imperfections)
 
 # saving and plotting
 

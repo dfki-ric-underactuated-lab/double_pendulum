@@ -1,5 +1,6 @@
 import numpy as np
 
+from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.utils.csv_trajectory import load_trajectory
@@ -74,7 +75,7 @@ class benchmarker():
             self.length = model_pars.l
             self.com = model_pars.r
             self.damping = model_pars.b
-            self.coulomb_fric = model_pars.cf
+            self.cfric = model_pars.cf
             self.gravity = model_pars.g
             self.inertia = model_pars.I
             self.motor_inertia = model_pars.Ir
@@ -95,6 +96,8 @@ class benchmarker():
 
     def set_init_traj(self, trajectory_csv, read_with):
         self.t_traj, self.x_traj, self.u_traj = load_trajectory(trajectory_csv, read_with)
+        if len(self.u_traj) == len(self.x_traj):
+            self.u_traj = self.u_traj[:-1]
 
     def set_cost_par(self, Q, R, Qf):
         self.Q = Q
@@ -126,8 +129,9 @@ class benchmarker():
         self.ref_cost_tf = self.compute_cost(self.x_traj, self.u_traj, mode="trajectory_following")
 
     def check_goal_success(self, x_traj, pos_eps=0.1, vel_eps=0.5):
-        pos_succ = np.max(x_traj[-1][:2] - self.goal[:2]) < pos_eps
-        vel_succ = np.max(x_traj[-1][2:] - self.goal[2:]) < vel_eps
+        lp = wrap_angles_top(x_traj[-1])
+        pos_succ = np.max(lp[:2] - self.goal[:2]) < pos_eps
+        vel_succ = np.max(lp[2:] - self.goal[2:]) < vel_eps
         return (pos_succ and vel_succ)
 
     def compute_success_measure(self, x_traj, u_traj):
@@ -432,7 +436,7 @@ class benchmarker():
 
     def check_uresponsiveness_robustness(self,
                                          u_responses=[]):
-        print("computing torque reponsiveness robustness...")
+        print("computing torque responsiveness robustness...")
 
         res_dict = {}
         C_free = []
@@ -455,7 +459,7 @@ class benchmarker():
             C_free.append(cost_free)
             C_tf.append(cost_tf)
             SUCC.append(succ)
-        res_dict["u_reponsivenesses"] = u_responses
+        res_dict["u_responsivenesses"] = u_responses
         res_dict["free_costs"] = C_free
         res_dict["following_costs"] = C_tf
         res_dict["successes"] = SUCC
@@ -543,9 +547,9 @@ class benchmarker():
                     unoise_amplitudes=unoise_amplitudes)
             res["unoise_robustness"] = res_unoise
         if compute_uresponsiveness_robustness:
-            res_unoise = self.check_uresponsiveness_robustness(
+            res_uresp = self.check_uresponsiveness_robustness(
                     u_responses=u_responses)
-            res["unoise_robustness"] = res_unoise
+            res["u_responsiveness_robustness"] = res_uresp
         if compute_delay_robustness:
             res_delay = self.check_delay_robustness(
                     delay_mode=delay_mode,

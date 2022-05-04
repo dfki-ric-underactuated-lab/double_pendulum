@@ -9,11 +9,13 @@ class ilqr_trajopt_loss():
                  bounds,
                  loss_weights,
                  start,
-                 goal):
+                 goal,
+                 goal_weights=np.array([1., 1., 1., 1.])):
         self.bounds = np.asarray(bounds)
         self.weights = loss_weights
-        self.start = start
-        self.goal = goal
+        self.start = np.asarray(start)
+        self.goal = np.asarray(goal)
+        self.goal_weights = np.asarray(goal_weights)
 
     def set_model_parameters(self,
                              mass=[0.608, 0.630],
@@ -103,7 +105,8 @@ class ilqr_trajopt_loss():
         # computing the trajectory
         T, X, U = il.compute_trajectory()
         y = wrap_angles_top(X[-1])
-        dist = np.max(np.abs(y - self.goal))
+        # dist = np.max(np.abs(y - self.goal))
+        dist = np.sum(self.goal_weights*np.square(y - self.goal))
         U1 = np.asarray(U).T[0]
         U2 = np.asarray(U).T[1]
         smooth = np.max(np.abs(np.diff(U1))) + np.max(np.abs(np.diff(U2)))

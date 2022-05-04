@@ -349,11 +349,11 @@ double ilqr::stage_cost(Eigen::Vector<double, n_x> x,
     // }
 
     en_error = pow(plant.calculate_total_energy(x) - goal_energy, 2.);
-    scost = sCp1*pos1_error + sCp2*pos2_error + 
-            sCv1*vel1_error + sCv2*vel2_error + 
-            sCu1*u1_cost + // sCu2*u2_cost + 
-            //sCu_act*u1_cost + 
-            sCen*en_error;
+    scost = (sCp1*pos1_error + sCp2*pos2_error + 
+             sCv1*vel1_error + sCv2*vel2_error + 
+             sCu1*u1_cost + // sCu2*u2_cost + 
+             //sCu_act*u1_cost + 
+             sCen*en_error) / (1.*(N-1));
     return scost; 
 }
 
@@ -381,13 +381,13 @@ double ilqr::calculate_cost(bool new_traj){
     double total = 0.;
     if (new_traj){
         for (int i=0; i<N-1; i++){
-            total += stage_cost(x_traj_new[i], u_traj_new[i], i) / (1.*(N-1));
+            total += stage_cost(x_traj_new[i], u_traj_new[i], i); // / (1.*(N-1));
         }
         total += final_cost(x_traj_new[N-1]);
     }
     else{
         for (int i=0; i<N-1; i++){
-            total += stage_cost(x_traj[i], u_traj[i], i) / (1.*(N-1));
+            total += stage_cost(x_traj[i], u_traj[i], i); // / (1.*(N-1));
             //printf("stage cost %e\n", total);
         }
         total += final_cost(x_traj[N-1]);
@@ -467,14 +467,14 @@ void ilqr::compute_stage_x(Eigen::Vector<double, n_x> x,
     en_diff = plant.calculate_total_energy(x) - goal_traj_energy[idx];
     Eigen::Vector<double, n_x> E_x = plant.get_Ex(x);
 
-    stage_x(0) = 2.*sCp1*(std::fmod(x(0), 2.*M_PI) - goal_traj[idx](0) + eps)
-                 + 2.*sCen*en_diff*E_x(0); 
-    stage_x(1) = 2.*sCp2*(std::fmod(x(1) + M_PI, 2.*M_PI) - M_PI - goal_traj[idx](1) + eps)
-                 + 2.*sCen*en_diff*E_x(1);
-    stage_x(2) = 2.*sCv1*(x(2) - goal_traj[idx](2))
-                 + 2.*sCen*en_diff*E_x(2);
-    stage_x(3) = 2.*sCv2*(x(3) - goal_traj[idx](3))
-                 + 2.*sCen*en_diff*E_x(3);
+    stage_x(0) = (2.*sCp1*(std::fmod(x(0), 2.*M_PI) - goal_traj[idx](0) + eps)
+                  + 2.*sCen*en_diff*E_x(0))/ (1.*(N-1)); 
+    stage_x(1) = (2.*sCp2*(std::fmod(x(1) + M_PI, 2.*M_PI) - M_PI - goal_traj[idx](1) + eps)
+                  + 2.*sCen*en_diff*E_x(1)) / (1.*(N-1));
+    stage_x(2) = (2.*sCv1*(x(2) - goal_traj[idx](2))
+                  + 2.*sCen*en_diff*E_x(2)) / (1.*(N-1));
+    stage_x(3) = (2.*sCv2*(x(3) - goal_traj[idx](3))
+                  + 2.*sCen*en_diff*E_x(3)) / (1.*(N-1));
 }
 
 void ilqr::compute_stage_u(Eigen::Vector<double, n_x> x,
@@ -490,7 +490,7 @@ void ilqr::compute_stage_u(Eigen::Vector<double, n_x> x,
     //else{
     //    sCu_act = sCu2;
     //}
-    stage_u(0) = 2*sCu1*u(0);
+    stage_u(0) = 2*sCu1*u(0) / (1.*(N-1));
     //stage_u(1) = 2.*sCu2*u(1);
     //stage_u(0) = 2*sCu_act*u(0);
 }
@@ -512,10 +512,10 @@ void ilqr::compute_stage_xx(Eigen::Vector<double, n_x> x,
         }
     }
 
-    stage_xx(0,0) += 2.*sCp1;
-    stage_xx(1,1) += 2.*sCp2;
-    stage_xx(2,2) += 2.*sCv1;
-    stage_xx(3,3) += 2.*sCv2;
+    stage_xx(0,0) += 2.*sCp1 / (1.*(N-1));
+    stage_xx(1,1) += 2.*sCp2 / (1.*(N-1));
+    stage_xx(2,2) += 2.*sCv1 / (1.*(N-1));
+    stage_xx(3,3) += 2.*sCv2 / (1.*(N-1));
 
 }
 
@@ -545,7 +545,7 @@ void ilqr::compute_stage_uu(Eigen::Vector<double, n_x> x,
     //else{
     //    sCu_act = sCu2;
     //}
-    stage_uu(0,0) = 2.*sCu1;
+    stage_uu(0,0) = 2.*sCu1 / (1.*(N-1));
     //stage_uu(0,1) = 0.;
     //stage_uu(1,0) = 0.;
     //stage_uu(1,1) = 2.*sCu2;

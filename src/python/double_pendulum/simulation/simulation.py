@@ -30,9 +30,9 @@ class Simulator:
 
     def record_data(self, time, x, tau=None):
         self.t_values.append(time)
-        self.x_values.append(x)
+        self.x_values.append(list(x))
         if tau is not None:
-            self.tau_values.append(tau)
+            self.tau_values.append(list(tau))
 
     def get_trajectory_data(self):
         T = np.asarray(self.t_values)
@@ -374,6 +374,7 @@ class Simulator:
         self.plot_trail = plot_trail
         self.set_state(t0, x0)
         self.reset_data_recorder()
+        self.record_data(t0, np.copy(x0), None)
 
         fig = plt.figure(figsize=(20, 20))
         self.animation_ax = plt.axes()
@@ -445,6 +446,7 @@ class Simulator:
         else:
             self.set_state(t0, x0)
             self.reset_data_recorder()
+            self.record_data(t0, np.copy(x0), None)
             plt.show()
         plt.close()
 

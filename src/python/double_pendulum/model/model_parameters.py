@@ -34,10 +34,10 @@ class model_parameters():
             else:
                 self.I.append(inertia[i])
 
-    def set_m(self, mass):
+    def set_mass(self, mass):
         self.m = mass
 
-    def set_l(self, length):
+    def set_length(self, length):
         self.l = length
 
     def set_com(self, com):
