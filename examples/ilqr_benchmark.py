@@ -66,12 +66,13 @@ R = np.array([[sCu[0], 0.],
               [0., sCu[1]]])
 
 # benchmark parameters
+N_var = 21
+
 compute_model_robustness = True
 mpar_vars = ["Ir",
              "m1r1", "I1", "b1", "cf1",
              "m2r2", "m2", "I2", "b2", "cf2"]
 
-N_var = 21
 Ir_var_list = np.linspace(0., 1e-4, N_var)
 m1r1_var_list = get_par_list(mpar.m[0]*mpar.r[0], 0.75, 1.25, N_var)
 I1_var_list = get_par_list(mpar.I[0], 0.75, 1.25, N_var)
@@ -95,7 +96,7 @@ modelpar_var_lists = {"Ir": Ir_var_list,
                       "cf2": cf2_var_list}
 
 compute_noise_robustness = True
-noise_mode = "vel"
+noise_modes = ["vel", "velfilt", "velcut", "velcutfilt"]
 noise_amplitudes = np.linspace(0.0, 0.5, N_var)  # [0.0, 0.05, 0.1, 0.3, 0.5]
 noise_cut = 0.5
 noise_vfilter = "lowpass"
@@ -166,7 +167,7 @@ res = ben.benchmark(compute_model_robustness=compute_model_robustness,
                     compute_delay_robustness=compute_delay_robustness,
                     mpar_vars=mpar_vars,
                     modelpar_var_lists=modelpar_var_lists,
-                    noise_mode=noise_mode,
+                    noise_mode=noise_modes,
                     noise_amplitudes=noise_amplitudes,
                     noise_cut=noise_cut,
                     noise_vfilter=noise_vfilter,

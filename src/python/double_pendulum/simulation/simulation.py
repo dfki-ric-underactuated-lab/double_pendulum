@@ -170,6 +170,24 @@ class Simulator:
                             vf2,
                             self.noise_vfilter_args["alpha"])[-1]
 
+        elif self.noise_mode == "velcutfilt":
+            xcon[2:] = xcon[2:] + np.random.uniform(-self.noise_amplitude,
+                                                    self.noise_amplitude,
+                                                    np.shape(self.x[2:]))
+            xcon[2] = np.where(np.abs(xcon[2]) < self.noise_cut, 0, xcon[2])
+            xcon[3] = np.where(np.abs(xcon[3]) < self.noise_cut, 0, xcon[3])
+            if len(self.vfilter) > 0:
+                vf1 = [self.vfilter[-1][0], xcon[2]]
+                vf2 = [self.vfilter[-1][1], xcon[3]]
+
+                if self.noise_vfilter == "lowpass":
+                    xcon[2] = lowpass_filter(
+                            vf1,
+                            self.noise_vfilter_args["alpha"])[-1]
+                    xcon[3] = lowpass_filter(
+                            vf2,
+                            self.noise_vfilter_args["alpha"])[-1]
+
             self.vfilter.append(xcon[2:])
 
         realtime = True
