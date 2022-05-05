@@ -41,6 +41,7 @@ class benchmarker():
         self.R = None
         self.Qf = None
 
+        self.traj_following = False
         self.t_traj = None
         self.x_traj = None
         self.u_traj = None
@@ -98,6 +99,7 @@ class benchmarker():
         self.t_traj, self.x_traj, self.u_traj = load_trajectory(trajectory_csv, read_with)
         if len(self.u_traj) == len(self.x_traj):
             self.u_traj = self.u_traj[:-1]
+        self.traj_following = True
 
     def set_cost_par(self, Q, R, Qf):
         self.Q = Q
@@ -126,7 +128,8 @@ class benchmarker():
 
     def compute_ref_cost(self):
         self.ref_cost_free = self.compute_cost(self.x_traj, self.u_traj, mode="free")
-        self.ref_cost_tf = self.compute_cost(self.x_traj, self.u_traj, mode="trajectory_following")
+        if self.traj_following:
+            self.ref_cost_tf = self.compute_cost(self.x_traj, self.u_traj, mode="trajectory_following")
 
     def check_goal_success(self, x_traj, pos_eps=0.1, vel_eps=0.5):
         lp = wrap_angles_top(x_traj[-1])
@@ -138,7 +141,10 @@ class benchmarker():
         X = np.asarray(x_traj)
         U = np.asarray(u_traj)
         cost_free = self.compute_cost(X, U, mode="free")
-        cost_tf = self.compute_cost(X, U, mode="trajectory_following")
+        if self.traj_following:
+            cost_tf = self.compute_cost(X, U, mode="trajectory_following")
+        else:
+            cost_tf = 0.
         succ = self.check_goal_success(X)
         return cost_free, cost_tf, succ
 
@@ -346,7 +352,8 @@ class benchmarker():
             res_dict[mp] = {}
             res_dict[mp]["values"] = var_lists[mp]
             res_dict[mp]["free_costs"] = C_free
-            res_dict[mp]["following_costs"] = C_tf
+            if self.traj_following:
+                res_dict[mp]["following_costs"] = C_tf
             res_dict[mp]["successes"] = SUCC
         return res_dict
 
@@ -405,7 +412,8 @@ class benchmarker():
             res_dict[nm] = {}
             res_dict[nm]["noise_amplitudes"] = noise_amplitudes
             res_dict[nm]["free_costs"] = C_free
-            res_dict[nm]["following_costs"] = C_tf
+            if self.traj_following:
+                res_dict[nm]["following_costs"] = C_tf
             res_dict[nm]["successes"] = SUCC
             res_dict[nm]["noise_mode"] = noise_mode
             res_dict[nm]["noise_cut"] = noise_cut
@@ -449,7 +457,8 @@ class benchmarker():
             SUCC.append(rep_SUCC)
         res_dict["unoise_amplitudes"] = unoise_amplitudes
         res_dict["free_costs"] = C_free
-        res_dict["following_costs"] = C_tf
+        if self.traj_following:
+            res_dict["following_costs"] = C_tf
         res_dict["successes"] = SUCC
         return res_dict
 
@@ -480,7 +489,8 @@ class benchmarker():
             SUCC.append(succ)
         res_dict["u_responsivenesses"] = u_responses
         res_dict["free_costs"] = C_free
-        res_dict["following_costs"] = C_tf
+        if self.traj_following:
+            res_dict["following_costs"] = C_tf
         res_dict["successes"] = SUCC
         return res_dict
 
@@ -514,7 +524,8 @@ class benchmarker():
         res_dict["delay_mode"] = delay_mode
         res_dict["measurement_delay"] = delays
         res_dict["free_costs"] = C_free
-        res_dict["following_costs"] = C_tf
+        if self.traj_following:
+            res_dict["following_costs"] = C_tf
         res_dict["successes"] = SUCC
         return res_dict
 

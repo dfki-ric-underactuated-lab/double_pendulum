@@ -106,7 +106,7 @@ class TVLQRController(AbstractController):
         tau_trajs = [self.tau1_traj, self.tau2_traj]
         u0_desc = tau_trajs[self.active_motor]
         u0_desc = u0_desc.reshape(u0_desc.shape[0], -1).T
-        u0 = PiecewisePolynomial.FirstOrderHold(self.time_traj, u0_desc)
+        u0 = PiecewisePolynomial.FirstOrderHold(self.time_traj[:np.shape(u0_desc)[-1]], u0_desc)
 
         # tvlqr construction with drake
         options = FiniteHorizonLinearQuadraticRegulatorOptions()

@@ -14,20 +14,42 @@ class LQRController(AbstractController):
                  coulomb_fric=[0.0, 0.0],
                  gravity=9.81,
                  inertia=[None, None],
-                 torque_limit=[0.0, 1.0]):
+                 torque_limit=[0.0, 1.0],
+                 model_pars=None):
 
-        self.damping = np.asarray(damping)
-        self.cfric = np.asarray(coulomb_fric)
+        # self.damping = np.asarray(damping)
+        # self.cfric = np.asarray(coulomb_fric)
+        # self.torque_limit = torque_limit
+
+        self.mass = mass
+        self.length = length
+        self.com = com
+        self.damping = damping
+        self.cfric = coulomb_fric
+        self.gravity = gravity
+        self.inertia = inertia
         self.torque_limit = torque_limit
 
-        self.splant = SymbolicDoublePendulum(mass=mass,
-                                             length=length,
-                                             com=com,
-                                             damping=damping,
-                                             gravity=gravity,
-                                             coulomb_fric=coulomb_fric,
-                                             inertia=inertia,
-                                             torque_limit=torque_limit)
+        if model_pars is not None:
+            self.mass = model_pars.m
+            self.length = model_pars.l
+            self.com = model_pars.r
+            self.damping = model_pars.b
+            self.cfric = model_pars.cf
+            self.gravity = model_pars.g
+            self.inertia = model_pars.I
+            # self.Ir = model_pars.Ir
+            # self.gr = model_pars.gr
+            self.torque_limit = model_pars.tl
+
+        self.splant = SymbolicDoublePendulum(mass=self.mass,
+                                             length=self.length,
+                                             com=self.com,
+                                             damping=self.damping,
+                                             gravity=self.gravity,
+                                             coulomb_fric=self.cfric,
+                                             inertia=self.inertia,
+                                             torque_limit=self.torque_limit)
 
         # set default parameters
         self.set_goal()
@@ -88,8 +110,9 @@ class LQRController(AbstractController):
     def init(self):
         Alin, Blin = self.splant.linear_matrices(x0=self.xd, u0=[0.0, 0.0])
         # Blin = Blin.T[1].T.reshape(4, 1)
-        # print(Alin, Blin)
+        print(Alin, Blin)
         self.K, self.S, _ = lqr(Alin, Blin, self.Q, self.R)
+        print(self.K, self.S)
 
     def get_control_output(self, x, t=None):
         y = x.copy()
@@ -115,5 +138,5 @@ class LQRController(AbstractController):
         u[0] = np.clip(u[0], -self.torque_limit[0], self.torque_limit[0])
         u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
 
-        # print(x, u)
+        #print(x, u)
         return u

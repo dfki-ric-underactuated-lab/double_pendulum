@@ -21,7 +21,7 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [4.0, 0.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -46,13 +46,22 @@ break_cost_redu = 1e-6
 trajectory_stabilization = True
 
 # acrobot good par
-sCu = [9.97938814e+00, 9.97938814e+00]
-sCp = [2.06969312e+00, 7.69967729e+00]
-sCv = [1.55726136e-02, 5.42226523e-01]
-sCen = 0.0
-fCp = [3.82623819e+02, 7.05315590e+03]
-fCv = [5.89790058e+01, 9.01459500e+01]
-fCen = 0.0
+stage_prefac = 1.0
+final_prefac = 200.
+sCu = [stage_prefac*0.8220356078430472, stage_prefac*0.8220356078430472]
+sCp = [stage_prefac*0.6406768243361961, stage_prefac*0.5566465602921646]
+sCv = [stage_prefac*0.13170941522322516, stage_prefac*0.036794663247905396]
+sCen = 0.
+fCp = [final_prefac*0.7170451397596873, final_prefac*0.7389953240562843]
+fCv = [final_prefac*0.5243681881323512, final_prefac*0.39819013775238776]
+fCen = 0.
+# sCu = [9.97938814e+00, 9.97938814e+00]
+# sCp = [2.06969312e+00, 7.69967729e+00]
+# sCv = [1.55726136e-02, 5.42226523e-01]
+# sCen = 0.0
+# fCp = [3.82623819e+02, 7.05315590e+03]
+# fCv = [5.89790058e+01, 9.01459500e+01]
+# fCen = 0.0
 
 Q = np.array([[sCp[0], 0., 0., 0.],
               [0., sCp[1], 0., 0.],
@@ -113,9 +122,9 @@ delay_mode = "vel"
 delays = np.linspace(0.0, (N_var-1)*dt, N_var)  # [0.0, dt, 2*dt, 5*dt, 10*dt]
 
 # init trajectory
-# latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
-# init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
-init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+latest_dir = sorted(os.listdir(os.path.join("../data", robot, "ilqr", "trajopt")))[-1]
+init_csv_path = os.path.join("../data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
+# init_csv_path = "../../data/trajectories/acrobot/ilqr/trajectory.csv"
 read_with = "numpy"
 
 # swingup parameters
@@ -124,7 +133,7 @@ goal = [np.pi, 0., 0., 0.]
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "ilqr", "mpc_benchmark", timestamp)
+save_dir = os.path.join("../data", robot, "ilqr", "mpc_benchmark", timestamp)
 os.makedirs(save_dir)
 
 # construct simulation objects

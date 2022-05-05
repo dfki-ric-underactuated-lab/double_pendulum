@@ -2,6 +2,7 @@ import os
 import pickle
 import numpy as np
 import matplotlib as mpl
+from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 
 
@@ -29,61 +30,181 @@ def plot_benchmark_results(results_dir, costlim=[0, 1e6], show=False):
 
     # model robustness
     if "model_robustness" in res_dict.keys():
-        pass
+        fig_mr, ax_mr = plt.subplots(5, 2, figsize=(24, 15),
+                                     num=fig_counter)
+        fig_mr.suptitle("Model Robustness")
+        for i, mp in enumerate(res_dict["model_robustness"].keys()):
+            j = int(i % 5)
+            k = int(i / 5)
+            # ax[j][k].set_title(f"{mp}")
+            x = res_dict["model_robustness"][mp]["values"]
+            if "free_costs" in res_dict["model_robustness"][mp].keys():
+                y1 = res_dict["model_robustness"][mp]["free_costs"]
+                ax_mr[j][k].plot(x, y1)
+            if "following_costs" in res_dict["model_robustness"][mp].keys():
+                y2 = res_dict["model_robustness"][mp]["following_costs"]
+                ax_mr[j][k].plot(x, y2)
+            if "successes" in res_dict["model_robustness"][mp].keys():
+                xr = x[:-1] + 0.5*np.diff(x)
+                xr = np.append([x[0]], xr)
+                xr = np.append(xr, [x[-1]])
+                ymax = costlim[1]
+                succ = res_dict["model_robustness"][mp]["successes"]
+                for i in range(len(xr[:-1])):
+                    c = "red"
+                    if succ[i]:
+                        c = "green"
+                    ax_mr[j][k].add_patch(
+                            Rectangle((xr[i], 0.),
+                                      xr[i+1]-xr[i], ymax,
+                                      facecolor=c, edgecolor=None,
+                                      alpha=0.1))
+
+            ax_mr[j][k].set_ylim(costlim[0], costlim[1])
+            ax_mr[j][k].set_ylabel("Cost")
+            ax_mr[j][k].set_xlabel(mp)
+        plt.savefig(os.path.join(results_dir, "model_robustness"))
+        plt.subplots_adjust(left=0.1,
+                            bottom=0.1,
+                            right=0.9,
+                            top=0.9,
+                            wspace=0.2,
+                            hspace=0.4)
+        fig_counter += 1
 
     # noise robustness
     if "noise_robustness" in res_dict.keys():
-        for nm in res_dict["noise_robustness"].keys():
+        fig_nr, ax_nr = plt.subplots(4, 1, figsize=(18, 12),
+                                     sharex="all", num=fig_counter)
+        fig_nr.suptitle("State Noise Robustness")
+        for i, nm in enumerate(res_dict["noise_robustness"].keys()):
+            ax_nr[i].set_title(f"{nm}")
             x = res_dict["noise_robustness"][nm]["noise_amplitudes"]
-            y1 = np.mean(res_dict["noise_robustness"][nm]["following_costs"], axis=1)
-            # mode = res_dict['noise_robustness'][nm]['noise_mode']
-            # y2 = res_dict["noise_robustness"]["free_costs"]
-            plt.figure(fig_counter, figsize=(16, 9))
-            plt.title(f"State Noise Robustness ({nm})")
-            plt.plot(x, y1)
-            # plt.plot(x, y2)
-            plt.ylim(costlim[0], costlim[1])
-            plt.xlabel("Noise Amplitude")
-            plt.ylabel("Cost")
-            plt.savefig(os.path.join(results_dir, "noise_robustness_"+nm))
-            fig_counter += 1
+            if "free_costs" in res_dict["noise_robustness"][nm].keys():
+                y1 = np.median(res_dict["noise_robustness"][nm]["free_costs"], axis=1)
+                ax_nr[i].plot(x, y1)
+            if "following_costs" in res_dict["noise_robustness"][nm].keys():
+                y2 = np.median(res_dict["noise_robustness"][nm]["following_costs"], axis=1)
+                ax_nr[i].plot(x, y2)
+            if "successes" in res_dict["noise_robustness"][nm].keys():
+                xr = x[:-1] + 0.5*np.diff(x)
+                xr = np.append([x[0]], xr)
+                xr = np.append(xr, [x[-1]])
+                ymax = costlim[1]
+                succs = res_dict["noise_robustness"][nm]["successes"]
+                succ = np.sum(succs, axis=1)
+                for j in range(len(xr[:-1])):
+                    c = "red"
+                    if succ[j] > 0.5*np.shape(succs)[-1]:
+                        c = "green"
+                    ax_nr[i].add_patch(
+                            Rectangle((xr[j], 0.),
+                                      xr[j+1]-xr[j], ymax,
+                                      facecolor=c, edgecolor=None,
+                                      alpha=0.1))
+            ax_nr[i].set_ylim(costlim[0], costlim[1])
+            ax_nr[i].set_ylabel("Cost")
+        ax_nr[-1].set_xlabel("Noise Amplitude")
+        plt.savefig(os.path.join(results_dir, "noise_robustness"))
+        fig_counter += 1
 
     # unoise robustness
     if "unoise_robustness" in res_dict.keys():
+        # plt.figure(fig_counter, figsize=(16, 9))
+        fig_unr, ax_unr = plt.subplots(1, 1, figsize=(16, 9), num=fig_counter)
+        fig_unr.suptitle("Torque Noise Robustness")
         x = res_dict["unoise_robustness"]["unoise_amplitudes"]
-        y = np.mean(res_dict["unoise_robustness"]["following_costs"], axis=1)
-        plt.figure(fig_counter, figsize=(16, 9))
-        plt.title("Torque Noise Robustness")
-        plt.plot(x, y)
-        plt.ylim(costlim[0], costlim[1])
-        plt.xlabel("Noise Amplitude")
-        plt.ylabel("Cost")
+        if "following_costs" in res_dict["unoise_robustness"].keys():
+            y1 = np.median(res_dict["unoise_robustness"]["following_costs"], axis=1)
+            ax_unr.plot(x, y1)
+        if "free_costs" in res_dict["u_responsiveness_robustness"].keys():
+            y2 = np.median(res_dict["unoise_robustness"]["free_costs"], axis=1)
+            ax_unr.plot(x, y2)
+        if "successes" in res_dict["unoise_robustness"].keys():
+            xr = x[:-1] + 0.5*np.diff(x)
+            xr = np.append([x[0]], xr)
+            xr = np.append(xr, [x[-1]])
+            ymax = costlim[1]
+            succs = res_dict["unoise_robustness"]["successes"]
+            succ = np.sum(succs, axis=1)
+            for i in range(len(xr[:-1])):
+                c = "red"
+                if succ[i] > 0.5*np.shape(succs)[-1]:
+                    c = "green"
+                ax_unr.add_patch(
+                        Rectangle((xr[i], 0.),
+                                  xr[i+1]-xr[i], ymax,
+                                  facecolor=c, edgecolor=None,
+                                  alpha=0.1))
+        ax_unr.set_ylim(costlim[0], costlim[1])
+        ax_unr.set_xlabel("Noise Amplitude")
+        ax_unr.set_ylabel("Cost")
         plt.savefig(os.path.join(results_dir, "unoise_robustness"))
         fig_counter += 1
 
     # u responsiveness robustness
     if "u_responsiveness_robustness" in res_dict.keys():
+        # plt.figure(fig_counter, figsize=(16, 9))
+        fig_urr, ax_urr = plt.subplots(1, 1, figsize=(16, 9), num=fig_counter)
+        fig_urr.suptitle("Motor Responsiveness Robustness")
         x = res_dict["u_responsiveness_robustness"]["u_responsivenesses"]
-        y = res_dict["u_responsiveness_robustness"]["following_costs"]
-        plt.figure(fig_counter, figsize=(16, 9))
-        plt.title("Motor Responsiveness Robustness")
-        plt.plot(x, y)
-        plt.ylim(costlim[0], costlim[1])
-        plt.xlabel("Responsiveness Factor Amplitude")
-        plt.ylabel("Cost")
+        if "following_costs" in res_dict["u_responsiveness_robustness"].keys():
+            y1 = res_dict["u_responsiveness_robustness"]["following_costs"]
+            ax_urr.plot(x, y1)
+        if "free_costs" in res_dict["u_responsiveness_robustness"].keys():
+            y2 = res_dict["u_responsiveness_robustness"]["free_costs"]
+            ax_urr.plot(x, y2)
+        if "successes" in res_dict["u_responsiveness_robustness"].keys():
+            xr = x[:-1] + 0.5*np.diff(x)
+            xr = np.append([x[0]], xr)
+            xr = np.append(xr, [x[-1]])
+            ymax = costlim[1]
+            succ = res_dict["u_responsiveness_robustness"]["successes"]
+            for i in range(len(xr[:-1])):
+                c = "red"
+                if succ[i]:
+                    c = "green"
+                ax_urr.add_patch(
+                        Rectangle((xr[i], 0.),
+                                  xr[i+1]-xr[i], ymax,
+                                  facecolor=c, edgecolor=None,
+                                  alpha=0.1))
+        ax_urr.set_ylim(costlim[0], costlim[1])
+        ax_urr.set_xlabel("Responsiveness Factor Amplitude")
+        ax_urr.set_ylabel("Cost")
         plt.savefig(os.path.join(results_dir, "u_responsivenesses"))
         fig_counter += 1
 
     # delay robustness
     if "delay_robustness" in res_dict.keys():
+        fig_dr, ax_dr = plt.subplots(1, 1, figsize=(16, 9), num=fig_counter)
+        # plt.figure(fig_counter, figsize=(16, 9))
+        fig_dr.suptitle("Time Delay Robustness")
         x = res_dict["delay_robustness"]["measurement_delay"]
-        y = res_dict["delay_robustness"]["following_costs"]
-        plt.figure(fig_counter, figsize=(16, 9))
-        plt.title("Time Delay Robustness")
-        plt.plot(x, y)
-        plt.ylim(costlim[0], costlim[1])
-        plt.xlabel("Time Delay [s]")
-        plt.ylabel("Cost")
+        if "following_costs" in res_dict["delay_robustness"].keys():
+            y1 = res_dict["delay_robustness"]["following_costs"]
+            ax_dr.plot(x, y1)
+        if "free_costs" in res_dict["delay_robustness"].keys():
+            y2 = res_dict["delay_robustness"]["free_costs"]
+            ax_dr.plot(x, y2)
+        if "successes" in res_dict["delay_robustness"].keys():
+            xr = x[:-1] + 0.5*np.diff(x)
+            xr = np.append([x[0]], xr)
+            xr = np.append(xr, [x[-1]])
+            ymax = costlim[1]
+            succ = res_dict["delay_robustness"]["successes"]
+            for i in range(len(xr[:-1])):
+                c = "red"
+                if succ[i]:
+                    c = "green"
+                ax_dr.add_patch(
+                        Rectangle((xr[i], 0.),
+                                  xr[i+1]-xr[i], ymax,
+                                  facecolor=c, edgecolor=None,
+                                  alpha=0.1))
+        ax_dr.set_ylim(costlim[0], costlim[1])
+        ax_dr.set_xlabel("Time Delay [s]")
+        ax_dr.set_ylabel("Cost")
         plt.savefig(os.path.join(results_dir, "delay_robustness"))
         fig_counter += 1
 
