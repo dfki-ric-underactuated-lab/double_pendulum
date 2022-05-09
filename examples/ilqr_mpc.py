@@ -31,16 +31,17 @@ robot = "acrobot"
 # damping = [0.081, 0.081]
 # damping = [0.0, 0.0]
 # cfric = [0.093, 0.186]
-cfric = [0., 0.]
 # gravity = 9.81
 # inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
+cfric = [0., 0.]
 motor_inertia = 0.
 if robot == "acrobot":
-    torque_limit = [0.0, 4.0]
+    torque_limit = [0.0, 6.0]
 if robot == "pendubot":
-    torque_limit = [4.0, 0.0]
+    torque_limit = [6.0, 0.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+# model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -50,7 +51,7 @@ mpar.set_torque_limit(torque_limit)
 
 # simulation parameter
 dt = 0.005
-t_final = 6.0
+t_final = 5.0
 integrator = "runge_kutta"
 
 imperfections = False
@@ -81,21 +82,43 @@ trajectory_stabilization = True
 start = [0., 0., 0., 0.]
 goal = [np.pi, 0., 0., 0.]
 
-# latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
-# init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
-init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
+init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
+#init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+#init_csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
 read_with = "numpy"
 
-stage_prefac = 0.1
-final_prefac = 1.
 if robot == "acrobot":
-    sCu = [stage_prefac*9.97938814e+01, stage_prefac*9.97938814e+01]
-    sCp = [stage_prefac*2.06969312e+01, stage_prefac*7.69967729e+01]
-    sCv = [stage_prefac*1.55726136e-01, stage_prefac*5.42226523e-00]
-    sCen = 0.0
-    fCp = [final_prefac*3.82623819e+02, final_prefac*7.05315590e+03]
-    fCv = [final_prefac*5.89790058e+01, final_prefac*9.01459500e+01]
-    fCen = 0.0
+    # stage_prefac = 0.1
+    # final_prefac = 1.
+    # sCu = [stage_prefac*9.97938814e+01, stage_prefac*9.97938814e+01]
+    # sCp = [stage_prefac*2.06969312e+01, stage_prefac*7.69967729e+01]
+    # sCv = [stage_prefac*1.55726136e-01, stage_prefac*5.42226523e-00]
+    # sCen = 0.0
+    # fCp = [final_prefac*3.82623819e+02, final_prefac*7.05315590e+03]
+    # fCv = [final_prefac*5.89790058e+01, final_prefac*9.01459500e+01]
+    # fCen = 0.0
+
+    # u_prefac = 1.
+    # stage_prefac = 1.
+    # final_prefac = 1.
+    # sCu = [u_prefac*0.8220356078430472, u_prefac*0.8220356078430472]
+    # sCp = [stage_prefac*0.6406768243361961, stage_prefac*0.5566465602921646]
+    # sCv = [stage_prefac*0.13170941522322516, stage_prefac*0.036794663247905396]
+    # sCen = 0.
+    # fCp = [final_prefac*0.7170451397596873, final_prefac*0.7389953240562843]
+    # fCv = [final_prefac*0.5243681881323512, final_prefac*0.39819013775238776]
+    # fCen = 0.
+
+    # tvlqr parameters
+    u_prefac = 1.0
+    sCu = [u_prefac*0.82, u_prefac*0.82]
+    sCp = [0.64, 0.56]
+    sCv = [0.13, 0.037]
+    sCen = 0.
+    fCp = [0.64, 0.56]
+    fCv = [0.13, 0.037]
+    fCen = 0.
 
 if robot == "pendubot":
     sCu = [0.2, 0.2]

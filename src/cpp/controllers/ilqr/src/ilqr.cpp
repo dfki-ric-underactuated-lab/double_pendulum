@@ -38,7 +38,8 @@ ilqr::~ilqr(){
     delete [] K_traj;
     delete [] best_k_traj;
     delete [] best_K_traj;
-    delete [] goal_traj;
+    delete [] goal_traj_x;
+    delete [] goal_traj_u;
     delete [] goal_traj_energy;
 }
 
@@ -214,10 +215,15 @@ void ilqr::set_goal(Eigen::Vector<double, n_x> x){
 
     for (int i=0; i<N; i++){
         for (int j=0; j<n_x; j++){
-            goal_traj[i](j) = goal(j);
+            goal_traj_x[i](j) = goal(j);
         }
-        //goal_traj_energy[i] = plant.calculate_total_energy(goal_traj[i]);
+        //goal_traj_energy[i] = plant.calculate_total_energy(goal_traj_x[i]);
         goal_traj_energy[i] = goal_energy; // save computing time (do not use energy for now)
+    }
+    for (int i=0; i<N; i++){
+        for (int j=0; j<n_u; j++){
+            goal_traj_u[i](j) = 0.;  // set default u desired to 0
+        }
     }
 }
 
@@ -231,10 +237,15 @@ void ilqr::set_goal(double pos1, double pos2,
 
     for (int i=0; i<N; i++){
         for (int j=0; j<n_x; j++){
-            goal_traj[i](j) = goal(j);
+            goal_traj_x[i](j) = goal(j);
         }
-        //goal_traj_energy[i] = plant.calculate_total_energy(goal_traj[i]);
+        //goal_traj_energy[i] = plant.calculate_total_energy(goal_traj_x[i]);
         goal_traj_energy[i] = goal_energy; // save computing time (do not use energy for now)
+    }
+    for (int i=0; i<N; i++){
+        for (int j=0; j<n_u; j++){
+            goal_traj_u[i](j) = 0.;  // set default u desired to 0
+        }
     }
 }
 
@@ -251,17 +262,58 @@ void ilqr::set_goal(double pos1, double pos2,
 // }
 
 void ilqr::set_goal_traj(double p1[], double p2[], double v1[], double v2[], int from, int to){
+    int c = 0;
     for (int i=from; i<to; i++){
-        goal_traj[i](0) = p1[i];
-        goal_traj[i](1) = p2[i];
-        goal_traj[i](2) = v1[i];
-        goal_traj[i](3) = v2[i];
+        goal_traj_x[c](0) = p1[i];
+        goal_traj_x[c](1) = p2[i];
+        goal_traj_x[c](2) = v1[i];
+        goal_traj_x[c](3) = v2[i];
+        c += 1;
+    }
+    for (int i=to; i<N; i++){
+        goal_traj_x[i](0) = p1[i];
+        goal_traj_x[i](1) = p2[i];
+        goal_traj_x[i](2) = v1[i];
+        goal_traj_x[i](3) = v2[i];
     }
 }
 
 void ilqr::set_goal_traj(Eigen::Vector<double, n_x> x_tr[], int from, int to){
+    int c = 0;
     for (int i=from; i<to; i++){
-        goal_traj[i] = x_tr[i];
+        goal_traj_x[c] = x_tr[i];
+        c += 1;
+    }
+    for (int i=to; i<N; i++){
+        goal_traj_x[i] = x_tr[to];
+    }
+}
+
+void ilqr::set_goal_traj(Eigen::Vector<double, n_x> x_tr[], Eigen::Vector<double, n_u> u_tr[], int from, int to){
+    int c = 0;
+    for (int i=from; i<to; i++){
+        for (int j=0; j<n_x; j++){
+            goal_traj_x[c](j) = x_tr[i](j);
+        }
+        c += 1;
+    }
+    for (int i=c; i<N; i++){
+        for (int j=0; j<n_x; j++){
+            goal_traj_x[i](j) = x_tr[to](j);
+        }
+    }
+
+    c = 0;
+    for (int i=from; i<(to-1); i++){
+        for (int j=0; j<n_u; j++){
+            goal_traj_u[c](j) = u_tr[i](j);
+        }
+        c += 1;
+    }
+    for (int i=c; i<N-1; i++){
+        for (int j=0; j<n_u; j++){
+            goal_traj_u[i](j) = 0.;
+        }
     }
 }
 
@@ -332,11 +384,12 @@ double ilqr::stage_cost(Eigen::Vector<double, n_x> x,
     double vel1_error, vel2_error;
     double u1_cost;//, u2_cost;
     double en_error, scost;
-    pos1_error = pow((std::fmod(x(0), 2.*M_PI) - goal_traj[idx](0) + eps), 2.);
-    pos2_error = pow((std::fmod(x(1)+M_PI, 2.*M_PI)- M_PI - goal_traj[idx](1) + eps), 2.);
-    vel1_error = pow((x(2) - goal_traj[idx](2)), 2.);
-    vel2_error = pow((x(3) - goal_traj[idx](3)), 2.);
-    u1_cost = pow(u(0), 2.);
+    pos1_error = pow((std::fmod(x(0), 2.*M_PI) - goal_traj_x[idx](0) + eps), 2.);
+    pos2_error = pow((std::fmod(x(1)+M_PI, 2.*M_PI)- M_PI - goal_traj_x[idx](1) + eps), 2.);
+    vel1_error = pow((x(2) - goal_traj_x[idx](2)), 2.);
+    vel2_error = pow((x(3) - goal_traj_x[idx](3)), 2.);
+    u1_cost = pow(u(0) - goal_traj_u[idx](0), 2.);
+    //std::cout << idx << ", " << u(0) << ", " << goal_traj_u[idx](0) << ", " << u1_cost << std::endl;
     //u2_cost = pow(u(1), 2.);
 
     // TODO: acro/pendubot switch
@@ -467,13 +520,13 @@ void ilqr::compute_stage_x(Eigen::Vector<double, n_x> x,
     en_diff = plant.calculate_total_energy(x) - goal_traj_energy[idx];
     Eigen::Vector<double, n_x> E_x = plant.get_Ex(x);
 
-    stage_x(0) = (2.*sCp1*(std::fmod(x(0), 2.*M_PI) - goal_traj[idx](0) + eps)
+    stage_x(0) = (2.*sCp1*(std::fmod(x(0), 2.*M_PI) - goal_traj_x[idx](0) + eps)
                   + 2.*sCen*en_diff*E_x(0))/ (1.*(N-1)); 
-    stage_x(1) = (2.*sCp2*(std::fmod(x(1) + M_PI, 2.*M_PI) - M_PI - goal_traj[idx](1) + eps)
+    stage_x(1) = (2.*sCp2*(std::fmod(x(1) + M_PI, 2.*M_PI) - M_PI - goal_traj_x[idx](1) + eps)
                   + 2.*sCen*en_diff*E_x(1)) / (1.*(N-1));
-    stage_x(2) = (2.*sCv1*(x(2) - goal_traj[idx](2))
+    stage_x(2) = (2.*sCv1*(x(2) - goal_traj_x[idx](2))
                   + 2.*sCen*en_diff*E_x(2)) / (1.*(N-1));
-    stage_x(3) = (2.*sCv2*(x(3) - goal_traj[idx](3))
+    stage_x(3) = (2.*sCv2*(x(3) - goal_traj_x[idx](3))
                   + 2.*sCen*en_diff*E_x(3)) / (1.*(N-1));
 }
 
@@ -490,7 +543,7 @@ void ilqr::compute_stage_u(Eigen::Vector<double, n_x> x,
     //else{
     //    sCu_act = sCu2;
     //}
-    stage_u(0) = 2*sCu1*u(0) / (1.*(N-1));
+    stage_u(0) = 2*sCu1*(u(0) - goal_traj_u[idx](0))/ (1.*(N-1));
     //stage_u(1) = 2.*sCu2*u(1);
     //stage_u(0) = 2*sCu_act*u(0);
 }
@@ -835,14 +888,11 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
             }
             //printf("y ");
             last_cost = total_cost;
-            //x_traj = x_traj_new;
-            //u_traj = u_traj_new;
             for (int i=0; i<N; i++){
                 x_traj[i] = x_traj_new[i];
                 best_k_traj[i] = k_traj[i];
                 best_K_traj[i] = K_traj[i];
             }
-            //x_traj[N-1] = x_traj_new[N-1];
             for (int i=0; i<N-1; i++){
                 u_traj[i] = u_traj_new[i];
             }

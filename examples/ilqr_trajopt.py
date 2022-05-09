@@ -43,7 +43,8 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [4.0, 0.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+#model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -86,13 +87,13 @@ if robot == "acrobot":
     # fCp = [3.82623819e+02, 7.05315590e+03]
     # fCv = [5.89790058e+01, 9.01459500e+01]
     # fCen = 0.0
-    sCu = [9.97938814e+01, 9.97938814e+01]
-    sCp = [2.06969312e+01, 7.69967729e+01]
-    sCv = [1.55726136e-01, 5.42226523e-00]
-    sCen = 0.0
-    fCp = [3.82623819e+02, 7.05315590e+03]
-    fCv = [5.89790058e+01, 9.01459500e+01]
-    fCen = 0.0
+    # sCu = [9.97938814e+01, 9.97938814e+01]
+    # sCp = [2.06969312e+01, 7.69967729e+01]
+    # sCv = [1.55726136e-01, 5.42226523e-00]
+    # sCen = 0.0
+    # fCp = [3.82623819e+02, 7.05315590e+03]
+    # fCv = [5.89790058e+01, 9.01459500e+01]
+    # fCen = 0.0
 
     # sCu = [100., 100.]
     # sCp = [0.1, 0.1]
@@ -102,13 +103,32 @@ if robot == "acrobot":
     # fCv = [2000., 2000.]
     # fCen = 0.
 
-    # sCu = [60., 60.]
-    # sCp = [3.6, 3.6]
-    # sCv = [50., 50.]
+    # stage_prefac = 0.1
+    # final_prefac = 1.
+    # sCu = [stage_prefac*.11, stage_prefac*.11]
+    # sCp = [stage_prefac*.97, stage_prefac*.93]
+    # sCv = [stage_prefac*.39, stage_prefac*.26]
     # sCen = 0.
-    # fCp = [20000., 35000.]
-    # fCv = [3651., 2068.]
+    # fCp = [final_prefac*.97, final_prefac*.93]
+    # fCv = [final_prefac*.39, final_prefac*.26]
     # fCen = 0.
+
+    # sCu = [0.8220356078430472, 0.8220356078430472]
+    # sCp = [0.6406768243361961, 0.5566465602921646]
+    # sCv = [0.13170941522322516, 0.036794663247905396]
+    # sCen = 0.
+    # fCp = [0.7170451397596873, 0.7389953240562843]
+    # fCv = [0.5243681881323512, 0.39819013775238776]
+    # fCen = 0.
+
+    # tvlqr parameters
+    sCu = [0.82, 0.82]
+    sCp = [0.64, 0.56]
+    sCv = [0.13, 0.037]
+    sCen = 0.
+    fCp = [0.64, 0.56]
+    fCv = [0.13, 0.037]
+    fCen = 0.
 
 
     # [8.26303186e+01 2.64981012e+01 3.90215591e+01 3.87432205e+00

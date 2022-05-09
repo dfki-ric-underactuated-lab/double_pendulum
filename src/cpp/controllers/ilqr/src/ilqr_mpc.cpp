@@ -327,16 +327,16 @@ void ilqr_mpc::shift_trajs(int s){
         x_traj[i](3) = x_traj[i+1](3);
     }
 
-    //if (N+s < N_init){
-    //    u_traj[N-2](0) = u_init_traj[N+s-1](0);
+    if (N+s < N_init){
+        u_traj[N-2](0) = u_init_traj[N+s-1](0);
     //    x_traj[N-1](0) = x_init_traj[N+s](0);
     //    x_traj[N-1](1) = x_init_traj[N+s](1);
     //    x_traj[N-1](2) = x_init_traj[N+s](2);
     //    x_traj[N-1](3) = x_init_traj[N+s](3);
-    //}
-    //else{
-    //    u_traj[N-2](0) = 0.0; // todo: acro/pendu
-    //}
+    }
+    else{
+        u_traj[N-2](0) = 0.0; // todo: acro/pendu
+    }
 
 }
 
@@ -370,7 +370,7 @@ double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
     Eigen::Vector<double, ilqr::n_x> x0, running_goal;
     int N_hor = std::min(counter+N, N_init-1);
     int counter_cap = std::min(counter, N_init-1);
-    int N_hor_cap = std::min(counter+N, N-1);
+    //int N_hor_cap = std::min(counter+N, N-1);
     running_goal(0) = x_init_traj[N_hor](0);
     running_goal(1) = x_init_traj[N_hor](1);
     running_goal(2) = x_init_traj[N_hor](2);
@@ -382,12 +382,10 @@ double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
 
     ilqr_calc->set_goal(running_goal);
     if (trajectory_stabilization){
-        ilqr_calc->set_goal_traj(x_init_traj, counter_cap, N_hor_cap);
+        //ilqr_calc->set_goal_traj(x_init_traj, counter_cap, N_hor_cap);
+        ilqr_calc->set_goal_traj(x_init_traj, u_init_traj, counter_cap, N_hor);
     }
     ilqr_calc->run_ilqr(max_iter, break_cost_redu, regu_init, max_regu, min_regu);
-
-    //std::string filename = "data/mpc_traj_files/trajectory_"+ std::to_string(counter) + ".csv";
-    //ilqr_calc->save_trajectory_csv(filename);
 
     //u_traj = ilqr_calc->get_u_traj();
     //x_traj = ilqr_calc->get_x_traj();

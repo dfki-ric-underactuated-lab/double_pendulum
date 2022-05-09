@@ -110,9 +110,7 @@ class LQRController(AbstractController):
     def init(self):
         Alin, Blin = self.splant.linear_matrices(x0=self.xd, u0=[0.0, 0.0])
         # Blin = Blin.T[1].T.reshape(4, 1)
-        print(Alin, Blin)
         self.K, self.S, _ = lqr(Alin, Blin, self.Q, self.R)
-        print(self.K, self.S)
 
     def get_control_output(self, x, t=None):
         y = x.copy()

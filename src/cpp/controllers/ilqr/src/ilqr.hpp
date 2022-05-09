@@ -135,6 +135,7 @@ public:
     void load_goal_traj(std::string);
     void set_goal_traj(double p1[], double p2[], double v1[], double v2[], int from, int to);
     void set_goal_traj(Eigen::Vector<double, n_x> x_tr[], int from, int to);
+    void set_goal_traj(Eigen::Vector<double, n_x> x_tr[], Eigen::Vector<double, n_u> u_tr[], int from, int to);
     void set_u_init_traj(double u1[], double u2[]);
     void set_u_init_traj(Eigen::Vector<double, n_u> utrj[]);
     void set_x_init_traj(double p1[], double p2[], double v1[], double v2[]);
@@ -147,7 +148,8 @@ public:
     Eigen::Vector<double, n_x>* x_traj = new Eigen::Vector<double, n_x>[N];
     Eigen::Vector<double, n_x>* x_traj_new = new Eigen::Vector<double, n_x>[N];
 
-    Eigen::Vector<double, n_x>* goal_traj = new Eigen::Vector<double, n_x>[N];
+    Eigen::Vector<double, n_x>* goal_traj_x = new Eigen::Vector<double, n_x>[N];
+    Eigen::Vector<double, n_u>* goal_traj_u = new Eigen::Vector<double, n_u>[N-1];
     double* goal_traj_energy = new double[N];
 
     bool warm_start_x = false;

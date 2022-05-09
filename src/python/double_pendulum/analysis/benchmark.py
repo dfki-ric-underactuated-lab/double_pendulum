@@ -127,8 +127,8 @@ class benchmarker():
         return cost
 
     def compute_ref_cost(self):
-        self.ref_cost_free = self.compute_cost(self.x_traj, self.u_traj, mode="free")
         if self.traj_following:
+            self.ref_cost_free = self.compute_cost(self.x_traj, self.u_traj, mode="free")
             self.ref_cost_tf = self.compute_cost(self.x_traj, self.u_traj, mode="trajectory_following")
 
     def check_goal_success(self, x_traj, pos_eps=0.1, vel_eps=0.5):

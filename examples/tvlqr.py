@@ -45,6 +45,19 @@ keys = ""
 # simulation parameters
 x0 = [0.0, 0.0, 0.0, 0.0]
 
+imperfections = False
+noise_mode = "vel"
+noise_amplitude = 0.5
+noise_cut = 0.0
+noise_vfilter = "lowpass"
+noise_vfilter_args = {"alpha": 0.3}
+delay_mode = "None"
+delay = 0.005
+unoise_amplitude = 0.0
+u_responsiveness = 1.0
+perturbation_times = []
+perturbation_taus = []
+
 # controller parameters
 # Q = np.diag([10.0, 10.0, 1.0, 1.0])  # for dircol traj
 # R = 0.1*np.eye(1)
@@ -64,16 +77,18 @@ Qf = np.copy(Q)
 
 # init plant, simulator and controller
 plant = SymbolicDoublePendulum(model_pars=mpar)
-# plant = SymbolicDoublePendulum(mass=mass,
-#                                length=length,
-#                                com=com,
-#                                damping=damping,
-#                                gravity=gravity,
-#                                coulomb_fric=cfric,
-#                                inertia=inertia,
-#                                torque_limit=torque_limit)
 
 sim = Simulator(plant=plant)
+sim.set_imperfections(noise_mode=noise_mode,
+                      noise_amplitude=noise_amplitude,
+                      noise_cut=noise_cut,
+                      noise_vfilter=noise_vfilter,
+                      noise_vfilter_args=noise_vfilter_args,
+                      delay=delay,
+                      delay_mode=delay_mode,
+                      unoise_amplitude=unoise_amplitude,
+                      u_responsiveness=u_responsiveness,
+                      perturbation_times=perturbation_times)
 
 
 controller = TVLQRController(csv_path=csv_path,
