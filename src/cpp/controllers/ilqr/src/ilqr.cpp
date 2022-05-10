@@ -220,7 +220,7 @@ void ilqr::set_goal(Eigen::Vector<double, n_x> x){
         //goal_traj_energy[i] = plant.calculate_total_energy(goal_traj_x[i]);
         goal_traj_energy[i] = goal_energy; // save computing time (do not use energy for now)
     }
-    for (int i=0; i<N; i++){
+    for (int i=0; i<N-1; i++){
         for (int j=0; j<n_u; j++){
             goal_traj_u[i](j) = 0.;  // set default u desired to 0
         }
@@ -242,7 +242,7 @@ void ilqr::set_goal(double pos1, double pos2,
         //goal_traj_energy[i] = plant.calculate_total_energy(goal_traj_x[i]);
         goal_traj_energy[i] = goal_energy; // save computing time (do not use energy for now)
     }
-    for (int i=0; i<N; i++){
+    for (int i=0; i<N-1; i++){
         for (int j=0; j<n_u; j++){
             goal_traj_u[i](j) = 0.;  // set default u desired to 0
         }
@@ -270,11 +270,11 @@ void ilqr::set_goal_traj(double p1[], double p2[], double v1[], double v2[], int
         goal_traj_x[c](3) = v2[i];
         c += 1;
     }
-    for (int i=to; i<N; i++){
-        goal_traj_x[i](0) = p1[i];
-        goal_traj_x[i](1) = p2[i];
-        goal_traj_x[i](2) = v1[i];
-        goal_traj_x[i](3) = v2[i];
+    for (int i=c; i<N; i++){
+        goal_traj_x[i](0) = p1[to];
+        goal_traj_x[i](1) = p2[to];
+        goal_traj_x[i](2) = v1[to];
+        goal_traj_x[i](3) = v2[to];
     }
 }
 
@@ -284,7 +284,7 @@ void ilqr::set_goal_traj(Eigen::Vector<double, n_x> x_tr[], int from, int to){
         goal_traj_x[c] = x_tr[i];
         c += 1;
     }
-    for (int i=to; i<N; i++){
+    for (int i=c; i<N; i++){
         goal_traj_x[i] = x_tr[to];
     }
 }
@@ -320,7 +320,7 @@ void ilqr::set_goal_traj(Eigen::Vector<double, n_x> x_tr[], Eigen::Vector<double
 void ilqr::set_u_init_traj(double u1[], double u2[]){
     for(int i=0; i<N-1; i++){
         u_traj[i](0) = u1[i];
-        u_traj[i](1) = u2[i];
+        //u_traj[i](1) = u2[i];
         //u1_traj_doubles[i] = u1[i];
         //u2_traj_doubles[i] = u2[i];
     }
