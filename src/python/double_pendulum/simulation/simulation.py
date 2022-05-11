@@ -7,6 +7,7 @@ import matplotlib.animation as mplanimation
 from double_pendulum.simulation.visualization import get_arrow, \
                                                      set_arrow_properties
 from double_pendulum.experiments.filters.low_pass import lowpass_filter
+from double_pendulum.experiments.filters.kalman_filter import kalman_filter_rt
 
 
 class Simulator:
@@ -65,7 +66,21 @@ class Simulator:
         self.perturbation_times = perturbation_times
         self.perturbation_taus = perturbation_taus
 
-        self.vfilter = []
+        self.imp_x_values = []
+        self.con_u_values = []
+
+        if noise_vfilter == "kalman":
+            noise = np.zeros((2*self.plant.dof, 2*self.plant.dof))
+            if noise_mode == "posvel":
+                noise[0, 0] = noise_amplitude
+                noise[1, 1] = noise_amplitude
+            noise[2, 2] = noise_amplitude
+            noise[3, 3] = noise_amplitude
+
+            self.kalman_filter = kalman_filter_rt(
+                    dim_x=2*self.plant.dof,
+                    dim_u=self.plant.n_actuators,
+                    measurement_noise=noise)
 
     def reset_imperfections(self):
 
@@ -81,7 +96,9 @@ class Simulator:
         self.perturbation_times = []
         self.perturbation_taus = []
 
-        self.vfilter = []
+        self.imp_x_values = []
+        self.con_u_values = []
+        self.kalman_filter = None
 
     def euler_integrator(self, t, y, dt, tau):
         return self.plant.rhs(t, y, tau)
@@ -158,9 +175,9 @@ class Simulator:
             xcon[2:] = xcon[2:] + np.random.uniform(-self.noise_amplitude,
                                                     self.noise_amplitude,
                                                     np.shape(self.x[2:]))
-            if len(self.vfilter) > 0:
-                vf1 = [self.vfilter[-1][0], xcon[2]]
-                vf2 = [self.vfilter[-1][1], xcon[3]]
+            if len(self.imp_x_values) > 0:
+                vf1 = [self.imp_x_values[-1][2], xcon[2]]
+                vf2 = [self.imp_x_values[-1][3], xcon[3]]
 
                 if self.noise_vfilter == "lowpass":
                     xcon[2] = lowpass_filter(
@@ -169,6 +186,14 @@ class Simulator:
                     xcon[3] = lowpass_filter(
                             vf2,
                             self.noise_vfilter_args["alpha"])[-1]
+
+                elif self.noise_vfilter == "kalman":
+                    A, B = self.plant.linear_matrices(
+                            self.imp_x_values[-1],
+                            self.con_u_values[-1])
+                    xcon = self.kalman_filter(A, B,
+                                xcon,  # self.imp_x_values[-1] or xcon?
+                                self.con_u_values[-1])
 
         elif self.noise_mode == "velcutfilt":
             xcon[2:] = xcon[2:] + np.random.uniform(-self.noise_amplitude,
@@ -176,9 +201,9 @@ class Simulator:
                                                     np.shape(self.x[2:]))
             xcon[2] = np.where(np.abs(xcon[2]) < self.noise_cut, 0, xcon[2])
             xcon[3] = np.where(np.abs(xcon[3]) < self.noise_cut, 0, xcon[3])
-            if len(self.vfilter) > 0:
-                vf1 = [self.vfilter[-1][0], xcon[2]]
-                vf2 = [self.vfilter[-1][1], xcon[3]]
+            if len(self.imp_x_values) > 0:
+                vf1 = [self.imp_x_values[-1][2], xcon[2]]
+                vf2 = [self.imp_x_values[-1][3], xcon[3]]
 
                 if self.noise_vfilter == "lowpass":
                     xcon[2] = lowpass_filter(
@@ -188,7 +213,7 @@ class Simulator:
                             vf2,
                             self.noise_vfilter_args["alpha"])[-1]
 
-            self.vfilter.append(xcon[2:])
+            self.imp_x_filter.append(xcon)
 
         realtime = True
         if controller is not None:
@@ -198,6 +223,8 @@ class Simulator:
                 realtime = False
         else:
             u = np.zeros(self.plant.n_actuators)
+
+        self.con_u_values.append(u)
 
         nu = np.copy(u)
 
@@ -222,6 +249,11 @@ class Simulator:
         self.set_state(t0, x0)
         self.reset_data_recorder()
         self.record_data(t0, np.copy(x0), None)
+
+        if imperfections:
+            if self.noise_vfilter == "kalman":
+                self.kalman_filter.set_parameters(x0=x0, dt=dt)
+                self.kalman_filter.init()
 
         while (self.t <= tf):
             # if controller is not None:
@@ -275,12 +307,18 @@ class Simulator:
         simulation of a single step which also updates the animation plot
         """
         dt = par_dict["dt"]
+        x0 = par_dict["x0"]
         controller = par_dict["controller"]
         integrator = par_dict["integrator"]
         imperfections = par_dict["imperfections"]
         anim_dt = par_dict["anim_dt"]
         trail_len = 25  # length of the trails
         sim_steps = int(anim_dt / dt)
+
+        if imperfections:
+            if self.noise_vfilter == "kalman":
+                self.kalman_filter.set_parameters(x0=x0, dt=dt)
+                self.kalman_filter.init()
 
         realtime = True
         for _ in range(sim_steps):
@@ -445,6 +483,7 @@ class Simulator:
         num_steps = int(tf / anim_dt)
         par_dict = {}
         par_dict["dt"] = dt
+        par_dict["x0"] = x0
         par_dict["anim_dt"] = anim_dt
         par_dict["controller"] = controller
         par_dict["integrator"] = integrator
