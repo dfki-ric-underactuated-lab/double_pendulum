@@ -364,10 +364,10 @@ class benchmarker():
 
     def check_noise_robustness(self,
                                repetitions=10,
-                               noise_mode=["vel"],
+                               noise_mode="vel",
                                noise_amplitudes=[],
-                               noise_cut=0.5,
-                               noise_vfilter="lowpass",
+                               noise_cut=0.,
+                               noise_vfilters=["None", "lowpass", "kalman"],
                                noise_vfilter_args={"alpha": 0.3}):
         # maybe add noise frequency
         # (on the real system noise frequency seems so be higher than
@@ -375,8 +375,8 @@ class benchmarker():
         print("computing noise robustness...")
 
         res_dict = {}
-        for nm in noise_mode:
-            print(nm)
+        for nf in noise_vfilters:
+            print("  ", nf)
             C_free = []
             C_tf = []
             SUCC = []
@@ -388,9 +388,9 @@ class benchmarker():
                     self.controller.init()
                     self.simulator.set_imperfections(
                             noise_amplitude=na,
-                            noise_mode=nm,
+                            noise_mode=noise_mode,
                             noise_cut=noise_cut,
-                            noise_vfilter=noise_vfilter,
+                            noise_vfilter=nf,
                             noise_vfilter_args=noise_vfilter_args)
                     T, X, U = self.simulator.simulate(
                             t0=0.0,
@@ -409,16 +409,16 @@ class benchmarker():
                 C_free.append(rep_C_free)
                 C_tf.append(rep_C_tf)
                 SUCC.append(rep_SUCC)
-            res_dict[nm] = {}
-            res_dict[nm]["noise_amplitudes"] = noise_amplitudes
-            res_dict[nm]["free_costs"] = C_free
+            res_dict[nf] = {}
+            res_dict[nf]["noise_amplitudes"] = noise_amplitudes
+            res_dict[nf]["free_costs"] = C_free
             if self.traj_following:
-                res_dict[nm]["following_costs"] = C_tf
-            res_dict[nm]["successes"] = SUCC
-            res_dict[nm]["noise_mode"] = noise_mode
-            res_dict[nm]["noise_cut"] = noise_cut
-            res_dict[nm]["noise_vfilter"] = noise_vfilter
-            res_dict[nm]["noise_vfilter_args"] = noise_vfilter_args
+                res_dict[nf]["following_costs"] = C_tf
+            res_dict[nf]["successes"] = SUCC
+            res_dict[nf]["noise_mode"] = noise_mode
+            res_dict[nf]["noise_cut"] = noise_cut
+            res_dict[nf]["noise_vfilter"] = nf
+            res_dict[nf]["noise_vfilter_args"] = noise_vfilter_args
         return res_dict
 
     def check_unoise_robustness(self,
@@ -552,7 +552,7 @@ class benchmarker():
                   noise_mode="vel",
                   noise_amplitudes=[0.1, 0.3, 0.5],
                   noise_cut=0.5,
-                  noise_vfilter="lowpass",
+                  noise_vfilters=["lowpass"],
                   noise_vfilter_args={"alpha": 0.3},
                   unoise_amplitudes=[0.1, 0.5, 1.0],
                   u_responses=[1.0, 1.1, 1.2, 1.3, 1.4, 1.5],
@@ -571,7 +571,7 @@ class benchmarker():
                     noise_mode=noise_mode,
                     noise_amplitudes=noise_amplitudes,
                     noise_cut=noise_cut,
-                    noise_vfilter=noise_vfilter,
+                    noise_vfilters=noise_vfilters,
                     noise_vfilter_args=noise_vfilter_args)
             res["noise_robustness"] = res_noise
         if compute_unoise_robustness:

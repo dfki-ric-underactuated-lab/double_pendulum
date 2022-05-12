@@ -23,6 +23,8 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
                     T_des=None,
                     X_des=None,
                     U_des=None,
+                    X_meas=None,
+                    U_con=None,
                     ACC_des=None,
                     save_to=None,
                     ):
@@ -51,8 +53,15 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         ax[i].plot(T, np.asarray(X).T[0], label="q1", color="blue")
         ax[i].plot(T, np.asarray(X).T[1], label="q2", color="red")
         if not (X_des is None):
-            ax[i].plot(T_des, np.asarray(X_des).T[0], ls="--", label="q1 desired", color="lightblue")
-            ax[i].plot(T_des, np.asarray(X_des).T[1], ls="--", label="q2 desired", color="orange")
+            ax[i].plot(T_des, np.asarray(X_des).T[0],
+                    ls="--", label="q1 desired", color="lightblue")
+            ax[i].plot(T_des, np.asarray(X_des).T[1],
+                    ls="--", label="q2 desired", color="orange")
+        if not (X_meas is None):
+            ax[i].plot(T[:len(X_meas)], np.asarray(X_meas).T[0],
+                    ls="-", label="q1 measured", color="blue", alpha=0.2)
+            ax[i].plot(T[:len(X_meas)], np.asarray(X_meas).T[1],
+                    ls="-", label="q2 measured", color="red", alpha=0.2)
         for line in pos_x_lines:
             ax[i].plot([line, line], [np.min(X.T[:2]), np.max(X.T[:2])],
                        ls="--", color="gray")
@@ -66,8 +75,15 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         ax[i].plot(T, np.asarray(X).T[2], label="q1 dot", color="blue")
         ax[i].plot(T, np.asarray(X).T[3], label="q2 dot", color="red")
         if not (X_des is None):
-            ax[i].plot(T_des, np.asarray(X_des).T[2], ls="--", label="q1 dot desired", color="lightblue")
-            ax[i].plot(T_des, np.asarray(X_des).T[3], ls="--", label="q2 dot desired", color="orange")
+            ax[i].plot(T_des, np.asarray(X_des).T[2],
+                    ls="--", label="q1 dot desired", color="lightblue")
+            ax[i].plot(T_des, np.asarray(X_des).T[3],
+                    ls="--", label="q2 dot desired", color="orange")
+        if not (X_meas is None):
+            ax[i].plot(T[:len(X_meas)], np.asarray(X_meas).T[2],
+                    ls="-", label="q1 dot measured", color="blue", alpha=0.2)
+            ax[i].plot(T[:len(X_meas)], np.asarray(X_meas).T[3],
+                    ls="-", label="q2 dot measured", color="red", alpha=0.2)
         for line in vel_x_lines:
             ax[i].plot([line, line], [np.min(X.T[2:]), np.max(X.T[2:])],
                        ls="--", color="gray")
@@ -81,8 +97,10 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         ax[i].plot(T, np.asarray(ACC).T[0], label="q1 ddot", color="blue")
         ax[i].plot(T, np.asarray(ACC).T[1], label="q2 ddot", color="red")
         if not (ACC_des is None):
-            ax[i].plot(T_des, np.asarray(ACC_des).T[0], ls="--", label="q1 ddot desired", color="lightblue")
-            ax[i].plot(T_des, np.asarray(ACC_des).T[1], ls="--", label="q2 ddot desired", color="orange")
+            ax[i].plot(T_des, np.asarray(ACC_des).T[0],
+                    ls="--", label="q1 ddot desired", color="lightblue")
+            ax[i].plot(T_des, np.asarray(ACC_des).T[1],
+                    ls="--", label="q2 ddot desired", color="orange")
         for line in acc_x_lines:
             ax[i].plot([line, line], [np.min(X.T[2:]), np.max(X.T[2:])],
                        ls="--", color="gray")
@@ -96,8 +114,15 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         ax[i].plot(T[:len(U)], np.asarray(U).T[0, :len(T)], label="u1", color="blue")
         ax[i].plot(T[:len(U)], np.asarray(U).T[1, :len(T)], label="u2", color="red")
         if not (U_des is None):
-            ax[i].plot(T_des[:len(U_des)], np.asarray(U_des).T[0], ls="--", label="u1 desired", color="lightblue")
-            ax[i].plot(T_des[:len(U_des)], np.asarray(U_des).T[1], ls="--", label="u2 desired", color="orange")
+            ax[i].plot(T_des[:len(U_des)], np.asarray(U_des).T[0],
+                    ls="--", label="u1 desired", color="lightblue")
+            ax[i].plot(T_des[:len(U_des)], np.asarray(U_des).T[1],
+                    ls="--", label="u2 desired", color="orange")
+        if not (U_con is None):
+            ax[i].plot(T[:len(U_con)], np.asarray(U_con).T[0],
+                    ls="-", label="u1 controller", color="blue", alpha=0.2)
+            ax[i].plot(T[:len(U_con)], np.asarray(U_con).T[1],
+                    ls="-", label="u2 controller", color="red", alpha=0.2)
         for line in tau_x_lines:
             ax[i].plot([line, line], [np.min(U), np.max(U)],
                        ls="--", color="gray")

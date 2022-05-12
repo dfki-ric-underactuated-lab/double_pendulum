@@ -74,10 +74,10 @@ modelpar_var_lists = {"Ir": Ir_var_list,
                       "cf2": cf2_var_list}
 
 compute_noise_robustness = True
-noise_modes = ["vel", "velfilt", "velcut", "velcutfilt"]
+noise_mode = "vel"
 noise_amplitudes = np.linspace(0.0, 0.5, N_var)
-noise_cut = 0.5
-noise_vfilter = "lowpass"
+noise_cut = 0.0
+noise_vfilter = ["None", "lowpass", "kalman"]
 noise_vfilter_args = {"alpha": 0.3}
 
 compute_unoise_robustness = True
@@ -134,10 +134,10 @@ res = ben.benchmark(compute_model_robustness=compute_model_robustness,
                     compute_delay_robustness=compute_delay_robustness,
                     mpar_vars=mpar_vars,
                     modelpar_var_lists=modelpar_var_lists,
-                    noise_mode=noise_modes,
+                    noise_mode=noise_mode,
                     noise_amplitudes=noise_amplitudes,
                     noise_cut=noise_cut,
-                    noise_vfilter=noise_vfilter,
+                    noise_vfilters=noise_vfilters,
                     noise_vfilter_args=noise_vfilter_args,
                     unoise_amplitudes=unoise_amplitudes,
                     u_responses=u_responses,

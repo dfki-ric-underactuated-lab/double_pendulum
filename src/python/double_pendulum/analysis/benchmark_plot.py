@@ -68,30 +68,32 @@ def plot_benchmark_results(results_dir, costlim=[0, 1e6], show=False):
                             bottom=0.1,
                             right=0.9,
                             top=0.9,
-                            wspace=0.2,
+                            wspace=0.3,
                             hspace=0.4)
         fig_counter += 1
 
     # noise robustness
     if "noise_robustness" in res_dict.keys():
-        fig_nr, ax_nr = plt.subplots(4, 1, figsize=(18, 12),
-                                     sharex="all", num=fig_counter)
+        n_subplots = len(res_dict["noise_robustness"].keys())
+        fig_nr, ax_nr = plt.subplots(
+                n_subplots, 1,
+                figsize=(18, 12), sharex="all", num=fig_counter)
         fig_nr.suptitle("State Noise Robustness")
-        for i, nm in enumerate(res_dict["noise_robustness"].keys()):
-            ax_nr[i].set_title(f"{nm}")
-            x = res_dict["noise_robustness"][nm]["noise_amplitudes"]
-            if "free_costs" in res_dict["noise_robustness"][nm].keys():
-                y1 = np.median(res_dict["noise_robustness"][nm]["free_costs"], axis=1)
+        for i, nf in enumerate(res_dict["noise_robustness"].keys()):
+            ax_nr[i].set_title(f"{nf}")
+            x = res_dict["noise_robustness"][nf]["noise_amplitudes"]
+            if "free_costs" in res_dict["noise_robustness"][nf].keys():
+                y1 = np.median(res_dict["noise_robustness"][nf]["free_costs"], axis=1)
                 ax_nr[i].plot(x, y1)
-            if "following_costs" in res_dict["noise_robustness"][nm].keys():
-                y2 = np.median(res_dict["noise_robustness"][nm]["following_costs"], axis=1)
+            if "following_costs" in res_dict["noise_robustness"][nf].keys():
+                y2 = np.median(res_dict["noise_robustness"][nf]["following_costs"], axis=1)
                 ax_nr[i].plot(x, y2)
-            if "successes" in res_dict["noise_robustness"][nm].keys():
+            if "successes" in res_dict["noise_robustness"][nf].keys():
                 xr = x[:-1] + 0.5*np.diff(x)
                 xr = np.append([x[0]], xr)
                 xr = np.append(xr, [x[-1]])
                 ymax = costlim[1]
-                succs = res_dict["noise_robustness"][nm]["successes"]
+                succs = res_dict["noise_robustness"][nf]["successes"]
                 succ = np.sum(succs, axis=1)
                 for j in range(len(xr[:-1])):
                     c = "red"

@@ -164,56 +164,34 @@ class Simulator:
             xcon[2:] = xcon[2:] + np.random.uniform(-self.noise_amplitude,
                                                     self.noise_amplitude,
                                                     np.shape(self.x[2:]))
-        elif self.noise_mode == "velcut":
-            # add noise to vel and cut off small velocities
-            xcon[2:] = xcon[2:] + np.random.uniform(-self.noise_amplitude,
-                                                    self.noise_amplitude,
-                                                    np.shape(self.x[2:]))
+        # velocity cut
+        if self.noise_cut > 0.:
             xcon[2] = np.where(np.abs(xcon[2]) < self.noise_cut, 0, xcon[2])
             xcon[3] = np.where(np.abs(xcon[3]) < self.noise_cut, 0, xcon[3])
-        elif self.noise_mode == "velfilt":
-            xcon[2:] = xcon[2:] + np.random.uniform(-self.noise_amplitude,
-                                                    self.noise_amplitude,
-                                                    np.shape(self.x[2:]))
+
+        # noise filters
+        if self.noise_vfilter == "lowpass":
             if len(self.imp_x_values) > 0:
                 vf1 = [self.imp_x_values[-1][2], xcon[2]]
                 vf2 = [self.imp_x_values[-1][3], xcon[3]]
 
-                if self.noise_vfilter == "lowpass":
-                    xcon[2] = lowpass_filter(
-                            vf1,
-                            self.noise_vfilter_args["alpha"])[-1]
-                    xcon[3] = lowpass_filter(
-                            vf2,
-                            self.noise_vfilter_args["alpha"])[-1]
+                xcon[2] = lowpass_filter(
+                        vf1,
+                        self.noise_vfilter_args["alpha"])[-1]
+                xcon[3] = lowpass_filter(
+                        vf2,
+                        self.noise_vfilter_args["alpha"])[-1]
 
-                elif self.noise_vfilter == "kalman":
-                    A, B = self.plant.linear_matrices(
-                            self.imp_x_values[-1],
+        elif self.noise_vfilter == "kalman":
+            if len(self.imp_x_values) > 0:
+                A, B = self.plant.linear_matrices(
+                        self.imp_x_values[-1],
+                        self.con_u_values[-1])
+                xcon = self.kalman_filter(A, B,
+                            xcon,  # self.imp_x_values[-1] or xcon?
                             self.con_u_values[-1])
-                    xcon = self.kalman_filter(A, B,
-                                xcon,  # self.imp_x_values[-1] or xcon?
-                                self.con_u_values[-1])
 
-        elif self.noise_mode == "velcutfilt":
-            xcon[2:] = xcon[2:] + np.random.uniform(-self.noise_amplitude,
-                                                    self.noise_amplitude,
-                                                    np.shape(self.x[2:]))
-            xcon[2] = np.where(np.abs(xcon[2]) < self.noise_cut, 0, xcon[2])
-            xcon[3] = np.where(np.abs(xcon[3]) < self.noise_cut, 0, xcon[3])
-            if len(self.imp_x_values) > 0:
-                vf1 = [self.imp_x_values[-1][2], xcon[2]]
-                vf2 = [self.imp_x_values[-1][3], xcon[3]]
-
-                if self.noise_vfilter == "lowpass":
-                    xcon[2] = lowpass_filter(
-                            vf1,
-                            self.noise_vfilter_args["alpha"])[-1]
-                    xcon[3] = lowpass_filter(
-                            vf2,
-                            self.noise_vfilter_args["alpha"])[-1]
-
-            self.imp_x_filter.append(xcon)
+        self.imp_x_values.append(np.copy(xcon))
 
         realtime = True
         if controller is not None:
@@ -224,7 +202,7 @@ class Simulator:
         else:
             u = np.zeros(self.plant.n_actuators)
 
-        self.con_u_values.append(u)
+        self.con_u_values.append(np.copy(u))
 
         nu = np.copy(u)
 

@@ -43,8 +43,8 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [4.0, 0.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-#model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+#model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -87,13 +87,13 @@ if robot == "acrobot":
     # fCp = [3.82623819e+02, 7.05315590e+03]
     # fCv = [5.89790058e+01, 9.01459500e+01]
     # fCen = 0.0
-    # sCu = [9.97938814e+01, 9.97938814e+01]
-    # sCp = [2.06969312e+01, 7.69967729e+01]
-    # sCv = [1.55726136e-01, 5.42226523e-00]
-    # sCen = 0.0
-    # fCp = [3.82623819e+02, 7.05315590e+03]
-    # fCv = [5.89790058e+01, 9.01459500e+01]
-    # fCen = 0.0
+    sCu = [9.97938814e+01, 9.97938814e+01]
+    sCp = [2.06969312e+01, 7.69967729e+01]
+    sCv = [1.55726136e-01, 5.42226523e-00]
+    sCen = 0.0
+    fCp = [3.82623819e+02, 7.05315590e+03]
+    fCv = [5.89790058e+01, 9.01459500e+01]
+    fCen = 0.0
 
     # sCu = [100., 100.]
     # sCp = [0.1, 0.1]
@@ -122,13 +122,16 @@ if robot == "acrobot":
     # fCen = 0.
 
     # tvlqr parameters
-    sCu = [0.82, 0.82]
-    sCp = [0.64, 0.56]
-    sCv = [0.13, 0.037]
-    sCen = 0.
-    fCp = [0.64, 0.56]
-    fCv = [0.13, 0.037]
-    fCen = 0.
+    # u_prefac = 1.0
+    # stage_prefac = 1.
+    # final_prefac = 1.
+    # sCu = [u_prefac*0.82, u_prefac*0.82]
+    # sCp = [stage_prefac*0.64, stage_prefac*0.56]
+    # sCv = [stage_prefac*0.13, stage_prefac*0.037]
+    # sCen = 0.
+    # fCp = [final_prefac*0.64, final_prefac*0.56]
+    # fCv = [final_prefac*0.13, final_prefac*0.037]
+    # fCen = 0.
 
 
     # [8.26303186e+01 2.64981012e+01 3.90215591e+01 3.87432205e+00
