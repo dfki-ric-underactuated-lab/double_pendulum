@@ -107,9 +107,12 @@ class LQRController(AbstractController):
                                  u2u2_cost=pars[9],
                                  u1u2_cost=pars[10])
 
+    def set_cost_matrices(self, Q, R):
+        self.Q = np.asarray(Q)
+        self.R = np.asarray(R)
+
     def init(self):
         Alin, Blin = self.splant.linear_matrices(x0=self.xd, u0=[0.0, 0.0])
-        # Blin = Blin.T[1].T.reshape(4, 1)
         self.K, self.S, _ = lqr(Alin, Blin, self.Q, self.R)
 
     def get_control_output(self, x, t=None):
@@ -131,8 +134,11 @@ class LQRController(AbstractController):
 
         if y.dot(np.asarray(self.S.dot(y))[0]) > self.cost_to_go_cut:  # old value:0.1
             u = [self.failure_value, self.failure_value]
+        # if self.torque_limit[0] > 0.0 and np.abs(u[0]) > self.torque_limit[0]:
+        #     u[0] = self.failure_value
+        # if self.torque_limit[1] > 0.0 and np.abs(u[1]) > self.torque_limit[1]:
+        #     u[1] = self.failure_value
 
-        # u = [0., u[0]]
         u[0] = np.clip(u[0], -self.torque_limit[0], self.torque_limit[0])
         u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
 

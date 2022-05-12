@@ -148,6 +148,7 @@ class TVLQRController(AbstractController):
         u = np.zeros(2)
         u[self.active_motor] = tau
 
+        #print(t, self.tvlqr.x0.value(t).T, self.tvlqr.u0.value(t), self.tvlqr.K.value(t), u[1])
         u[0] = np.clip(u[0], -self.torque_limit[0], self.torque_limit[0])
         u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
         return u
