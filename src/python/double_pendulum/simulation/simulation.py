@@ -6,8 +6,8 @@ import matplotlib.animation as mplanimation
 
 from double_pendulum.simulation.visualization import get_arrow, \
                                                      set_arrow_properties
-from double_pendulum.experiments.filters.low_pass import lowpass_filter
-from double_pendulum.experiments.filters.kalman_filter import kalman_filter_rt
+from double_pendulum.utils.filters.low_pass import lowpass_filter
+from double_pendulum.utils.filters.kalman_filter import kalman_filter_rt
 
 
 class Simulator:

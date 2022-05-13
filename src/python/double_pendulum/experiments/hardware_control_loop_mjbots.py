@@ -15,7 +15,7 @@ from double_pendulum.experiments.experimental_utils import (yb_friction_matrix,
                                                             rev2rad,
                                                             rad2rev)
 
-from double_pendulum.experiments.filters.low_pass import lowpass_filter
+from double_pendulum.utils.filters.low_pass import lowpass_filter
 
 
 async def run_experiment(controller,

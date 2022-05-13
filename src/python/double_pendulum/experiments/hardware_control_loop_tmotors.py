@@ -12,7 +12,7 @@ from double_pendulum.experiments.experimental_utils import (yb_friction_matrix,
                                                             save_data,
                                                             setZeroPosition)
 
-from double_pendulum.experiments.filters.low_pass import lowpass_filter
+from double_pendulum.utils.filters.low_pass import lowpass_filter
 
 
 def run_experiment(controller,
