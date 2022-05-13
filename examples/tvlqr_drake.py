@@ -45,11 +45,11 @@ keys = ""
 # simulation parameters
 x0 = [0.0, 0.0, 0.0, 0.0]
 
-imperfections = True
+imperfections = False
 noise_mode = "vel"
 noise_amplitude = 0.5
 noise_cut = 0.0
-noise_vfilter = "lowpass"
+noise_vfilter = "None"
 noise_vfilter_args = {"alpha": 0.3}
 delay_mode = "None"
 delay = 0.005

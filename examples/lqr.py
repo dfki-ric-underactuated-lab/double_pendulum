@@ -69,12 +69,12 @@ t_final = 4.0
 integrator = "runge_kutta"
 goal = [np.pi, 0., 0., 0.]
 
-imperfections = True
+imperfections = False
 noise_mode = "vel"
 noise_amplitude = 0.2
 noise_cut = 0.0
-noise_vfilter = "kalman"
-noise_vfilter_args = {"alpha": 0.3}
+noise_vfilter = "none"
+noise_vfilter_args = {"alpha": 0.9}
 delay_mode = "None"
 delay = 0.005
 unoise_amplitude = 0.0

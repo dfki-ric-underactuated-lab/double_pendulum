@@ -6,7 +6,7 @@ import matplotlib.animation as mplanimation
 
 from double_pendulum.simulation.visualization import get_arrow, \
                                                      set_arrow_properties
-from double_pendulum.utils.filters.low_pass import lowpass_filter
+from double_pendulum.utils.filters.low_pass import lowpass_filter_rt
 from double_pendulum.utils.filters.kalman_filter import kalman_filter_rt
 
 
@@ -69,19 +69,6 @@ class Simulator:
         self.imp_x_values = []
         self.con_u_values = []
 
-        if noise_vfilter == "kalman":
-            noise = np.zeros((2*self.plant.dof, 2*self.plant.dof))
-            if noise_mode == "posvel":
-                noise[0, 0] = noise_amplitude
-                noise[1, 1] = noise_amplitude
-            noise[2, 2] = noise_amplitude
-            noise[3, 3] = noise_amplitude
-
-            self.kalman_filter = kalman_filter_rt(
-                    dim_x=2*self.plant.dof,
-                    dim_u=self.plant.n_actuators,
-                    measurement_noise=noise)
-
     def reset_imperfections(self):
 
         self.noise_amplitude = 0.0
@@ -98,7 +85,41 @@ class Simulator:
 
         self.imp_x_values = []
         self.con_u_values = []
-        self.kalman_filter = None
+        self.filter = None
+
+    def init_filter(self, x0, dt):
+        if self.noise_vfilter == "lowpass":
+            dof = self.plant.dof
+            al = np.ones(2*dof)
+            if self.noise_mode == "posvel":
+                for i in range(2*dof):
+                    al[i] = self.noise_vfilter_args["alpha"]
+            else:
+                for i in range(dof):
+                    al[dof+i] = self.noise_vfilter_args["alpha"]
+
+            self.filter = lowpass_filter_rt(
+                    dim_x=2*dof,
+                    alpha=al,
+                    x0=x0)
+
+        if self.noise_vfilter == "kalman":
+            dof = self.plant.dof
+            noise = np.zeros((2*dof, 2*dof))  # not used
+            # if self.noise_mode == "posvel":
+            #     for i in range(2*dof):
+            #         noise[i, i] = self.noise_amplitude
+            # else:
+            #     for i in range(dof):
+            #         noise[dof+i, dof+i] = self.noise_amplitude
+
+            self.filter = kalman_filter_rt(
+                    plant=self.plant,
+                    dim_x=2*dof,
+                    dim_u=self.plant.n_actuators,
+                    x0=x0,
+                    dt=dt,
+                    measurement_noise=noise)
 
     def euler_integrator(self, t, y, dt, tau):
         return self.plant.rhs(t, y, tau)
@@ -170,26 +191,29 @@ class Simulator:
             xcon[3] = np.where(np.abs(xcon[3]) < self.noise_cut, 0, xcon[3])
 
         # noise filters
-        if self.noise_vfilter == "lowpass":
-            if len(self.imp_x_values) > 0:
-                vf1 = [self.imp_x_values[-1][2], xcon[2]]
-                vf2 = [self.imp_x_values[-1][3], xcon[3]]
+        if self.noise_vfilter not in ["None", "none", "", None, False]:
+            if len(self.con_u_values) > 0:
+                xcon = self.filter(xcon, self.con_u_values[-1])
+        # if self.noise_vfilter == "lowpass":
+        #     if len(self.imp_x_values) > 0:
+        #         vf1 = [self.imp_x_values[-1][2], xcon[2]]
+        #         vf2 = [self.imp_x_values[-1][3], xcon[3]]
 
-                xcon[2] = lowpass_filter(
-                        vf1,
-                        self.noise_vfilter_args["alpha"])[-1]
-                xcon[3] = lowpass_filter(
-                        vf2,
-                        self.noise_vfilter_args["alpha"])[-1]
+        #         xcon[2] = lowpass_filter(
+        #                 vf1,
+        #                 self.noise_vfilter_args["alpha"])[-1]
+        #         xcon[3] = lowpass_filter(
+        #                 vf2,
+        #                 self.noise_vfilter_args["alpha"])[-1]
 
-        elif self.noise_vfilter == "kalman":
-            if len(self.imp_x_values) > 0:
-                A, B = self.plant.linear_matrices(
-                        self.imp_x_values[-1],
-                        self.con_u_values[-1])
-                xcon = self.kalman_filter(A, B,
-                            xcon,  # self.imp_x_values[-1] or xcon?
-                            self.con_u_values[-1])
+        # elif self.noise_vfilter == "kalman":
+        #     if len(self.imp_x_values) > 0:
+        #         A, B = self.plant.linear_matrices(
+        #                 self.imp_x_values[-1],
+        #                 self.con_u_values[-1])
+        #         xcon = self.kalman_filter(A, B,
+        #                     xcon,  # self.imp_x_values[-1] or xcon?
+        #                     self.con_u_values[-1])
 
         self.imp_x_values.append(np.copy(xcon))
 
@@ -229,16 +253,9 @@ class Simulator:
         self.record_data(t0, np.copy(x0), None)
 
         if imperfections:
-            if self.noise_vfilter == "kalman":
-                self.kalman_filter.set_parameters(x0=x0, dt=dt)
-                self.kalman_filter.init()
+            self.init_filter(x0, dt)
 
         while (self.t <= tf):
-            # if controller is not None:
-            #     tau = controller.get_control_output(x=self.x, t=self.t)
-            # else:
-            #     tau = np.zeros(self.plant.n_actuators)
-            # self.step(tau, dt, integrator=integrator)
             if not imperfections:
                 _ = self.controller_step(dt, controller, integrator)
             else:
@@ -278,6 +295,12 @@ class Simulator:
             self.animation_ax.add_patch(arc)
             self.animation_ax.add_patch(head)
 
+        dt = self.par_dict["dt"]
+        x0 = self.par_dict["x0"]
+        imperfections = self.par_dict["imperfections"]
+        if imperfections:
+            self.init_filter(x0, dt)
+
         return self.animation_plots + self.tau_arrowarcs + self.tau_arrowheads
 
     def _animation_step(self, par_dict):
@@ -285,18 +308,13 @@ class Simulator:
         simulation of a single step which also updates the animation plot
         """
         dt = par_dict["dt"]
-        x0 = par_dict["x0"]
+        # x0 = par_dict["x0"]
         controller = par_dict["controller"]
         integrator = par_dict["integrator"]
         imperfections = par_dict["imperfections"]
         anim_dt = par_dict["anim_dt"]
         trail_len = 25  # length of the trails
         sim_steps = int(anim_dt / dt)
-
-        if imperfections:
-            if self.noise_vfilter == "kalman":
-                self.kalman_filter.set_parameters(x0=x0, dt=dt)
-                self.kalman_filter.init()
 
         realtime = True
         for _ in range(sim_steps):
@@ -459,14 +477,14 @@ class Simulator:
         self.animation_plots.append(text_plot)
 
         num_steps = int(tf / anim_dt)
-        par_dict = {}
-        par_dict["dt"] = dt
-        par_dict["x0"] = x0
-        par_dict["anim_dt"] = anim_dt
-        par_dict["controller"] = controller
-        par_dict["integrator"] = integrator
-        par_dict["imperfections"] = imperfections
-        frames = num_steps*[par_dict]
+        self.par_dict = {}
+        self.par_dict["dt"] = dt
+        self.par_dict["x0"] = x0
+        self.par_dict["anim_dt"] = anim_dt
+        self.par_dict["controller"] = controller
+        self.par_dict["integrator"] = integrator
+        self.par_dict["imperfections"] = imperfections
+        frames = num_steps*[self.par_dict]
 
         animation = FuncAnimation(fig, self._animation_step, frames=frames,
                                   init_func=self._animation_init, blit=True,

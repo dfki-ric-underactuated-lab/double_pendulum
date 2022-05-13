@@ -51,11 +51,11 @@ keys = ""
 # simulation parameters
 x0 = [0.0, 0.0, 0.0, 0.0]
 
-imperfections = True
+imperfections = False
 noise_mode = "vel"
-noise_amplitude = 0.2
+noise_amplitude = 0.1
 noise_cut = 0.0
-noise_vfilter = "lowpass"
+noise_vfilter = "None"
 noise_vfilter_args = {"alpha": 0.3}
 delay_mode = "None"
 delay = 0.005
@@ -107,7 +107,7 @@ controller.init()
 # load reference trajectory
 T_des, X_des, U_des = load_trajectory(csv_path, read_with)
 dt = T_des[1] - T_des[0]
-t_final = T_des[-1]
+t_final = T_des[-1] + 1
 
 # simulate
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
