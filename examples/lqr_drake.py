@@ -34,19 +34,17 @@ mpar.set_torque_limit(torque_limit)
 dt = 0.002
 t_final = 4.0
 
-imperfections = True
-noise_mode = "vel"
-noise_amplitude = 0.1
+process_noise_sigmas = [0., 0., 0., 0.]
+x_noise_sigmas = [0., 0., 0., 0.]
 noise_cut = 0.0
-noise_vfilter = "lowpass"
-noise_vfilter_args = {"alpha": 0.3}
+noise_vfilter = "none"
+noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}
 delay_mode = "None"
-delay = 0.005
-unoise_amplitude = 0.0
+delay = 0.0
+u_noise_amplitude = 0.0
 u_responsiveness = 1.0
 perturbation_times = []
 perturbation_taus = []
-
 
 if robot == "acrobot":
     # x0 = [2.85, 0.7, 0.0, 0.0]
@@ -87,16 +85,15 @@ elif robot == "pendubot":
 plant = SymbolicDoublePendulum(model_pars=mpar)
 
 sim = Simulator(plant=plant)
-sim.set_imperfections(noise_mode=noise_mode,
-                      noise_amplitude=noise_amplitude,
-                      noise_cut=noise_cut,
-                      noise_vfilter=noise_vfilter,
-                      noise_vfilter_args=noise_vfilter_args,
-                      delay=delay,
-                      delay_mode=delay_mode,
-                      unoise_amplitude=unoise_amplitude,
-                      u_responsiveness=u_responsiveness,
-                      perturbation_times=perturbation_times)
+sim.set_process_noise(process_noise_sigmas=process_noise_sigmas)
+sim.set_measurement_parameters(x_noise_sigmas=x_noise_sigmas,
+                               delay=delay,
+                               delay_mode=delay_mode)
+sim.set_filter_parameters(noise_cut=noise_cut,
+                          noise_vfilter=noise_vfilter,
+                          noise_vfilter_args=noise_vfilter_args)
+sim.set_motor_parameters(u_noise_amplitude=u_noise_amplitude,
+                         u_responsiveness=u_responsiveness)
 
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
 save_dir = os.path.join("data", robot, "lqr_drake", timestamp)
@@ -111,7 +108,7 @@ controller.set_cost_matrices(Q=Q, R=R)
 controller.init()
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    tf=t_final, dt=dt, controller=controller,
-                                   integrator="runge_kutta", imperfections=imperfections,
+                                   integrator="runge_kutta",# imperfections=imperfections,
                                    save_video=False,
                                    video_name=os.path.join(save_dir, "simulation"))
 

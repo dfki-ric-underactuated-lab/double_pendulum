@@ -17,9 +17,11 @@ class Simulator:
         self.x = np.zeros(2*self.plant.dof)  # position, velocity
         self.t = 0.0  # time
 
-    def set_state(self, time, x):
+        self.reset()
+
+    def set_state(self, t, x):
         self.x = np.copy(x)
-        self.t = time
+        self.t = t
 
     def get_state(self):
         return self.t, self.x
@@ -29,8 +31,12 @@ class Simulator:
         self.x_values = []
         self.tau_values = []
 
-    def record_data(self, time, x, tau=None):
-        self.t_values.append(time)
+        self.meas_x_values = []
+        self.filt_x_values = []
+        self.con_u_values = []
+
+    def record_data(self, t, x, tau=None):
+        self.t_values.append(t)
         self.x_values.append(list(x))
         if tau is not None:
             self.tau_values.append(list(tau))
@@ -41,77 +47,82 @@ class Simulator:
         U = np.asarray(self.tau_values)
         return T, X, U
 
-    def set_imperfections(self,
-                          noise_amplitude=0.0,
-                          noise_mode="None",
-                          noise_cut=0.0,
-                          noise_vfilter="lowpass",
-                          noise_vfilter_args={"alpha": 0.3},
-                          delay=0.0,
-                          delay_mode="None",
-                          unoise_amplitude=0.0,
-                          u_responsiveness=1.0,
-                          perturbation_times=[],
-                          perturbation_taus=[]):
+    def set_process_noise(self,
+                          process_noise_sigmas=[0., 0., 0., 0.]):
+        self.process_noise_sigmas = process_noise_sigmas
 
-        self.noise_amplitude = noise_amplitude
-        self.noise_mode = noise_mode
+    def set_measurement_parameters(self,
+                                   C=np.eye(4),
+                                   D=np.zeros((4,2)),
+                                   #noise_mode="None",
+                                   #noise_amplitude=0.0,
+                                   x_noise_sigmas=[0., 0., 0., 0.],
+                                   delay=0.0,
+                                   delay_mode="None"):
+
+        self.meas_C = C
+        self.meas_D = D
+        #self.noise_amplitude = noise_amplitude
+        #self.noise_mode = noise_mode
+        self.x_noise_sigmas = x_noise_sigmas
+        self.delay = delay
+        self.delay_mode = delay_mode
+
+    def set_filter_parameters(self,
+                              noise_cut=0.0,
+                              noise_vfilter="lowpass",
+                              noise_vfilter_args={"alpha": [1., 1., 1.0, 1.0]}):
+
         self.noise_cut = noise_cut
         self.noise_vfilter = noise_vfilter
         self.noise_vfilter_args = noise_vfilter_args
-        self.delay = delay
-        self.delay_mode = delay_mode
-        self.unoise_amplitude = unoise_amplitude
+
+    def set_motor_parameters(self,
+                             u_noise_amplitude=0.0,
+                             u_responsiveness=1.0):
+        self.unoise_amplitude = u_noise_amplitude
         self.u_responsiveness = u_responsiveness
+
+    def set_disturbances(self,
+                         perturbation_times=[],
+                         perturbation_taus=[]):
+
         self.perturbation_times = perturbation_times
         self.perturbation_taus = perturbation_taus
 
-        self.imp_x_values = []
-        self.con_u_values = []
+    def reset(self):
 
-    def reset_imperfections(self):
-
-        self.noise_amplitude = 0.0
-        self.noise_mode = "None"
-        self.noise_cut = 0.0
-        self.noise_vfilter = "lowpass"
-        self.noise_vfilter_args = {"alpha": 0.3}
+        self.process_noise_sigmas = [0., 0., 0., 0.]
+        #self.noise_amplitude = 0.0
+        #self.noise_mode = "None"
+        self.x_noise_sigmas = [0., 0., 0., 0.]
         self.delay = 0.0
         self.delay_mode = "None"
+        self.noise_cut = 0.0
+        self.noise_vfilter = "lowpass"
+        self.noise_vfilter_args = {"alpha": [1., 1., 1.0, 1.0]}
         self.unoise_amplitude = 0.0
         self.u_responsiveness = 1.0
         self.perturbation_times = []
         self.perturbation_taus = []
-
-        self.imp_x_values = []
-        self.con_u_values = []
         self.filter = None
+
+        self.reset_data_recorder()
 
     def init_filter(self, x0, dt):
         if self.noise_vfilter == "lowpass":
             dof = self.plant.dof
-            al = np.ones(2*dof)
-            if self.noise_mode == "posvel":
-                for i in range(2*dof):
-                    al[i] = self.noise_vfilter_args["alpha"]
-            else:
-                for i in range(dof):
-                    al[dof+i] = self.noise_vfilter_args["alpha"]
 
             self.filter = lowpass_filter_rt(
                     dim_x=2*dof,
-                    alpha=al,
+                    alpha=self.noise_vfilter_args["alpha"],
                     x0=x0)
 
         if self.noise_vfilter == "kalman":
             dof = self.plant.dof
             noise = np.zeros((2*dof, 2*dof))  # not used
-            # if self.noise_mode == "posvel":
-            #     for i in range(2*dof):
-            #         noise[i, i] = self.noise_amplitude
-            # else:
-            #     for i in range(dof):
-            #         noise[dof+i, dof+i] = self.noise_amplitude
+            # for i in range(dof):
+            #     noise[dof+i, dof+i] = self.x_noise_sigmas
 
             self.filter = kalman_filter_rt(
                     plant=self.plant,
@@ -144,90 +155,68 @@ class Simulator:
         else:
             raise NotImplementedError(
                    f'Sorry, the integrator {integrator} is not implemented.')
+        # process noise
+        self.x = np.random.normal(self.x, self.process_noise_sigmas, np.shape(self.x))
+
         self.t += dt
         self.record_data(self.t, self.x.copy(), tau)
 
-    def controller_step(self, dt, controller, integrator):
+    def get_control_u(self, controller, x, t, dt):
         realtime = True
         if controller is not None:
             t0 = time.time()
-            tau = controller.get_control_output(x=self.x, t=self.t)
-            if time.time() - t0 > dt:
-                realtime = False
-        else:
-            tau = np.zeros(self.plant.n_actuators)
-        self.step(tau, dt, integrator=integrator)
-        return realtime
-
-    def controller_step_with_imperfections(self,
-                                           dt,
-                                           controller=None,
-                                           integrator="runge_kutta"):
-
-        # delay
-        n_delay = int(self.delay / dt) + 1
-        xcon = np.copy(self.x)
-        if n_delay > 0:
-            len_X = len(self.x_values)
-            if self.delay_mode == "posvel":
-                xcon = np.copy(self.x_values[max(-n_delay, -len_X)])
-            elif self.delay_mode == "vel":
-                # xcon[:2] = self.x[:2]
-                xcon[2:] = self.x_values[max(-n_delay, -len_X)][2:]
-
-        # noise
-        if self.noise_mode == "posvel":
-            # add noise to full state
-            xcon = xcon + np.random.uniform(-self.noise_amplitude,
-                                            self.noise_amplitude,
-                                            np.shape(self.x))
-        elif self.noise_mode == "vel":
-            xcon[2:] = xcon[2:] + np.random.uniform(-self.noise_amplitude,
-                                                    self.noise_amplitude,
-                                                    np.shape(self.x[2:]))
-        # velocity cut
-        if self.noise_cut > 0.:
-            xcon[2] = np.where(np.abs(xcon[2]) < self.noise_cut, 0, xcon[2])
-            xcon[3] = np.where(np.abs(xcon[3]) < self.noise_cut, 0, xcon[3])
-
-        # noise filters
-        if self.noise_vfilter not in ["None", "none", "", None, False]:
-            if len(self.con_u_values) > 0:
-                xcon = self.filter(xcon, self.con_u_values[-1])
-        # if self.noise_vfilter == "lowpass":
-        #     if len(self.imp_x_values) > 0:
-        #         vf1 = [self.imp_x_values[-1][2], xcon[2]]
-        #         vf2 = [self.imp_x_values[-1][3], xcon[3]]
-
-        #         xcon[2] = lowpass_filter(
-        #                 vf1,
-        #                 self.noise_vfilter_args["alpha"])[-1]
-        #         xcon[3] = lowpass_filter(
-        #                 vf2,
-        #                 self.noise_vfilter_args["alpha"])[-1]
-
-        # elif self.noise_vfilter == "kalman":
-        #     if len(self.imp_x_values) > 0:
-        #         A, B = self.plant.linear_matrices(
-        #                 self.imp_x_values[-1],
-        #                 self.con_u_values[-1])
-        #         xcon = self.kalman_filter(A, B,
-        #                     xcon,  # self.imp_x_values[-1] or xcon?
-        #                     self.con_u_values[-1])
-
-        self.imp_x_values.append(np.copy(xcon))
-
-        realtime = True
-        if controller is not None:
-            t0 = time.time()
-            u = controller.get_control_output(x=xcon, t=self.t)
+            u = controller.get_control_output(x=x, t=t)
             if time.time() - t0 > dt:
                 realtime = False
         else:
             u = np.zeros(self.plant.n_actuators)
-
         self.con_u_values.append(np.copy(u))
+        return u, realtime
 
+    def get_measurement(self, dt):
+
+        x_meas = np.copy(self.x)
+
+        # delay
+        n_delay = int(self.delay / dt) + 1
+        if n_delay > 1:
+            len_X = len(self.x_values)
+            if self.delay_mode == "posvel":
+                x_meas = np.copy(self.x_values[max(-n_delay, -len_X)])
+            elif self.delay_mode == "vel":
+                # x_meas[:2] = self.x[:2]
+                x_meas[2:] = self.x_values[max(-n_delay, -len_X)][2:]
+
+        if len(self.tau_values) > n_delay:
+            u = np.asarray(self.tau_values[-n_delay])
+        else:
+            u = np.zeros(self.plant.n_actuators)
+
+        x_meas = np.dot(self.meas_C, x_meas) + np.dot(self.meas_D, u)
+
+        # sensor noise
+        x_meas = np.random.normal(x_meas, self.x_noise_sigmas, np.shape(self.x))
+
+        self.meas_x_values.append(np.copy(x_meas))
+        return x_meas
+
+    def filter_measurement(self, x):
+        x_filt = np.copy(x)
+
+        # velocity cut
+        if self.noise_cut > 0.:
+            x_filt[2] = np.where(np.abs(x_filt[2]) < self.noise_cut, 0, x_filt[2])
+            x_filt[3] = np.where(np.abs(x_filt[3]) < self.noise_cut, 0, x_filt[3])
+
+        # filter
+        if not self.filter is None:
+            if len(self.con_u_values) > 0:
+                x_filt = self.filter(x, self.con_u_values[-1])
+
+        self.filt_x_values.append(np.copy(x_filt))
+        return x_filt
+
+    def get_real_applied_u(self, u):
         nu = np.copy(u)
 
         # tau responsiveness
@@ -240,27 +229,40 @@ class Simulator:
         # tau noise (unoise)
         for i, tau in enumerate(nu):
             if np.abs(tau) > 0:
-                nu[i] = tau + np.random.uniform(-self.unoise_amplitude,
-                                                self.unoise_amplitude,
-                                                1)
+                # nu[i] = tau + np.random.uniform(-self.unoise_amplitude,
+                #                                 self.unoise_amplitude,
+                #                                 1)
+                nu[i] = tau + np.random.normal(0,
+                                               self.unoise_amplitude,
+                                               1)
+        return nu
+
+    def controller_step(self,
+                        dt,
+                        controller=None,
+                        integrator="runge_kutta"):
+
+        x_meas = self.get_measurement(dt)
+        x_filt = self.filter_measurement(x_meas)
+
+        u, realtime = self.get_control_u(controller, x_filt, self.t, dt)
+        nu = self.get_real_applied_u(u)
+
         self.step(nu, dt, integrator=integrator)
+
         return realtime
 
     def simulate(self, t0, x0, tf, dt, controller=None,
-                 integrator="runge_kutta", imperfections=False):
+            integrator="runge_kutta"): #, imperfections=False):
         self.set_state(t0, x0)
         self.reset_data_recorder()
         self.record_data(t0, np.copy(x0), None)
 
-        if imperfections:
+        if not self.filter is None:
             self.init_filter(x0, dt)
 
         while (self.t <= tf):
-            if not imperfections:
-                _ = self.controller_step(dt, controller, integrator)
-            else:
-                _ = self.controller_step_with_imperfections(
-                        dt, controller, integrator)
+            _ = self.controller_step(dt, controller, integrator)
 
         return self.t_values, self.x_values, self.tau_values
 
@@ -297,8 +299,9 @@ class Simulator:
 
         dt = self.par_dict["dt"]
         x0 = self.par_dict["x0"]
-        imperfections = self.par_dict["imperfections"]
-        if imperfections:
+        # imperfections = self.par_dict["imperfections"]
+        # if imperfections:
+        if not self.filter is None:
             self.init_filter(x0, dt)
 
         return self.animation_plots + self.tau_arrowarcs + self.tau_arrowheads
@@ -311,26 +314,14 @@ class Simulator:
         # x0 = par_dict["x0"]
         controller = par_dict["controller"]
         integrator = par_dict["integrator"]
-        imperfections = par_dict["imperfections"]
+        # imperfections = par_dict["imperfections"]
         anim_dt = par_dict["anim_dt"]
         trail_len = 25  # length of the trails
         sim_steps = int(anim_dt / dt)
 
         realtime = True
         for _ in range(sim_steps):
-            # if controller is not None:
-            #     t0 = time.time()
-            #     tau = controller.get_control_output(x=self.x, t=self.t)
-            #     if time.time() - t0 > dt:
-            #         realtime = False
-            # else:
-            #     tau = np.zeros(self.plant.n_actuators)
-            # self.step(tau, dt, integrator=integrator)
-            if not imperfections:
-                rt = self.controller_step(dt, controller, integrator)
-            else:
-                rt = self.controller_step_with_imperfections(
-                        dt, controller, integrator)
+            rt = self.controller_step(dt, controller, integrator)
             if not rt:
                 realtime = False
         tau = self.tau_values[-1]
@@ -411,7 +402,7 @@ class Simulator:
         return self.animation_plots + self.tau_arrowarcs + self.tau_arrowheads
 
     def simulate_and_animate(self, t0, x0, tf, dt, controller=None,
-                             integrator="runge_kutta", imperfections=False,
+                             integrator="runge_kutta",# imperfections=False,
                              plot_inittraj=False, plot_forecast=False,
                              plot_trail=True,
                              phase_plot=False, save_video=False,
@@ -483,7 +474,7 @@ class Simulator:
         self.par_dict["anim_dt"] = anim_dt
         self.par_dict["controller"] = controller
         self.par_dict["integrator"] = integrator
-        self.par_dict["imperfections"] = imperfections
+        # self.par_dict["imperfections"] = imperfections
         frames = num_steps*[self.par_dict]
 
         animation = FuncAnimation(fig, self._animation_step, frames=frames,

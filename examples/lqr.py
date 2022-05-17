@@ -69,15 +69,17 @@ t_final = 4.0
 integrator = "runge_kutta"
 goal = [np.pi, 0., 0., 0.]
 
-imperfections = False
-noise_mode = "vel"
-noise_amplitude = 0.2
+# imperfections = False
+#noise_mode = "vel"
+#noise_amplitude = 0.0
+process_noise_sigmas = [0., 0., 0., 0.]
+x_noise_sigmas = [0., 0., 0., 0.]
 noise_cut = 0.0
 noise_vfilter = "none"
-noise_vfilter_args = {"alpha": 0.9}
+noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}
 delay_mode = "None"
-delay = 0.005
-unoise_amplitude = 0.0
+delay = 0.0
+u_noise_amplitude = 0.0
 u_responsiveness = 1.0
 perturbation_times = []
 perturbation_taus = []
@@ -125,16 +127,15 @@ os.makedirs(save_dir)
 plant = SymbolicDoublePendulum(model_pars=mpar)
 
 sim = Simulator(plant=plant)
-sim.set_imperfections(noise_mode=noise_mode,
-                      noise_amplitude=noise_amplitude,
-                      noise_cut=noise_cut,
-                      noise_vfilter=noise_vfilter,
-                      noise_vfilter_args=noise_vfilter_args,
-                      delay=delay,
-                      delay_mode=delay_mode,
-                      unoise_amplitude=unoise_amplitude,
-                      u_responsiveness=u_responsiveness,
-                      perturbation_times=perturbation_times)
+sim.set_process_noise(process_noise_sigmas=process_noise_sigmas)
+sim.set_measurement_parameters(x_noise_sigmas=x_noise_sigmas,
+                               delay=delay,
+                               delay_mode=delay_mode)
+sim.set_filter_parameters(noise_cut=noise_cut,
+                          noise_vfilter=noise_vfilter,
+                          noise_vfilter_args=noise_vfilter_args)
+sim.set_motor_parameters(u_noise_amplitude=u_noise_amplitude,
+                         u_responsiveness=u_responsiveness)
 
 controller = LQRController(model_pars=mpar)
 controller.set_goal(goal)
@@ -144,7 +145,7 @@ controller.set_parameters(failure_value=0.0,
 controller.init()
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    tf=t_final, dt=dt, controller=controller,
-                                   integrator=integrator, imperfections=imperfections,
+                                   integrator=integrator,
                                    save_video=False,
                                    video_name=os.path.join(save_dir, "simulation"))
 
