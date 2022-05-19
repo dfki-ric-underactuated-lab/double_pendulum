@@ -8,6 +8,7 @@ from double_pendulum.simulation.visualization import get_arrow, \
                                                      set_arrow_properties
 from double_pendulum.utils.filters.low_pass import lowpass_filter_rt
 from double_pendulum.utils.filters.kalman_filter import kalman_filter_rt
+from double_pendulum.utils.filters.unscented_kalman_filter import unscented_kalman_filter_rt
 
 
 class Simulator:
@@ -54,33 +55,29 @@ class Simulator:
     def set_measurement_parameters(self,
                                    C=np.eye(4),
                                    D=np.zeros((4,2)),
-                                   #noise_mode="None",
-                                   #noise_amplitude=0.0,
-                                   x_noise_sigmas=[0., 0., 0., 0.],
+                                   meas_noise_sigmas=[0., 0., 0., 0.],
                                    delay=0.0,
                                    delay_mode="None"):
 
         self.meas_C = C
         self.meas_D = D
-        #self.noise_amplitude = noise_amplitude
-        #self.noise_mode = noise_mode
-        self.x_noise_sigmas = x_noise_sigmas
+        self.meas_noise_sigmas = meas_noise_sigmas
         self.delay = delay
         self.delay_mode = delay_mode
 
     def set_filter_parameters(self,
-                              noise_cut=0.0,
-                              noise_vfilter="lowpass",
-                              noise_vfilter_args={"alpha": [1., 1., 1.0, 1.0]}):
+                              meas_noise_cut=0.0,
+                              meas_noise_vfilter="None",
+                              meas_noise_vfilter_args={"alpha": [1., 1., 1., 1.]}):
 
-        self.noise_cut = noise_cut
-        self.noise_vfilter = noise_vfilter
-        self.noise_vfilter_args = noise_vfilter_args
+        self.meas_noise_cut = meas_noise_cut
+        self.meas_noise_vfilter = meas_noise_vfilter
+        self.meas_noise_vfilter_args = meas_noise_vfilter_args
 
     def set_motor_parameters(self,
-                             u_noise_amplitude=0.0,
-                             u_responsiveness=1.0):
-        self.unoise_amplitude = u_noise_amplitude
+                             u_noise_sigmas=[0., 0.],
+                             u_responsiveness=1.):
+        self.u_noise_sigmas = u_noise_sigmas
         self.u_responsiveness = u_responsiveness
 
     def set_disturbances(self,
@@ -93,36 +90,37 @@ class Simulator:
     def reset(self):
 
         self.process_noise_sigmas = [0., 0., 0., 0.]
-        #self.noise_amplitude = 0.0
-        #self.noise_mode = "None"
-        self.x_noise_sigmas = [0., 0., 0., 0.]
+
+        self.meas_C = np.eye(4)
+        self.meas_D = np.zeros((4,2))
+        self.meas_noise_sigmas = [0., 0., 0., 0.]
         self.delay = 0.0
         self.delay_mode = "None"
-        self.noise_cut = 0.0
-        self.noise_vfilter = "lowpass"
-        self.noise_vfilter_args = {"alpha": [1., 1., 1.0, 1.0]}
-        self.unoise_amplitude = 0.0
-        self.u_responsiveness = 1.0
+
+        self.meas_noise_cut = 0.0
+        self.meas_noise_vfilter = "None"
+        self.meas_noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}
+
+        self.u_noise_sigmas = [0., 0.]
+        self.u_responsiveness = 1.
+
         self.perturbation_times = []
         self.perturbation_taus = []
-        self.filter = None
 
+        self.filter = None
         self.reset_data_recorder()
 
-    def init_filter(self, x0, dt):
-        if self.noise_vfilter == "lowpass":
+    def init_filter(self, x0, dt, integrator):
+        if self.meas_noise_vfilter == "lowpass":
             dof = self.plant.dof
 
             self.filter = lowpass_filter_rt(
                     dim_x=2*dof,
-                    alpha=self.noise_vfilter_args["alpha"],
+                    alpha=self.meas_noise_vfilter_args["alpha"],
                     x0=x0)
 
-        if self.noise_vfilter == "kalman":
+        elif self.meas_noise_vfilter == "kalman":
             dof = self.plant.dof
-            noise = np.zeros((2*dof, 2*dof))  # not used
-            # for i in range(dof):
-            #     noise[dof+i, dof+i] = self.x_noise_sigmas
 
             self.filter = kalman_filter_rt(
                     plant=self.plant,
@@ -130,12 +128,26 @@ class Simulator:
                     dim_u=self.plant.n_actuators,
                     x0=x0,
                     dt=dt,
-                    measurement_noise=noise)
+                    process_noise=self.process_noise_sigmas,
+                    measurement_noise=self.meas_noise_sigmas)
+        elif self.meas_noise_vfilter == "unscented_kalman":
+            dof = self.plant.dof
+            if integrator == "euler":
+                fx = self.euler_integrator
+            elif integrator == "runge_kutta":
+                fx = self.runge_integrator
+            self.filter = unscented_kalman_filter_rt(
+                    dim_x=2*dof,
+                    x0=x0,
+                    dt=dt,
+                    process_noise=self.process_noise_sigmas,
+                    measurement_noise=self.meas_noise_sigmas,
+                    fx=fx)
 
-    def euler_integrator(self, t, y, dt, tau):
+    def euler_integrator(self, y, dt, t, tau):
         return self.plant.rhs(t, y, tau)
 
-    def runge_integrator(self, t, y, dt, tau):
+    def runge_integrator(self, y, dt, t, tau):
         k1 = self.plant.rhs(t, y, tau)
         k2 = self.plant.rhs(t + 0.5 * dt, y + 0.5 * dt * k1, tau)
         k3 = self.plant.rhs(t + 0.5 * dt, y + 0.5 * dt * k2, tau)
@@ -143,15 +155,14 @@ class Simulator:
         return (k1 + 2 * (k2 + k3) + k4) / 6.0
 
     def step(self, tau, dt, integrator="runge_kutta"):
-        tau = np.clip(tau, -np.asarray(self.plant.torque_limit),
+        tau = np.clip(tau,
+                      -np.asarray(self.plant.torque_limit),
                       np.asarray(self.plant.torque_limit))
 
-        # self.record_data(self.t, self.x.copy(), tau)
-
         if integrator == "runge_kutta":
-            self.x += dt * self.runge_integrator(self.t, self.x, dt, tau)
+            self.x += dt * self.runge_integrator(self.x, dt, self.t, tau)
         elif integrator == "euler":
-            self.x += dt * self.euler_integrator(self.t, self.x, dt, tau)
+            self.x += dt * self.euler_integrator(self.x, dt, self.t, tau)
         else:
             raise NotImplementedError(
                    f'Sorry, the integrator {integrator} is not implemented.')
@@ -195,7 +206,7 @@ class Simulator:
         x_meas = np.dot(self.meas_C, x_meas) + np.dot(self.meas_D, u)
 
         # sensor noise
-        x_meas = np.random.normal(x_meas, self.x_noise_sigmas, np.shape(self.x))
+        x_meas = np.random.normal(x_meas, self.meas_noise_sigmas, np.shape(self.x))
 
         self.meas_x_values.append(np.copy(x_meas))
         return x_meas
@@ -204,9 +215,9 @@ class Simulator:
         x_filt = np.copy(x)
 
         # velocity cut
-        if self.noise_cut > 0.:
-            x_filt[2] = np.where(np.abs(x_filt[2]) < self.noise_cut, 0, x_filt[2])
-            x_filt[3] = np.where(np.abs(x_filt[3]) < self.noise_cut, 0, x_filt[3])
+        if self.meas_noise_cut > 0.:
+            x_filt[2] = np.where(np.abs(x_filt[2]) < self.meas_noise_cut, 0, x_filt[2])
+            x_filt[3] = np.where(np.abs(x_filt[3]) < self.meas_noise_cut, 0, x_filt[3])
 
         # filter
         if not self.filter is None:
@@ -227,14 +238,15 @@ class Simulator:
         nu = last_u + self.u_responsiveness*(nu - last_u)
 
         # tau noise (unoise)
-        for i, tau in enumerate(nu):
-            if np.abs(tau) > 0:
-                # nu[i] = tau + np.random.uniform(-self.unoise_amplitude,
-                #                                 self.unoise_amplitude,
-                #                                 1)
-                nu[i] = tau + np.random.normal(0,
-                                               self.unoise_amplitude,
-                                               1)
+        nu = np.random.normal(nu, self.u_noise_sigmas, np.shape(nu))
+        # for i, tau in enumerate(nu):
+        #     if np.abs(tau) > 0:
+        #         # nu[i] = tau + np.random.uniform(-self.unoise_amplitude,
+        #         #                                 self.unoise_amplitude,
+        #         #                                 1)
+        #         nu[i] = tau + np.random.normal(0,
+        #                                        self.unoise_sigmas[i],
+        #                                        1)
         return nu
 
     def controller_step(self,
@@ -257,9 +269,10 @@ class Simulator:
         self.set_state(t0, x0)
         self.reset_data_recorder()
         self.record_data(t0, np.copy(x0), None)
+        self.meas_x_values.append(np.copy(x0))
 
         if not self.filter is None:
-            self.init_filter(x0, dt)
+            self.init_filter(x0, dt, integrator)
 
         while (self.t <= tf):
             _ = self.controller_step(dt, controller, integrator)
@@ -299,10 +312,11 @@ class Simulator:
 
         dt = self.par_dict["dt"]
         x0 = self.par_dict["x0"]
+        integrator = self.par_dict["integrator"]
         # imperfections = self.par_dict["imperfections"]
         # if imperfections:
         if not self.filter is None:
-            self.init_filter(x0, dt)
+            self.init_filter(x0, dt, integrator)
 
         return self.animation_plots + self.tau_arrowarcs + self.tau_arrowheads
 
@@ -418,6 +432,7 @@ class Simulator:
         self.set_state(t0, x0)
         self.reset_data_recorder()
         self.record_data(t0, np.copy(x0), None)
+        self.meas_x_values.append(np.copy(x0))
 
         fig = plt.figure(figsize=(20, 20))
         self.animation_ax = plt.axes()
@@ -491,6 +506,7 @@ class Simulator:
             self.set_state(t0, x0)
             self.reset_data_recorder()
             self.record_data(t0, np.copy(x0), None)
+            self.meas_x_values.append(x0)
             plt.show()
         plt.close()
 

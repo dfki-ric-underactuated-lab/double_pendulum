@@ -73,27 +73,27 @@ def plot_benchmark_results(results_dir, costlim=[0, 1e6], show=False):
         fig_counter += 1
 
     # noise robustness
-    if "noise_robustness" in res_dict.keys():
-        n_subplots = len(res_dict["noise_robustness"].keys())
+    if "meas_noise_robustness" in res_dict.keys():
+        n_subplots = len(res_dict["meas_noise_robustness"].keys())
         fig_nr, ax_nr = plt.subplots(
                 n_subplots, 1,
                 figsize=(18, 12), sharex="all", num=fig_counter)
         fig_nr.suptitle("State Noise Robustness")
-        for i, nf in enumerate(res_dict["noise_robustness"].keys()):
+        for i, nf in enumerate(res_dict["meas_noise_robustness"].keys()):
             ax_nr[i].set_title(f"{nf}")
-            x = res_dict["noise_robustness"][nf]["noise_amplitudes"]
-            if "free_costs" in res_dict["noise_robustness"][nf].keys():
-                y1 = np.median(res_dict["noise_robustness"][nf]["free_costs"], axis=1)
+            x = res_dict["meas_noise_robustness"][nf]["noise_sigma_list"]
+            if "free_costs" in res_dict["meas_noise_robustness"][nf].keys():
+                y1 = np.median(res_dict["meas_noise_robustness"][nf]["free_costs"], axis=1)
                 ax_nr[i].plot(x, y1)
-            if "following_costs" in res_dict["noise_robustness"][nf].keys():
-                y2 = np.median(res_dict["noise_robustness"][nf]["following_costs"], axis=1)
+            if "following_costs" in res_dict["meas_noise_robustness"][nf].keys():
+                y2 = np.median(res_dict["meas_noise_robustness"][nf]["following_costs"], axis=1)
                 ax_nr[i].plot(x, y2)
-            if "successes" in res_dict["noise_robustness"][nf].keys():
+            if "successes" in res_dict["meas_noise_robustness"][nf].keys():
                 xr = x[:-1] + 0.5*np.diff(x)
                 xr = np.append([x[0]], xr)
                 xr = np.append(xr, [x[-1]])
                 ymax = costlim[1]
-                succs = res_dict["noise_robustness"][nf]["successes"]
+                succs = res_dict["meas_noise_robustness"][nf]["successes"]
                 succ = np.sum(succs, axis=1)
                 for j in range(len(xr[:-1])):
                     c = "red"
@@ -106,28 +106,28 @@ def plot_benchmark_results(results_dir, costlim=[0, 1e6], show=False):
                                       alpha=0.1))
             ax_nr[i].set_ylim(costlim[0], costlim[1])
             ax_nr[i].set_ylabel("Cost")
-        ax_nr[-1].set_xlabel("Noise Amplitude")
-        plt.savefig(os.path.join(results_dir, "noise_robustness"))
+        ax_nr[-1].set_xlabel("Noise Variance")
+        plt.savefig(os.path.join(results_dir, "meas_noise_robustness"))
         fig_counter += 1
 
     # unoise robustness
-    if "unoise_robustness" in res_dict.keys():
+    if "u_noise_robustness" in res_dict.keys():
         # plt.figure(fig_counter, figsize=(16, 9))
         fig_unr, ax_unr = plt.subplots(1, 1, figsize=(16, 9), num=fig_counter)
         fig_unr.suptitle("Torque Noise Robustness")
-        x = res_dict["unoise_robustness"]["unoise_amplitudes"]
-        if "following_costs" in res_dict["unoise_robustness"].keys():
-            y1 = np.median(res_dict["unoise_robustness"]["following_costs"], axis=1)
+        x = res_dict["u_noise_robustness"]["u_noise_sigma_list"]
+        if "following_costs" in res_dict["u_noise_robustness"].keys():
+            y1 = np.median(res_dict["u_noise_robustness"]["following_costs"], axis=1)
             ax_unr.plot(x, y1)
-        if "free_costs" in res_dict["u_responsiveness_robustness"].keys():
-            y2 = np.median(res_dict["unoise_robustness"]["free_costs"], axis=1)
+        if "free_costs" in res_dict["u_noise_robustness"].keys():
+            y2 = np.median(res_dict["u_noise_robustness"]["free_costs"], axis=1)
             ax_unr.plot(x, y2)
-        if "successes" in res_dict["unoise_robustness"].keys():
+        if "successes" in res_dict["u_noise_robustness"].keys():
             xr = x[:-1] + 0.5*np.diff(x)
             xr = np.append([x[0]], xr)
             xr = np.append(xr, [x[-1]])
             ymax = costlim[1]
-            succs = res_dict["unoise_robustness"]["successes"]
+            succs = res_dict["u_noise_robustness"]["successes"]
             succ = np.sum(succs, axis=1)
             for i in range(len(xr[:-1])):
                 c = "red"
@@ -139,9 +139,9 @@ def plot_benchmark_results(results_dir, costlim=[0, 1e6], show=False):
                                   facecolor=c, edgecolor=None,
                                   alpha=0.1))
         ax_unr.set_ylim(costlim[0], costlim[1])
-        ax_unr.set_xlabel("Noise Amplitude")
+        ax_unr.set_xlabel("Noise Variance")
         ax_unr.set_ylabel("Cost")
-        plt.savefig(os.path.join(results_dir, "unoise_robustness"))
+        plt.savefig(os.path.join(results_dir, "u_noise_robustness"))
         fig_counter += 1
 
     # u responsiveness robustness

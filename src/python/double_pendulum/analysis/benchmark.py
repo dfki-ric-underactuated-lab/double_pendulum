@@ -362,45 +362,48 @@ class benchmarker():
                                       tau_perts=[]):
         pass
 
-    def check_noise_robustness(self,
-                               repetitions=10,
-                               noise_mode="vel",
-                               noise_amplitudes=[],
-                               noise_cut=0.,
-                               noise_vfilters=["None", "lowpass", "kalman"],
-                               noise_vfilter_args={"alpha": 0.3}):
+    def check_meas_noise_robustness(self,
+                                    repetitions=10,
+                                    meas_noise_mode="vel",
+                                    meas_noise_sigma_list=[],
+                                    meas_noise_cut=0.,
+                                    meas_noise_vfilters=["None", "lowpass", "kalman"],
+                                    meas_noise_vfilter_args={"alpha": 0.3}):
         # maybe add noise frequency
         # (on the real system noise frequency seems so be higher than
         # control frequency -> no frequency neccessary here)
         print("computing noise robustness...")
 
         res_dict = {}
-        for nf in noise_vfilters:
+        for nf in meas_noise_vfilters:
             print("  ", nf)
             C_free = []
             C_tf = []
             SUCC = []
-            for na in noise_amplitudes:
+            for na in meas_noise_sigma_list:
                 rep_C_free = []
                 rep_C_tf = []
                 rep_SUCC = []
                 for _ in range(repetitions):
                     self.controller.init()
-                    self.simulator.set_imperfections(
-                            noise_amplitude=na,
-                            noise_mode=noise_mode,
-                            noise_cut=noise_cut,
-                            noise_vfilter=nf,
-                            noise_vfilter_args=noise_vfilter_args)
+                    if meas_noise_mode == "posvel":
+                        meas_noise_sigmas = [na, na, na, na]
+                    elif meas_noise_mode == "vel":
+                        meas_noise_sigmas = [0., 0., na, na]
+                    self.simulator.set_measurement_parameters(
+                            meas_noise_sigmas=meas_noise_sigmas)
+                    self.simulator.set_filter_parameters(
+                            meas_noise_cut=meas_noise_cut,
+                            meas_noise_vfilter=nf,
+                            meas_noise_vfilter_args=meas_noise_vfilter_args)
                     T, X, U = self.simulator.simulate(
                             t0=0.0,
                             tf=self.t_final,
                             dt=self.dt,
                             x0=self.x0,
                             controller=self.controller,
-                            integrator=self.integrator,
-                            imperfections=True)
-                    self.simulator.reset_imperfections()
+                            integrator=self.integrator)
+                    self.simulator.reset()
 
                     cost_free, cost_tf, succ = self.compute_success_measure(X, U)
                     rep_C_free.append(cost_free)
@@ -410,20 +413,20 @@ class benchmarker():
                 C_tf.append(rep_C_tf)
                 SUCC.append(rep_SUCC)
             res_dict[nf] = {}
-            res_dict[nf]["noise_amplitudes"] = noise_amplitudes
+            res_dict[nf]["noise_sigma_list"] = meas_noise_sigma_list
             res_dict[nf]["free_costs"] = C_free
             if self.traj_following:
                 res_dict[nf]["following_costs"] = C_tf
             res_dict[nf]["successes"] = SUCC
-            res_dict[nf]["noise_mode"] = noise_mode
-            res_dict[nf]["noise_cut"] = noise_cut
+            res_dict[nf]["noise_mode"] = meas_noise_mode
+            res_dict[nf]["noise_cut"] = meas_noise_cut
             res_dict[nf]["noise_vfilter"] = nf
-            res_dict[nf]["noise_vfilter_args"] = noise_vfilter_args
+            res_dict[nf]["noise_vfilter_args"] = meas_noise_vfilter_args
         return res_dict
 
     def check_unoise_robustness(self,
                                 repetitions=10,
-                                unoise_amplitudes=[]):
+                                u_noise_sigma_list=[]):
         # maybe add noise frequency
         print("computing torque noise robustness...")
 
@@ -431,22 +434,26 @@ class benchmarker():
         C_free = []
         C_tf = []
         SUCC = []
-        for na in unoise_amplitudes:
+        for uns in u_noise_sigma_list:
             rep_C_free = []
             rep_C_tf = []
             rep_SUCC = []
             for _ in range(repetitions):
                 self.controller.init()
-                self.simulator.set_imperfections(unoise_amplitude=na)
+                u_noise_sigmas = np.zeros(len(self.torque_limit))
+                for i in range(len(self.torque_limit)):
+                    if self.torque_limit[i] != 0.:
+                        u_noise_sigmas[i] = uns
+
+                self.simulator.set_motor_parameters(u_noise_sigmas=u_noise_sigmas)
                 T, X, U = self.simulator.simulate(
                         t0=0.0,
                         tf=self.t_final,
                         dt=self.dt,
                         x0=self.x0,
                         controller=self.controller,
-                        integrator=self.integrator,
-                        imperfections=True)
-                self.simulator.reset_imperfections()
+                        integrator=self.integrator)
+                self.simulator.reset()
 
                 cost_free, cost_tf, succ = self.compute_success_measure(X, U)
                 rep_C_free.append(cost_free)
@@ -455,7 +462,7 @@ class benchmarker():
             C_free.append(rep_C_free)
             C_tf.append(rep_C_tf)
             SUCC.append(rep_SUCC)
-        res_dict["unoise_amplitudes"] = unoise_amplitudes
+        res_dict["u_noise_sigma_list"] = u_noise_sigma_list
         res_dict["free_costs"] = C_free
         if self.traj_following:
             res_dict["following_costs"] = C_tf
@@ -472,16 +479,15 @@ class benchmarker():
         SUCC = []
         for ur in u_responses:
             self.controller.init()
-            self.simulator.set_imperfections(u_responsiveness=ur)
+            self.simulator.set_motor_parameters(u_responsiveness=ur)
             T, X, U = self.simulator.simulate(
                     t0=0.0,
                     tf=self.t_final,
                     dt=self.dt,
                     x0=self.x0,
                     controller=self.controller,
-                    integrator=self.integrator,
-                    imperfections=True)
-            self.simulator.reset_imperfections()
+                    integrator=self.integrator)
+            self.simulator.reset()
 
             cost_free, cost_tf, succ = self.compute_success_measure(X, U)
             C_free.append(cost_free)
@@ -504,7 +510,7 @@ class benchmarker():
         SUCC = []
         for de in delays:
             self.controller.init()
-            self.simulator.set_imperfections(
+            self.simulator.set_measurement_parameters(
                     delay=de,
                     delay_mode=delay_mode)
             T, X, U = self.simulator.simulate(
@@ -513,9 +519,8 @@ class benchmarker():
                     dt=self.dt,
                     x0=self.x0,
                     controller=self.controller,
-                    integrator=self.integrator,
-                    imperfections=True)
-            self.simulator.reset_imperfections()
+                    integrator=self.integrator)
+            self.simulator.reset()
 
             cost_free, cost_tf, succ = self.compute_success_measure(X, U)
             C_free.append(cost_free)
@@ -549,12 +554,12 @@ class benchmarker():
                                       "b2": [],
                                       "cf2": []},
                   repetitions=10,
-                  noise_mode="vel",
-                  noise_amplitudes=[0.1, 0.3, 0.5],
-                  noise_cut=0.5,
-                  noise_vfilters=["lowpass"],
-                  noise_vfilter_args={"alpha": 0.3},
-                  unoise_amplitudes=[0.1, 0.5, 1.0],
+                  meas_noise_mode="vel",
+                  meas_noise_sigma_list=[0.1, 0.3, 0.5],
+                  meas_noise_cut=0.5,
+                  meas_noise_vfilters=["lowpass"],
+                  meas_noise_vfilter_args={"alpha": 0.3},
+                  u_noise_sigma_list=[0.1, 0.5, 1.0],
                   u_responses=[1.0, 1.1, 1.2, 1.3, 1.4, 1.5],
                   delay_mode="vel",
                   delays=[0.01, 0.02, 0.05, 0.1]):
@@ -566,18 +571,18 @@ class benchmarker():
                     var_lists=modelpar_var_lists)
             res["model_robustness"] = res_model
         if compute_noise_robustness:
-            res_noise = self.check_noise_robustness(
+            res_noise = self.check_meas_noise_robustness(
                     repetitions=repetitions,
-                    noise_mode=noise_mode,
-                    noise_amplitudes=noise_amplitudes,
-                    noise_cut=noise_cut,
-                    noise_vfilters=noise_vfilters,
-                    noise_vfilter_args=noise_vfilter_args)
-            res["noise_robustness"] = res_noise
+                    meas_noise_mode=meas_noise_mode,
+                    meas_noise_sigma_list=meas_noise_sigma_list,
+                    meas_noise_cut=meas_noise_cut,
+                    meas_noise_vfilters=meas_noise_vfilters,
+                    meas_noise_vfilter_args=meas_noise_vfilter_args)
+            res["meas_noise_robustness"] = res_noise
         if compute_unoise_robustness:
             res_unoise = self.check_unoise_robustness(
-                    unoise_amplitudes=unoise_amplitudes)
-            res["unoise_robustness"] = res_unoise
+                    u_noise_sigma_list=u_noise_sigma_list)
+            res["u_noise_robustness"] = res_unoise
         if compute_uresponsiveness_robustness:
             res_uresp = self.check_uresponsiveness_robustness(
                     u_responses=u_responses)

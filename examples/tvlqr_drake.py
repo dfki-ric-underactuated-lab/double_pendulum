@@ -46,17 +46,16 @@ keys = ""
 x0 = [0.0, 0.0, 0.0, 0.0]
 
 process_noise_sigmas = [0., 0., 0., 0.]
-x_noise_sigmas = [0., 0., 0., 0.]
-noise_cut = 0.0
-noise_vfilter = "none"
-noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}
+meas_noise_sigmas = [0., 0., 0., 0.]
+meas_noise_cut = 0.0
+meas_noise_vfilter = "none"
+meas_noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}
 delay_mode = "None"
 delay = 0.0
-u_noise_amplitude = 0.0
+u_noise_sigmas = [0., 0.]
 u_responsiveness = 1.0
 perturbation_times = []
 perturbation_taus = []
-
 # controller parameters
 # Q = np.diag([10.0, 10.0, 1.0, 1.0])  # for dircol traj
 # R = 0.1*np.eye(1)
@@ -79,13 +78,13 @@ plant = SymbolicDoublePendulum(model_pars=mpar)
 
 sim = Simulator(plant=plant)
 sim.set_process_noise(process_noise_sigmas=process_noise_sigmas)
-sim.set_measurement_parameters(x_noise_sigmas=x_noise_sigmas,
+sim.set_measurement_parameters(meas_noise_sigmas=meas_noise_sigmas,
                                delay=delay,
                                delay_mode=delay_mode)
-sim.set_filter_parameters(noise_cut=noise_cut,
-                          noise_vfilter=noise_vfilter,
-                          noise_vfilter_args=noise_vfilter_args)
-sim.set_motor_parameters(u_noise_amplitude=u_noise_amplitude,
+sim.set_filter_parameters(meas_noise_cut=meas_noise_cut,
+                          meas_noise_vfilter=meas_noise_vfilter,
+                          meas_noise_vfilter_args=meas_noise_vfilter_args)
+sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
                          u_responsiveness=u_responsiveness)
 
 controller = TVLQRController(csv_path=csv_path,

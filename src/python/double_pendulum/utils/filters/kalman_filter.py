@@ -62,7 +62,8 @@ class kalman_filter_rt():
     """
     def __init__(self, plant, dim_x=4, dim_u=2,
                  x0=np.array([0., 0., 0., 0.]), dt=0.01,
-                 measurement_noise=None):
+                 process_noise=[0., 0., 0., 0.],
+                 measurement_noise=[0.001, 0.001, 0.1, 0.1]):
 
         self.dim_x = dim_x
         self.dim_u = dim_u
@@ -85,7 +86,6 @@ class kalman_filter_rt():
         # Assign the initial value for the state (position and velocity).
         self.f.x = np.asarray(self.x0)  # position, velocity
 
-        # not sure if these are necessary
         # Measurement function:
         self.f.H = np.array([[1., 0., 0., 0.],
                              [0., 1., 0., 0.],
@@ -93,15 +93,14 @@ class kalman_filter_rt():
                              [0., 0., 0., 1.]])
 
         # Covariance matrix
-        self.f.P = 1000 * np.identity(np.size(self.f.x))
+        #self.f.P = 1000 * np.identity(np.size(self.f.x))
+        #self.f.P = np.diag((0., 0., 1000., 1000.))
 
         # Measurement noise
-        # if self.measurement_noise is None:
-        #     self.measurement_noise = np.zeros(self.dim_x, self.dim_x)
-        # self.f.R = np.array(self.measurement_noise)
+        self.f.R = np.diag(self.measurement_noise)
 
         # Process noise
-        self.f.Q = Q_discrete_white_noise(dim=self.dim_x, dt=self.dt, var=0.13)  # TODO: variance value
+        self.f.Q = Q_discrete_white_noise(dim=self.dim_x, dt=self.dt, var=process_noise)
 
     def __call__(self, x, u):
 

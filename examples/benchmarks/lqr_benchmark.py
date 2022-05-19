@@ -44,9 +44,9 @@ R = np.diag((0.11, 0.11))
 Qf = np.copy(Q)
 
 # benchmark parameters
-N_var = 21
+N_var = 3
 
-compute_model_robustness = True
+compute_model_robustness = False
 mpar_vars = ["Ir",
              "m1r1", "I1", "b1", "cf1",
              "m2r2", "m2", "I2", "b2", "cf2"]
@@ -74,14 +74,14 @@ modelpar_var_lists = {"Ir": Ir_var_list,
                       "cf2": cf2_var_list}
 
 compute_noise_robustness = True
-noise_mode = "vel"
-noise_amplitudes = np.linspace(0.0, 0.5, N_var)
-noise_cut = 0.0
-noise_vfilter = ["None", "lowpass", "kalman"]
-noise_vfilter_args = {"alpha": 0.3}
+meas_noise_mode = "vel"
+meas_noise_sigma_list = np.linspace(0.0, 0.5, N_var)
+meas_noise_cut = 0.0
+meas_noise_vfilters = ["None", "lowpass", "kalman"]
+meas_noise_vfilter_args = {"alpha": [1., 1., 0.3, 0.3]}
 
 compute_unoise_robustness = True
-unoise_amplitudes = np.linspace(0.0, 2.0, N_var)
+u_noise_sigma_list = np.linspace(0.0, 2.0, N_var)
 
 compute_uresponsiveness_robustness = True
 u_responses = np.linspace(1.0, 2.0, N_var)
@@ -134,12 +134,12 @@ res = ben.benchmark(compute_model_robustness=compute_model_robustness,
                     compute_delay_robustness=compute_delay_robustness,
                     mpar_vars=mpar_vars,
                     modelpar_var_lists=modelpar_var_lists,
-                    noise_mode=noise_mode,
-                    noise_amplitudes=noise_amplitudes,
-                    noise_cut=noise_cut,
-                    noise_vfilters=noise_vfilters,
-                    noise_vfilter_args=noise_vfilter_args,
-                    unoise_amplitudes=unoise_amplitudes,
+                    meas_noise_mode=meas_noise_mode,
+                    meas_noise_sigma_list=meas_noise_sigma_list,
+                    meas_noise_cut=meas_noise_cut,
+                    meas_noise_vfilters=meas_noise_vfilters,
+                    meas_noise_vfilter_args=meas_noise_vfilter_args,
+                    u_noise_sigma_list=u_noise_sigma_list,
                     u_responses=u_responses,
                     delay_mode=delay_mode,
                     delays=delays)

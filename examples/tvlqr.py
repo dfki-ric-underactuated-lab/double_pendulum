@@ -52,17 +52,16 @@ keys = ""
 x0 = [0.0, 0.0, 0.0, 0.0]
 
 process_noise_sigmas = [0., 0., 0., 0.]
-x_noise_sigmas = [0., 0., 0., 0.]
-noise_cut = 0.0
-noise_vfilter = "none"
-noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}
+meas_noise_sigmas = [0., 0., 0.2, 0.2]
+meas_noise_cut = 0.0
+meas_noise_vfilter = "none"
+meas_noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}
 delay_mode = "None"
 delay = 0.0
-u_noise_amplitude = 0.0
+u_noise_sigmas = [0., 0.]
 u_responsiveness = 1.0
 perturbation_times = []
 perturbation_taus = []
-
 # controller parameters
 # Q = np.diag([10.0, 10.0, 1.0, 1.0])  # for dircol traj
 # R = 0.1*np.eye(2)
@@ -85,13 +84,13 @@ plant = SymbolicDoublePendulum(model_pars=mpar)
 
 sim = Simulator(plant=plant)
 sim.set_process_noise(process_noise_sigmas=process_noise_sigmas)
-sim.set_measurement_parameters(x_noise_sigmas=x_noise_sigmas,
+sim.set_measurement_parameters(meas_noise_sigmas=meas_noise_sigmas,
                                delay=delay,
                                delay_mode=delay_mode)
-sim.set_filter_parameters(noise_cut=noise_cut,
-                          noise_vfilter=noise_vfilter,
-                          noise_vfilter_args=noise_vfilter_args)
-sim.set_motor_parameters(u_noise_amplitude=u_noise_amplitude,
+sim.set_filter_parameters(meas_noise_cut=meas_noise_cut,
+                          meas_noise_vfilter=meas_noise_vfilter,
+                          meas_noise_vfilter_args=meas_noise_vfilter_args)
+sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
                          u_responsiveness=u_responsiveness)
 
 controller = TVLQRController(model_pars=mpar,
@@ -127,6 +126,20 @@ os.makedirs(save_dir)
 
 os.system(f"cp {csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))
 save_trajectory(os.path.join(save_dir, "trajectory.csv"), T, X, U)
+
+# TT = np.asarray(T)
+# XX = np.asarray(X)
+# XX2 = np.asarray(X_meas)
+# UU = np.asarray(U)
+# if len(UU) < len(XX):
+#     UU = np.append(UU, [UU[-1]], axis=0)
+# data = np.asarray([TT,
+#                    XX.T[0], XX.T[1], XX.T[2], XX.T[3],
+#                    UU.T[0], UU.T[1],
+#                    XX2.T[0], XX2.T[1], XX2.T[2], XX2.T[3]]).T
+# np.savetxt("../data/trajectories/acrobot/noisy_trajectory.csv", data, delimiter=",",
+#            header="time, pos1, pos2, vel1, vel2, tau1, tau2, meas_pos1, meas_pos2, meas_vel1, meas_vel2")
+
 
 plot_timeseries(T, X, U, None,
                 plot_energy=False,
