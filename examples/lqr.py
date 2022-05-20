@@ -72,11 +72,12 @@ goal = [np.pi, 0., 0., 0.]
 # imperfections = False
 #noise_mode = "vel"
 #noise_amplitude = 0.0
-process_noise_sigmas = [0., 0., 0., 0.]
-meas_noise_sigmas = [0., 0., 0.1, 0.1]
+process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
+meas_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
 meas_noise_cut = 0.0
-meas_noise_vfilter = "kalman"
-meas_noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}
+meas_noise_vfilter = "none"
+meas_noise_vfilter_args = {"alpha": [1., 1., 0.3, 0.3],
+                           "kalman":{"x_lin": goal, "u_lin": [0., 0.]}}
 delay_mode = "None"
 delay = 0.0
 u_noise_sigmas = [0., 0.]
@@ -148,9 +149,15 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    integrator=integrator,
                                    save_video=False,
                                    video_name=os.path.join(save_dir, "simulation"))
+X_meas = sim.meas_x_values
+X_filt = sim.filt_x_values
+U_con = sim.con_u_values
 
 plot_timeseries(T, X, U, None,
                 plot_energy=False,
+                #T_des=T[1:],
+                #X_des=X_filt,
+                X_meas=X_meas,
                 pos_y_lines=[0.0, np.pi],
                 tau_y_lines=[-torque_limit[active_act], torque_limit[active_act]],
                 save_to=os.path.join(save_dir, "time_series"))

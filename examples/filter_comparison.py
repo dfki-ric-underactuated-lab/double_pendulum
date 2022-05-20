@@ -78,9 +78,9 @@ X_lowpass = [X_meas[0]]
 X_kalman = [X_meas[0]]
 X_ukalman = [X_meas[0]]
 for i in range(1, len(X)):
-    X_lowpass.append(lowpass(X_meas[i], U[i]))
-    X_kalman.append(kalman(X_meas[i], U[i]))
-    X_ukalman.append(unscented_kalman(X_meas[i], U[i]))
+    X_lowpass.append(lowpass(X_meas[i], U[i-1]))
+    X_kalman.append(kalman(X_meas[i], U[i-1]))
+    X_ukalman.append(unscented_kalman(X_meas[i], U[i-1]))
 
 X_lowpass = np.asarray(X_lowpass)
 X_kalman = np.asarray(X_kalman)
@@ -93,9 +93,9 @@ fig, ax = plt.subplots(4, 1,
 for i in range(4):
     ax[i].plot(T, X.T[i], label="true data", color="blue", alpha=1.0)
     ax[i].plot(T, X_meas.T[i], label="measured data", color="lightblue")
-    ax[i].plot(T, X_lowpass.T[i], label="lowpass filter", color="red", lw=0.2)
-    #ax[i].plot(T, X_kalman.T[i], label="kalman filter", color="orange", lw=0.2)
-    ax[i].plot(T, X_ukalman.T[i], label="unscented kalman filter", color="darkorange", lw=0.2)
+    ax[i].plot(T, X_lowpass.T[i], label="lowpass filter", color="red", lw=0.5)
+    ax[i].plot(T, X_kalman.T[i], label="kalman filter", color="orange", lw=0.5)
+    ax[i].plot(T, X_ukalman.T[i], label="unscented kalman filter", color="brown", lw=0.5)
     ax[i].legend(loc="best")
 
 plt.show()

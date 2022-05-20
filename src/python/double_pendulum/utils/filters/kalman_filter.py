@@ -60,10 +60,12 @@ class kalman_filter_rt():
     """
     kalman filter for realtime data processing
     """
-    def __init__(self, plant, dim_x=4, dim_u=2,
-                 x0=np.array([0., 0., 0., 0.]), dt=0.01,
+    def __init__(self, A, B, dim_x=4, dim_u=2,
+                 x0=np.array([0., 0., 0., 0.]),
+                 dt=0.01,
                  process_noise=[0., 0., 0., 0.],
-                 measurement_noise=[0.001, 0.001, 0.1, 0.1]):
+                 measurement_noise=[0.001, 0.001, 0.1, 0.1],
+                 covariance_matrix=np.diag((1., 1., 1., 1.))):
 
         self.dim_x = dim_x
         self.dim_u = dim_u
@@ -72,7 +74,8 @@ class kalman_filter_rt():
         self.x0 = np.asarray(x0)
         self.dt = dt
 
-        self.plant = plant
+        self.A = A
+        self.B = B
 
         self.x_data = [self.x0]
         self.u_data = []
@@ -95,6 +98,7 @@ class kalman_filter_rt():
         # Covariance matrix
         #self.f.P = 1000 * np.identity(np.size(self.f.x))
         #self.f.P = np.diag((0., 0., 1000., 1000.))
+        self.f.P = covariance_matrix
 
         # Measurement noise
         self.f.R = np.diag(self.measurement_noise)
@@ -104,12 +108,12 @@ class kalman_filter_rt():
 
     def __call__(self, x, u):
 
-        A, B = self.plant.linear_matrices(
-                        self.x_data[-1],
-                        u)
+        # A, B = self.plant.linear_matrices(
+        #                 self.x_data[-1],
+        #                 u)
 
-        self.f.F = np.asarray(A)
-        self.f.B = np.asarray(B)
+        self.f.F = np.asarray(self.A)
+        self.f.B = np.asarray(self.B)
 
         # Perform one KF step
         self.f.u = np.asarray(u)

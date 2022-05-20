@@ -50,12 +50,12 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
 
     i = 0
     if plot_pos:
-        ax[i].plot(T, np.asarray(X).T[0], label="q1", color="blue")
-        ax[i].plot(T, np.asarray(X).T[1], label="q2", color="red")
+        ax[i].plot(T[:len(X)], np.asarray(X).T[0], label="q1", color="blue")
+        ax[i].plot(T[:len(X)], np.asarray(X).T[1], label="q2", color="red")
         if not (X_des is None):
-            ax[i].plot(T_des, np.asarray(X_des).T[0],
+            ax[i].plot(T_des[:len(X_des)], np.asarray(X_des).T[0],
                     ls="--", label="q1 desired", color="lightblue")
-            ax[i].plot(T_des, np.asarray(X_des).T[1],
+            ax[i].plot(T_des[:len(X_des)], np.asarray(X_des).T[1],
                     ls="--", label="q2 desired", color="orange")
         if not (X_meas is None):
             ax[i].plot(T[:len(X_meas)], np.asarray(X_meas).T[0],
@@ -72,12 +72,12 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         ax[i].legend(loc="best")
     if plot_vel:
         i += 1
-        ax[i].plot(T, np.asarray(X).T[2], label="q1 dot", color="blue")
-        ax[i].plot(T, np.asarray(X).T[3], label="q2 dot", color="red")
+        ax[i].plot(T[:len(X)], np.asarray(X).T[2], label="q1 dot", color="blue")
+        ax[i].plot(T[:len(X)], np.asarray(X).T[3], label="q2 dot", color="red")
         if not (X_des is None):
-            ax[i].plot(T_des, np.asarray(X_des).T[2],
+            ax[i].plot(T_des[:len(X_des)], np.asarray(X_des).T[2],
                     ls="--", label="q1 dot desired", color="lightblue")
-            ax[i].plot(T_des, np.asarray(X_des).T[3],
+            ax[i].plot(T_des[:len(X_des)], np.asarray(X_des).T[3],
                     ls="--", label="q2 dot desired", color="orange")
         if not (X_meas is None):
             ax[i].plot(T[:len(X_meas)], np.asarray(X_meas).T[2],
@@ -94,12 +94,12 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         ax[i].legend(loc="best")
     if plot_acc:
         i += 1
-        ax[i].plot(T, np.asarray(ACC).T[0], label="q1 ddot", color="blue")
-        ax[i].plot(T, np.asarray(ACC).T[1], label="q2 ddot", color="red")
+        ax[i].plot(T[:len(ACC)], np.asarray(ACC).T[0], label="q1 ddot", color="blue")
+        ax[i].plot(T[:len(ACC)], np.asarray(ACC).T[1], label="q2 ddot", color="red")
         if not (ACC_des is None):
-            ax[i].plot(T_des, np.asarray(ACC_des).T[0],
+            ax[i].plot(T_des[:len(ACC_des)], np.asarray(ACC_des).T[0],
                     ls="--", label="q1 ddot desired", color="lightblue")
-            ax[i].plot(T_des, np.asarray(ACC_des).T[1],
+            ax[i].plot(T_des[:len(ACC_des)], np.asarray(ACC_des).T[1],
                     ls="--", label="q2 ddot desired", color="orange")
         for line in acc_x_lines:
             ax[i].plot([line, line], [np.min(X.T[2:]), np.max(X.T[2:])],
@@ -133,7 +133,7 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         ax[i].legend(loc="best")
     if plot_energy:
         i += 1
-        ax[i].plot(T, np.asarray(energy), label="energy")
+        ax[i].plot(T[:len(energy)], np.asarray(energy), label="energy")
         for line in energy_x_lines:
             ax[i].plot([line, line], [np.min(energy), np.max(energy)],
                        ls="--", color="gray")

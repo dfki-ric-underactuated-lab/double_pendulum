@@ -122,8 +122,13 @@ class Simulator:
         elif self.meas_noise_vfilter == "kalman":
             dof = self.plant.dof
 
+            A, B = self.plant.linear_matrices(
+                    self.meas_noise_vfilter_args["kalman"]["x_lin"],
+                    self.meas_noise_vfilter_args["kalman"]["u_lin"])
+
             self.filter = kalman_filter_rt(
-                    plant=self.plant,
+                    A=A,
+                    B=B,
                     dim_x=2*dof,
                     dim_u=self.plant.n_actuators,
                     x0=x0,
@@ -271,8 +276,7 @@ class Simulator:
         self.record_data(t0, np.copy(x0), None)
         self.meas_x_values.append(np.copy(x0))
 
-        if not self.filter is None:
-            self.init_filter(x0, dt, integrator)
+        self.init_filter(x0, dt, integrator)
 
         while (self.t <= tf):
             _ = self.controller_step(dt, controller, integrator)
@@ -315,8 +319,7 @@ class Simulator:
         integrator = self.par_dict["integrator"]
         # imperfections = self.par_dict["imperfections"]
         # if imperfections:
-        if not self.filter is None:
-            self.init_filter(x0, dt, integrator)
+        self.init_filter(x0, dt, integrator)
 
         return self.animation_plots + self.tau_arrowarcs + self.tau_arrowheads
 
@@ -429,10 +432,10 @@ class Simulator:
         self.plot_inittraj = plot_inittraj
         self.plot_forecast = plot_forecast
         self.plot_trail = plot_trail
-        self.set_state(t0, x0)
-        self.reset_data_recorder()
-        self.record_data(t0, np.copy(x0), None)
-        self.meas_x_values.append(np.copy(x0))
+        #self.set_state(t0, x0)
+        #self.reset_data_recorder()
+        #self.record_data(t0, np.copy(x0), None)
+        #self.meas_x_values.append(np.copy(x0))
 
         fig = plt.figure(figsize=(20, 20))
         self.animation_ax = plt.axes()
