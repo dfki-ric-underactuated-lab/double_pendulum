@@ -81,7 +81,7 @@ R = np.array([[sCu[0], 0.],
 # benchmark parameters
 N_var = 3
 
-compute_model_robustness = True
+compute_model_robustness = False
 mpar_vars = ["Ir",
              "m1r1", "I1", "b1", "cf1",
              "m2r2", "m2", "I2", "b2", "cf2"]
@@ -112,7 +112,7 @@ compute_noise_robustness = True
 meas_noise_mode = "vel"
 meas_noise_sigma_list = np.linspace(0.0, 0.5, N_var)
 meas_noise_cut = 0.0
-meas_noise_vfilters = ["None", "lowpass", "kalman"]
+meas_noise_vfilters = ["None", "lowpass"]
 meas_noise_vfilter_args = {"alpha": [1., 1., 0.3, 0.3]}
 
 compute_unoise_robustness = True

@@ -57,14 +57,14 @@ lowpass = lowpass_filter_rt(
         alpha=[1., 1., 0.3, 0.3],
         x0=X[0])
 
-kalman = kalman_filter_rt(
-        plant=plant,
-        dim_x=4,
-        dim_u=2,
-        x0=X[0],
-        dt=dt,
-        process_noise=process_noise,
-        measurement_noise=measurement_noise)
+# kalman = kalman_filter_rt(
+#         # plant=plant,
+#         dim_x=4,
+#         dim_u=2,
+#         x0=X[0],
+#         dt=dt,
+#         process_noise=process_noise,
+#         measurement_noise=measurement_noise)
 
 unscented_kalman = unscented_kalman_filter_rt(
         dim_x=4,
@@ -79,11 +79,11 @@ X_kalman = [X_meas[0]]
 X_ukalman = [X_meas[0]]
 for i in range(1, len(X)):
     X_lowpass.append(lowpass(X_meas[i], U[i-1]))
-    X_kalman.append(kalman(X_meas[i], U[i-1]))
+    # X_kalman.append(kalman(X_meas[i], U[i-1]))
     X_ukalman.append(unscented_kalman(X_meas[i], U[i-1]))
 
 X_lowpass = np.asarray(X_lowpass)
-X_kalman = np.asarray(X_kalman)
+#X_kalman = np.asarray(X_kalman)
 X_ukalman = np.asarray(X_ukalman)
 
 fig, ax = plt.subplots(4, 1,
@@ -94,7 +94,7 @@ for i in range(4):
     ax[i].plot(T, X.T[i], label="true data", color="blue", alpha=1.0)
     ax[i].plot(T, X_meas.T[i], label="measured data", color="lightblue")
     ax[i].plot(T, X_lowpass.T[i], label="lowpass filter", color="red", lw=0.5)
-    ax[i].plot(T, X_kalman.T[i], label="kalman filter", color="orange", lw=0.5)
+    #ax[i].plot(T, X_kalman.T[i], label="kalman filter", color="orange", lw=0.5)
     ax[i].plot(T, X_ukalman.T[i], label="unscented kalman filter", color="brown", lw=0.5)
     ax[i].legend(loc="best")
 

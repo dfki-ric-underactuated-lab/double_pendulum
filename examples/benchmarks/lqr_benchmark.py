@@ -36,6 +36,10 @@ dt = 0.005
 t_final = 4.985
 integrator = "runge_kutta"
 
+# swingup parameters
+start = [np.pi+0.05, -0.2, 0.0, 0.0]
+goal = [np.pi, 0., 0., 0.]
+
 # controller parameters
 
 # acrobot good par
@@ -77,22 +81,20 @@ compute_noise_robustness = True
 meas_noise_mode = "vel"
 meas_noise_sigma_list = np.linspace(0.0, 0.5, N_var)
 meas_noise_cut = 0.0
-meas_noise_vfilters = ["None", "lowpass", "kalman"]
-meas_noise_vfilter_args = {"alpha": [1., 1., 0.3, 0.3]}
+meas_noise_vfilters = ["None", "lowpass"]
+meas_noise_vfilter_args = {
+        "alpha": [1., 1., 0.3, 0.3],
+        "kalman": {"x_lin": goal, "u_lin": [0., 0.]}}
 
-compute_unoise_robustness = True
+compute_unoise_robustness = False
 u_noise_sigma_list = np.linspace(0.0, 2.0, N_var)
 
-compute_uresponsiveness_robustness = True
+compute_uresponsiveness_robustness = False
 u_responses = np.linspace(1.0, 2.0, N_var)
 
-compute_delay_robustness = True
+compute_delay_robustness = False
 delay_mode = "vel"
 delays = np.linspace(0.0, (N_var-1)*dt, N_var)
-
-# swingup parameters
-start = [np.pi+0.05, -0.2, 0.0, 0.0]
-goal = [np.pi, 0., 0., 0.]
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
