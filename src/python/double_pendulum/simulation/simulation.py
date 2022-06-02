@@ -389,8 +389,9 @@ class Simulator:
                     self.plant.forward_kinematics(x[:self.plant.dof])[-1])
 
             coords = np.asarray(coords)
-            self.animation_plots[ani_plot_counter].set_data(coords.T[0],
-                                                            coords.T[1])
+            if len(coords) > 1:
+                self.animation_plots[ani_plot_counter].set_data(coords.T[0],
+                                                                coords.T[1])
             ani_plot_counter += 1
 
         if self.plot_forecast:
@@ -401,8 +402,9 @@ class Simulator:
                     self.plant.forward_kinematics(x[:self.plant.dof])[-1])
 
             coords = np.asarray(coords)
-            self.animation_plots[ani_plot_counter].set_data(coords.T[0],
-                                                            coords.T[1])
+            if len(coords) > 1:
+                self.animation_plots[ani_plot_counter].set_data(coords.T[0],
+                                                                coords.T[1])
             ani_plot_counter += 1
 
         t = float(self.animation_plots[ani_plot_counter].get_text()[4:])

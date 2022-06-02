@@ -4,7 +4,7 @@ import pandas as pd
 from double_pendulum.controller.abstract_controller import AbstractController
 
 
-class PIDController(AbstractController):
+class TrajPIDController(AbstractController):
     def __init__(self,
                  csv_path,
                  read_with="pandas",

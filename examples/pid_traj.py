@@ -3,7 +3,7 @@ import pandas as pd
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.simulation.simulation import Simulator
-from double_pendulum.controller.trajectory_following.pid_controller import PIDController
+from double_pendulum.controller.pid.trajectory_pid_controller import TrajPIDController
 from double_pendulum.utils.plotting import plot_timeseries
 
 # model parameters
@@ -35,7 +35,7 @@ x0 = [pos1_traj[0], pos2_traj[0],
 integrator = "runge_kutta"
 
 # controller parameters
-Kp = 35.
+Kp = 10.
 Ki = 0.
 Kd = 0.1
 
@@ -50,10 +50,10 @@ plant = SymbolicDoublePendulum(mass=mass,
 
 sim = Simulator(plant=plant)
 
-controller = PIDController(csv_path=excitation_traj_csv,
-                           read_with=read_with,
-                           use_feed_forward_torque=False,
-                           torque_limit=torque_limit)
+controller = TrajPIDController(csv_path=excitation_traj_csv,
+                               read_with=read_with,
+                               use_feed_forward_torque=False,
+                               torque_limit=torque_limit)
 
 controller.set_parameters(Kp=Kp, Ki=Ki, Kd=Kd)
 controller.init()

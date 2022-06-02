@@ -5,7 +5,7 @@ import pandas as pd
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.controller.trajectory_following.trajectory_controller import TrajectoryController
-from double_pendulum.controller.trajectory_following.pid_controller import PIDController
+from double_pendulum.controller.pid.trajectory_pid_controller import TrajPIDController
 from double_pendulum.utils.plotting import plot_timeseries
 
 
@@ -87,7 +87,7 @@ sim = Simulator(plant=plant)
 # controller = TrajectoryController(csv_path=csv_path,
 #                                   torque_limit=torque_limit,
 #                                   kK_stabilization=True)
-controller = PIDController(csv_path=csv_path,
+controller = TrajPIDController(csv_path=csv_path,
                            read_with=read_with,
                            use_feed_forward_torque=use_feed_forward_torque,
                            torque_limit=torque_limit)
