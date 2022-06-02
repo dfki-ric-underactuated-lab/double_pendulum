@@ -1,48 +1,47 @@
 import numpy as np
-import pandas as pd
 
 from double_pendulum.controller.abstract_controller import AbstractController
+from double_pendulum.utils.pcw_polynomial import FitPiecewisePolynomial, InterpolateVector
+from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties
 
 
 class TrajPIDController(AbstractController):
     def __init__(self,
                  csv_path,
                  read_with="pandas",
+                 keys="",
                  use_feed_forward_torque=True,
-                 torque_limit=[0.0, 1.0]):
+                 torque_limit=[0.0, 1.0],
+                 num_break=40):
 
         self.use_ff = use_feed_forward_torque
         self.torque_limit = torque_limit
 
-        if read_with == "pandas":
-            self.data = pd.read_csv(csv_path)
+        # load trajectory
+        self.T, self.X, self.U = load_trajectory(
+                csv_path=csv_path,
+                read_with=read_with,
+                with_tau=self.use_ff,
+                keys=keys)
 
-            self.time_traj = np.asarray(self.data["time"])
-            self.pos1_traj = np.asarray(self.data["shoulder_pos"])
-            self.pos2_traj = np.asarray(self.data["elbow_pos"])
-            self.vel1_traj = np.asarray(self.data["shoulder_vel"])
-            self.vel2_traj = np.asarray(self.data["elbow_vel"])
-            if self.use_ff:
-                self.tau1_traj = np.asarray(self.data["shoulder_torque"])
-                self.tau2_traj = np.asarray(self.data["elbow_torque"])
+        self.dt, self.max_t, _, _ = trajectory_properties(self.T, self.X)
 
-        elif read_with == "numpy":
-            self.data = np.loadtxt(csv_path, skiprows=1, delimiter=",")
+        # interpolate trajectory
+        self.P_interp = InterpolateVector(
+                T=self.T,
+                X=self.X.T[:2].T,
+                num_break=num_break,
+                poly_degree=3)
 
-            self.time_traj = self.data[:, 0]
-            self.pos1_traj = self.data[:, 1]
-            self.pos2_traj = self.data[:, 2]
-            self.vel1_traj = self.data[:, 3]
-            self.vel1_traj = self.data[:, 4]
-            if self.use_ff:
-                self.tau1_traj = self.data[:, 5]
-                self.tau2_traj = self.data[:, 6]
-
-        self.dt = self.time_traj[1] - self.time_traj[0]
-        self.max_t = self.time_traj[-1]
+        if self.use_ff:
+            self.U_interp = InterpolateVector(
+                    T=self.T,
+                    X=self.U,
+                    num_break=num_break,
+                    poly_degree=3)
 
         # default weights
-        self.Kp = 1.0
+        self.Kp = 10.0
         self.Ki = 0.0
         self.Kd = 0.1
 
@@ -60,10 +59,11 @@ class TrajPIDController(AbstractController):
         self.errors2 = []
 
     def get_control_output(self, x, t):
-        n = int(np.around(min(t, self.max_t) / self.dt))
+        tt = min(t, self.max_t)
 
-        e1 = self.pos1_traj[n] - x[0]
-        e2 = self.pos2_traj[n] - x[1]
+        p = self.P_interp.get_value(tt)
+        e1 = p[0] - x[0]
+        e2 = p[1] - x[1]
         e1 = (e1 + np.pi) % (2*np.pi) - np.pi
         e2 = (e2 + np.pi) % (2*np.pi) - np.pi
         self.errors1.append(e1)
@@ -74,6 +74,7 @@ class TrajPIDController(AbstractController):
 
         I1 = self.Ki*np.sum(np.asarray(self.errors1))*self.dt
         I2 = self.Ki*np.sum(np.asarray(self.errors2))*self.dt
+
         if len(self.errors1) > 2:
             D1 = self.Kd*(self.errors1[-1]-self.errors1[-2]) / self.dt
             D2 = self.Kd*(self.errors2[-1]-self.errors2[-2]) / self.dt
@@ -82,8 +83,9 @@ class TrajPIDController(AbstractController):
             D2 = 0.0
 
         if self.use_ff:
-            u1 = self.tau1_traj[n] + P1 + I1 + D1
-            u2 = self.tau2_traj[n] + P2 + I2 + D2
+            uu = self.U_interp.get_value(tt)
+            u1 = uu[0] + P1 + I1 + D1
+            u2 = uu[1] + P2 + I2 + D2
         else:
             u1 = P1 + I1 + D1
             u2 = P2 + I2 + D2
@@ -94,11 +96,4 @@ class TrajPIDController(AbstractController):
         return u
 
     def get_init_trajectory(self):
-        T = self.time_traj.T
-        X = np.asarray([self.pos1_traj, self.pos2_traj,
-                        self.vel1_traj, self.vel2_traj]).T
-        if self.use_ff:
-            U = np.asarray([self.tau1_traj, self.tau2_traj]).T
-        else:
-            U = np.asarray([np.zeros_like(T), np.zeros_like(T)])
-        return T, X, U
+        return self.T, self.X, self.U

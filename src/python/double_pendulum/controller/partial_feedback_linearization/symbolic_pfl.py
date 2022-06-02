@@ -16,11 +16,31 @@ class SymbolicPFLController(AbstractController):
                  coulomb_fric=[0.0, 0.0],
                  inertia=[None, None],
                  torque_limit=[np.inf, np.inf],
+                 model_pars=None,
                  robot="acrobot",
                  pfl_method="collocated",
                  reference="energy"):
 
+        self.mass = mass
+        self.length = length
+        self.com = com
+        self.damping = damping
+        self.coulomb_fric = coulomb_fric
+        self.gravity = gravity
+        self.inertia = inertia
         self.torque_limit = torque_limit
+
+        if model_pars is not None:
+            self.mass = model_pars.m
+            self.length = model_pars.l
+            self.com = model_pars.r
+            self.damping = model_pars.b
+            self.coulomb_fric = model_pars.cf
+            self.gravity = model_pars.g
+            self.inertia = model_pars.I
+            # self.Ir = model_pars.Ir
+            # self.gr = model_pars.gr
+            self.torque_limit = model_pars.tl
 
         if robot == "acrobot":
             self.active_motor_ind = 1
@@ -41,14 +61,14 @@ class SymbolicPFLController(AbstractController):
                 self.eliminate_ind = 0
                 self.desired_ind = 1
 
-        self.plant = SymbolicDoublePendulum(mass=mass,
-                                            length=length,
-                                            com=com,
-                                            damping=damping,
-                                            gravity=gravity,
-                                            coulomb_fric=coulomb_fric,
-                                            inertia=inertia,
-                                            torque_limit=torque_limit)
+        self.plant = SymbolicDoublePendulum(mass=self.mass,
+                                            length=self.length,
+                                            com=self.com,
+                                            damping=self.damping,
+                                            gravity=self.gravity,
+                                            coulomb_fric=self.coulomb_fric,
+                                            inertia=self.inertia,
+                                            torque_limit=self.torque_limit)
 
         M11, M12, M21, M22 = smp.symbols("M11 M12 M21 M22")
         C11, C12, C21, C22 = smp.symbols("C11 C12 C21 C22")
@@ -187,31 +207,53 @@ class SymbolicPFLAndLQRController(AbstractController):
                  coulomb_fric=[0.0, 0.0],
                  inertia=[None, None],
                  torque_limit=[np.inf, np.inf],
+                 model_pars=None,
                  robot="acrobot",
                  pfl_method="collocated",
                  reference="energy"):
 
+        self.mass = mass
+        self.length = length
+        self.com = com
+        self.damping = damping
+        self.coulomb_fric = coulomb_fric
+        self.gravity = gravity
+        self.inertia = inertia
+        self.torque_limit = torque_limit
+
+        if model_pars is not None:
+            self.mass = model_pars.m
+            self.length = model_pars.l
+            self.com = model_pars.r
+            self.damping = model_pars.b
+            self.coulomb_fric = model_pars.cf
+            self.gravity = model_pars.g
+            self.inertia = model_pars.I
+            # self.Ir = model_pars.Ir
+            # self.gr = model_pars.gr
+            self.torque_limit = model_pars.tl
+
         self.en_controller = SymbolicPFLController(
-            mass=mass,
-            length=length,
-            com=com,
-            damping=damping,
-            gravity=gravity,
-            coulomb_fric=coulomb_fric,
-            inertia=inertia,
-            torque_limit=torque_limit,
+            mass=self.mass,
+            length=self.length,
+            com=self.com,
+            damping=self.damping,
+            gravity=self.gravity,
+            coulomb_fric=self.coulomb_fric,
+            inertia=self.inertia,
+            torque_limit=self.torque_limit,
             robot=robot,
             pfl_method=pfl_method,
             reference=reference)
 
-        self.lqr_controller = LQRController(mass=mass,
-                                            length=length,
-                                            com=com,
-                                            damping=damping,
-                                            gravity=gravity,
-                                            coulomb_fric=coulomb_fric,
-                                            inertia=inertia,
-                                            torque_limit=torque_limit)
+        self.lqr_controller = LQRController(mass=self.mass,
+                                            length=self.length,
+                                            com=self.com,
+                                            damping=self.damping,
+                                            gravity=self.gravity,
+                                            coulomb_fric=self.coulomb_fric,
+                                            inertia=self.inertia,
+                                            torque_limit=self.torque_limit)
 
         self.active_controller = "energy"
         self.en = []

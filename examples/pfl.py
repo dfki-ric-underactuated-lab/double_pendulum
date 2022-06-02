@@ -5,6 +5,7 @@ import yaml
 import numpy as np
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
+from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory
@@ -15,23 +16,28 @@ from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl impo
 robot = "acrobot"
 with_cfric = False
 
-mass = [0.608, 0.5]
-length = [0.3, 0.4]
-com = [length[0], length[1]]
+motor_inertia = 0.
 #damping = [0.081, 0.0]
 damping = [0.0, 0.0]
-if with_cfric:
-    cfric = [0.093, 0.186]
-else:
+if not with_cfric:
     cfric = [0.0, 0.0]
 gravity = 9.81
-inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
 if robot == "acrobot":
     torque_limit = [0.0, 5.0]
     active_act = 1
 if robot == "pendubot":
     torque_limit = [5.0, 0.0]
     active_act = 0
+
+# model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+mpar = model_parameters()
+mpar.load_yaml(model_par_path)
+mpar.set_motor_inertia(motor_inertia)
+# mpar.set_damping(damping)
+if not with_cfric:
+    mpar.set_cfric(cfric)
+mpar.set_torque_limit(torque_limit)
 
 # simulation parameters
 integrator = "runge_kutta"
@@ -50,7 +56,8 @@ if robot == "acrobot":
     R = np.diag((0.11, 0.11))
     if pfl_method == "collocated":
         if with_cfric:
-            par = [9.94271982, 1.56306923, 3.27636175]  # ok
+            #par = [9.94271982, 1.56306923, 3.27636175]  # ok
+            par = [6.97474837, 9.84031538, 9.1297417]  # v1.0
         else:
             #par = [9.98906556, 5.40486824, 7.28776292]  # similar to the one below
             par = [7.5, 4.4, 7.3]  # best
@@ -81,26 +88,12 @@ else:
     sys.exit()
 
 
-double_pendulum = SymbolicDoublePendulum(mass=mass,
-                                         length=length,
-                                         com=com,
-                                         damping=damping,
-                                         gravity=gravity,
-                                         coulomb_fric=cfric,
-                                         inertia=inertia,
-                                         torque_limit=torque_limit)
+plant = SymbolicDoublePendulum(model_pars=mpar)
 
 if with_lqr:
-    controller = SymbolicPFLAndLQRController(mass,
-                                             length,
-                                             com,
-                                             damping,
-                                             gravity,
-                                             cfric,
-                                             inertia,
-                                             torque_limit,
-                                             robot,
-                                             pfl_method)
+    controller = SymbolicPFLAndLQRController(model_pars=mpar,
+                                             robot=robot,
+                                             pfl_method=pfl_method)
     controller.lqr_controller.set_cost_parameters(p1p1_cost=Q[0, 0],
                                                   p2p2_cost=Q[1, 1],
                                                   v1v1_cost=Q[2, 2],
@@ -113,18 +106,11 @@ if with_lqr:
                                                   u2u2_cost=R[1, 1],
                                                   u1u2_cost=0.)
 else:  # without lqr
-    controller = SymbolicPFLController(mass,
-                                       length,
-                                       com,
-                                       damping,
-                                       gravity,
-                                       cfric,
-                                       inertia,
-                                       torque_limit,
-                                       robot,
-                                       pfl_method)
+    controller = SymbolicPFLController(model_par=mpar,
+                                       robot=robot,
+                                       pfl_method=pfl_method)
 
-sim = Simulator(plant=double_pendulum)
+sim = Simulator(plant=plant)
 
 controller.set_goal(goal)
 controller.set_cost_parameters_(par)
@@ -156,7 +142,7 @@ timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
 save_dir = os.path.join("data", robot, "pfl", pfl_method, timestamp)
 os.makedirs(save_dir)
 
-save_trajectory(filename=os.path.join(save_dir, "trajectory.csv"),
+save_trajectory(csv_path=os.path.join(save_dir, "trajectory.csv"),
                 T=T,
                 X=X,
                 U=U)
@@ -168,21 +154,9 @@ plot_timeseries(T=T, X=X, U=U, energy=energy,
                 energy_y_lines=[des_energy],
                 save_to=os.path.join(save_dir, "time_series"))
 
-par_dict = {"mass1": mass[0],
-            "mass2": mass[1],
-            "length1": length[0],
-            "length2": length[1],
-            "com1": com[0],
-            "com2": com[1],
-            "inertia1": inertia[0],
-            "inertia2": inertia[1],
-            "damping1": damping[0],
-            "damping2": damping[1],
-            "coulomb_friction1": cfric[0],
-            "coulomb_friction2": cfric[1],
-            "gravity": gravity,
-            "torque_limit1": torque_limit[0],
-            "torque_limit2": torque_limit[1],
+mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
+
+par_dict = {
             "dt": dt,
             "t_final": t_final,
             "integrator": integrator,

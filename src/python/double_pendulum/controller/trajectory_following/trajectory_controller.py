@@ -1,51 +1,40 @@
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
+from double_pendulum.utils.pcw_polynomial import FitPiecewisePolynomial, InterpolateVector
+from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties, load_Kk_values
 
 
 class TrajectoryController(AbstractController):
     def __init__(self,
                  csv_path,
+                 read_with,
+                 keys="",
                  torque_limit=[0.0, 1.0],
                  kK_stabilization=False):
 
-        self.trajectory = np.loadtxt(csv_path, skiprows=1, delimiter=",")
-        self.dt = self.trajectory[1][0] - self.trajectory[0][0]
-        self.max_t = self.trajectory[-1][0]
         self.torque_limit = torque_limit
-
         self.kK_stabilization = kK_stabilization
+
+        self.T, self.X, self.U = load_trajectory(csv_path, read_with, with_tau=True, keys=keys)
+        self.dt, self.max_t, _, _ = trajectory_properties(self.T, self.X)
         if self.kK_stabilization:
-            if len(self.trajectory[0]) < 16:
-                self.kK_stabilization = False
-                print("Disabling kK_stabilization. No k/K terms found in csv file")
+            self.K1, self.K2, self.k1, self.k2 = load_Kk_values(csv_path, read_with, keys=keys)
 
     def get_control_output(self, x, t):
         n = int(np.around(min(t, self.max_t) / self.dt))
 
-        u1 = self.trajectory[n][5]
-        u2 = self.trajectory[n][6]
+        u1 = self.U[n][0]
+        u2 = self.U[n][1]
 
         if self.kK_stabilization:
-            x1_des = self.trajectory[n][1]
-            x2_des = self.trajectory[n][2]
-            x3_des = self.trajectory[n][3]
-            x4_des = self.trajectory[n][4]
-            x_des = np.asarray([x1_des, x2_des, x3_des, x4_des])
+            x_des = self.X[n]
 
-            K11 = self.trajectory[n][7]
-            K12 = self.trajectory[n][8]
-            K13 = self.trajectory[n][9]
-            K14 = self.trajectory[n][10]
-            K21 = self.trajectory[n][11]
-            K22 = self.trajectory[n][12]
-            K23 = self.trajectory[n][13]
-            K24 = self.trajectory[n][14]
-            K1 = np.asarray([K11, K12, K13, K14])
-            K2 = np.asarray([K21, K22, K23, K24])
+            K1 = self.K1[n]
+            K2 = self.K2[n]
 
-            # k1 = self.trajectory[n][15]
-            # k2 = self.trajectory[n][16]
+            # k1 = self.k1[n]
+            # k2 = self.k2[n]
             k1 = 0.0
             k2 = 0.0
 
@@ -58,15 +47,81 @@ class TrajectoryController(AbstractController):
         return u
 
     def get_init_trajectory(self):
-        u1_traj = self.trajectory.T[5]
-        u2_traj = self.trajectory.T[6]
-        p1_traj = self.trajectory.T[1]
-        p2_traj = self.trajectory.T[2]
-        v1_traj = self.trajectory.T[3]
-        v2_traj = self.trajectory.T[4]
+        return self.T, self.X, self.U
 
-        T = self.trajectory.T[0]
-        X = np.asarray([p1_traj, p2_traj, v1_traj, v2_traj]).T
-        U = np.asarray([u1_traj, u2_traj]).T
 
-        return T, X, U
+class TrajectoryInterpController(AbstractController):
+    def __init__(self,
+                 csv_path,
+                 read_with="numpy",
+                 keys="",
+                 torque_limit=[0.0, 1.0],
+                 kK_stabilization=False,
+                 num_break=40):
+
+        self.torque_limit = torque_limit
+        self.kK_stabilization = kK_stabilization
+
+        self.T, self.X, self.U = load_trajectory(csv_path, read_with, with_tau=True, keys=keys)
+        self.dt, self.max_t, _, _ = trajectory_properties(self.T, self.X)
+        if self.kK_stabilization:
+            self.K1, self.K2, self.k1, self.k2 = load_Kk_values(csv_path, read_with, keys=keys)
+
+        self.U_interp = InterpolateVector(
+                T=self.T,
+                X=self.U,
+                num_break=num_break,
+                poly_degree=3)
+
+        if self.kK_stabilization:
+            self.X_interp = InterpolateVector(
+                    T=self.T,
+                    X=self.X,
+                    num_break=num_break,
+                    poly_degree=3)
+            self.K1_interp = InterpolateVector(
+                    T=self.T,
+                    X=self.K1,
+                    num_break=num_break,
+                    poly_degree=3)
+            self.K2_interp = InterpolateVector(
+                    T=self.T,
+                    X=self.K2,
+                    num_break=num_break,
+                    poly_degree=3)
+            k = np.swapaxes([self.k1, self.k2], 0, 1)
+            self.k_interp = InterpolateVector(
+                    T=self.T,
+                    X=k,
+                    num_break=num_break,
+                    poly_degree=3)
+
+    def get_control_output(self, x, t):
+        tt = min(t, self.max_t)
+
+        uu = self.U_interp.get_value(tt)
+        u1 = uu[0]
+        u2 = uu[1]
+
+        if self.kK_stabilization:
+            x_des = self.X_interp.get_value(tt)
+
+            K1 = self.K1_interp.get_value(tt)
+            K2 = self.K2_interp.get_value(tt)
+
+            # k = self.k_interp.get_value(tt)
+            # k1 = k[0]
+            # k2 = k[1]
+            k1 = 0.0
+            k2 = 0.0
+
+            u1 = u1 + k1 - np.dot(K1, x_des - x)
+            u2 = u2 + k2 - np.dot(K2, x_des - x)
+        u1 = np.clip(u1, -self.torque_limit[0], self.torque_limit[0])
+        u2 = np.clip(u2, -self.torque_limit[1], self.torque_limit[1])
+
+        u = np.asarray([u1, u2])
+        return u
+
+    def get_init_trajectory(self):
+        return self.T, self.X, self.U

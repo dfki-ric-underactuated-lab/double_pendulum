@@ -52,15 +52,17 @@ sim = Simulator(plant=plant)
 
 controller = TrajPIDController(csv_path=excitation_traj_csv,
                                read_with=read_with,
+                               keys="shoulder-elbow",
                                use_feed_forward_torque=False,
-                               torque_limit=torque_limit)
+                               torque_limit=torque_limit,
+                               num_break=250)
 
 controller.set_parameters(Kp=Kp, Ki=Ki, Kd=Kd)
 controller.init()
 
 # T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
 #                                    tf=t_final, dt=dt, controller=controller,
-#                                    integrator=integrator, phase_plot=False,
+#                                    integrator=integrator, plot_inittraj=True,
 #                                    save_video=False)
 
 T, X, U = sim.simulate(t0=0.0, x0=x0,

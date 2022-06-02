@@ -59,3 +59,37 @@ def load_trajectory(csv_path, read_with="numpy",
     else:
         U = np.asarray([np.zeros_like(T), np.zeros_like(T)])
     return T, X, U
+
+def trajectory_properties(T, X):
+
+    dt = T[1] - T[0]
+    t_final = T[-1]
+
+    x0 = X[0]
+    xf = X[-1]
+    return dt, t_final, x0, xf
+
+
+def load_Kk_values(csv_path, read_with, keys=""):
+    if read_with == "pandas":
+        print("loading of kK values with pandas not yet implemented")
+    elif read_with == "numpy":
+        data = np.loadtxt(csv_path, skiprows=1, delimiter=",")
+
+        K11 = data[:, 7]
+        K12 = data[:, 8]
+        K13 = data[:, 9]
+        K14 = data[:, 10]
+        K21 = data[:, 11]
+        K22 = data[:, 12]
+        K23 = data[:, 13]
+        K24 = data[:, 14]
+        K1 = np.asarray([K11, K12, K13, K14])
+        K2 = np.asarray([K21, K22, K23, K24])
+        K1 = np.swapaxes(K1, 0, 1)
+        K2 = np.swapaxes(K2, 0, 1)
+
+        k1 = data[:, 15]
+        k2 = data[:, 16]
+
+    return K1, K2, k1, k2

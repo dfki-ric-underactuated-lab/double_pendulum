@@ -5,6 +5,8 @@ from double_pendulum.controller.lqr.lqr import lqr
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.utils.csv_trajectory import load_trajectory
 from double_pendulum.utils.wrap_angles import wrap_angles_diff
+from double_pendulum.utils.pcw_polynomial import FitPiecewisePolynomial, InterpolateVector, InterpolateMatrix
+
 
 class TVLQRController(AbstractController):
     def __init__(self,
@@ -19,7 +21,8 @@ class TVLQRController(AbstractController):
                  model_pars=None,
                  csv_path="",
                  read_with="pandas",
-                 keys=""
+                 keys="",
+                 num_break=40
                  ):
 
         # model parameters
@@ -54,7 +57,9 @@ class TVLQRController(AbstractController):
                 inertia=self.inertia,
                 torque_limit=self.torque_limit)
 
-        # trajectory
+        self.num_break = num_break
+
+        # load trajectory
         self.T, self.X, self.U = load_trajectory(
                                     csv_path=csv_path,
                                     read_with=read_with,
@@ -62,6 +67,19 @@ class TVLQRController(AbstractController):
                                     keys=keys)
         self.max_t = self.T[-1]
         self.dt = self.T[1] - self.T[0]
+
+        # interpolate trajectory
+        self.X_interp = InterpolateVector(
+                T=self.T,
+                X=self.X,
+                num_break=num_break,
+                poly_degree=3)
+
+        self.U_interp = InterpolateVector(
+                T=self.T,
+                X=self.U,
+                num_break=num_break,
+                poly_degree=3)
 
         # default cost parameters
         self.Q = np.diag([4., 4., 0.1, 0.1])
@@ -89,19 +107,26 @@ class TVLQRController(AbstractController):
             A, B = self.splant.linear_matrices(x0=self.X[i], u0=self.U[i])
             K, S, _ = lqr(A, B, self.Q, self.R)
             self.K.append(K)
+
         A, B = self.splant.linear_matrices(x0=self.X[-1], u0=self.U[-1])
         K, S, _ = lqr(A, B, self.Qf, self.R)
         self.K.append(K)
 
+        self.K = np.asarray(self.K)
+        self.K_interp = InterpolateMatrix(
+                T=self.T,
+                X=self.K,
+                num_break=self.num_break,
+                poly_degree=3)
+
     def get_control_output(self, x, t):
-        n = int(np.around(min(t, self.max_t) / self.dt))
+        tt = min(t, self.max_t)
 
-        x_error = wrap_angles_diff(np.asarray(x) - self.X[n])
+        x_error = wrap_angles_diff(np.asarray(x) - self.X_interp.get_value(tt))
 
-        tau = self.U[n] - np.dot(self.K[n], x_error)
-        #u = np.squeeze(tau)  # does not work (why?)
-        u = [tau[0,0], tau[0,1]]
-        #print(t, x_error, self.U[n][1], self.K[n][1], u[1])
+        tau = self.U_interp.get_value(tt) - np.dot(self.K_interp.get_value(tt), x_error)
+        u = [tau[0], tau[1]]
+
         u[0] = np.clip(u[0], -self.torque_limit[0], self.torque_limit[0])
         u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
         return u
