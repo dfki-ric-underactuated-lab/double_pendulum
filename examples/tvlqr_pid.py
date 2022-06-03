@@ -15,20 +15,14 @@ from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajector
 # model parameters
 robot = "acrobot"
 
-# mass = [0.608, 0.630]
-# length = [0.3, 0.2]
-# com = [0.275, 0.166]
 # damping = [0.081, 0.0]
-# cfric = [0.093, 0.186]
 cfric = [0., 0.]
-# gravity = 9.81
-# inertia = [0.05472, 0.02522]
 motor_inertia = 0.
 torque_limit = [0.0, 6.0]
 torque_limit_pid = [6.0, 6.0]
 
-#model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+#model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -44,19 +38,19 @@ mpar_dp.set_cfric(cfric)
 mpar_dp.set_torque_limit(torque_limit_pid)
 # trajectory parameters
 ## tmotors v1.0
-# csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
-# read_with = "pandas"  # for dircol traj
-# keys = "shoulder-elbow"
+#csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
+#read_with = "pandas"  # for dircol traj
+#keys = "shoulder-elbow"
 
 ## tmotors v1.0
-# csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-# read_with = "numpy"
-# keys = ""
-
-# tmotors v2.0
-csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
 read_with = "numpy"
 keys = ""
+
+# tmotors v2.0
+#csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+#read_with = "numpy"
+#keys = ""
 
 # load reference trajectory
 T_des, X_des, U_des = load_trajectory(csv_path, read_with)
@@ -68,7 +62,7 @@ goal = [np.pi, 0., 0., 0.]
 x0 = [0.0, 0.0, 0.0, 0.0]
 
 process_noise_sigmas = [0., 0., 0., 0.]
-meas_noise_sigmas = [0., 0., 0.2, 0.2]
+meas_noise_sigmas = [0., 0., 0.0, 0.0]
 meas_noise_cut = 0.0
 meas_noise_vfilter = "none"
 meas_noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}

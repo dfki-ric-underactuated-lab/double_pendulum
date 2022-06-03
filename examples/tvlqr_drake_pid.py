@@ -16,14 +16,8 @@ from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajector
 urdf_path = "../data/urdfs/acrobot.urdf"
 robot = "acrobot"
 
-# mass = [0.608, 0.630]
-# length = [0.3, 0.2]
-# com = [0.275, 0.166]
 # damping = [0.081, 0.0]
-# cfric = [0.093, 0.186]
 cfric = [0., 0.]
-# gravity = 9.81
-# inertia = [0.05472, 0.02522]
 motor_inertia = 0.
 torque_limit = [0.0, 6.0]
 torque_limit_pid = [6.0, 6.0]
