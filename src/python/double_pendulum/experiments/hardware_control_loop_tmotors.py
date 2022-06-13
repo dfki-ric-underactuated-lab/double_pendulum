@@ -27,11 +27,15 @@ def run_experiment(controller,
                    filter_args={"alpha": 0.3,
                                 "kernel_size": 5,
                                 "filter_size": 1},
+                   tau_filter=None,
+                   tau_filter_args={"alpha": 0.5,
+                                    "kernel_size": 5,
+                                    "filter_size": 1},
                    save_dir="."):
 
     np.set_printoptions(formatter={'float': lambda x: "{0:0.4f}".format(x)})
 
-    n = int(t_final/dt)
+    n = int(t_final/dt) + 2
 
     T_des, X_des, U_des = controller.get_init_trajectory()
     if len(X_des) > 0:
@@ -78,6 +82,8 @@ def run_experiment(controller,
     elbow_fric_tau = np.zeros(n)
     shoulder_filtered_meas_vel = np.zeros(n+1)
     elbow_filtered_meas_vel = np.zeros(n+1)
+    shoulder_filtered_controller_tau = np.zeros(n+1)
+    elbow_filtered_controller_tau = np.zeros(n+1)
     # shoulder_on = np.zeros(n)
     # transmission of the motor
     # gear_ratio = 1
@@ -94,6 +100,23 @@ def run_experiment(controller,
     motor_shoulder_controller = CanMotorController(can_port, motor_shoulder_id)
     motor_elbow_controller = CanMotorController(can_port, motor_elbow_id)
 
+
+    (shoulder_pos,
+     shoulder_vel,
+     shoulder_torque) = motor_shoulder_controller.send_rad_command(
+        0.0, 0.0, 0.0, 0.0, 0.0)
+
+    (elbow_pos,
+     elbow_vel,
+     elbow_torque) = motor_elbow_controller.send_rad_command(
+        0.0, 0.0, 0.0, 0.0, 0.0)
+
+    print("Setting Shoulder Motor to Zero Position...")
+    setZeroPosition(motor_shoulder_controller, shoulder_pos, shoulder_vel, shoulder_torque)
+
+    print("Setting Elbow Motor to Zero Position...")
+    setZeroPosition(motor_elbow_controller, elbow_pos, elbow_vel, elbow_torque)
+
     (shoulder_pos,
      shoulder_vel,
      shoulder_torque) = motor_shoulder_controller.enable_motor()
@@ -103,12 +126,6 @@ def run_experiment(controller,
     elbow_pos, elbow_vel, elbow_torque = motor_elbow_controller.enable_motor()
     print("Elbow Motor Status: Pos: {}, Vel: {}, Torque: {}".format(
         elbow_pos, elbow_vel, elbow_torque))
-
-    print("Setting Shoulder Motor to Zero Position...")
-    setZeroPosition(motor_shoulder_controller, shoulder_pos, shoulder_vel, shoulder_torque)
-
-    print("Setting Elbow Motor to Zero Position...")
-    setZeroPosition(motor_elbow_controller, elbow_pos, elbow_vel, elbow_torque)
 
     if input('Do you want to proceed for real time execution?(y) ') == 'y':
 
@@ -133,6 +150,8 @@ def run_experiment(controller,
         elbow_meas_pos[0] = elbow_pos
         elbow_meas_vel[0] = elbow_vel
         elbow_filtered_meas_vel[0] = elbow_vel
+        #shoulder_filtered_meas_tau = 0
+        #elbow_filtered_meas_tau = 0
 
         print("Starting Experiment...")
         # start_time = time.time()
@@ -175,16 +194,34 @@ def run_experiment(controller,
                               elbow_filtered_vel])
 
                 # get control command from controller
-                tau_cmd = controller.get_control_output(x, t)
+                tau_cmd_raw = controller.get_control_output(x, t)
+
+                shoulder_tau_controller[index] = tau_cmd_raw[0]
+                elbow_tau_controller[index] = tau_cmd_raw[1]
+
+                if tau_filter == "lowpass":
+                    s_tau = [shoulder_filtered_controller_tau[max(0, index-1)],
+                             tau_cmd_raw[0]]
+                    e_tau = [elbow_filtered_controller_tau[max(0, index-1)],
+                             tau_cmd_raw[1]]
+                    shoulder_filtered_tau = lowpass_filter(
+                        s_tau, tau_filter_args["alpha"])[-1]
+                    elbow_filtered_tau = lowpass_filter(
+                        e_tau, tau_filter_args["alpha"])[-1]
+                else:
+                    shoulder_filtered_tau = tau_cmd_raw[0]
+                    elbow_filtered_tau = tau_cmd_raw[1]
+
+                tau_cmd = [shoulder_filtered_tau, elbow_filtered_tau]
 
                 #tau_cmd = [0.0, 0.0]
-                #tau_cmd[0] = 0.0
-                #tau_cmd[1] = 0.0
+                #tau_cmd[0] = 0.5
+                #tau_cmd[1] = 0.5
 
-                shoulder_tau_controller[index] = tau_cmd[0]
-                elbow_tau_controller[index] = tau_cmd[1]
                 shoulder_fric_tau[index] = tau_fric[0]
                 elbow_fric_tau[index] = tau_fric[1]
+                shoulder_filtered_controller_tau[index] = shoulder_filtered_tau
+                elbow_filtered_controller_tau[index] = elbow_filtered_tau
 
                 # safety command
                 tau_cmd[0] = np.clip(tau_cmd[0], -tau_limit[0], tau_limit[0])
@@ -198,12 +235,18 @@ def run_experiment(controller,
                 (shoulder_pos,
                  shoulder_vel,
                  shoulder_tau) = motor_shoulder_controller.send_rad_command(
-                    0.0, 0.0, 0.0, 0.0, -tau_cmd[0])
+                    0.0, 0.0, 0.0, 0.0, tau_cmd[0])
 
                 (elbow_pos,
                  elbow_vel,
                  elbow_tau) = motor_elbow_controller.send_rad_command(
-                    0.0, 0.0, 0.0, 0.0, -tau_cmd[1])
+                    0.0, 0.0, 0.0, 0.0, tau_cmd[1])
+
+                # cut the velocity noise
+                if np.abs(shoulder_vel) < 0.15:
+                    shoulder_vel = 0.0
+                if np.abs(elbow_vel) < 0.15:
+                    elbow_vel = 0.0
 
                 # friction compensation
                 if friction_compensation:

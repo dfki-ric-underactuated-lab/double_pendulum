@@ -230,7 +230,8 @@ class ILQRMPCCPPController(AbstractController):
         v1_traj = self.v1_init_traj
         v2_traj = self.v2_init_traj
 
-        T = np.linspace(0, self.N*self.dt, self.N)
+        n = len(p1_traj)
+        T = np.linspace(0, n*self.dt, n)
         X = np.asarray([p1_traj, p2_traj, v1_traj, v2_traj]).T
         U = np.asarray([u1_traj, u2_traj]).T
 

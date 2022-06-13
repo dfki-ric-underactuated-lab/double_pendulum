@@ -7,7 +7,7 @@ import numpy as np
 from scipy.signal import medfilt
 import matplotlib.pyplot as plt
 
-from double_pendulum.experiments.canmotorlib import CanMotorController
+#from double_pendulum.experiments.canmotorlib import CanMotorController
 from double_pendulum.experiments.experimental_utils import (yb_friction_matrix,
                                                             plot_figure,
                                                             plot_figure_single,
@@ -170,6 +170,7 @@ async def run_experiment(controller,
 
                 # get control command from controller
                 tau_cmd = controller.get_control_output(x)
+                #tau_cmd = [0., 0.]
 
                 # safety command
                 tau_cmd[0] = np.clip(tau_cmd[0], -tau_limit[0], tau_limit[0])
@@ -286,7 +287,7 @@ async def run_experiment(controller,
                       elbow_meas_vel[:index-1],
                       elbow_meas_tau[:index-1],
                       meas_time[:index-1])
-            date = plot_figure(save_dir=save_dir_time,
+            plot_figure_single(save_dir=save_dir_time,
                                date=date,
                                index=index-1,
                                meas_time=meas_time,
@@ -311,7 +312,7 @@ async def run_experiment(controller,
                                shoulder_fric_tau=shoulder_fric_tau,
                                elbow_fric_tau=elbow_fric_tau,
                                error=None)
-            plot_figure_single(save_dir=save_dir_time,
+            date = plot_figure(save_dir=save_dir_time,
                                date=date,
                                index=index-1,
                                meas_time=meas_time,

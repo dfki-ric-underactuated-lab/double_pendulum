@@ -34,15 +34,16 @@ keys = ""
 
 T, X, U = load_trajectory(csv_path, read_with, True, keys)
 dt, t_final, _, _ = trajectory_properties(T, X)
+t_final = t_final + 2.
 
 # swingup parameters
 start = [0., 0., 0., 0.]
 goal = [np.pi, 0., 0., 0.]
 
 # controller parameters
-Kp = 10.
-Ki = 0.
-Kd = 0.1
+Kp = 5.
+Ki = 1.
+Kd = 1.
 
 # switiching conditions
 def condition1(t, x):
@@ -50,20 +51,24 @@ def condition1(t, x):
 
 def condition2(t, x):
     goal = [np.pi, 0., 0., 0.]
-    eps = [0.2, 0.2, 0.8, 0.8]
+    eps = [0.2, 0.2, 2.0, 2.0]
 
     y = wrap_angles_top(x)
 
     delta = np.abs(np.subtract(y, goal))
     max_diff = np.max(np.subtract(delta, eps))
     if max_diff > 0.:
+        print(f"Stayed with TVLQR control in state x {x} at time {t}")
         return False
     else:
+        print(f"Switched to PID control in state x {x} at time {t}")
         return True
 
 controller1 = TrajectoryController(csv_path=csv_path,
-                                  torque_limit=torque_limit,
-                                  kK_stabilization=True)
+                                   read_with=read_with,
+                                   keys=keys,
+                                   torque_limit=torque_limit,
+                                   kK_stabilization=True)
 controller1.init()
 
 controller2 = PointPIDController(
@@ -91,6 +96,7 @@ run_experiment(controller=controller,
                friction_compensation=True,
                #friction_terms=[0.093, 0.081, 0.186, 0.0],
                friction_terms=[0.093, 0.005, 0.15, 0.001],
+               #friction_terms=[0.0, 0.0, 0.15, 0.001],
                velocity_filter="lowpass",
                filter_args={"alpha": 0.2,
                             "kernel_size": 5,

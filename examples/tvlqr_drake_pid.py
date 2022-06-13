@@ -24,13 +24,6 @@ torque_limit_pid = [6.0, 6.0]
 
 model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
 #model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
-mpar = model_parameters()
-mpar.load_yaml(model_par_path)
-mpar.set_motor_inertia(motor_inertia)
-# mpar.set_damping(damping)
-mpar.set_cfric(cfric)
-mpar.set_torque_limit(torque_limit)
-
 mpar_dp = model_parameters()
 mpar_dp.load_yaml(model_par_path)
 mpar_dp.set_motor_inertia(motor_inertia)
