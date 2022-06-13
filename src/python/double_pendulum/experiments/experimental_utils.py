@@ -116,9 +116,11 @@ def plot_figure(save_dir,
                 elbow_tau_controller,
                 shoulder_filtered_vel,
                 elbow_filtered_vel,
+                shoulder_des_time=None,
                 shoulder_des_pos=None,
                 shoulder_des_vel=None,
                 shoulder_des_tau=None,
+                elbow_des_time=None,
                 elbow_des_pos=None,
                 elbow_des_vel=None,
                 elbow_des_tau=None,
@@ -132,7 +134,7 @@ def plot_figure(save_dir,
     fig, ax = plt.subplots()
     plt.plot(meas_time[:index], elbow_meas_pos[:index], label='measured position')
     if not (elbow_des_pos is None):
-        plt.plot(meas_time[:index], elbow_des_pos[:index], label="desired position")
+        plt.plot(elbow_des_time, elbow_des_pos, label="desired position")
     trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
     # ax.fill_between(meas_time, 0, 1, where=shoulder_on == 1,
     #                 facecolor='green', alpha=0.5, transform=trans)
@@ -151,7 +153,7 @@ def plot_figure(save_dir,
     plt.plot(meas_time[:index], elbow_meas_vel[:index], label="measured velocity")
     plt.plot(meas_time[:index], elbow_filtered_vel[:index], label="filtered velocity")
     if not (elbow_des_vel is None):
-        plt.plot(meas_time[:index], elbow_des_vel[:index], label="desired velocity")
+        plt.plot(elbow_des_time, elbow_des_vel, label="desired velocity")
     trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
     # ax.fill_between(meas_time, 0, 1, where=shoulder_on == 1,
     #                 facecolor='green', alpha=0.5, transform=trans)
@@ -170,7 +172,7 @@ def plot_figure(save_dir,
     plt.plot(meas_time[:index], elbow_meas_tau[:index], label="total commanded torque")
     plt.plot(meas_time[:index], elbow_tau_controller[:index], label="controller torque")
     if not (elbow_des_tau is None):
-        plt.plot(meas_time[:index], elbow_des_tau[:index], label="desired torque")
+        plt.plot(elbow_des_time, elbow_des_tau, label="desired torque")
     if not (elbow_fric_tau is None):
         plt.plot(meas_time[:index], elbow_fric_tau[:index], label="friction comp. torque")
     trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
@@ -190,7 +192,7 @@ def plot_figure(save_dir,
     fig, ax = plt.subplots()
     plt.plot(meas_time[:index], shoulder_meas_pos[:index], label="measured position")
     if not (shoulder_des_pos is None):
-        plt.plot(meas_time[:index], shoulder_des_pos[:index], label="desired position")
+        plt.plot(shoulder_des_time, shoulder_des_pos, label="desired position")
     trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
     # ax.fill_between(meas_time, 0, 1, where=shoulder_on == 1,
     #                 facecolor='green', alpha=0.5, transform=trans)
@@ -209,7 +211,7 @@ def plot_figure(save_dir,
     plt.plot(meas_time[:index], shoulder_meas_vel[:index], label="measured velocity")
     plt.plot(meas_time[:index], shoulder_filtered_vel[:index], label="filtered velocity")
     if not (shoulder_des_vel is None):
-        plt.plot(meas_time[:index], shoulder_des_vel[:index], label="desired velocity")
+        plt.plot(shoulder_des_time, shoulder_des_vel, label="desired velocity")
     trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
     # ax.fill_between(meas_time, 0, 1, where=shoulder_on == 1,
     #                 facecolor='green', alpha=0.5, transform=trans)
@@ -228,7 +230,7 @@ def plot_figure(save_dir,
     plt.plot(meas_time[:index], shoulder_meas_tau[:index], label="total commanded torque")
     plt.plot(meas_time[:index], shoulder_tau_controller[:index], label="controller torque")
     if not (shoulder_des_tau is None):
-        plt.plot(meas_time[:index], shoulder_des_tau[:index], label="desired torque")
+        plt.plot(shoulder_des_time, shoulder_des_tau, label="desired torque")
     if not (shoulder_fric_tau is None):
         plt.plot(meas_time[:index], shoulder_fric_tau[:index], label="friction comp. torque")
     trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
@@ -259,9 +261,11 @@ def plot_figure_single(save_dir,
                        elbow_tau_controller,
                        shoulder_filtered_vel,
                        elbow_filtered_vel,
+                       shoulder_des_time=None,
                        shoulder_des_pos=None,
                        shoulder_des_vel=None,
                        shoulder_des_tau=None,
+                       elbow_des_time=None,
                        elbow_des_pos=None,
                        elbow_des_vel=None,
                        elbow_des_tau=None,
@@ -278,9 +282,9 @@ def plot_figure_single(save_dir,
     ax[0].plot(meas_time[:index], shoulder_meas_pos[:index], label="shoulder measured position", color="blue")
     ax[0].plot(meas_time[:index], elbow_meas_pos[:index], label='elbow measured position', color="green")
     if not (shoulder_des_pos is None):
-        ax[0].plot(meas_time[:index], shoulder_des_pos[:index], label="shoulder desired position", color="lightblue")
+        ax[0].plot(shoulder_des_time, shoulder_des_pos, label="shoulder desired position", color="lightblue")
     if not (elbow_des_pos is None):
-        ax[0].plot(meas_time[:index], elbow_des_pos[:index], label="elbow desired position", color="lightgreen")
+        ax[0].plot(elbow_des_time, elbow_des_pos, label="elbow desired position", color="lightgreen")
     ax[0].set_ylabel("Position (rad)")
     ax[0].legend()
 
@@ -290,9 +294,9 @@ def plot_figure_single(save_dir,
     ax[1].plot(meas_time[:index], elbow_meas_vel[:index], label="elbow measured velocity", color="green")
     ax[1].plot(meas_time[:index], elbow_filtered_vel[:index], label="elbow filtered velocity", color="orange")
     if not (shoulder_des_vel is None):
-        ax[1].plot(meas_time[:index], shoulder_des_vel[:index], label="shoulder desired velocity", color="lightblue")
+        ax[1].plot(shoulder_des_time, shoulder_des_vel, label="shoulder desired velocity", color="lightblue")
     if not (elbow_des_vel is None):
-        ax[1].plot(meas_time[:index], elbow_des_vel[:index], label="elbow desired velocity", color="lightgreen")
+        ax[1].plot(elbow_des_time, elbow_des_vel, label="elbow desired velocity", color="lightgreen")
     ax[1].set_ylabel("Velocity (rad)")
     ax[1].legend()
 
@@ -303,11 +307,11 @@ def plot_figure_single(save_dir,
     ax[2].plot(meas_time[:index], elbow_meas_tau[:index], label="elbow total commanded torque", color="green")
     ax[2].plot(meas_time[:index], elbow_tau_controller[:index], label="elbow controller torque", color="lime")
     if not (shoulder_des_tau is None):
-        ax[2].plot(meas_time[:index], shoulder_des_tau[:index], label="shoulder desired torque", color="lightblue")
+        ax[2].plot(shoulder_des_time, shoulder_des_tau, label="shoulder desired torque", color="lightblue")
     if not (shoulder_fric_tau is None):
         ax[2].plot(meas_time[:index], shoulder_fric_tau[:index], label="shoulder friction comp. torque", color="darkviolet")
     if not (elbow_des_tau is None):
-        ax[2].plot(meas_time[:index], elbow_des_tau[:index], label="elbow desired torque", color="lightgreen")
+        ax[2].plot(elbow_des_time, elbow_des_tau, label="elbow desired torque", color="lightgreen")
     if not (elbow_fric_tau is None):
         ax[2].plot(meas_time[:index], elbow_fric_tau[:index], label="elbow friction comp. torque", color="orange")
     ax[2].set_xlabel("Time (s)")

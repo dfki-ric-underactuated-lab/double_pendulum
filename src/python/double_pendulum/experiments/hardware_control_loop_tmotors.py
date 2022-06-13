@@ -186,13 +186,13 @@ def run_experiment(controller,
                 shoulder_fric_tau[index] = tau_fric[0]
                 elbow_fric_tau[index] = tau_fric[1]
 
-                # add friction compensation (0 if turned off)
-                tau_cmd[0] += tau_fric[0]
-                tau_cmd[1] += tau_fric[1]
-
                 # safety command
                 tau_cmd[0] = np.clip(tau_cmd[0], -tau_limit[0], tau_limit[0])
                 tau_cmd[1] = np.clip(tau_cmd[1], -tau_limit[1], tau_limit[1])
+
+                # add friction compensation (0 if turned off)
+                tau_cmd[0] += tau_fric[0]
+                tau_cmd[1] += tau_fric[1]
 
                 # Send tau command to motors
                 (shoulder_pos,
@@ -316,9 +316,11 @@ def run_experiment(controller,
                                elbow_tau_controller=elbow_tau_controller,
                                shoulder_filtered_vel=shoulder_filtered_meas_vel,
                                elbow_filtered_vel=elbow_filtered_meas_vel,
+                               shoulder_des_time=T_des,
                                shoulder_des_pos=shoulder_des_pos,
                                shoulder_des_vel=shoulder_des_vel,
                                shoulder_des_tau=shoulder_des_tau,
+                               elbow_des_time=T_des,
                                elbow_des_pos=elbow_des_pos,
                                elbow_des_vel=elbow_des_vel,
                                elbow_des_tau=elbow_des_tau,
@@ -339,9 +341,11 @@ def run_experiment(controller,
                         elbow_tau_controller=elbow_tau_controller,
                         shoulder_filtered_vel=shoulder_filtered_meas_vel,
                         elbow_filtered_vel=elbow_filtered_meas_vel,
+                        shoulder_des_time=T_des,
                         shoulder_des_pos=shoulder_des_pos,
                         shoulder_des_vel=shoulder_des_vel,
                         shoulder_des_tau=shoulder_des_tau,
+                        elbow_des_time=T_des,
                         elbow_des_pos=elbow_des_pos,
                         elbow_des_vel=elbow_des_vel,
                         elbow_des_tau=elbow_des_tau,
