@@ -113,6 +113,7 @@ controller1.set_cost_parameters(
         fCv=fCv,
         fCen=fCen)
 controller1.load_init_traj(csv_path=csv_path)
+controller1.init()
 
 controller2 = PointPIDController(
         torque_limit=torque_limit_pid,
