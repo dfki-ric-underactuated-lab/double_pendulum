@@ -31,6 +31,7 @@ private:
     int active_act = 1;
 
     double sCu1, sCu2, sCp1, sCp2, sCv1, sCv2, sCen, fCp1, fCp2, fCv1, fCv2, fCen;
+    double f_sCu1, f_sCu2, f_sCp1, f_sCp2, f_sCv1, f_sCv2, f_sCen, f_fCp1, f_fCp2, f_fCv1, f_fCv2, f_fCen;
 
     Eigen::Vector<double, ilqr::n_x> x0, goal;
 
@@ -66,6 +67,9 @@ public:
     void set_cost_parameters(double, double, double, double, double,
                              double, double, double, double, double,
                              double, double);
+    void set_final_cost_parameters(double, double, double, double, double,
+                                   double, double, double, double, double,
+                                   double, double);
 
     void set_start(Eigen::Vector<double, ilqr::n_x>);
     void set_start(double, double, double, double);

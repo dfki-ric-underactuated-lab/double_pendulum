@@ -92,6 +92,22 @@ class ILQRMPCCPPController(AbstractController):
         self.fCv = fCv
         self.fCen = fCen
 
+    def set_final_cost_parameters(self,
+                                  sCu=[0.005, 0.005],
+                                  sCp=[0., 0.],
+                                  sCv=[0., 0.],
+                                  sCen=0.,
+                                  fCp=[1000., 1000.],
+                                  fCv=[10., 10.],
+                                  fCen=0.):
+        self.f_sCu = sCu
+        self.f_sCp = sCp
+        self.f_sCv = sCv
+        self.f_sCen = sCen
+        self.f_fCp = fCp
+        self.f_fCv = fCv
+        self.f_fCen = fCen
+
     def set_cost_parameters_(self,
                              pars=[0.005,
                                    0., 0.,
@@ -202,6 +218,13 @@ class ILQRMPCCPPController(AbstractController):
                                        self.fCp[0], self.fCp[1],
                                        self.fCv[0], self.fCv[1],
                                        self.fCen)
+        self.ilmpc.set_final_cost_parameters(self.f_sCu[0], self.f_sCu[1],
+                                             self.f_sCp[0], self.f_sCp[1],
+                                             self.f_sCv[0], self.f_sCv[1],
+                                             self.f_sCen,
+                                             self.f_fCp[0], self.f_fCp[1],
+                                             self.f_fCv[0], self.f_fCv[1],
+                                             self.f_fCen)
         # self.il.set_start(x[0], x[1], x[2], x[3])
         self.ilmpc.set_u_init_traj(self.u1_init_traj, self.u2_init_traj)
         self.ilmpc.set_x_init_traj(self.p1_init_traj, self.p2_init_traj,

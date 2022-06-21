@@ -185,6 +185,41 @@ void ilqr_mpc::set_cost_parameters(double su1, double su2,
                                    fv2, fv2,
                                    fen);
 
+    // set final parameter defaults to the same values
+    f_sCu1 = su1;
+    f_sCu2 = su2;
+    f_sCp1 = sp1;
+    f_sCp2 = sp2;
+    f_sCv1 = sv1;
+    f_sCv2 = sv2;
+    f_sCen = sen;
+    f_fCp1 = fp1;
+    f_fCp2 = fp2;
+    f_fCv1 = fv1;
+    f_fCv2 = fv2;
+    f_fCen = fen;
+}
+
+
+void ilqr_mpc::set_final_cost_parameters(double su1, double su2,
+                                         double sp1, double sp2,
+                                         double sv1, double sv2,
+                                         double sen,
+                                         double fp1, double fp2,
+                                         double fv1, double fv2,
+                                         double fen){
+    f_sCu1 = su1;
+    f_sCu2 = su2;
+    f_sCp1 = sp1;
+    f_sCp2 = sp2;
+    f_sCv1 = sv1;
+    f_sCv2 = sv2;
+    f_sCen = sen;
+    f_fCp1 = fp1;
+    f_fCp2 = fp2;
+    f_fCv1 = fv1;
+    f_fCv2 = fv2;
+    f_fCen = fen;
 }
 
 
@@ -380,10 +415,22 @@ double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
     ilqr_calc->set_u_init_traj(u_traj);
     //ilqr_calc->set_x_init_traj(x_traj);
 
-    ilqr_calc->set_goal(running_goal);
-    if (trajectory_stabilization){
-        //ilqr_calc->set_goal_traj(x_init_traj, counter_cap, N_hor_cap);
-        ilqr_calc->set_goal_traj(x_init_traj, u_init_traj, counter_cap, N_hor);
+    if (counter+N < N_init-1){
+        ilqr_calc->set_goal(running_goal);
+        if (trajectory_stabilization){
+            //ilqr_calc->set_goal_traj(x_init_traj, counter_cap, N_hor_cap);
+            ilqr_calc->set_goal_traj(x_init_traj, u_init_traj, counter_cap, N_hor);
+        }
+    }
+    else{
+        ilqr_calc->set_cost_parameters(f_sCu1, f_sCu2,
+                                       f_sCp1, f_sCp2,
+                                       f_sCv1, f_sCv2,
+                                       f_sCen,
+                                       f_fCp1, f_fCp2,
+                                       f_fCv2, f_fCv2,
+                                       f_fCen);
+        ilqr_calc->set_goal(goal);
     }
     ilqr_calc->run_ilqr(max_iter, break_cost_redu, regu_init, max_regu, min_regu);
 

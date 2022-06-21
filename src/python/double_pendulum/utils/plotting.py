@@ -27,6 +27,7 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
                     U_con=None,
                     ACC_des=None,
                     save_to=None,
+                    show=True
                     ):
 
     n_subplots = np.sum([plot_pos, plot_vel, plot_tau, plot_acc, plot_energy])
@@ -145,7 +146,9 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
     ax[i].set_xlabel("time [s]")
     if not (save_to is None):
         plt.savefig(save_to, bbox_inches="tight")
-    plt.show()
+    if show:
+        plt.show()
+    plt.close()
 
 
 def plot_timeseries_csv(csv_path, read_with="pandas"):

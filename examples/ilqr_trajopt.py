@@ -43,8 +43,8 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [4.0, 0.0]
 
-#model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+#model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -313,6 +313,8 @@ plant = SymbolicDoublePendulum(model_pars=mpar)
 sim = Simulator(plant=plant)
 
 controller = TrajectoryController(csv_path=traj_file,
+                                  read_with="numpy",
+                                  keys="",
                                   torque_limit=torque_limit,
                                   kK_stabilization=True)
 

@@ -69,6 +69,13 @@ cdef extern from "../controllers/ilqr/src/ilqr_mpc.hpp":
                                  double fp1, double fp2,
                                  double fv1, double fv2,
                                  double fen)
+        void set_final_cost_parameters(double su1, double su2,
+                                       double sp1, double sp2,
+                                       double sv1, double sv2,
+                                       double sen,
+                                       double fp1, double fp2,
+                                       double fv1, double fv2,
+                                       double fen)
         void set_model_parameters(double m1, double m2,
                                   double l1, double l2,
                                   double cm1, double cm1,

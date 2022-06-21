@@ -21,7 +21,7 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [6.0, 0.0]
 
-model_par_path = "../../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -35,13 +35,13 @@ t_final = 4.985
 integrator = "runge_kutta"
 
 # controller parameters
-N = 100
+N = 20
 N_init = 1000
-max_iter = 5
+max_iter = 100
 max_iter_init = 1000
-regu_init = 100
+regu_init = 1.
 max_regu = 10000.
-min_regu = 0.01
+min_regu = 0.0001
 break_cost_redu = 1e-6
 trajectory_stabilization = True
 
@@ -56,9 +56,9 @@ trajectory_stabilization = True
 # fCv = [final_prefac*0.5243681881323512, final_prefac*0.39819013775238776]
 # fCen = 0.
 
-u_prefac = 0.1
-stage_prefac = 0.5
-final_prefac = 10.
+u_prefac = 1.
+stage_prefac = 1.
+final_prefac = 1.
 sCu = [u_prefac*9.97938814e+01, u_prefac*9.97938814e+01]
 sCp = [stage_prefac*2.06969312e+01, stage_prefac*7.69967729e+01]
 sCv = [stage_prefac*1.55726136e-01, stage_prefac*5.42226523e-00]
@@ -66,6 +66,18 @@ sCen = 0.0
 fCp = [final_prefac*3.82623819e+02, final_prefac*7.05315590e+03]
 fCv = [final_prefac*5.89790058e+01, final_prefac*9.01459500e+01]
 fCen = 0.0
+
+
+u_prefac = 1.
+stage_prefac = 1.
+final_prefac = 1.
+f_sCu = [u_prefac*9.97938814e+01, u_prefac*9.97938814e+01]
+f_sCp = [stage_prefac*2.06969312e+01, stage_prefac*7.69967729e+01]
+f_sCv = [stage_prefac*1.55726136e-01, stage_prefac*5.42226523e-00]
+f_sCen = 0.0
+f_fCp = [final_prefac*3.82623819e+02, final_prefac*7.05315590e+03]
+f_fCv = [final_prefac*5.89790058e+01, final_prefac*9.01459500e+01]
+f_fCen = 0.0
 
 Q = np.array([[sCp[0], 0., 0., 0.],
               [0., sCp[1], 0., 0.],
@@ -79,9 +91,9 @@ R = np.array([[sCu[0], 0.],
               [0., sCu[1]]])
 
 # benchmark parameters
-N_var = 3
+N_var = 21
 
-compute_model_robustness = False
+compute_model_robustness = True
 mpar_vars = ["Ir",
              "m1r1", "I1", "b1", "cf1",
              "m2r2", "m2", "I2", "b2", "cf2"]
@@ -89,12 +101,12 @@ mpar_vars = ["Ir",
 Ir_var_list = np.linspace(0., 1e-4, N_var)
 m1r1_var_list = get_par_list(mpar.m[0]*mpar.r[0], 0.75, 1.25, N_var)
 I1_var_list = get_par_list(mpar.I[0], 0.75, 1.25, N_var)
-b1_var_list = np.linspace(0., 0.01, N_var)
+b1_var_list = np.linspace(0., 0.16, N_var)
 cf1_var_list = np.linspace(0., 0.2, N_var)
 m2r2_var_list = get_par_list(mpar.m[1]*mpar.r[1], 0.75, 1.25, N_var)
 m2_var_list = get_par_list(mpar.m[1], 0.75, 1.25, N_var)
 I2_var_list = get_par_list(mpar.I[1], 0.75, 1.25, N_var)
-b2_var_list = np.linspace(0., 0.01, N_var)
+b2_var_list = np.linspace(0., 0.16, N_var)
 cf2_var_list = np.linspace(0., 0.2, N_var)
 
 modelpar_var_lists = {"Ir": Ir_var_list,
@@ -128,7 +140,7 @@ delays = np.linspace(0.0, (N_var-1)*dt, N_var)
 # init trajectory
 # latest_dir = sorted(os.listdir(os.path.join("../data", robot, "ilqr", "trajopt")))[-1]
 # init_csv_path = os.path.join("../data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
-init_csv_path = "../../data/trajectories/acrobot/ilqr/trajectory.csv"
+init_csv_path = "../../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
 read_with = "numpy"
 
 # swingup parameters
@@ -160,6 +172,13 @@ controller.set_cost_parameters(sCu=sCu,
                                fCp=fCp,
                                fCv=fCv,
                                fCen=fCen)
+controller.set_final_cost_parameters(sCu=f_sCu,
+                                     sCp=f_sCp,
+                                     sCv=f_sCv,
+                                     sCen=f_sCen,
+                                     fCp=f_fCp,
+                                     fCv=f_fCv,
+                                     fCen=f_fCen)
 controller.load_init_traj(csv_path=init_csv_path)
 
 ben = benchmarker(controller=controller,

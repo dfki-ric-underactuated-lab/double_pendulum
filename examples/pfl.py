@@ -18,7 +18,7 @@ with_cfric = False
 
 motor_inertia = 0.
 #damping = [0.081, 0.0]
-damping = [0.0, 0.0]
+#damping = [0.0, 0.0]
 if not with_cfric:
     cfric = [0.0, 0.0]
 gravity = 9.81
@@ -29,8 +29,8 @@ if robot == "pendubot":
     torque_limit = [5.0, 0.0]
     active_act = 0
 
-# model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+#model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -60,10 +60,11 @@ if robot == "acrobot":
             par = [6.97474837, 9.84031538, 9.1297417]  # v1.0
         else:
             #par = [9.98906556, 5.40486824, 7.28776292]  # similar to the one below
-            par = [7.5, 4.4, 7.3]  # best
+            #par = [7.5, 4.4, 7.3]  # best
             #par = [0.5, 0.44, 0.6]
             #par = [9.39406094, 8.45818256, 0.82061105]
             #par = [14.07071258, 4.31253548, 16.77354333] # quick start
+            par = [6.78389278, 5.66430937, 9.98022384]
     elif pfl_method == "noncollocated":
         par = [9.19534629, 2.24529733, 5.90567362]  # good
     else:
@@ -106,7 +107,7 @@ if with_lqr:
                                                   u2u2_cost=R[1, 1],
                                                   u1u2_cost=0.)
 else:  # without lqr
-    controller = SymbolicPFLController(model_par=mpar,
+    controller = SymbolicPFLController(model_pars=mpar,
                                        robot=robot,
                                        pfl_method=pfl_method)
 

@@ -247,6 +247,23 @@ cdef class cppilqrmpc:
                                        fv1, fv2,
                                        fen)
 
+
+    def set_final_cost_parameters(self,
+                                  double su1, double su2,
+                                  double sp1, double sp2,
+                                  double sv1, double sv2,
+                                  double sen,
+                                  double fp1, double fp2,
+                                  double fv1, double fv2,
+                                  double fen):
+        self.ilmpc.set_final_cost_parameters(su1, su2,
+                                             sp1, sp2,
+                                             sv1, sv2,
+                                             sen,
+                                             fp1, fp2,
+                                             fv1, fv2,
+                                             fen)
+
     def set_model_parameters(self,
                              double m1, double m2,
                              double l1, double l2,

@@ -115,8 +115,10 @@ class benchmarker():
             U = u_traj
             xf = x_traj[-1] - self.goal
         elif mode == "trajectory_following":
-            X = x_traj[:-1] - self.x_traj[:-1]
-            U = u_traj - self.u_traj
+            n = min([len(x_traj), len(self.x_traj)])
+            X = x_traj[:n] - self.x_traj[:n]
+            nu = min([len(u_traj), len(self.u_traj)])
+            U = u_traj[:nu] - self.u_traj[:nu]
             xf = x_traj[-1] - self.x_traj[-1]
 
         X_cost = np.einsum('jl, jk, lk', X.T, self.Q, X) / (len_traj-1)

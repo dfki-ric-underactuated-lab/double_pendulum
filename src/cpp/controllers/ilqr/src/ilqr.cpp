@@ -297,11 +297,11 @@ void ilqr::set_goal_traj(Eigen::Vector<double, n_x> x_tr[], Eigen::Vector<double
         }
         c += 1;
     }
-    for (int i=c; i<N; i++){
-        for (int j=0; j<n_x; j++){
-            goal_traj_x[i](j) = x_tr[to](j);
-        }
-    }
+    //for (int i=c; i<N; i++){
+    //    for (int j=0; j<n_x; j++){
+    //        goal_traj_x[i](j) = x_tr[to](j);
+    //    }
+    //}
 
     c = 0;
     for (int i=from; i<(to-1); i++){
@@ -310,11 +310,11 @@ void ilqr::set_goal_traj(Eigen::Vector<double, n_x> x_tr[], Eigen::Vector<double
         }
         c += 1;
     }
-    for (int i=c; i<N-1; i++){
-        for (int j=0; j<n_u; j++){
-            goal_traj_u[i](j) = 0.;
-        }
-    }
+    //for (int i=c; i<N-1; i++){
+    //    for (int j=0; j<n_u; j++){
+    //        goal_traj_u[i](j) = 0.;
+    //    }
+    //}
 }
 
 void ilqr::set_u_init_traj(double u1[], double u2[]){

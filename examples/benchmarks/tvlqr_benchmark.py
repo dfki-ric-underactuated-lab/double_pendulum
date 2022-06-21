@@ -55,7 +55,7 @@ Qf = np.copy(Q)
 # benchmark parameters
 N_var = 21
 
-compute_model_robustness = False
+compute_model_robustness = True
 mpar_vars = ["Ir",
              "m1r1", "I1", "b1", "cf1",
              "m2r2", "m2", "I2", "b2", "cf2"]
@@ -63,12 +63,12 @@ mpar_vars = ["Ir",
 Ir_var_list = np.linspace(0., 1e-4, N_var)
 m1r1_var_list = get_par_list(mpar.m[0]*mpar.r[0], 0.75, 1.25, N_var)
 I1_var_list = get_par_list(mpar.I[0], 0.75, 1.25, N_var)
-b1_var_list = np.linspace(0., 0.01, N_var)
+b1_var_list = np.linspace(0., 0.16, N_var)
 cf1_var_list = np.linspace(0., 0.2, N_var)
 m2r2_var_list = get_par_list(mpar.m[1]*mpar.r[1], 0.75, 1.25, N_var)
 m2_var_list = get_par_list(mpar.m[1], 0.75, 1.25, N_var)
 I2_var_list = get_par_list(mpar.I[1], 0.75, 1.25, N_var)
-b2_var_list = np.linspace(0., 0.01, N_var)
+b2_var_list = np.linspace(0., 0.16, N_var)
 cf2_var_list = np.linspace(0., 0.2, N_var)
 
 modelpar_var_lists = {"Ir": Ir_var_list,
@@ -112,7 +112,7 @@ goal = [np.pi, 0., 0., 0.]
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("../data", robot, "tvlqr", "benchmark", timestamp)
+save_dir = os.path.join("../data", robot, "tvlqr_drake", "benchmark", timestamp)
 os.makedirs(save_dir)
 
 # construct simulation objects

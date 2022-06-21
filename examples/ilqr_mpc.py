@@ -40,8 +40,8 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [6.0, 0.0]
 
-# model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+# model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -51,7 +51,7 @@ mpar.set_torque_limit(torque_limit)
 
 # simulation parameter
 dt = 0.005
-t_final = 7.0
+t_final = 6.0 #4.985
 integrator = "runge_kutta"
 
 process_noise_sigmas = [0., 0., 0., 0.]
@@ -67,9 +67,9 @@ perturbation_times = []
 perturbation_taus = []
 
 # controller parameters
-N = 100
+N = 20
 N_init = 1000
-max_iter = 5
+max_iter = 100
 max_iter_init = 1000
 regu_init = 100.
 max_regu = 10000.
@@ -83,14 +83,14 @@ goal = [np.pi, 0., 0., 0.]
 
 #latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
 #init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
-init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
-#init_csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
+init_csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
+#init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
 read_with = "numpy"
 
 if robot == "acrobot":
-    u_prefac = 0.1
-    stage_prefac = 0.5
-    final_prefac = 10.
+    u_prefac = 1.
+    stage_prefac = 1.
+    final_prefac = 1.
     sCu = [u_prefac*9.97938814e+01, u_prefac*9.97938814e+01]
     sCp = [stage_prefac*2.06969312e+01, stage_prefac*7.69967729e+01]
     sCv = [stage_prefac*1.55726136e-01, stage_prefac*5.42226523e-00]
@@ -98,6 +98,19 @@ if robot == "acrobot":
     fCp = [final_prefac*3.82623819e+02, final_prefac*7.05315590e+03]
     fCv = [final_prefac*5.89790058e+01, final_prefac*9.01459500e+01]
     fCen = 0.0
+
+    # stabilizaion cost par
+    u_prefac = 1.
+    stage_prefac = 1.
+    final_prefac = 1.
+    f_sCu = [u_prefac*9.97938814e+01, u_prefac*9.97938814e+01]
+    f_sCp = [stage_prefac*2.06969312e+01, stage_prefac*7.69967729e+01]
+    f_sCv = [stage_prefac*1.55726136e-01, stage_prefac*5.42226523e-00]
+    f_sCen = 0.0
+    f_fCp = [final_prefac*3.82623819e+02, final_prefac*7.05315590e+03]
+    f_fCv = [final_prefac*5.89790058e+01, final_prefac*9.01459500e+01]
+    f_fCen = 0.0
+
 
     # u_prefac = 1.
     # stage_prefac = 1.
@@ -176,6 +189,13 @@ controller.set_cost_parameters(sCu=sCu,
                                fCp=fCp,
                                fCv=fCv,
                                fCen=fCen)
+controller.set_final_cost_parameters(sCu=f_sCu,
+                                     sCp=f_sCp,
+                                     sCv=f_sCv,
+                                     sCen=f_sCen,
+                                     fCp=f_fCp,
+                                     fCv=f_fCv,
+                                     fCen=f_fCen)
 if init_csv_path is None:
     controller.compute_init_traj(N=N_init,
                                  dt=dt,
@@ -201,7 +221,8 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
                                    # imperfections=imperfections,
                                    plot_inittraj=True, plot_forecast=True,
                                    save_video=False,
-                                   video_name=os.path.join(save_dir, "simulation"))
+                                   video_name=os.path.join(save_dir, "simulation"),
+                                   anim_dt=5*dt)
 
 # T, X, U = sim.simulate(t0=0.0, x0=start,
 #                        tf=t_final, dt=dt, controller=controller,
