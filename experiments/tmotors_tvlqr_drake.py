@@ -16,15 +16,6 @@ motor_inertia = 0.
 torque_limit = [0.0, 6.0]
 torque_limit_pid = [6.0, 6.0]
 
-#model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
-mpar = model_parameters()
-mpar.load_yaml(model_par_path)
-mpar.set_motor_inertia(motor_inertia)
-# mpar.set_damping(damping)
-mpar.set_cfric(cfric)
-mpar.set_torque_limit(torque_limit)
-
 # trajectory parameters
 ## tmotors v1.0
 # csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
@@ -32,17 +23,19 @@ mpar.set_torque_limit(torque_limit)
 # keys = "shoulder-elbow"
 
 ## tmotors v1.0
-# csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-# read_with = "numpy"
-# keys = ""
-
-# tmotors v2.0
-csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
 read_with = "numpy"
 keys = ""
 
+# tmotors v2.0
+#csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+#read_with = "numpy"
+#keys = ""
+
 T, X, U = load_trajectory(csv_path, read_with, True, keys)
 dt, t_final, _, _ = trajectory_properties(T, X)
+#dt = 0.002
+t_final = t_final + 2.
 goal = [np.pi, 0., 0., 0.]
 
 # controller parameters
@@ -50,9 +43,9 @@ Q = np.diag([0.64, 0.56, 0.13, 0.037])
 R = np.eye(1)*0.82
 Qf = np.copy(Q)
 
-Kp = 10.
-Ki = 0.
-Kd = 0.1
+Kp = 5.
+Ki = 1.0
+Kd = 1.0
 
 # switiching conditions
 def condition1(t, x):
@@ -60,15 +53,17 @@ def condition1(t, x):
 
 def condition2(t, x):
     goal = [np.pi, 0., 0., 0.]
-    eps = [0.2, 0.2, 0.8, 0.8]
+    eps = [0.2, 0.2, 2.0, 2.0]
 
     y = wrap_angles_top(x)
 
     delta = np.abs(np.subtract(y, goal))
     max_diff = np.max(np.subtract(delta, eps))
     if max_diff > 0.:
+        print(f"Stayed with TVLQR control in state x {x} at time {t}")
         return False
     else:
+        print(f"Switched to PID control in state x {x} at time {t}")
         return True
 
 # setup controller
@@ -103,10 +98,11 @@ run_experiment(controller=controller,
                t_final=t_final,
                can_port="can0",
                motor_ids=[8, 9],
-               tau_limit=torque_limit,
+               tau_limit=torque_limit_pid,
                friction_compensation=True,
                #friction_terms=[0.093, 0.081, 0.186, 0.0],
-               friction_terms=[0.093, 0.005, 0.15, 0.001],
+               #friction_terms=[0.093, 0.005, 0.15, 0.001],
+               friction_terms=[0.0, 0.0, 0.15, 0.001],
                velocity_filter="lowpass",
                filter_args={"alpha": 0.2,
                             "kernel_size": 5,
