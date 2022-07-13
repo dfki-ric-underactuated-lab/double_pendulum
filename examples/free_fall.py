@@ -16,7 +16,7 @@ torque_limit = [0.0, 3.0]
 
 dt = 0.01
 t_final = 7.0
-x0 = [1.5, -1.9, 2.5, -1.0]
+x0 = [np.pi/2., -np.pi/2, 0., 0.]
 
 plant = SymbolicDoublePendulum(mass=mass,
                                length=length,

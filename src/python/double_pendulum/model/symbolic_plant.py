@@ -349,6 +349,18 @@ class SymbolicDoublePendulum():
         # print("accn", accn)
         return accn
 
+    def inverse_dynamics(self, x, acc):
+
+        vel = np.copy(x[self.dof:])
+
+        M = self.mass_matrix(x)
+        C = self.coriolis_matrix(x)
+        G = self.gravity_vector(x)
+        F = self.coulomb_vector(x)
+
+        tau = np.dot(M, acc) + np.dot(C, vel) - G + F
+        return tau
+
     def rhs(self, t, x, u):
         # Forward dynamics
         accn = self.forward_dynamics(x, u)

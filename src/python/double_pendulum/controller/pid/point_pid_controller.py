@@ -6,17 +6,16 @@ from double_pendulum.controller.abstract_controller import AbstractController
 class PointPIDController(AbstractController):
     def __init__(self,
                  torque_limit=[1.0, 1.0],
-                 goal=[np.pi, 0., 0., 0.],
                  dt=0.01):
 
         self.torque_limit = torque_limit
-        self.goal = goal
         self.dt = dt
 
         # default weights
         self.Kp = 1.0
         self.Ki = 0.0
         self.Kd = 0.1
+        self.goal = np.array([np.pi, 0., 0., 0.])
 
         # init pars
         self.errors1 = []
@@ -27,11 +26,14 @@ class PointPIDController(AbstractController):
         self.Ki = Ki
         self.Kd = Kd
 
+    def set_goal(self, x):
+        self.goal = x
+
     def init(self):
         self.errors1 = []
         self.errors2 = []
 
-    def get_control_output(self, x, t):
+    def get_control_output(self, x, t=None):
         e1 = self.goal[0] - x[0]
         e2 = self.goal[1] - x[1]
         e1 = (e1 + np.pi) % (2*np.pi) - np.pi
