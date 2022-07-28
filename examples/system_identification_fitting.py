@@ -3,13 +3,37 @@ from datetime import datetime
 import numpy as np
 
 from double_pendulum.system_identification.sys_id import run_system_identification
-from double_pendulum.utils.plotting import plot_timeseries_csv
+from double_pendulum.utils.plotting import plot_timeseries  # , plot_timeseries_csv
+from double_pendulum.utils.csv_trajectory import save_trajectory, concatenate_trajectories
 
+
+# saving
+timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
+save_dir = os.path.join("data", "system_identification", timestamp)
+os.makedirs(save_dir)
 
 # recorded data from robot
-measured_data_csv = "../data/system_identification/excitation_trajectories_measured/trajectory-pos-20_measured.csv"
-#measured_data_csv = "../data/system_identification/excitation_trajectories_measured/trajectory-pos-50-3x_measured.csv"
-plot_timeseries_csv(measured_data_csv, read_with="pandas")
+measured_data_csv = [
+        "../data/system_identification/excitation_trajectories_measured/trajectory-pos-20_measured.csv",
+        "../data/system_identification/excitation_trajectories_measured/trajectory-pos-50-3x_measured.csv"
+                    ]
+read_withs = ["pandas", "pandas"]
+keys = ["shoulder-elbow", "shoulder-elbow"]
+
+
+full_csv_path = os.path.join(save_dir, "full_trajectory.csv")
+T, X, U = concatenate_trajectories(measured_data_csv,
+                                   read_withs=read_withs,
+                                   with_tau=True,
+                                   keys=keys,
+                                   save_to=full_csv_path)
+save_trajectory(full_csv_path, T, X, U)
+
+# plot trajectory
+# plot_timeseries_csv(full_csv_path, read_with="numpy", keys="")
+plot_timeseries(T, X, U)
+
+
 
 # fixed model parameters (will not be fitted)
 fixed_mpar = {"g": 9.81,
@@ -41,17 +65,14 @@ bounds = ([0.15, 0.0, 0.0, 0.0, 0.0, 0.1, 0.5, 0.0, 0.00, 0.000],
           [0.3, np.Inf, 0.093, 0.005, 0.003, 0.4, 0.7, np.Inf, 0.14, 0.005])
 
 mpar_opt, mpar = run_system_identification(
-        measured_data_csv=measured_data_csv,
+        measured_data_csv=full_csv_path,
         fixed_mpar=fixed_mpar,
         variable_mpar=variable_mpar,
         mp0=mp0,
-        bounds=bounds)
+        bounds=bounds,
+        read_with="numpy",
+        keys="")
 
 print(mpar)
-
-# saving
-timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", "system_identification", timestamp)
-os.makedirs(save_dir)
 
 mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))

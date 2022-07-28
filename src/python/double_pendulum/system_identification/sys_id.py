@@ -6,11 +6,17 @@ from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.system_identification.dynamics import build_identification_matrices
 from double_pendulum.system_identification.optimization import solve_least_squares
 from double_pendulum.system_identification.plotting import plot_torques
+from double_pendulum.utils.csv_trajectory import load_trajectory
 
 
-def run_system_identification(measured_data_csv, fixed_mpar, variable_mpar, mp0, bounds):
+def run_system_identification(measured_data_csv, fixed_mpar,
+                              variable_mpar, mp0, bounds,
+                              read_with="pandas", keys="shoulder-elbow"):
 
-    Q, phi = build_identification_matrices(fixed_mpar, variable_mpar, measured_data_csv)
+    Q, phi = build_identification_matrices(fixed_mpar, variable_mpar,
+                                           measured_data_csv,
+                                           read_with=read_with,
+                                           keys=keys)
 
     mp_opt = solve_least_squares(Q, phi, mp0, bounds)
 
@@ -27,9 +33,11 @@ def run_system_identification(measured_data_csv, fixed_mpar, variable_mpar, mp0,
     print("Mean root mean squared error: ", rmse)
 
     # plotting results
-    data = pd.read_csv(measured_data_csv)
-    time = data["time"].tolist()
-    plot_torques(time, Q[::2, 0], Q[1::2, 0], Q_opt[::2], Q_opt[1::2])
+    T, X, U = load_trajectory(measured_data_csv,
+                              read_with=read_with,
+                              keys=keys,
+                              with_tau=True)
+    plot_torques(T, Q[::2, 0], Q[1::2, 0], Q_opt[::2], Q_opt[1::2])
 
     all_par = fixed_mpar
     for i, key in enumerate(variable_mpar):

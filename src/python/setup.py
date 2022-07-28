@@ -27,7 +27,7 @@ setup(
         # optimal control
         'drake',
         'meshcat',
-        'IPython', 
+        'IPython',
         'filterpy'
         # 'crocoddyl',
 

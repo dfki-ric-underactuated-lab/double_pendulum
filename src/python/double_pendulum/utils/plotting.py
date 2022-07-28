@@ -3,6 +3,8 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+from double_pendulum.utils.csv_trajectory import load_trajectory, load_acceleration
+
 
 def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
                     plot_pos=True,
@@ -151,31 +153,36 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
     plt.close()
 
 
-def plot_timeseries_csv(csv_path, read_with="pandas"):
-    if read_with == "pandas":
-        data = pd.read_csv(csv_path)
-        time = data["time"].tolist()
-        shoulder_pos = data["shoulder_pos"].tolist()
-        shoulder_vel = data["shoulder_vel"].tolist()
-        shoulder_trq = data["shoulder_torque"].tolist()
+def plot_timeseries_csv(csv_path, read_with="pandas", keys="shoulder-elbow"):
+    # if read_with == "pandas":
+    #     data = pd.read_csv(csv_path)
+    #     time = data["time"].tolist()
+    #     shoulder_pos = data["shoulder_pos"].tolist()
+    #     shoulder_vel = data["shoulder_vel"].tolist()
+    #     shoulder_trq = data["shoulder_torque"].tolist()
 
-        elbow_pos = data["elbow_pos"].tolist()
-        elbow_vel = data["elbow_vel"].tolist()
-        elbow_trq = data["elbow_torque"].tolist()
+    #     elbow_pos = data["elbow_pos"].tolist()
+    #     elbow_vel = data["elbow_vel"].tolist()
+    #     elbow_trq = data["elbow_torque"].tolist()
 
-        if "shoulder_acc" in data.keys() and "elbow_acc" in data.keys():
-            shoulder_acc = data["shoulder_acc"].tolist()
-            elbow_acc = data["elbow_acc"].tolist()
-            ACC = np.asarray([shoulder_acc, elbow_acc]).T
-            plot_acc = True
-        else:
-            plot_acc = False
-            ACC = None
+    #     if "shoulder_acc" in data.keys() and "elbow_acc" in data.keys():
+    #         shoulder_acc = data["shoulder_acc"].tolist()
+    #         elbow_acc = data["elbow_acc"].tolist()
+    #         ACC = np.asarray([shoulder_acc, elbow_acc]).T
+    #         plot_acc = True
+    #     else:
+    #         plot_acc = False
+    #         ACC = None
 
-    X = np.asarray([shoulder_pos, elbow_pos, shoulder_vel, elbow_vel]).T
-    U = np.asarray([shoulder_trq, elbow_trq]).T
+    # X = np.asarray([shoulder_pos, elbow_pos, shoulder_vel, elbow_vel]).T
+    # U = np.asarray([shoulder_trq, elbow_trq]).T
 
-    plot_timeseries(T=time,
+    T, X, U = load_trajectory(csv_path, read_with, keys)
+    ACC = load_acceleration(csv_path, read_with, keys)
+
+    plot_acc = ACC is not None
+
+    plot_timeseries(T=T,
                     X=X,
                     U=U,
                     ACC=ACC,

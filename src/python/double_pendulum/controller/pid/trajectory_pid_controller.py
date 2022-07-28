@@ -7,7 +7,10 @@ from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_pro
 
 class TrajPIDController(AbstractController):
     def __init__(self,
-                 csv_path,
+                 T=None,
+                 X=None,
+                 U=None,
+                 csv_path=None,
                  read_with="pandas",
                  keys="",
                  use_feed_forward_torque=True,
@@ -18,11 +21,22 @@ class TrajPIDController(AbstractController):
         self.torque_limit = torque_limit
 
         # load trajectory
-        self.T, self.X, self.U = load_trajectory(
-                csv_path=csv_path,
-                read_with=read_with,
-                with_tau=self.use_ff,
-                keys=keys)
+        if csv_path is not None:
+            self.T, self.X, self.U = load_trajectory(
+                    csv_path=csv_path,
+                    read_with=read_with,
+                    with_tau=self.use_ff,
+                    keys=keys)
+        elif T is not None and X is not None:
+            self.T = T
+            self.X = X
+            if U is not None:
+                self.U = U
+            else:
+                self.U = np.zeros((len(self.T), 2))
+        else:
+            print("Please Parse a trajectory to the TrajPIDController")
+            exit()
 
         self.dt, self.max_t, _, _ = trajectory_properties(self.T, self.X)
 

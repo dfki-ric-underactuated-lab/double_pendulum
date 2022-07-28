@@ -39,6 +39,7 @@ Kp = 10.
 Ki = 0.
 Kd = 0.1
 
+# simulation objects
 plant = SymbolicDoublePendulum(mass=mass,
                                length=length,
                                com=com,

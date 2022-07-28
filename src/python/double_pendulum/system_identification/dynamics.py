@@ -93,7 +93,10 @@ class yb_matrix_sym():
 #     return yb
 
 
-def build_identification_matrices(fixed_mpar, variable_mpar, measured_data_filepath):
+def build_identification_matrices(fixed_mpar, variable_mpar,
+                                  measured_data_filepath,
+                                  read_with="pandas",
+                                  keys="shoulder-elbow"):
     """
     g: float
         gravity
@@ -133,7 +136,8 @@ def build_identification_matrices(fixed_mpar, variable_mpar, measured_data_filep
     #                                           elbow_trq,
     #                                           )
     T, X, U = load_trajectory(measured_data_filepath,
-                              read_with="pandas",
+                              read_with=read_with,
+                              keys=keys,
                               with_tau=True)
 
     (filtered_time,

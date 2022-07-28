@@ -2,17 +2,23 @@ import numpy as np
 import pandas as pd
 
 
-def save_trajectory(csv_path, T, X, U):
+def save_trajectory(csv_path, T, X, U=None):
     TT = np.asarray(T)
     XX = np.asarray(X)
-    UU = np.asarray(U)
-    if len(UU) < len(XX):
-        UU = np.append(UU, [UU[-1]], axis=0)
-    data = np.asarray([TT,
-                       XX.T[0], XX.T[1], XX.T[2], XX.T[3],
-                       UU.T[0], UU.T[1]]).T
-    np.savetxt(csv_path, data, delimiter=",",
-               header="time, pos1, pos2, vel1, vel2, tau1, tau2")
+    if U is not None:
+        UU = np.asarray(U)
+        if len(UU) < len(XX):
+            UU = np.append(UU, [UU[-1]], axis=0)
+        data = np.asarray([TT,
+                           XX.T[0], XX.T[1], XX.T[2], XX.T[3],
+                           UU.T[0], UU.T[1]]).T
+        np.savetxt(csv_path, data, delimiter=",",
+                   header="time, pos1, pos2, vel1, vel2, tau1, tau2")
+    else:
+        data = np.asarray([TT,
+                           XX.T[0], XX.T[1], XX.T[2], XX.T[3]]).T
+        np.savetxt(csv_path, data, delimiter=",",
+                   header="time, pos1, pos2, vel1, vel2")
 
 
 def load_trajectory(csv_path, read_with="numpy",
@@ -59,6 +65,64 @@ def load_trajectory(csv_path, read_with="numpy",
     else:
         U = np.asarray([np.zeros_like(T), np.zeros_like(T)])
     return T, X, U
+
+
+def load_acceleration(csv_path, read_with="numpy",
+                      keys="shoulder-elbow"):
+    if read_with == "pandas":
+        data = pd.read_csv(csv_path)
+
+        if "shoulder_acc" in data.keys() and "elbow_acc" in data.keys():
+            shoulder_acc = data["shoulder_acc"].tolist()
+            elbow_acc = data["elbow_acc"].tolist()
+            ACC = np.asarray([shoulder_acc, elbow_acc]).T
+        else:
+            ACC = None
+    elif read_with == "numpy":
+        data = np.loadtxt(csv_path, skiprows=1, delimiter=",")
+        if np.shape(data)[1] >= 8:
+            shoulder_acc = data[:, 7]
+            elbow_acc = data[:, 8]
+            ACC = np.asarray([shoulder_acc, elbow_acc]).T
+        else:
+            ACC = None
+
+    return ACC
+
+
+def concatenate_trajectories(csv_paths=[], read_withs="numpy",
+                             with_tau=True, keys="",
+                             save_to="conc_trajectrory.csv"):
+    if type(csv_paths) != list:
+        csv_paths = [csv_paths]
+    n = len(csv_paths)
+
+    if type(read_withs) != list:
+        read_withs = n*[read_withs]
+
+    if type(keys) != list:
+        keys = n*[keys]
+
+    T_outs = []
+    X_outs = []
+    U_outs = []
+    time = 0.
+    for i, cp in enumerate(csv_paths):
+        t, x, u = load_trajectory(csv_path=cp,
+                                  read_with=read_withs[i],
+                                  with_tau=with_tau,
+                                  keys=keys[i])
+        T_outs.append(t + time)
+        time = t[-1] + (t[-1] - t[-2])
+        X_outs.append(x)
+        U_outs.append(u)
+
+    T_out = np.concatenate(T_outs, axis=0)
+    X_out = np.concatenate(X_outs, axis=0)
+    U_out = np.concatenate(U_outs, axis=0)
+
+    return T_out, X_out, U_out
+
 
 def trajectory_properties(T, X):
 
