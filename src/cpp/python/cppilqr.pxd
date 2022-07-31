@@ -57,7 +57,7 @@ cdef extern from "../controllers/ilqr/src/ilqr_mpc.hpp":
         ilqr_mpc(int N, int N_init) except +
         void set_parameters(int integrator_ind, double delta_t, int max_it,
                             double break_cost_red, double regu_ini,
-                            double max_reg, double min_reg)
+                            double max_reg, double min_reg, int shifting)
         void set_start(double pos1, double pos2,
                        double vel1, double vel2)
         void set_goal(double pos1, double pos2,

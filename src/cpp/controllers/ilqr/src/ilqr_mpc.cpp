@@ -44,7 +44,7 @@ int ilqr_mpc::get_N(){
 
 void ilqr_mpc::set_parameters(int integ_ind, double delta_t,
                               int max_it, double break_cost_red, double regu_ini,
-                              double max_reg, double min_reg){
+                              double max_reg, double min_reg, int shifting){
     integrator_ind = integ_ind;
     if(integ_ind == 0){
         integrator = "euler";
@@ -59,6 +59,7 @@ void ilqr_mpc::set_parameters(int integ_ind, double delta_t,
     regu_init = regu_ini;
     max_regu = max_reg;
     min_regu = min_reg;
+    shift_every = shifting;
 }
 
 void ilqr_mpc::read_parameter_file(std::string configfile){
@@ -415,12 +416,10 @@ double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
     ilqr_calc->set_u_init_traj(u_traj);
     //ilqr_calc->set_x_init_traj(x_traj);
 
-    if (counter+N < N_init-1){
+    if ((counter+N < N_init-1) and trajectory_stabilization){
         ilqr_calc->set_goal(running_goal);
-        if (trajectory_stabilization){
-            //ilqr_calc->set_goal_traj(x_init_traj, counter_cap, N_hor_cap);
-            ilqr_calc->set_goal_traj(x_init_traj, u_init_traj, counter_cap, N_hor);
-        }
+        //ilqr_calc->set_goal_traj(x_init_traj, counter_cap, N_hor_cap);
+        ilqr_calc->set_goal_traj(x_init_traj, u_init_traj, counter_cap, N_hor);
     }
     else{
         ilqr_calc->set_cost_parameters(f_sCu1, f_sCu2,
@@ -453,7 +452,9 @@ double ilqr_mpc::get_control_output(Eigen::Vector<double, ilqr::n_x> x){
     //u[0] = u_traj[0](0);
     u = u_traj[0](0);
 
-    shift_trajs(counter);
+    if ((counter + 1) % shift_every == 0){
+        shift_trajs(counter);
+    }
     counter += 1;
 
     if (verbose > 0){

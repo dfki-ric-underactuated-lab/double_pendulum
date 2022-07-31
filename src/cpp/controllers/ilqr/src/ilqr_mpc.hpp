@@ -43,6 +43,7 @@ private:
     double break_cost_redu;
     double regu_init, max_regu, min_regu;
     bool trajectory_stabilization = false;
+    int shift_every = 1;
 
     int counter = 0;
 
@@ -59,7 +60,7 @@ private:
 public:
     void set_verbose(int, int);
     void set_parameters(int, double, int, double, double,
-                        double, double);
+                        double, double, int);
     void read_parameter_file(std::string);
     void set_model_parameters(double, double, double, double, double,
                               double, double, double, double, double,

@@ -216,14 +216,15 @@ cdef class cppilqrmpc:
 
     def set_parameters(self, integrator_ind, delta_t,
                        max_it, break_cost_red, regu_ini,
-                       max_reg, min_reg):
+                       max_reg, min_reg, shifting):
         self.ilmpc.set_parameters(integrator_ind,
                                   delta_t,
                                   max_it,
                                   break_cost_red,
                                   regu_ini,
                                   max_reg,
-                                  min_reg)
+                                  min_reg,
+                                  shifting)
 
     def set_start(self, pos1, pos2, vel1, vel2):
         self.ilmpc.set_start(pos1, pos2, vel1, vel2)

@@ -41,9 +41,9 @@ class ILQRMPCCPPController(AbstractController):
 
         self.counter = 0
 
-        if torque_limit[0] > 0.0:
+        if self.torque_limit[0] > 0.0:
             self.active_act = 0
-        elif torque_limit[1] > 0.0:
+        elif self.torque_limit[1] > 0.0:
             self.active_act = 1
 
     def set_start(self, x=[0., 0., 0., 0.]):
@@ -61,7 +61,8 @@ class ILQRMPCCPPController(AbstractController):
                        min_regu=0.01,
                        break_cost_redu=1e-6,
                        integrator="runge_kutta",
-                       trajectory_stabilization=True):
+                       trajectory_stabilization=True,
+                       shifting=1):
         self.N = N
         self.dt = dt
         self.max_iter = max_iter
@@ -75,6 +76,7 @@ class ILQRMPCCPPController(AbstractController):
         else:
             self.integrator_int = 1
         self.traj_stab = trajectory_stabilization
+        self.shifting = shifting
 
     def set_cost_parameters(self,
                             sCu=[0.005, 0.005],
@@ -199,7 +201,8 @@ class ILQRMPCCPPController(AbstractController):
                                   self.break_cost_redu,
                                   self.regu_init,
                                   self.max_regu,
-                                  self.min_regu)
+                                  self.min_regu,
+                                  self.shifting)
         self.ilmpc.set_goal(self.goal[0], self.goal[1],
                             self.goal[2], self.goal[3])
         self.ilmpc.set_model_parameters(

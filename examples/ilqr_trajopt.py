@@ -34,7 +34,7 @@ robot = "acrobot"
 # damping = [0.0005, 0.0001]
 # damping = [0., 0.]
 # cfric = [0.093, 0.186]
-cfric = [0., 0.]
+# cfric = [0., 0.]
 # gravity = 9.81
 # inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
 motor_inertia = 0.
@@ -49,7 +49,7 @@ mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
 # mpar.set_damping(damping)
-mpar.set_cfric(cfric)
+# mpar.set_cfric(cfric)
 mpar.set_torque_limit(torque_limit)
 
 # controller parameters
@@ -132,7 +132,6 @@ if robot == "acrobot":
     # fCp = [final_prefac*0.64, final_prefac*0.56]
     # fCv = [final_prefac*0.13, final_prefac*0.037]
     # fCen = 0.
-
 
     # [8.26303186e+01 2.64981012e+01 3.90215591e+01 3.87432205e+00
     #  2.47715889e+00 5.72238144e+04 9.99737172e+04 7.16184205e+03
@@ -225,8 +224,6 @@ il.set_goal(goal)
 T, X, U = il.compute_trajectory()
 print("Computing time: ", time.time() - t0, "s")
 
-# saving
-
 # saving and plotting
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
 save_dir = os.path.join("data", robot, "ilqr", "trajopt", timestamp)
@@ -240,21 +237,6 @@ os.system("mv trajectory.csv " + traj_file)
 #                 T=T, X=X, U=U)
 
 par_dict = {
-            # "mass1": mass[0],
-            # "mass2": mass[1],
-            # "length1": length[0],
-            # "length2": length[1],
-            # "com1": com[0],
-            # "com2": com[1],
-            # "inertia1": inertia[0],
-            # "inertia2": inertia[1],
-            # "damping1": damping[0],
-            # "damping2": damping[1],
-            # "coulomb_friction1": cfric[0],
-            # "coulomb_friction2": cfric[1],
-            # "gravity": gravity,
-            # "torque_limit1": torque_limit[0],
-            # "torque_limit2": torque_limit[1],
             "dt": dt,
             "t_final": t_final,
             "integrator": integrator,

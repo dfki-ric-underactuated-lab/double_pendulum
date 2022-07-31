@@ -74,8 +74,9 @@ class kalman_filter_rt():
         self.x0 = np.asarray(x0)
         self.dt = dt
 
-        self.A = A
-        self.B = B
+        # discrete transition matrices
+        self.A = np.eye(4) + A*dt
+        self.B = B*dt
 
         self.x_data = [self.x0]
         self.u_data = []
@@ -85,6 +86,9 @@ class kalman_filter_rt():
                 dim_x=self.dim_x,
                 dim_z=self.dim_x,
                 dim_u=self.dim_u)
+
+        self.f.F = np.asarray(self.A)
+        self.f.B = np.asarray(self.B)
 
         # Assign the initial value for the state (position and velocity).
         self.f.x = np.asarray(self.x0)  # position, velocity
@@ -111,9 +115,6 @@ class kalman_filter_rt():
         # A, B = self.plant.linear_matrices(
         #                 self.x_data[-1],
         #                 u)
-
-        self.f.F = np.asarray(self.A)
-        self.f.B = np.asarray(self.B)
 
         # Perform one KF step
         self.f.u = np.asarray(u)
