@@ -133,3 +133,29 @@ class InterpolateMatrix():
                 else:
                     x[d1, d2] = 0.
         return x
+
+def ResampleTrajectory(T, X, U, dt, num_break=40, poly_degree=3):
+
+    n = int(T[-1] / dt)
+
+    X_interp = InterpolateVector(
+        T=T,
+        X=X,
+        num_break=num_break,
+        poly_degree=poly_degree)
+
+    U_interp = InterpolateVector(
+        T=T,
+        X=U,
+        num_break=num_break,
+        poly_degree=poly_degree)
+
+    T_resamp = np.linspace(0, T[-1], n)
+    X_resamp = []
+    U_resamp = []
+    for t in T_resamp:
+        X_resamp.append(X_interp.get_value(t))
+        U_resamp.append(U_interp.get_value(t))
+    X_resamp = np.asarray(X_resamp)
+    U_resamp = np.asarray(U_resamp)
+    return T_resamp, X_resamp, U_resamp

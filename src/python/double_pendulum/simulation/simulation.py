@@ -176,6 +176,7 @@ class Simulator:
 
         self.t += dt
         self.record_data(self.t, self.x.copy(), tau)
+        #_ = self.get_measurement(dt)
 
     def get_control_u(self, controller, x, t, dt):
         realtime = True
@@ -260,6 +261,7 @@ class Simulator:
                         integrator="runge_kutta"):
 
         x_meas = self.get_measurement(dt)
+        #x_meas = self.meas_x_values[-1]
         x_filt = self.filter_measurement(x_meas)
 
         u, realtime = self.get_control_u(controller, x_filt, self.t, dt)
@@ -274,7 +276,7 @@ class Simulator:
         self.set_state(t0, x0)
         self.reset_data_recorder()
         self.record_data(t0, np.copy(x0), None)
-        self.meas_x_values.append(np.copy(x0))
+        # self.meas_x_values.append(np.copy(x0))
 
         self.init_filter(x0, dt, integrator)
 
@@ -511,7 +513,7 @@ class Simulator:
             self.set_state(t0, x0)
             self.reset_data_recorder()
             self.record_data(t0, np.copy(x0), None)
-            self.meas_x_values.append(x0)
+            #self.meas_x_values.append(x0)
             plt.show()
         plt.close()
 

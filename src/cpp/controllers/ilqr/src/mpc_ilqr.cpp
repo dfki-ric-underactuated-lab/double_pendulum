@@ -217,12 +217,12 @@ int main(int argc, char *argv[], char *envp[]){
     ilmpc.set_u_init_traj(u_traj);
     ilmpc.set_x_init_traj(x_traj);
 
-    //double* u1_mpctraj_doubles = new double[N-1];
-    //double* u2_mpctraj_doubles = new double[N-1];
-    //double* p1_mpctraj_doubles = new double[N];
-    //double* p2_mpctraj_doubles = new double[N];
-    //double* v1_mpctraj_doubles = new double[N];
-    //double* v2_mpctraj_doubles = new double[N];
+    double* u1_mpctraj_doubles = new double[N-1];
+    double* u2_mpctraj_doubles = new double[N-1];
+    double* p1_mpctraj_doubles = new double[N];
+    double* p2_mpctraj_doubles = new double[N];
+    double* v1_mpctraj_doubles = new double[N];
+    double* v2_mpctraj_doubles = new double[N];
 
     std::ofstream traj_file;
     traj_file.open (foldername+"/trajectory_mpc.csv");
@@ -232,19 +232,19 @@ int main(int argc, char *argv[], char *envp[]){
         u_full(0) = 0.;
         u_full(1) = ilmpc.get_control_output(state); //(0);
 
-        //u1_mpctraj_doubles = ilmpc.get_u1_traj();
-        //std::cout << "Got u1 traj: " << u1_mpctraj_doubles[0];
-        //u2_mpctraj_doubles = ilmpc.get_u2_traj();
-        //std::cout << "Got u2 traj: " << u2_mpctraj_doubles[0];
-        //p1_mpctraj_doubles = ilmpc.get_p1_traj();
-        //std::cout << "Got p1 traj: " << p1_mpctraj_doubles[10];
-        //p2_mpctraj_doubles = ilmpc.get_p2_traj();
-        //std::cout << "Got p2 traj: " << p2_mpctraj_doubles[10];
-        //v1_mpctraj_doubles = ilmpc.get_v1_traj();
-        //std::cout << "Got v1 traj: " << v1_mpctraj_doubles[10];
-        //v2_mpctraj_doubles = ilmpc.get_v2_traj();
-        //std::cout << "Got v2 traj: " << v2_mpctraj_doubles[10];
-        //std::cout << std::endl;
+        u1_mpctraj_doubles = ilmpc.get_u1_traj();
+        std::cout << "Got u1 traj: " << u1_mpctraj_doubles[0];
+        u2_mpctraj_doubles = ilmpc.get_u2_traj();
+        std::cout << "Got u2 traj: " << u2_mpctraj_doubles[0];
+        p1_mpctraj_doubles = ilmpc.get_p1_traj();
+        std::cout << "Got p1 traj: " << p1_mpctraj_doubles[10];
+        p2_mpctraj_doubles = ilmpc.get_p2_traj();
+        std::cout << "Got p2 traj: " << p2_mpctraj_doubles[10];
+        v1_mpctraj_doubles = ilmpc.get_v1_traj();
+        std::cout << "Got v1 traj: " << v1_mpctraj_doubles[10];
+        v2_mpctraj_doubles = ilmpc.get_v2_traj();
+        std::cout << "Got v2 traj: " << v2_mpctraj_doubles[10];
+        std::cout << std::endl;
 
         sim.set_state(0.0, state);
         sim.step(u_full, dt, integrator);
@@ -278,11 +278,11 @@ int main(int argc, char *argv[], char *envp[]){
     delete [] u_traj;
     delete [] x_traj;
 
-    //delete [] u1_mpctraj_doubles;
-    //delete [] u2_mpctraj_doubles;
-    //delete [] p1_mpctraj_doubles;
-    //delete [] p2_mpctraj_doubles;
-    //delete [] v1_mpctraj_doubles;
-    //delete [] v2_mpctraj_doubles;
+    delete [] u1_mpctraj_doubles;
+    delete [] u2_mpctraj_doubles;
+    delete [] p1_mpctraj_doubles;
+    delete [] p2_mpctraj_doubles;
+    delete [] v1_mpctraj_doubles;
+    delete [] v2_mpctraj_doubles;
 }
 

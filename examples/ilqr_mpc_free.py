@@ -13,14 +13,11 @@ from double_pendulum.utils.csv_trajectory import save_trajectory
 robot = "acrobot"
 
 cfric = [0., 0.]
-# damping = [0., 0.]
-
 motor_inertia = 0.
-
 if robot == "acrobot":
-    torque_limit = [0.0, 6.0]
+    torque_limit = [0.0, 4.0]
 if robot == "pendubot":
-    torque_limit = [6.0, 0.0]
+    torque_limit = [4.0, 0.0]
 
 model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
 # model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
@@ -33,14 +30,14 @@ mpar.set_torque_limit(torque_limit)
 
 # simulation parameter
 dt = 0.005
-t_final = 10.0  # 4.985
+t_final = 10.0
 integrator = "runge_kutta"
 
 process_noise_sigmas = [0., 0., 0., 0.]
 meas_noise_sigmas = [0., 0., 0., 0.]
 meas_noise_cut = 0.0
 meas_noise_vfilter = "none"
-meas_noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}
+meas_noise_vfilter_args = {"alpha": [1., 1., 0.3, 0.3]}
 delay_mode = "None"
 delay = 0.0
 u_noise_sigmas = [0., 0.]
@@ -49,70 +46,52 @@ perturbation_times = []
 perturbation_taus = []
 
 # controller parameters
-# N = 20
-N = 100
-con_dt = dt
-N_init = 100
-max_iter = 5
-max_iter_init = 1000
+N = 200
+N_init = 1000
+max_iter = 2
+max_iter_init = 100
 regu_init = 1.
 max_regu = 10000.
-min_regu = 0.01
+min_regu = 0.0001
 break_cost_redu = 1e-6
 trajectory_stabilization = False
-shifting = 1
 
 # swingup parameters
-start = [np.pi+0.05, -0.1, 0., 0.]
+start = [0., 0., 0., 0.]
+# start = [np.pi-0.2, -0.2, 0., 0.]
+# start = [1.0, -2.1, -0.5, 1.5]
 goal = [np.pi, 0., 0., 0.]
 
-
 if robot == "acrobot":
-    sCu = [0.0001, 0.0001]
-    sCp = [.01, .01]
-    sCv = [.01, .01]
-    sCen = 0.0
-    fCp = [100., 100.]
-    fCv = [1., 1.]
-    fCen = 0.0
+    # works with high velocities (40-50 rad/s)
+    # f_sCu = [0.0001, 0.0001]
+    # f_sCp = [.1, .1]
+    # f_sCv = [.01, .01]
+    # f_sCen = 0.0
+    # f_fCp = [10., 10.]
+    # f_fCv = [1., 1.]
+    # f_fCen = 0.0
 
-    f_sCu = sCu
-    f_sCp = sCp
-    f_sCv = sCv
-    f_sCen = sCen
-    f_fCp = fCp
-    f_fCv = fCv
-    f_fCen = fCen
-
+    f_sCu = [0.0001, 0.0001]
+    f_sCp = [.1, .1]
+    f_sCv = [.01, .5]
+    f_sCen = 0.0
+    f_fCp = [10., 10.]
+    f_fCv = [1., 1.]
+    f_fCen = 1.0
 
 if robot == "pendubot":
-    sCu = [0.0001, 0.0001]
-    sCp = [0.1, 0.1]
-    sCv = [0.01, 0.01]
-    sCen = 0.
-    fCp = [10., 10.]
-    fCv = [0.1, 0.1]
-    fCen = 0.
-
-    f_sCu = sCu
-    f_sCp = sCp
-    f_sCv = sCv
-    f_sCen = sCen
-    f_fCp = fCp
-    f_fCv = fCv
-    f_fCen = fCen
-
-init_sCu = sCu
-init_sCp = sCp
-init_sCv = sCv
-init_sCen = sCen
-init_fCp = fCp
-init_fCv = fCv
-init_fCen = fCen
+    f_sCu = [0.0001, 0.0001]
+    f_sCp = [0.1, 0.2]
+    f_sCv = [0., 0.]
+    f_sCen = 0.
+    f_fCp = [10., 10.]
+    f_fCv = [1., 1.]
+    f_fCen = 1.
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "ilqr", "mpc", timestamp)
+save_dir = os.path.join("data", robot, "ilqr", "mpc_free", timestamp)
 os.makedirs(save_dir)
 
 # construct simulation objects
@@ -130,62 +109,50 @@ sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
                          u_responsiveness=u_responsiveness)
 
 controller = ILQRMPCCPPController(model_pars=mpar)
-# controller.set_start(start)
+controller.set_start(start)
 controller.set_goal(goal)
 controller.set_parameters(N=N,
-                          dt=con_dt,
+                          dt=dt,
                           max_iter=max_iter,
                           regu_init=regu_init,
                           max_regu=max_regu,
                           min_regu=min_regu,
                           break_cost_redu=break_cost_redu,
                           integrator=integrator,
-                          trajectory_stabilization=trajectory_stabilization,
-                          shifting=shifting)
-controller.set_cost_parameters(sCu=sCu,
-                               sCp=sCp,
-                               sCv=sCv,
-                               sCen=sCen,
-                               fCp=fCp,
-                               fCv=fCv,
-                               fCen=fCen)
-controller.set_final_cost_parameters(sCu=f_sCu,
-                                     sCp=f_sCp,
-                                     sCv=f_sCv,
-                                     sCen=f_sCen,
-                                     fCp=f_fCp,
-                                     fCv=f_fCv,
-                                     fCen=f_fCen)
-# controller.compute_init_traj(N=N_init,
-#                              dt=dt,
-#                              max_iter=max_iter_init,
-#                              regu_init=regu_init,
-#                              max_regu=max_regu,
-#                              min_regu=min_regu,
-#                              break_cost_redu=break_cost_redu,
-#                              sCu=init_sCu,
-#                              sCp=init_sCp,
-#                              sCv=init_sCv,
-#                              sCen=init_sCen,
-#                              fCp=init_fCp,
-#                              fCv=init_fCv,
-#                              fCen=init_fCen,
-#                              integrator=integrator)
+                          trajectory_stabilization=trajectory_stabilization)
+controller.set_cost_parameters(sCu=f_sCu,
+                               sCp=f_sCp,
+                               sCv=f_sCv,
+                               sCen=f_sCen,
+                               fCp=f_fCp,
+                               fCv=f_fCv,
+                               fCen=f_fCen)
+controller.compute_init_traj(N=N_init,
+                             dt=dt,
+                             max_iter=max_iter_init,
+                             regu_init=regu_init,
+                             max_regu=max_regu,
+                             min_regu=min_regu,
+                             break_cost_redu=break_cost_redu,
+                             sCu=f_sCu,
+                             sCp=f_sCp,
+                             sCv=f_sCv,
+                             sCen=f_sCen,
+                             fCp=f_fCp,
+                             fCv=f_fCv,
+                             fCen=f_fCen,
+                             integrator=integrator)
 controller.init()
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
                                    tf=t_final, dt=dt, controller=controller,
                                    integrator="runge_kutta",
-                                   # imperfections=imperfections,
-                                   plot_inittraj=True, plot_forecast=True,
+                                   plot_inittraj=False, plot_forecast=True,
                                    save_video=False,
                                    video_name=os.path.join(save_dir, "simulation"),
-                                   anim_dt=5*dt)
-
-# T, X, U = sim.simulate(t0=0.0, x0=start,
-#                        tf=t_final, dt=dt, controller=controller,
-#                        integrator="runge_kutta", imperfections=imperfections)
+                                   anim_dt=0.02)
 
 # saving and plotting
+
 mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
 
 par_dict = {
@@ -209,18 +176,18 @@ par_dict = {
             "min_regu": min_regu,
             "break_cost_redu": break_cost_redu,
             "trajectory_stabilization": trajectory_stabilization,
-            "sCu1": sCu[0],
-            "sCu2": sCu[1],
-            "sCp1": sCp[0],
-            "sCp2": sCp[1],
-            "sCv1": sCv[0],
-            "sCv2": sCv[1],
-            "sCen": sCen,
-            "fCp1": fCp[0],
-            "fCp2": fCp[1],
-            "fCv1": fCv[0],
-            "fCv2": fCv[1],
-            "fCen": fCen
+            "sCu1": f_sCu[0],
+            "sCu2": f_sCu[1],
+            "sCp1": f_sCp[0],
+            "sCp2": f_sCp[1],
+            "sCv1": f_sCv[0],
+            "sCv2": f_sCv[1],
+            "sCen": f_sCen,
+            "fCp1": f_fCp[0],
+            "fCp2": f_fCp[1],
+            "fCv1": f_fCv[0],
+            "fCv2": f_fCv[1],
+            "fCen": f_fCen
             }
 
 with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
@@ -228,8 +195,13 @@ with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
 
 save_trajectory(os.path.join(save_dir, "trajectory.csv"), T, X, U)
 
+X_meas = sim.meas_x_values
+
 plot_timeseries(T, X, U, None,
                 plot_energy=False,
+                #T_des=T[1:],
+                #X_des=X_filt,
+                X_meas=X_meas,
                 pos_y_lines=[0.0, np.pi],
                 tau_y_lines=[-torque_limit[1], torque_limit[1]],
                 save_to=os.path.join(save_dir, "timeseries"))

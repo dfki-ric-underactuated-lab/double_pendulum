@@ -1,6 +1,8 @@
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
+from double_pendulum.utils.csv_trajectory import load_trajectory
+#from double_pendulum.utils.pcw_polynomial import ResampleTrajectory
 import cppilqr
 
 
@@ -78,6 +80,16 @@ class ILQRMPCCPPController(AbstractController):
         self.traj_stab = trajectory_stabilization
         self.shifting = shifting
 
+        self.N_init = N
+
+        self.u1_init_traj = np.zeros(self.N_init)
+        self.u2_init_traj = np.zeros(self.N_init)
+        self.p1_init_traj = np.zeros(self.N_init)
+        self.p2_init_traj = np.zeros(self.N_init)
+        self.v1_init_traj = np.zeros(self.N_init)
+        self.v2_init_traj = np.zeros(self.N_init)
+
+
     def set_cost_parameters(self,
                             sCu=[0.005, 0.005],
                             sCp=[0., 0.],
@@ -93,6 +105,15 @@ class ILQRMPCCPPController(AbstractController):
         self.fCp = fCp
         self.fCv = fCv
         self.fCen = fCen
+
+        # set defaults for final parameters to the same values
+        self.f_sCu = sCu
+        self.f_sCp = sCp
+        self.f_sCv = sCv
+        self.f_sCen = sCen
+        self.f_fCp = fCp
+        self.f_fCv = fCv
+        self.f_fCen = fCen
 
     def set_final_cost_parameters(self,
                                   sCu=[0.005, 0.005],
@@ -181,17 +202,38 @@ class ILQRMPCCPPController(AbstractController):
         self.v2_init_traj = il.get_v2_traj()
 
     def load_init_traj(self,
-                       csv_path):
-        trajectory = np.loadtxt(csv_path, skiprows=1, delimiter=",")
+                       csv_path,
+                       read_with="numpy",
+                       keys="",
+                       num_break=40,
+                       poly_degree=3):
+        # trajectory = np.loadtxt(csv_path, skiprows=1, delimiter=",")
+        # self.N_init = np.shape(trajectory)[0]
+        # self.u1_init_traj = np.ascontiguousarray(trajectory.T[5])
+        # self.u2_init_traj = np.ascontiguousarray(trajectory.T[6])
+        # self.p1_init_traj = np.ascontiguousarray(trajectory.T[1])
+        # self.p2_init_traj = np.ascontiguousarray(trajectory.T[2])
+        # self.v1_init_traj = np.ascontiguousarray(trajectory.T[3])
+        # self.v2_init_traj = np.ascontiguousarray(trajectory.T[4])
 
-        self.N_init = np.shape(trajectory)[0]
+        T, X, U = load_trajectory(
+                        csv_path=csv_path,
+                        read_with=read_with,
+                        with_tau=True,
+                        keys=keys,
+                        resample=True,
+                        resample_dt=self.dt,
+                        num_break=num_break,
+                        poly_degree=poly_degree)
 
-        self.u1_init_traj = np.ascontiguousarray(trajectory.T[5])
-        self.u2_init_traj = np.ascontiguousarray(trajectory.T[6])
-        self.p1_init_traj = np.ascontiguousarray(trajectory.T[1])
-        self.p2_init_traj = np.ascontiguousarray(trajectory.T[2])
-        self.v1_init_traj = np.ascontiguousarray(trajectory.T[3])
-        self.v2_init_traj = np.ascontiguousarray(trajectory.T[4])
+        self.N_init = len(T)
+        self.u1_init_traj = np.ascontiguousarray(U.T[0])
+        self.u2_init_traj = np.ascontiguousarray(U.T[1])
+        self.p1_init_traj = np.ascontiguousarray(X.T[0])
+        self.p2_init_traj = np.ascontiguousarray(X.T[1])
+        self.v1_init_traj = np.ascontiguousarray(X.T[2])
+        self.v2_init_traj = np.ascontiguousarray(X.T[3])
+
 
     def init(self):
         self.ilmpc = cppilqr.cppilqrmpc(self.N, self.N_init)

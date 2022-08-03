@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+from double_pendulum.utils.pcw_polynomial import ResampleTrajectory
 
 def save_trajectory(csv_path, T, X, U=None):
     TT = np.asarray(T)
@@ -22,7 +23,9 @@ def save_trajectory(csv_path, T, X, U=None):
 
 
 def load_trajectory(csv_path, read_with="numpy",
-                    with_tau=True, keys="shoulder-elbow"):
+                    with_tau=True, keys="shoulder-elbow",
+                    resample=False, resample_dt=None,
+                    num_break=40, poly_degree=3):
     if read_with == "pandas":
         data = pd.read_csv(csv_path)
 
@@ -64,6 +67,9 @@ def load_trajectory(csv_path, read_with="numpy",
         U = np.asarray([tau1_traj, tau2_traj]).T
     else:
         U = np.asarray([np.zeros_like(T), np.zeros_like(T)])
+
+    if resample:
+        T, X, U = ResampleTrajectory(T, X, U, resample_dt, num_break, poly_degree)
     return T, X, U
 
 

@@ -1,8 +1,8 @@
+import time
+from datetime import datetime
 import os
 import numpy as np
-from datetime import datetime
 import yaml
-import time
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.model.model_parameters import model_parameters
@@ -53,15 +53,15 @@ mpar.set_motor_inertia(motor_inertia)
 mpar.set_torque_limit(torque_limit)
 
 # controller parameters
-N = 1000
-max_iter = 2000
+N = 5000
+max_iter = 100000
 regu_init = 100.
 max_regu = 1000000.
 min_regu = 0.01
 break_cost_redu = 1e-6
 
 # simulation parameter
-dt = 0.005
+dt = 0.001
 # t_final = 5.0
 t_final = N*dt
 integrator = "runge_kutta"
@@ -184,7 +184,7 @@ if robot == "pendubot":
     sCv = [0., 0.]
     sCen = 0.
     fCp = [2500., 500.]
-    fCv = [100., 100.]
+    fCv = [500., 500.]
     fCen = 0.
 
 # swingup parameters
@@ -282,16 +282,7 @@ plot_timeseries(T, X, U, None,
                 save_to=os.path.join(save_dir, "timeseries"))
 
 # simulation
-# plant = SymbolicDoublePendulum(mass=mass,
-#                                length=length,
-#                                com=com,
-#                                damping=damping,
-#                                gravity=gravity,
-#                                coulomb_fric=cfric,
-#                                inertia=inertia,
-#                                torque_limit=torque_limit)
 plant = SymbolicDoublePendulum(model_pars=mpar)
-
 sim = Simulator(plant=plant)
 
 controller = TrajectoryController(csv_path=traj_file,

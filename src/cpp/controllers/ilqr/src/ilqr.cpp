@@ -865,8 +865,6 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
     double total_cost;
 
     double regu = regu_init;
-    // double max_regu = 10000.;
-    // double min_regu = 0.01;
     double expected_cost_redu = 0.;
 
     for (int n=0; n<max_iter; n++){
@@ -878,7 +876,7 @@ void ilqr::run_ilqr(int max_iter, double break_cost_redu, double regu_init, doub
             printf("iteration %d, ", n);
             printf("last_pos1 %f, ", x_traj_new[N-1](0));
             printf("last_pos2 %f, ", x_traj_new[N-1](1));
-            printf("last cost %e, ", last_cost);
+            printf("last_cost %e, ", last_cost);
             printf("total_cost %e\n", total_cost);
         }
         if ((last_cost - total_cost) > 0.){

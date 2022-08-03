@@ -71,7 +71,7 @@ perturbation_taus = []
 N = 100
 con_dt = dt
 N_init = 1000
-max_iter = 100
+max_iter = 2
 max_iter_init = 1000
 regu_init = 100.
 max_regu = 10000.
@@ -84,11 +84,28 @@ shifting = 1
 start = [0., 0., 0., 0.]
 goal = [np.pi, 0., 0., 0.]
 
+# trajectory parameters
+## tmotors v1.0
+# init_csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
+# read_with = "pandas"  # for dircol traj
+# keys = "shoulder-elbow"
+
+## tmotors v1.0
+# init_csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory2.csv"
+# read_with = "numpy"
+# keys = ""
+
+# tmotors v2.0
+# init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+# read_with = "numpy"
+# keys = ""
+
 #latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
 #init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
 init_csv_path = os.path.join("../data/trajectories", robot, "ilqr_v1.0/trajectory.csv")
 #init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
 read_with = "numpy"
+keys = ""
 
 if robot == "acrobot":
     u_prefac = 1.
@@ -146,18 +163,18 @@ if robot == "acrobot":
 if robot == "pendubot":
     sCu = [0.2, 0.2]
     sCp = [0.1, 0.2]
-    sCv = [0., 0.]
+    sCv = [0.1, 0.1]
     sCen = 0.
     fCp = [2500., 500.]
-    fCv = [100., 100.]
+    fCv = [500., 500.]
     fCen = 0.
 
     f_sCu = [0.0001, 0.0001]
     f_sCp = [0.1, 0.1]
     f_sCv = [0.01, 0.01]
     f_sCen = 0.
-    f_fCp = [10., 10.]
-    f_fCv = [0.1, 0.1]
+    f_fCp = [100., 1000.]
+    f_fCv = [1.0, 10.0]
     f_fCen = 0.
 
 init_sCu = sCu
@@ -231,7 +248,11 @@ if init_csv_path is None:
                                  fCen=init_fCen,
                                  integrator=integrator)
 else:
-    controller.load_init_traj(csv_path=init_csv_path)
+    controller.load_init_traj(csv_path=init_csv_path,
+            read_with=read_with,
+            keys=keys,
+            num_break=40,
+            poly_degree=3)
 controller.init()
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
                                    tf=t_final, dt=dt, controller=controller,
@@ -240,7 +261,7 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
                                    plot_inittraj=True, plot_forecast=True,
                                    save_video=False,
                                    video_name=os.path.join(save_dir, "simulation"),
-                                   anim_dt=5*dt)
+                                   anim_dt=0.02)
 
 # T, X, U = sim.simulate(t0=0.0, x0=start,
 #                        tf=t_final, dt=dt, controller=controller,

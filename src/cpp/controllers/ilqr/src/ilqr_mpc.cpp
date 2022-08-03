@@ -299,9 +299,17 @@ void ilqr_mpc::set_goal(double pos1, double pos2,
 
 void ilqr_mpc::set_u_init_traj(double u1[], double u2[]){
     int Nmin = std::min(N_init, N);
-    for(int i=0; i<N_init-1; i++){
-        u_init_traj[i](0) = u2[i];  //todo Acrobot/Pendubot
-        //u_init_traj[i](1) = u2[i];
+    if (active_act == 0){
+        for(int i=0; i<N_init-1; i++){
+            u_init_traj[i](0) = u1[i];
+            //u_init_traj[i](1) = u2[i];
+        }
+    }
+    else{
+        for(int i=0; i<N_init-1; i++){
+            u_init_traj[i](0) = u2[i];
+            //u_init_traj[i](1) = u2[i];
+        }
     }
     for(int i=0; i<Nmin-1; i++){
         u_traj[i] = u_init_traj[i];
@@ -365,10 +373,10 @@ void ilqr_mpc::shift_trajs(int s){
 
     if (N+s < N_init){
         u_traj[N-2](0) = u_init_traj[N+s-1](0);
-    //    x_traj[N-1](0) = x_init_traj[N+s](0);
-    //    x_traj[N-1](1) = x_init_traj[N+s](1);
-    //    x_traj[N-1](2) = x_init_traj[N+s](2);
-    //    x_traj[N-1](3) = x_init_traj[N+s](3);
+        x_traj[N-1](0) = x_init_traj[N+s](0);
+        x_traj[N-1](1) = x_init_traj[N+s](1);
+        x_traj[N-1](2) = x_init_traj[N+s](2);
+        x_traj[N-1](3) = x_init_traj[N+s](3);
     }
     else{
         u_traj[N-2](0) = 0.0; // todo: acro/pendu
