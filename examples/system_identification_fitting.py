@@ -59,10 +59,21 @@ Fv2 = 0.0008
 Ir = 0.000060719
 # Irr = 0.002186
 
-mp0 = [Lc1 * m1,  I1, Fc1, Fv1, Ir, Lc2 * m2, m2, I2, Fc2, Fv2]
+mp0 = [Lc1 * m1, I1, Fc1, Fv1, Ir, Lc2 * m2, m2, I2, Fc2, Fv2]
 
-bounds = ([0.15, 0.0, 0.0, 0.0, 0.0, 0.1, 0.5, 0.0, 0.00, 0.000],
-          [0.3, np.Inf, 0.093, 0.005, 0.003, 0.4, 0.7, np.Inf, 0.14, 0.005])
+# bounds = [[0.15, 0.0, 0.0, 0.0, 0.0, 0.1, 0.5, 0.0, 0.00, 0.000],
+#           [0.3, 1.0, 0.093, 0.005, 0.003, 0.4, 0.7, 1.0, 0.14, 0.005]]
+
+bounds = np.array([[0.15, 0.3],      # r1*m1
+                   [0.0, 0.2],       # I1
+                   [0.0, 0.5],       # cf1
+                   [0.0, 0.5],       # b1
+                   [0.0, 0.003],     # Ir
+                   [0.1, 0.4],       # r2*m2
+                   [0.5, 0.7],       # m2
+                   [0.0, 0.2],       # I2
+                   [0.0, 0.5],       # cf2
+                   [0.0, 0.5]]).T    # b2
 
 mpar_opt, mpar = run_system_identification(
         measured_data_csv=full_csv_path,
@@ -71,7 +82,12 @@ mpar_opt, mpar = run_system_identification(
         mp0=mp0,
         bounds=bounds,
         read_with="numpy",
-        keys="")
+        keys="",
+        optimization_method="least-squares",
+        save_dir=save_dir,
+        num_proc=0,
+        rescale=False,
+        maxfevals=100000)
 
 print(mpar)
 
