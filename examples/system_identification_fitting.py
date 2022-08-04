@@ -21,19 +21,13 @@ read_withs = ["pandas", "pandas"]
 keys = ["shoulder-elbow", "shoulder-elbow"]
 
 
-full_csv_path = os.path.join(save_dir, "full_trajectory.csv")
 T, X, U = concatenate_trajectories(measured_data_csv,
                                    read_withs=read_withs,
                                    with_tau=True,
-                                   keys=keys,
-                                   save_to=full_csv_path)
+                                   keys=keys)
+full_csv_path = os.path.join(save_dir, "full_trajectory.csv")
 save_trajectory(full_csv_path, T, X, U)
-
-# plot trajectory
-# plot_timeseries_csv(full_csv_path, read_with="numpy", keys="")
 plot_timeseries(T, X, U)
-
-
 
 # fixed model parameters (will not be fitted)
 fixed_mpar = {"g": 9.81,
@@ -76,13 +70,13 @@ bounds = np.array([[0.15, 0.3],      # r1*m1
                    [0.0, 0.5]]).T    # b2
 
 mpar_opt, mpar = run_system_identification(
-        measured_data_csv=full_csv_path,
+        measured_data_csv=measured_data_csv,
         fixed_mpar=fixed_mpar,
         variable_mpar=variable_mpar,
         mp0=mp0,
         bounds=bounds,
-        read_with="numpy",
-        keys="",
+        read_with=read_withs,
+        keys=keys,
         optimization_method="least-squares",
         save_dir=save_dir,
         num_proc=0,

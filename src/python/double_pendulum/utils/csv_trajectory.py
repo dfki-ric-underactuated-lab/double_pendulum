@@ -97,8 +97,7 @@ def load_acceleration(csv_path, read_with="numpy",
 
 
 def concatenate_trajectories(csv_paths=[], read_withs="numpy",
-                             with_tau=True, keys="",
-                             save_to="conc_trajectrory.csv"):
+                             with_tau=True, keys=""):
     if type(csv_paths) != list:
         csv_paths = [csv_paths]
     n = len(csv_paths)

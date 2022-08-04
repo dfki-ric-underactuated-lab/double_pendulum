@@ -1,6 +1,5 @@
 import numpy as np
 import sympy as smp
-import pandas as pd
 
 from double_pendulum.system_identification.data_prep import smooth_data_butter
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
@@ -97,68 +96,47 @@ def build_identification_matrices(fixed_mpar, variable_mpar,
                                   measured_data_filepath,
                                   read_with="pandas",
                                   keys="shoulder-elbow"):
-    """
-    g: float
-        gravity
-    n: int
-        gear ratio
-    L1: float
-        length of first link
-    """
 
-    num_params = len(variable_mpar)
+    t0 = 0.
+    for i, mdf in enumerate(measured_data_filepath):
+        T, X, U = load_trajectory(mdf,
+                                  read_with=read_with[i],
+                                  keys=keys[i],
+                                  with_tau=True)
 
-    # data = pd.read_csv(measured_data_filepath)
-    # print("Measured Data Shape = ", data.shape)
-    # time = data["time"].tolist()
-    # shoulder_pos = data["shoulder_pos"].tolist()
-    # shoulder_vel = data["shoulder_vel"].tolist()
-    # shoulder_trq = data["shoulder_torque"].tolist()
-
-    # elbow_pos = data["elbow_pos"].tolist()
-    # elbow_vel = data["elbow_vel"].tolist()
-    # elbow_trq = data["elbow_torque"].tolist()
-
-    # (filtered_time,
-    #  filtered_shoulder_pos,
-    #  filtered_elbow_pos,
-    #  filtered_shoulder_vel,
-    #  filtered_elbow_vel,
-    #  filtered_shoulder_acc,
-    #  filtered_elbow_acc,
-    #  filtered_shoulder_trq,
-    #  filtered_elbow_trq) = smooth_data_butter(time,
-    #                                           shoulder_pos,
-    #                                           shoulder_vel,
-    #                                           shoulder_trq,
-    #                                           elbow_pos,
-    #                                           elbow_vel,
-    #                                           elbow_trq,
-    #                                           )
-    T, X, U = load_trajectory(measured_data_filepath,
-                              read_with=read_with,
-                              keys=keys,
-                              with_tau=True)
-
-    (filtered_time,
-     filtered_shoulder_pos,
-     filtered_elbow_pos,
-     filtered_shoulder_vel,
-     filtered_elbow_vel,
-     filtered_shoulder_acc,
-     filtered_elbow_acc,
-     filtered_shoulder_trq,
-     filtered_elbow_trq) = smooth_data_butter(t=T.tolist(),
-                                              shoulder_pos=X.T[0],
-                                              shoulder_vel=X.T[2],
-                                              shoulder_trq=U.T[0],
-                                              elbow_pos=X.T[1],
-                                              elbow_vel=X.T[3],
-                                              elbow_trq=U.T[1],
-                                              )
+        (ti, pos1, pos2, vel1, vel2,
+         acc1, acc2, tau1, tau2) = smooth_data_butter(t=T.tolist(),
+                                    shoulder_pos=X.T[0],
+                                    shoulder_vel=X.T[2],
+                                    shoulder_trq=U.T[0],
+                                    elbow_pos=X.T[1],
+                                    elbow_vel=X.T[3],
+                                    elbow_trq=U.T[1])
+        if i == 0:
+            filtered_time = np.asarray(ti)
+            filtered_shoulder_pos = np.asarray(pos1)
+            filtered_elbow_pos = np.asarray(pos2)
+            filtered_shoulder_vel = np.asarray(vel1)
+            filtered_elbow_vel = np.asarray(vel2)
+            filtered_shoulder_acc = np.asarray(acc1)
+            filtered_elbow_acc = np.asarray(acc2)
+            filtered_shoulder_trq = np.asarray(tau1)
+            filtered_elbow_trq = np.asarray(tau2)
+        else:
+            filtered_time = np.append(filtered_time, t0 + np.asarray(ti))
+            t0 = ti[-1] + (ti[-1] - ti[-2])
+            filtered_shoulder_pos = np.append(filtered_shoulder_pos, pos1)
+            filtered_elbow_pos = np.append(filtered_elbow_pos, pos2)
+            filtered_shoulder_vel = np.append(filtered_shoulder_vel, vel1)
+            filtered_elbow_vel = np.append(filtered_elbow_vel, vel2)
+            filtered_shoulder_acc = np.append(filtered_shoulder_acc, acc1)
+            filtered_elbow_acc = np.append(filtered_elbow_acc, acc2)
+            filtered_shoulder_trq = np.append(filtered_shoulder_trq, tau1)
+            filtered_elbow_trq = np.append(filtered_elbow_trq, tau2)
 
     yb_matrix_obj = yb_matrix_sym(fixed_mpar, variable_mpar)
 
+    num_params = len(variable_mpar)
     num_samples = len(filtered_time)
     phi = np.empty((num_samples*2, num_params))
     Q = np.empty((num_samples*2, 1))
