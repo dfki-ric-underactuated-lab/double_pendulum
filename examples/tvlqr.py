@@ -23,8 +23,8 @@ cfric = [0., 0.]
 motor_inertia = 0.
 torque_limit = [0.0, 6.0]
 
-#model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+# model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -39,20 +39,20 @@ mpar.set_torque_limit(torque_limit)
 # keys = "shoulder-elbow"
 
 ## tmotors v1.0
-# csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-# read_with = "numpy"
-# keys = ""
-
-# tmotors v2.0
-csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
 read_with = "numpy"
 keys = ""
+
+# tmotors v2.0
+# csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+# read_with = "numpy"
+# keys = ""
 
 # simulation parameters
 x0 = [0.0, 0.0, 0.0, 0.0]
 
 process_noise_sigmas = [0., 0., 0., 0.]
-meas_noise_sigmas = [0., 0., 0.2, 0.2]
+meas_noise_sigmas = [0., 0., 0.5, 0.5]
 meas_noise_cut = 0.0
 meas_noise_vfilter = "none"
 meas_noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}
@@ -62,6 +62,7 @@ u_noise_sigmas = [0., 0.]
 u_responsiveness = 1.0
 perturbation_times = []
 perturbation_taus = []
+
 # controller parameters
 # Q = np.diag([10.0, 10.0, 1.0, 1.0])  # for dircol traj
 # R = 0.1*np.eye(2)
@@ -77,7 +78,7 @@ Qf = np.copy(Q)
 #                [1600.,  400.,  370.,  0.],
 #                [1500.,  370.,  350.,  0.],
 #                [   0.,    0.,    0., 30.]])
-
+horizon = 100
 
 # init plant, simulator and controller
 plant = SymbolicDoublePendulum(model_pars=mpar)
@@ -96,7 +97,8 @@ sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
 controller = TVLQRController(model_pars=mpar,
                              csv_path=csv_path,
                              read_with=read_with,
-                             keys=keys)
+                             keys=keys,
+                             horizon=horizon)
 
 controller.set_cost_parameters(Q=Q, R=R, Qf=Qf)
 controller.init()
@@ -104,7 +106,7 @@ controller.init()
 # load reference trajectory
 T_des, X_des, U_des = load_trajectory(csv_path, read_with)
 dt = T_des[1] - T_des[0]
-t_final = T_des[-1] + 1
+t_final = T_des[-1]
 
 # simulate
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,

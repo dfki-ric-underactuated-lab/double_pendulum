@@ -1,7 +1,7 @@
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
-from double_pendulum.controller.lqr.lqr import lqr
+from double_pendulum.controller.lqr.lqr import lqr, solve_differential_ricatti
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.utils.csv_trajectory import load_trajectory
 from double_pendulum.utils.wrap_angles import wrap_angles_diff
@@ -22,7 +22,8 @@ class TVLQRController(AbstractController):
                  csv_path="",
                  read_with="pandas",
                  keys="",
-                 num_break=40
+                 num_break=40,
+                 horizon=100,
                  ):
 
         # model parameters
@@ -58,6 +59,7 @@ class TVLQRController(AbstractController):
                 torque_limit=self.torque_limit)
 
         self.num_break = num_break
+        self.horizon = horizon
 
         # load trajectory
         self.T, self.X, self.U = load_trajectory(
@@ -103,16 +105,21 @@ class TVLQRController(AbstractController):
     def init(self):
         self.K = []
         # self.k = []
-        for i in range(len(self.T[:-1])):
+        #for i in range(len(self.T[:-1])):
+        for i in range(len(self.T)):
             A, B = self.splant.linear_matrices(x0=self.X[i], u0=self.U[i])
-            K, S, _ = lqr(A, B, self.Q, self.R)
+            #K, S, _ = lqr(A, B, self.Q, self.R)
+            K, S = solve_differential_ricatti(A, B, self.Q, self.R, self.horizon, self.dt)
+            K = K[0]
+            S = S[0]
+            #print(np.shape(K))
             self.K.append(K)
 
-        A, B = self.splant.linear_matrices(x0=self.X[-1], u0=self.U[-1])
-        K, S, _ = lqr(A, B, self.Qf, self.R)
-        self.K.append(K)
-
+        # A, B = self.splant.linear_matrices(x0=self.X[-1], u0=self.U[-1])
+        # K, S, _ = lqr(A, B, self.Qf, self.R)
+        # self.K.append(K)
         self.K = np.asarray(self.K)
+
         self.K_interp = InterpolateMatrix(
                 T=self.T,
                 X=self.K,
@@ -126,6 +133,8 @@ class TVLQRController(AbstractController):
 
         tau = self.U_interp.get_value(tt) - np.dot(self.K_interp.get_value(tt), x_error)
         u = [tau[0], tau[1]]
+
+        #print(self.K_interp.get_value(tt))
 
         u[0] = np.clip(u[0], -self.torque_limit[0], self.torque_limit[0])
         u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])

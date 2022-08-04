@@ -7,6 +7,7 @@ from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.controller.tvlqr.tvlqr_controller import TVLQRController
 from double_pendulum.controller.pid.point_pid_controller import PointPIDController
+from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.controller.combined_controller import CombinedController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.wrap_angles import wrap_angles_top
@@ -36,6 +37,7 @@ mpar_dp.set_motor_inertia(motor_inertia)
 # mpar_dp.set_damping(damping)
 mpar_dp.set_cfric(cfric)
 mpar_dp.set_torque_limit(torque_limit_pid)
+
 # trajectory parameters
 ## tmotors v1.0
 #csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
@@ -55,11 +57,12 @@ keys = ""
 # load reference trajectory
 T_des, X_des, U_des = load_trajectory(csv_path, read_with)
 dt = T_des[1] - T_des[0]
-t_final = T_des[-1] + 1
+t_final = T_des[-1] + 5
 goal = [np.pi, 0., 0., 0.]
 
 # simulation parameters
 x0 = [0.0, 0.0, 0.0, 0.0]
+integrator = "runge_kutta"
 
 process_noise_sigmas = [0., 0., 0., 0.]
 meas_noise_sigmas = [0., 0., 0.0, 0.0]
@@ -78,16 +81,40 @@ Q = np.diag([0.64, 0.56, 0.13, 0.037])
 R = np.eye(2)*0.82
 Qf = np.copy(Q)
 
+# PID controller
 Kp = 10.
 Ki = 0.
 Kd = 0.1
+horizon = 100
+
+# ilqr mpc controller
+N = 100
+con_dt = dt
+N_init = 100
+max_iter = 10
+max_iter_init = 1000
+regu_init = 1.
+max_regu = 10000.
+min_regu = 0.01
+break_cost_redu = 1e-6
+trajectory_stabilization = False
+shifting = 1
+sCu = [0.0001, 0.0001]
+sCp = [.1, .1]
+sCv = [.01, .01]
+sCen = 0.0
+fCp = [10., 10.]
+fCv = [1., 1.]
+fCen = 0.0
+
 
 def condition1(t, x):
     return False
 
 def condition2(t, x):
     goal = [np.pi, 0., 0., 0.]
-    eps = [0.2, 0.2, 0.8, 0.8]
+    #eps = [0.2, 0.2, 0.8, 0.8]
+    eps = [0.1, 0.1, 0.4, 0.4]
 
     y = wrap_angles_top(x)
 
@@ -117,31 +144,55 @@ controller1 = TVLQRController(
         csv_path=csv_path,
         read_with=read_with,
         keys=keys,
-        torque_limit=torque_limit)
+        torque_limit=torque_limit,
+        horizon=horizon)
 
 controller1.set_cost_parameters(Q=Q, R=R, Qf=Qf)
 controller1.init()
 
-controller2 = PointPIDController(
-        torque_limit=torque_limit_pid,
-        goal=goal,
-        dt=dt)
-controller2.set_parameters(
-        Kp=Kp,
-        Ki=Ki,
-        Kd=Kd)
+# controller2 = PointPIDController(
+#         torque_limit=torque_limit_pid,
+#         dt=dt)
+# controller2.set_parameters(
+#         Kp=Kp,
+#         Ki=Ki,
+#         Kd=Kd)
+# controller2.set_goal(goal)
+# controller2.init()
+
+controller2 = ILQRMPCCPPController(model_pars=mpar)
+#controller2.set_start(start)
+controller2.set_goal(goal)
+controller2.set_parameters(N=N,
+                           dt=con_dt,
+                           max_iter=max_iter,
+                           regu_init=regu_init,
+                           max_regu=max_regu,
+                           min_regu=min_regu,
+                           break_cost_redu=break_cost_redu,
+                           integrator=integrator,
+                           trajectory_stabilization=trajectory_stabilization,
+                           shifting=shifting)
+controller2.set_cost_parameters(sCu=sCu,
+                                sCp=sCp,
+                                sCv=sCv,
+                                sCen=sCen,
+                                fCp=fCp,
+                                fCv=fCv,
+                                fCen=fCen)
 controller2.init()
 
 controller = CombinedController(
         controller1=controller1,
         controller2=controller2,
         condition1=condition1,
-        condition2=condition2)
+        condition2=condition2,
+        compute_both=False)
 
 # simulate
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    tf=t_final, dt=dt, controller=controller,
-                                   integrator="runge_kutta",# imperfections=imperfections,
+                                   integrator=integrator,
                                    plot_inittraj=True)
 # if imperfections:
 X_meas = sim.meas_x_values

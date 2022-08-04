@@ -5,8 +5,8 @@ import yaml
 import numpy as np
 
 from double_pendulum.controller.ilqr.paropt import ilqrmpc_swingup_loss
-from double_pendulum.utils.cmaes_controller_par_optimizer import (cma_par_optimization,
-                                                                  scipy_par_optimization)
+from double_pendulum.utils.optimization import (cma_optimization,
+                                                scipy_par_optimization)
 
 
 # interactive = False
@@ -102,7 +102,7 @@ loss_func.init()
 ipars = loss_func.unscale_pars(init_pars)
 t0 = time.time()
 if optimization_method == "cma":
-    best_par = cma_par_optimization(
+    best_par = cma_optimization(
         loss_func=loss_func,
         init_pars=ipars,
         bounds=[0, 1],

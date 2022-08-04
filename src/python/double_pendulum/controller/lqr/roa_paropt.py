@@ -6,7 +6,7 @@ import yaml
 from roatools.obj_fcts import caprr_coopt_interface
 # from roatools.vis import plotEllipse
 
-from double_pendulum.utils.cmaes_controller_par_optimizer import cma_par_optimization#, plot_cma_results
+from double_pendulum.utils.optimization import cma_optimization#, plot_cma_results
 
 
 class roa_lqrpar_lossfunc():
@@ -363,7 +363,7 @@ def roa_lqr_opt(model_pars=[0.63, 0.3, 0.2],
 
     # optimization
     t0 = time.time()
-    best_par = cma_par_optimization(loss_func=loss_func,
+    best_par = cma_optimization(loss_func=loss_func,
                                     init_pars=inits,
                                     bounds=[0, 1],
                                     save_dir=os.path.join(save_dir, "outcmaes"),
@@ -520,7 +520,7 @@ def roa_design_opt(lqr_pars=[1., 1., 1., 1., 1.],
 
     # optimization
     t0 = time.time()
-    best_par = cma_par_optimization(loss_func=loss_func,
+    best_par = cma_optimization(loss_func=loss_func,
                                     init_pars=init_pars,
                                     bounds=[0, 1],
                                     save_dir=os.path.join(save_dir, "outcmaes"),

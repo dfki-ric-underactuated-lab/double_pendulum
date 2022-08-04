@@ -9,9 +9,10 @@ from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl import SymbolicPFLController
-from double_pendulum.utils.cmaes_controller_par_optimizer import (swingup_loss,
-                                                                  cma_par_optimization,
-                                                                  scipy_par_optimization)
+from double_pendulum.utils.cmaes_controller_par_optimizer import swingup_loss
+from double_pendulum.utils.optimization import (cma_optimization,
+                                                scipy_par_optimization)
+
 
 interactive = False
 
@@ -94,7 +95,7 @@ ipars = loss_func.unscale_pars(init_pars)
 
 t0 = time.time()
 if opt_method == "cma":
-    best_par = cma_par_optimization(loss_func=loss_func,
+    best_par = cma_optimization(loss_func=loss_func,
                                     init_pars=ipars,
                                     bounds=[0, 1],
                                     save_dir=os.path.join(save_dir, "outcmaes"),

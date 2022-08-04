@@ -8,8 +8,8 @@ from roatools.obj_fcts import caprr_coopt_interface
 from roatools.vis import plotEllipse
 
 from double_pendulum.controller.lqr.roa_paropt import roa_lqrandmodelpar_lossfunc
-from double_pendulum.utils.cmaes_controller_par_optimizer import (cma_par_optimization,
-                                                                  scipy_par_optimization)
+from double_pendulum.utils.optimization import (cma_optimization,
+                                                scipy_par_optimization)
 
 
 # interactive = False
@@ -77,7 +77,7 @@ loss_func.set_model_parameters(mass=mass,
 
 # optimization
 t0 = time.time()
-best_par = cma_par_optimization(loss_func=loss_func,
+best_par = cma_optimization(loss_func=loss_func,
                                 init_pars=init_pars,
                                 bounds=[0, 1],
                                 save_dir=os.path.join(save_dir, "outcmaes"),
