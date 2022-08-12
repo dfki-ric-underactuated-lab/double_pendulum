@@ -55,6 +55,7 @@ class LQRController(AbstractController):
         self.set_goal()
         self.set_parameters()
         self.set_cost_parameters()
+        self.set_filter_args()
 
     def set_goal(self, x=[np.pi, 0., 0., 0.]):
         y = x.copy()
@@ -111,12 +112,21 @@ class LQRController(AbstractController):
         self.Q = np.asarray(Q)
         self.R = np.asarray(R)
 
-    def init(self):
+    def init_(self):
         Alin, Blin = self.splant.linear_matrices(x0=self.xd, u0=[0.0, 0.0])
         self.K, self.S, _ = lqr(Alin, Blin, self.Q, self.R)
 
-    def get_control_output(self, x, t=None):
+        # self.init_filter()
+        # self.x_hist = []
+        # self.u_hist = [[0., 0.]]
+        # self.xfilt_hist = []
+
+    def get_control_output_(self, x, t=None):
         y = x.copy()
+        #self.x_hist.append(x)
+        #y = self.filter_measurement(x, self.u_hist[-1])
+        #self.xfilt_hist.append(y)
+
         y[0] = y[0] % (2*np.pi)
         y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi
 
@@ -141,6 +151,8 @@ class LQRController(AbstractController):
 
         u[0] = np.clip(u[0], -self.torque_limit[0], self.torque_limit[0])
         u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
+
+        #self.u_hist.append(u)
 
         #print(x, u)
         return u

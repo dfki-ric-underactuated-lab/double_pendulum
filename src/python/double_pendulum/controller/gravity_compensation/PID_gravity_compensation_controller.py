@@ -45,11 +45,11 @@ class PIDGravityCompensationController(AbstractController):
     def set_parameters(self, Kp, Ki, Kd):
         self.pid_con.set_parameters(Kp, Ki, Kd)
 
-    def init(self):
+    def init_(self):
         self.grav_con.init()
         self.pid_con.init()
 
-    def get_control_output(self, x, t=None):
+    def get_control_output_(self, x, t=None):
 
         grav_u = self.grav_con.get_control_output(x, t)
         pid_u = self.pid_con.get_control_output(x, t)

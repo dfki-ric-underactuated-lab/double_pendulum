@@ -68,11 +68,11 @@ class TrajPIDController(AbstractController):
         self.Ki = Ki
         self.Kd = Kd
 
-    def init(self):
+    def init_(self):
         self.errors1 = []
         self.errors2 = []
 
-    def get_control_output(self, x, t):
+    def get_control_output_(self, x, t):
         tt = min(t, self.max_t)
 
         p = self.P_interp.get_value(tt)

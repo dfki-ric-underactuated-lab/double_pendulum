@@ -235,7 +235,7 @@ class ILQRMPCCPPController(AbstractController):
         self.v2_init_traj = np.ascontiguousarray(X.T[3])
 
 
-    def init(self):
+    def init_(self):
         self.ilmpc = cppilqr.cppilqrmpc(self.N, self.N_init)
         self.ilmpc.set_parameters(self.integrator_int,
                                   self.dt,
@@ -276,7 +276,7 @@ class ILQRMPCCPPController(AbstractController):
                                    self.v1_init_traj, self.v2_init_traj,
                                    self.traj_stab)
 
-    def get_control_output(self, x, t=None):
+    def get_control_output_(self, x, t=None):
         # print("get control output")
         u_act = self.ilmpc.get_control_output(x[0], x[1], x[2], x[3])
 

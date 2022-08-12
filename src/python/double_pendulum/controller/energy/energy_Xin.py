@@ -103,10 +103,10 @@ class EnergyController(AbstractController):
         tmax = (a2*b1 + a3*b1 - a1*b2 - a3*b2) / (a1 + a2 + a3)
         print("Bound on torque: ", tmax)
 
-    def init(self):
+    def init_(self):
         self.en = []
 
-    def get_control_output(self, x, t=None):
+    def get_control_output_(self, x, t=None):
         pos = np.copy(x[:2])
         vel = np.copy(x[2:])
 

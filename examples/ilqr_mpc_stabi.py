@@ -10,7 +10,7 @@ from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory
 
-robot = "acrobot"
+robot = "pendubot"
 
 cfric = [0., 0.]
 # damping = [0., 0.]
@@ -76,15 +76,6 @@ if robot == "acrobot":
     fCv = [1., 1.]
     fCen = 0.0
 
-    f_sCu = sCu
-    f_sCp = sCp
-    f_sCv = sCv
-    f_sCen = sCen
-    f_fCp = fCp
-    f_fCv = fCv
-    f_fCen = fCen
-
-
 if robot == "pendubot":
     sCu = [0.0001, 0.0001]
     sCp = [0.1, 0.1]
@@ -93,22 +84,6 @@ if robot == "pendubot":
     fCp = [10., 10.]
     fCv = [0.1, 0.1]
     fCen = 0.
-
-    f_sCu = sCu
-    f_sCp = sCp
-    f_sCv = sCv
-    f_sCen = sCen
-    f_fCp = fCp
-    f_fCv = fCv
-    f_fCen = fCen
-
-init_sCu = sCu
-init_sCp = sCp
-init_sCv = sCv
-init_sCen = sCen
-init_fCp = fCp
-init_fCv = fCv
-init_fCen = fCen
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
@@ -149,13 +124,13 @@ controller.set_cost_parameters(sCu=sCu,
                                fCp=fCp,
                                fCv=fCv,
                                fCen=fCen)
-controller.set_final_cost_parameters(sCu=f_sCu,
-                                     sCp=f_sCp,
-                                     sCv=f_sCv,
-                                     sCen=f_sCen,
-                                     fCp=f_fCp,
-                                     fCv=f_fCv,
-                                     fCen=f_fCen)
+# controller.set_final_cost_parameters(sCu=f_sCu,
+#                                      sCp=f_sCp,
+#                                      sCv=f_sCv,
+#                                      sCen=f_sCen,
+#                                      fCp=f_fCp,
+#                                      fCv=f_fCv,
+#                                      fCen=f_fCen)
 # controller.compute_init_traj(N=N_init,
 #                              dt=dt,
 #                              max_iter=max_iter_init,

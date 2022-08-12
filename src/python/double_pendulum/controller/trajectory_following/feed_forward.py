@@ -22,7 +22,7 @@ class FeedForwardController(AbstractController):
                 num_break=num_break,
                 poly_degree=3)
 
-    def get_control_output(self, x, t):
+    def get_control_output_(self, x, t):
         tt = min(t, self.T[-1])
 
         uu = self.U_interp.get_value(tt)

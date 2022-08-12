@@ -60,7 +60,6 @@ controller1 = TrajPIDController(T=T_des,
                                 torque_limit=torque_limit,
                                 num_break=40)
 controller1.set_parameters(Kp=Kp, Ki=Ki, Kd=Kd)
-controller1.init()
 
 controller2 = TrajPIDController(T=T_des,
                                 X=X_des,
@@ -69,13 +68,13 @@ controller2 = TrajPIDController(T=T_des,
                                 torque_limit=torque_limit,
                                 num_break=40)
 controller2.set_parameters(Kp=0., Ki=0., Kd=0.)
-controller2.init()
 
 controller = CombinedController(
         controller1=controller1,
         controller2=controller2,
         condition1=condition1,
         condition2=condition2)
+controller.init()
 
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    tf=t_final, dt=dt, controller=controller,

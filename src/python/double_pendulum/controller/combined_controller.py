@@ -1,7 +1,9 @@
 import numpy as np
 
+from double_pendulum.controller.abstract_controller import AbstractController
 
-class CombinedController():
+
+class CombinedController(AbstractController):
     def __init__(self,
                  controller1,
                  controller2,
@@ -16,9 +18,9 @@ class CombinedController():
 
         self.compute_both = compute_both
 
-    def init(self):
-        self.controllers[0].init()
-        self.controllers[1].init()
+    def init_(self):
+        self.controllers[0].init_()
+        self.controllers[1].init_()
 
     def set_parameters(self, controller1_pars, controller2_pars):
         self.controllers[0].set_parameters(*controller1_pars)
@@ -32,7 +34,7 @@ class CombinedController():
         self.controllers[0].set_goal(x)
         self.controllers[1].set_goal(x)
 
-    def get_control_output(self, x, t):
+    def get_control_output_(self, x, t):
         inactive = 1 - self.active
 
         if self.conditions[inactive](t, x):
@@ -40,9 +42,9 @@ class CombinedController():
             print("Switching to Controller ", self.active + 1)
 
         if self.compute_both:
-            _ = self.controllers[inactive].get_control_output(x, t)
+            _ = self.controllers[inactive].get_control_output_(x, t)
 
-        return self.controllers[self.active].get_control_output(x, t)
+        return self.controllers[self.active].get_control_output_(x, t)
 
     def get_forecast(self):
         return self.controllers[self.active].get_forecast()
@@ -51,7 +53,7 @@ class CombinedController():
         return self.controllers[self.active].get_init_trajectory()
 
 
-class SimultaneousControllers():
+class SimultaneousControllers(AbstractController):
     def __init__(self,
                  controllers,
                  forecast_con=0):
@@ -59,9 +61,9 @@ class SimultaneousControllers():
         self.controllers = controllers
         self.fc_ind = forecast_con
 
-    def init(self):
+    def init_(self):
         for c in self.controllers:
-            c.init()
+            c.init_()
 
     def set_parameters(self, controller_pars):
         for i, c in enumerate(self.controllers):
@@ -75,10 +77,10 @@ class SimultaneousControllers():
         for c in self.controllers:
             c.set_goal(x)
 
-    def get_control_output(self, x, t):
+    def get_control_output_(self, x, t):
         u_cons = []
         for c in self.controllers:
-            u_cons.append(c.get_control_output(x, t))
+            u_cons.append(c.get_control_output_(x, t))
 
         u = np.sum(u_cons)
         return u

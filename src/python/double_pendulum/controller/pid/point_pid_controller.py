@@ -29,11 +29,11 @@ class PointPIDController(AbstractController):
     def set_goal(self, x):
         self.goal = x
 
-    def init(self):
+    def init_(self):
         self.errors1 = []
         self.errors2 = []
 
-    def get_control_output(self, x, t=None):
+    def get_control_output_(self, x, t=None):
         e1 = self.goal[0] - x[0]
         e2 = self.goal[1] - x[1]
         e1 = (e1 + np.pi) % (2*np.pi) - np.pi

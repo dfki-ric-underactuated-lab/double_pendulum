@@ -45,7 +45,7 @@ class LQRController(AbstractController):
         self.Q = np.asarray(Q)
         self.R = np.asarray(R)
 
-    def init(self):
+    def init_(self):
         # Linearization of the system
         self.drake_robot_lin = FirstOrderTaylorApproximation(
                 self.drake_robot,
@@ -58,7 +58,7 @@ class LQRController(AbstractController):
                 self.Q,
                 self.R)
 
-    def get_control_output(self, x, t=None):
+    def get_control_output_(self, x, t=None):
         y = x.copy()
         y[0] = y[0] % (2*np.pi)
         y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi

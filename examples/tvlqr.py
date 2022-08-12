@@ -39,7 +39,9 @@ mpar.set_torque_limit(torque_limit)
 # keys = "shoulder-elbow"
 
 ## tmotors v1.0
-csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
+#csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
+latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
+csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
 read_with = "numpy"
 keys = ""
 
@@ -48,11 +50,17 @@ keys = ""
 # read_with = "numpy"
 # keys = ""
 
+T_des, X_des, U_des = load_trajectory(csv_path, read_with)
+dt = T_des[1] - T_des[0]
+# dt = 0.002
+t_final = T_des[-1] + 5
+
+
 # simulation parameters
 x0 = [0.0, 0.0, 0.0, 0.0]
 
 process_noise_sigmas = [0., 0., 0., 0.]
-meas_noise_sigmas = [0., 0., 0.5, 0.5]
+meas_noise_sigmas = [0., 0., 0., 0.]
 meas_noise_cut = 0.0
 meas_noise_vfilter = "none"
 meas_noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}
@@ -102,11 +110,6 @@ controller = TVLQRController(model_pars=mpar,
 
 controller.set_cost_parameters(Q=Q, R=R, Qf=Qf)
 controller.init()
-
-# load reference trajectory
-T_des, X_des, U_des = load_trajectory(csv_path, read_with)
-dt = T_des[1] - T_des[0]
-t_final = T_des[-1]
 
 # simulate
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,

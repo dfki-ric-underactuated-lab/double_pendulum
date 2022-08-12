@@ -36,8 +36,8 @@ t_final = 60.0
 
 # controller parameters
 kp = 0.68  # > 0.67
-kd = 0.3  # > 0.022
-kv = 5.0  # > 0.0
+kd = 0.023  # > 0.022
+kv = 0.015  # > 0.0
 
 plant = SymbolicDoublePendulum(model_pars=mpar)
 sim = Simulator(plant=plant)

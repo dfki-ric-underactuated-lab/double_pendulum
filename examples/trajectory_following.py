@@ -8,8 +8,8 @@ from double_pendulum.controller.pid.trajectory_pid_controller import TrajPIDCont
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties
 
-robot = "acrobot"
-trajopt = "ilqr"
+robot = "double_pendulum"
+trajopt = "dircol"
 
 cfric = [0., 0.]
 motor_inertia = 0.
@@ -17,9 +17,11 @@ if robot == "acrobot":
     torque_limit = [0.0, 6.0]
 if robot == "pendubot":
     torque_limit = [6.0, 0.0]
+if robot == "double_pendulum":
+    torque_limit = [6.0, 6.0]
 
-# model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+#model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -28,12 +30,13 @@ mpar.set_torque_limit(torque_limit)
 
 # csv file
 use_feed_forward_torque = True
-read_with = "numpy"
-keys = ""
+read_with = "pandas"
+keys = "shoulder-elbow"
 #latest_dir = sorted(os.listdir(os.path.join("data", robot, trajopt, "trajopt")))[-1]
 #csv_path = os.path.join("data", robot, trajopt, "trajopt", latest_dir, "trajectory.csv")
 #csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+#csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+csv_path = "../data/trajectories/double_pendulum/dircol/trajectory.csv"
 
 T_des, X_des, U_des = load_trajectory(csv_path, read_with=read_with)
 dt, t_final, x0, _ = trajectory_properties(T_des, X_des)
@@ -45,7 +48,7 @@ controller = TrajectoryController(csv_path=csv_path,
                                   read_with=read_with,
                                   keys=keys,
                                   torque_limit=torque_limit,
-                                  kK_stabilization=True)
+                                  kK_stabilization=False)
 # controller = TrajectoryInterpController(csv_path=csv_path,
 #                                   torque_limit=torque_limit,
 #                                   read_with=read_with,

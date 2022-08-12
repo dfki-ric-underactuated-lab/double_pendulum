@@ -1,6 +1,12 @@
 # here, the abstract controller class is defined, to which all controller
 # classes have to adhere
 from abc import ABC, abstractmethod
+import numpy as np
+
+from double_pendulum.utils.filters.identity import identity_filter
+from double_pendulum.utils.filters.low_pass import lowpass_filter_rt
+from double_pendulum.utils.filters.kalman_filter import kalman_filter_rt
+from double_pendulum.utils.filters.unscented_kalman_filter import unscented_kalman_filter_rt
 
 
 class AbstractController(ABC):
@@ -9,7 +15,7 @@ class AbstractController(ABC):
     this abstract class.
     """
     @abstractmethod
-    def get_control_output(self, x, t=None):
+    def get_control_output_(self, x, t=None):
         """
         The function to compute the control input for the double pendulum's
         actuator(s).
@@ -33,17 +39,35 @@ class AbstractController(ABC):
         u = [0.0, 0.0]
         return u
 
+    def get_control_output(self, x, t=None):
+        self.x_hist.append(x)
+        y = self.filter_measurement(x, self.u_hist[-1])
+        self.xfilt_hist.append(y)
+
+        u = self.get_control_output_(x, t)
+
+        self.u_hist.append(u)
+        return u
+
     def set_parameters(self):
         """
         Set controller parameters. Optional.
         """
         pass
 
-    def init(self):
+    def init_(self):
         """
         Initialize the controller. Optional.
         """
-        pass
+
+    def init(self):
+        self.set_filter_args()
+        self.init_filter()
+        self.x_hist = []
+        self.u_hist = [[0., 0.]]
+        self.xfilt_hist = []
+
+        self.init_()
 
     def set_start(self, x):
         """
@@ -73,3 +97,69 @@ class AbstractController(ABC):
 
     def get_init_trajectory(self):
         return [], [], []
+
+    def set_filter_args(self, filt=None, x0=[np.pi, 0., 0., 0.], dt=0.001, plant=None,
+                        simulator=None, velocity_cut=-1., filter_kwargs={}):
+        self.filt = filt
+        self.filt_x0 = x0
+        self.filt_dt = dt
+        self.filt_plant = plant
+        self.filt_simulator = simulator
+        self.filt_velocity_cut = velocity_cut
+        self.filt_kwargs = filter_kwargs
+
+    def init_filter(self):
+
+        if self.filt == None:
+            self.filter = identity_filter()
+
+        elif self.filt == "lowpass":
+            dof = self.filt_plant.dof
+
+            self.filter = lowpass_filter_rt(
+                    dim_x=2*dof,
+                    alpha=self.filt_kwargs["lowpass_alpha"],
+                    x0=self.filt_x0)
+
+        elif self.filt == "kalman":
+            dof = self.filt_plant.dof
+
+            A, B = self.filt_plant.linear_matrices(
+                    self.filt_kwargs["kalman_xlin"],
+                    self.filt_kwargs["kalman_ulin"])
+
+            self.filter = kalman_filter_rt(
+                    A=A,
+                    B=B,
+                    dim_x=2*dof,
+                    dim_u=self.filt_plant.n_actuators,
+                    x0=self.filt_x0,
+                    dt=self.filt_dt,
+                    process_noise=self.filt_kwargs["kalman_process_noise_sigmas"],
+                    measurement_noise=self.filt_kwargs["kalman_meas_noise_sigmas"])
+        elif self.filt == "unscented_kalman":
+            dof = self.filt_plant.dof
+            if self.filt_kwargs["ukalman_integrator"] == "euler":
+                 fx = self.filt_simulator.euler_integrator
+            elif self.filt_kwargs["ukalman_integrator"] == "runge_kutta":
+                fx = self.filt_simulator.runge_integrator
+            self.filter = unscented_kalman_filter_rt(
+                    dim_x=2*dof,
+                    x0=self.filt_x0,
+                    dt=self.filt_dt,
+                    process_noise=self.filt_kwargs["ukalman_process_noise_sigmas"],
+                    measurement_noise=self.filt_kwargs["ukalman_meas_noise_sigmas"],
+                    fx=fx)
+
+    def filter_measurement(self, x, last_u):
+        x_filt = np.copy(x)
+
+        # velocity cut
+        if self.filt_velocity_cut > 0.:
+            x_filt[2] = np.where(np.abs(x_filt[2]) < self.filt_velocity_cut, 0, x_filt[2])
+            x_filt[3] = np.where(np.abs(x_filt[3]) < self.filt_velocity_cut, 0, x_filt[3])
+
+        # filter
+        x_filt = self.filter(x, last_u)
+
+        return x_filt

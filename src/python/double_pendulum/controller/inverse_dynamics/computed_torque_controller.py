@@ -79,12 +79,12 @@ class ComputedTorqueController(AbstractController):
         self.Ki = Ki
         self.Kd = Kd
 
-    def init(self):
+    def init_(self):
         self.errors1 = []
         self.errors2 = []
         self.counter = 0
 
-    def get_control_output(self, x, t=None):
+    def get_control_output_(self, x, t=None):
 
         acc = self.splant.inverse_dynamics(self.X[self.counter], self.ACC[self.counter])
 

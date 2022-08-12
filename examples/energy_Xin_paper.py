@@ -84,8 +84,6 @@ if with_lqr:
                                    torque_limit=torque_limit)
     controller1.set_parameters(kp=kp, kd=kd, kv=kv)
     controller1.set_goal(goal)
-    # controller.check_parameters()
-    controller1.init()
 
     controller2 = LQRController(mass=mass,
                                 length=length,
@@ -99,15 +97,14 @@ if with_lqr:
     controller2.set_cost_matrices(Q=Q, R=R)
     controller2.set_parameters(failure_value=0.0,
                                cost_to_go_cut=1e9)
-    controller2.init()
-    print(f"LQR controller K matrix: {controller2.K}")
-
 
     controller = CombinedController(
             controller1=controller1,
             controller2=controller2,
             condition1=condition1,
             condition2=condition2)
+    controller.init()
+    print(f"LQR controller K matrix: {controller2.K}")
 else:
     controller = EnergyController(mass=mass,
                                   length=length,

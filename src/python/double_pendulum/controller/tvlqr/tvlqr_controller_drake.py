@@ -92,7 +92,7 @@ class TVLQRController(AbstractController):
         self.R = np.asarray(R)
         self.Qf = np.asarray(Qf)
 
-    def init(self):
+    def init_(self):
 
         # self.time_traj = self.time_traj.reshape(self.time_traj.shape[0], -1)
         x0_desc = np.vstack((self.pos1_traj,
@@ -133,7 +133,7 @@ class TVLQRController(AbstractController):
 
         return T, X, U
 
-    def get_control_output(self, x, t):
+    def get_control_output_(self, x, t):
         # ti = float(np.min(t, self.max_t))
 
         error_state = np.reshape(x, (np.shape(x)[0], 1)) - self.tvlqr.x0.value(t)
@@ -143,7 +143,9 @@ class TVLQRController(AbstractController):
         #        self.tvlqr.k0.value(t))[0][0]
         tau = (self.tvlqr.u0.value(t) -
                self.tvlqr.K.value(t).dot(error_state))[0][0]
+
         # print(self.tvlqr.u0.value(t), self.tvlqr.K.value(t).dot(error_state), self.tvlqr.k0.value(t))
+        # print(self.tvlqr.K.value(t))
 
         u = np.zeros(2)
         u[self.active_motor] = tau

@@ -100,9 +100,9 @@ goal = [np.pi, 0., 0., 0.]
 # read_with = "numpy"
 # keys = ""
 
-#latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
-#init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
-init_csv_path = os.path.join("../data/trajectories", robot, "ilqr_v1.0/trajectory.csv")
+latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
+init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
+#init_csv_path = os.path.join("../data/trajectories", robot, "ilqr_v1.0/trajectory.csv")
 #init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
 read_with = "numpy"
 keys = ""

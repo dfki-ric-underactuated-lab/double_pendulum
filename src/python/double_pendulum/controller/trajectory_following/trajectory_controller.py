@@ -1,7 +1,7 @@
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
-from double_pendulum.utils.pcw_polynomial import FitPiecewisePolynomial, InterpolateVector
+from double_pendulum.utils.pcw_polynomial import InterpolateVector
 from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties, load_Kk_values
 
 
@@ -21,7 +21,7 @@ class TrajectoryController(AbstractController):
         if self.kK_stabilization:
             self.K1, self.K2, self.k1, self.k2 = load_Kk_values(csv_path, read_with, keys=keys)
 
-    def get_control_output(self, x, t):
+    def get_control_output_(self, x, t):
         n = int(np.around(min(t, self.max_t) / self.dt))
 
         u1 = self.U[n][0]
@@ -96,7 +96,7 @@ class TrajectoryInterpController(AbstractController):
                     num_break=num_break,
                     poly_degree=3)
 
-    def get_control_output(self, x, t):
+    def get_control_output_(self, x, t):
         tt = min(t, self.max_t)
 
         uu = self.U_interp.get_value(tt)

@@ -46,7 +46,7 @@ class GravityCompensationController(AbstractController):
                                              inertia=self.inertia,
                                              torque_limit=self.torque_limit)
 
-    def get_control_output(self, x, t=None):
+    def get_control_output_(self, x, t=None):
 
         g = self.splant.gravity_vector(x)
         u = -np.dot(self.splant.B, g)

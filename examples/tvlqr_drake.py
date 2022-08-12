@@ -38,7 +38,9 @@ mpar.set_torque_limit(torque_limit)
 # read_with = "pandas"  # for dircol traj
 # keys = "shoulder-elbow"
 
-csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
+#csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
+latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
+csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
 read_with = "numpy"
 keys = ""
 
@@ -99,7 +101,7 @@ controller.init()
 # load reference trajectory
 T_des, X_des, U_des = load_trajectory(csv_path, read_with)
 dt = T_des[1] - T_des[0]
-t_final = T_des[-1]
+t_final = T_des[-1] + 5
 
 # simulate
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,

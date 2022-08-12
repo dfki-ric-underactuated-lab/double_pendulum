@@ -55,17 +55,18 @@ double_pendulum = SymbolicDoublePendulum(mass=mass,
                                          torque_limit=torque_limit)
 
 if with_lqr:
-    controller = SymbolicPFLAndLQRController(mass,
-                                             length,
-                                             com,
-                                             damping,
-                                             gravity,
-                                             cfric,
-                                             inertia,
-                                             torque_limit,
-                                             "acrobot",
-                                             "collocated",
-                                             "energy")
+    controller = SymbolicPFLAndLQRController(mass=mass,
+                                             length=length,
+                                             com=com,
+                                             damping=damping,
+                                             gravity=gravity,
+                                             coulomb_fric=cfric,
+                                             inertia=inertia,
+                                             torque_limit=torque_limit,
+                                             model_pars=None,
+                                             robot="acrobot",
+                                             pfl_method="collocated",
+                                             reference="energy")
     controller.lqr_controller.set_cost_parameters(p1p1_cost=1000.,
                                                   p2p2_cost=1000.,
                                                   v1v1_cost=1000.,
@@ -78,16 +79,17 @@ if with_lqr:
     controller.lqr_controller.set_parameters(failure_value=np.nan,
                                              cost_to_go_cut=1000.)
 else:
-    controller = SymbolicPFLController(mass,
-                                       length,
-                                       com,
-                                       damping,
-                                       gravity,
-                                       cfric,
-                                       inertia,
-                                       torque_limit,
-                                       "acrobot",
-                                       "collocated")
+    controller = SymbolicPFLController(mass=mass,
+                                       length=length,
+                                       com=com,
+                                       damping=damping,
+                                       gravity=gravity,
+                                       coulomb_fric=cfric,
+                                       inertia=inertia,
+                                       torque_limit=torque_limit,
+                                       model_pars=None,
+                                       robot="acrobot",
+                                       pfl_method="collocated")
     # controller = EnergyShapingPFLController(mass,
     #                                         length,
     #                                         com,
@@ -121,28 +123,30 @@ T, X, U = sim.simulate_and_animate(t0=0.0,
 energy = controller.en
 des_energy = controller.desired_energy
 
-fig, ax = plt.subplots(4, 1, figsize=(18, 6), sharex="all")
+plot_timeseries(T=T, X=X, U=U, energy=energy,
+                plot_energy=True,
+                pos_y_lines=[-np.pi, np.pi],
+                tau_y_lines=[-torque_limit[1], torque_limit[1]],
+                energy_y_lines=[des_energy])
 
-ax[0].plot(T, np.asarray(X).T[0], label="q1")
-ax[0].plot(T, np.asarray(X).T[1], label="q2")
-ax[0].set_ylabel("angle [rad]")
-ax[0].legend(loc="best")
-ax[1].plot(T, np.asarray(X).T[2], label="q1 dot")
-ax[1].plot(T, np.asarray(X).T[3], label="q2 dot")
-ax[1].set_ylabel("angular velocity [rad/s]")
-ax[1].legend(loc="best")
-ax[2].plot(T, np.asarray(U).T[0], label="u1")
-ax[2].plot(T, np.asarray(U).T[1], label="u2")
-ax[2].set_xlabel("time [s]")
-ax[2].set_ylabel("input torque [Nm]")
-ax[2].legend(loc="best")
-ax[3].plot(T, np.asarray(energy), label="energy")
-ax[3].plot([T[0], T[-1]], [des_energy, des_energy], label="energy", color="red")
-ax[3].set_ylabel("energy [J]")
-ax[3].legend(loc="best")
-plt.show()
+# fig, ax = plt.subplots(4, 1, figsize=(18, 6), sharex="all")
+# 
+# ax[0].plot(T, np.asarray(X).T[0], label="q1")
+# ax[0].plot(T, np.asarray(X).T[1], label="q2")
+# ax[0].set_ylabel("angle [rad]")
+# ax[0].legend(loc="best")
+# ax[1].plot(T, np.asarray(X).T[2], label="q1 dot")
+# ax[1].plot(T, np.asarray(X).T[3], label="q2 dot")
+# ax[1].set_ylabel("angular velocity [rad/s]")
+# ax[1].legend(loc="best")
+# ax[2].plot(T, np.asarray(U).T[0], label="u1")
+# ax[2].plot(T, np.asarray(U).T[1], label="u2")
+# ax[2].set_xlabel("time [s]")
+# ax[2].set_ylabel("input torque [Nm]")
+# ax[2].legend(loc="best")
+# ax[3].plot(T, np.asarray(energy), label="energy")
+# ax[3].plot([T[0], T[-1]], [des_energy, des_energy], label="energy", color="red")
+# ax[3].set_ylabel("energy [J]")
+# ax[3].legend(loc="best")
+# plt.show()
 
-# Save Trajectory to a csv file to be sent to the motor.
-
-#csv_data = np.vstack((T, np.asarray(X).T[0], np.asarray(X).T[1], U)).T
-#np.savetxt("traj_opt_traj.csv", csv_data, delimiter=',', header="time,pos,vel,torque", comments="")

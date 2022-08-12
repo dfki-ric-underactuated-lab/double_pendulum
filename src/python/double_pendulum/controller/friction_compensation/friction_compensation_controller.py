@@ -46,7 +46,7 @@ class FrictionCompensationController(AbstractController):
                                              inertia=self.inertia,
                                              torque_limit=self.torque_limit)
 
-    def get_control_output(self, x, t=None):
+    def get_control_output_(self, x, t=None):
 
         cf = self.splant.coulomb_vector(x)
         u = np.dot(self.splant.B, cf)

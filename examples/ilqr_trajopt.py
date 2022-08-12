@@ -34,7 +34,7 @@ robot = "acrobot"
 # damping = [0.0005, 0.0001]
 # damping = [0., 0.]
 # cfric = [0.093, 0.186]
-# cfric = [0., 0.]
+cfric = [0., 0.]
 # gravity = 9.81
 # inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
 motor_inertia = 0.
@@ -49,11 +49,11 @@ mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
 # mpar.set_damping(damping)
-# mpar.set_cfric(cfric)
+mpar.set_cfric(cfric)
 mpar.set_torque_limit(torque_limit)
 
 # controller parameters
-N = 5000
+N = 6000
 max_iter = 100000
 regu_init = 100.
 max_regu = 1000000.

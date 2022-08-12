@@ -63,6 +63,7 @@ sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
                          u_responsiveness=u_responsiveness)
 
 controller = GravityCompensationController(model_pars=mpar)
+controller.init()
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    tf=t_final, dt=dt, controller=controller,
                                    integrator=integrator,
