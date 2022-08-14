@@ -1008,7 +1008,7 @@ void ilqr::save_trajectory_csv(std::string filename){
 
     std::ofstream traj_file;
     traj_file.open (filename);
-    traj_file << "time, pos1, pos2, vel1, vel2, tau1, tau2, K11, K12, K13, K14, K21, K22, K23, K24, k1, k2\n";
+    traj_file << "time,pos1,pos2,vel1,vel2,tau1,tau2,K11,K12,K13,K14,K21,K22,K23,K24,k1,k2\n";
 
     for(int i=0; i<N-1; i++){
         traj_file << dt*i << ", ";

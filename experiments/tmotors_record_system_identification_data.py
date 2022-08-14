@@ -17,7 +17,6 @@ Ki = 0.
 Kd = 2.
 
 controller = TrajPIDController(csv_path=excitation_traj_csv,
-                               read_with="pandas",
                                use_feed_forward_torque=False,
                                torque_limit=torque_limit)
 

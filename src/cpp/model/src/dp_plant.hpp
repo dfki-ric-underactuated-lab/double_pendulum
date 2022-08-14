@@ -11,6 +11,8 @@ class DPPlant{
     double length1, length2;
     double com1, com2;
     double inertia1, inertia2;
+    double motor_inertia;
+    double gear_ratio;
     double damping1, damping2;
     double coulomb_friction1, coulomb_friction2;
     double gravity;

@@ -35,26 +35,23 @@ mpar.set_torque_limit(torque_limit)
 # trajectory parameters
 ## tmotors v1.0
 # csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
-# read_with = "pandas"  # for dircol traj
-# keys = "shoulder-elbow"
 
 ## tmotors v1.0
 #csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
 latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
 csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
-read_with = "numpy"
-keys = ""
 
 # tmotors v2.0
 # csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
-# read_with = "numpy"
-# keys = ""
 
-T_des, X_des, U_des = load_trajectory(csv_path, read_with)
+T_des, X_des, U_des = load_trajectory(csv_path)
 dt = T_des[1] - T_des[0]
 # dt = 0.002
 t_final = T_des[-1] + 5
 
+
+# tmotors v2.0
+# csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
 
 # simulation parameters
 x0 = [0.0, 0.0, 0.0, 0.0]
@@ -104,8 +101,6 @@ sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
 
 controller = TVLQRController(model_pars=mpar,
                              csv_path=csv_path,
-                             read_with=read_with,
-                             keys=keys,
                              horizon=horizon)
 
 controller.set_cost_parameters(Q=Q, R=R, Qf=Qf)
@@ -114,7 +109,7 @@ controller.init()
 # simulate
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    tf=t_final, dt=dt, controller=controller,
-                                   integrator="runge_kutta",# imperfections=imperfections,
+                                   integrator="runge_kutta",
                                    plot_inittraj=True)
 # if imperfections:
 X_meas = sim.meas_x_values

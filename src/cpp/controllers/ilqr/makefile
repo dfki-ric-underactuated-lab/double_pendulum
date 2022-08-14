@@ -16,7 +16,7 @@ EXECUTABLE1 := compute_ilqr
 EXECUTABLE3 := mpc_ilqr
 SRCS1 := $(SRC_ILQR)/main_ilqr.cpp $(SRC_PLANT)/dp_plant.cpp $(SRC_SIMULATOR)/simulator.cpp $(SRC_ILQR)/ilqr.cpp
 SRCS2 := $(SRC_PLANT)/dp_plant.cpp $(SRC_SIMULATOR)/simulator.cpp $(SRC_ILQR)/ilqr.cpp $(SRC_ILQR)/ilqr_mpc.cpp
-SRCS3 := $(SRC_ILQR)/mpc_ilqr.cpp $(SRC_PLANT)/dp_plant.cpp $(SRC_SIMULATOR)/simulator.cpp $(SRC_ILQR)/ilqr.cpp $(SRC_ILQR)/ilqr_mpc.cpp $(SRC_UTILS)/csv_reader.cpp
+SRCS3 := $(SRC_ILQR)/main_ilqr_mpc.cpp $(SRC_PLANT)/dp_plant.cpp $(SRC_SIMULATOR)/simulator.cpp $(SRC_ILQR)/ilqr.cpp $(SRC_ILQR)/ilqr_mpc.cpp $(SRC_UTILS)/csv_reader.cpp
 
 all: $(BIN)/$(EXECUTABLE1) $(OBJ)/libilqr.a $(BIN)/$(EXECUTABLE3)
 

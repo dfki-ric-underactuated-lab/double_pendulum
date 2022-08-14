@@ -1,8 +1,6 @@
 import numpy as np
-import pandas as pd
 from pydrake.systems.controllers import (FiniteHorizonLinearQuadraticRegulatorOptions,
                                          FiniteHorizonLinearQuadraticRegulator)
-from pydrake.systems.primitives import FirstOrderTaylorApproximation
 from pydrake.trajectories import PiecewisePolynomial
 from pydrake.multibody.parsing import Parser
 from pydrake.multibody.plant import MultibodyPlant
@@ -11,6 +9,7 @@ from double_pendulum.controller.abstract_controller import AbstractController
 from double_pendulum.utils.csv_trajectory import load_trajectory
 
 
+#from pydrake.systems.primitives import FirstOrderTaylorApproximation
 #from pydrake... import LinearQuadraticRegulator
 # def LQR_drake(urdf_path,
 #               x_star,
@@ -46,10 +45,10 @@ class TVLQRController(AbstractController):
     def __init__(self,
                  csv_path,
                  urdf_path,
-                 read_with="pandas",
-                 keys="shoulder-elbow",
                  torque_limit=[0.0, 3.0],
                  robot="acrobot"):
+
+        super().__init__()
 
         self.urdf_path = urdf_path
         self.torque_limit = torque_limit
@@ -60,9 +59,7 @@ class TVLQRController(AbstractController):
             self.active_motor = 0
 
         T, X, U = load_trajectory(csv_path=csv_path,
-                                  read_with=read_with,
-                                  with_tau=True,
-                                  keys=keys)
+                                  with_tau=True)
 
         self.time_traj = T
         self.pos1_traj = X.T[0]

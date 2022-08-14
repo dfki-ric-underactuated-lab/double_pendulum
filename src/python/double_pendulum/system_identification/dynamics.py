@@ -3,7 +3,7 @@ import sympy as smp
 
 from double_pendulum.system_identification.data_prep import smooth_data_butter
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
-from double_pendulum.utils.csv_trajectory import load_trajectory
+from double_pendulum.utils.csv_trajectory import load_trajectory_full
 
 
 class yb_matrix_sym():
@@ -93,19 +93,30 @@ class yb_matrix_sym():
 
 
 def build_identification_matrices(fixed_mpar, variable_mpar,
-                                  measured_data_filepath,
-                                  read_with="pandas",
-                                  keys="shoulder-elbow"):
+                                  measured_data_filepath):
+
+    if type(measured_data_filepath) != list:
+        measured_data_filepath = [measured_data_filepath]
 
     t0 = 0.
     for i, mdf in enumerate(measured_data_filepath):
-        T, X, U = load_trajectory(mdf,
-                                  read_with=read_with[i],
-                                  keys=keys[i],
-                                  with_tau=True)
+        traj = load_trajectory_full(mdf)
+
+        T = traj["T"]
+
+        if traj["X_meas"] is not None:
+            X = traj["X_meas"]
+        else:
+            X = traj["X"]
+
+        if traj["U_meas"] is not None:
+            U = traj["U_meas"]
+        else:
+            U = traj["U"]
 
         (ti, pos1, pos2, vel1, vel2,
-         acc1, acc2, tau1, tau2) = smooth_data_butter(t=T.tolist(),
+         acc1, acc2, tau1, tau2) = smooth_data_butter(
+                                    t=T.tolist(),
                                     shoulder_pos=X.T[0],
                                     shoulder_vel=X.T[2],
                                     shoulder_trq=U.T[0],
@@ -123,8 +134,9 @@ def build_identification_matrices(fixed_mpar, variable_mpar,
             filtered_shoulder_trq = np.asarray(tau1)
             filtered_elbow_trq = np.asarray(tau2)
         else:
-            filtered_time = np.append(filtered_time, t0 + np.asarray(ti))
-            t0 = ti[-1] + (ti[-1] - ti[-2])
+            tt = t0 + np.asarray(ti)
+            filtered_time = np.append(filtered_time, tt)
+            t0 = tt[-1] + (tt[-1] - tt[-2])
             filtered_shoulder_pos = np.append(filtered_shoulder_pos, pos1)
             filtered_elbow_pos = np.append(filtered_elbow_pos, pos2)
             filtered_shoulder_vel = np.append(filtered_shoulder_vel, vel1)

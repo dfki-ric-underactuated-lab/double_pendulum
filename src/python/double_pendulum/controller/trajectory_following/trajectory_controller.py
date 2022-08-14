@@ -8,18 +8,18 @@ from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_pro
 class TrajectoryController(AbstractController):
     def __init__(self,
                  csv_path,
-                 read_with,
-                 keys="",
                  torque_limit=[0.0, 1.0],
                  kK_stabilization=False):
+
+        super().__init__()
 
         self.torque_limit = torque_limit
         self.kK_stabilization = kK_stabilization
 
-        self.T, self.X, self.U = load_trajectory(csv_path, read_with, with_tau=True, keys=keys)
+        self.T, self.X, self.U = load_trajectory(csv_path, with_tau=True)
         self.dt, self.max_t, _, _ = trajectory_properties(self.T, self.X)
         if self.kK_stabilization:
-            self.K1, self.K2, self.k1, self.k2 = load_Kk_values(csv_path, read_with, keys=keys)
+            self.K1, self.K2, self.k1, self.k2 = load_Kk_values(csv_path)
 
     def get_control_output_(self, x, t):
         n = int(np.around(min(t, self.max_t) / self.dt))
@@ -53,8 +53,6 @@ class TrajectoryController(AbstractController):
 class TrajectoryInterpController(AbstractController):
     def __init__(self,
                  csv_path,
-                 read_with="numpy",
-                 keys="",
                  torque_limit=[0.0, 1.0],
                  kK_stabilization=False,
                  num_break=40):
@@ -62,10 +60,10 @@ class TrajectoryInterpController(AbstractController):
         self.torque_limit = torque_limit
         self.kK_stabilization = kK_stabilization
 
-        self.T, self.X, self.U = load_trajectory(csv_path, read_with, with_tau=True, keys=keys)
+        self.T, self.X, self.U = load_trajectory(csv_path, with_tau=True)
         self.dt, self.max_t, _, _ = trajectory_properties(self.T, self.X)
         if self.kK_stabilization:
-            self.K1, self.K2, self.k1, self.k2 = load_Kk_values(csv_path, read_with, keys=keys)
+            self.K1, self.K2, self.k1, self.k2 = load_Kk_values(csv_path)
 
         self.U_interp = InterpolateVector(
                 T=self.T,

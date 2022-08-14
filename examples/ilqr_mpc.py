@@ -87,25 +87,17 @@ goal = [np.pi, 0., 0., 0.]
 # trajectory parameters
 ## tmotors v1.0
 # init_csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
-# read_with = "pandas"  # for dircol traj
-# keys = "shoulder-elbow"
 
 ## tmotors v1.0
 # init_csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory2.csv"
-# read_with = "numpy"
-# keys = ""
 
 # tmotors v2.0
 # init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
-# read_with = "numpy"
-# keys = ""
 
 latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
 init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
 #init_csv_path = os.path.join("../data/trajectories", robot, "ilqr_v1.0/trajectory.csv")
 #init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
-read_with = "numpy"
-keys = ""
 
 if robot == "acrobot":
     u_prefac = 1.
@@ -249,10 +241,8 @@ if init_csv_path is None:
                                  integrator=integrator)
 else:
     controller.load_init_traj(csv_path=init_csv_path,
-            read_with=read_with,
-            keys=keys,
-            num_break=40,
-            poly_degree=3)
+                              num_break=40,
+                              poly_degree=3)
 controller.init()
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
                                    tf=t_final, dt=dt, controller=controller,
@@ -328,7 +318,8 @@ with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
 
 save_trajectory(os.path.join(save_dir, "trajectory.csv"), T, X, U)
 
-T_des, X_des, U_des = load_trajectory(init_csv_path, read_with=read_with)
+#T_des, X_des, U_des = load_trajectory(init_csv_path)
+T_des, X_des, U_des = load_trajectory(init_csv_path)
 
 plot_timeseries(T, X, U, None,
                 plot_energy=False,

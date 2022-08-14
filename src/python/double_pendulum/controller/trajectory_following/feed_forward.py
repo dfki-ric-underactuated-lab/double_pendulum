@@ -11,6 +11,8 @@ class FeedForwardController(AbstractController):
                  torque_limit=[1.0, 1.0],
                  num_break=40):
 
+        super().__init__()
+
         self.T = T
         self.U = U
         self.torque_limit = torque_limit

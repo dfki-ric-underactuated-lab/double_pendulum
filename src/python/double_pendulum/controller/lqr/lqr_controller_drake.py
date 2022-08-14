@@ -14,6 +14,8 @@ class LQRController(AbstractController):
                  robot="acrobot",
                  torque_limit=[0.0, 1.0]):
 
+        super().__init__()
+
         self.torque_limit = torque_limit
         self.robot = robot
         if self.robot == "acrobot":

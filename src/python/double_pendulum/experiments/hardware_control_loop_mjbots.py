@@ -7,14 +7,13 @@ import numpy as np
 from scipy.signal import medfilt
 import matplotlib.pyplot as plt
 
-#from double_pendulum.experiments.canmotorlib import CanMotorController
-from double_pendulum.experiments.experimental_utils import (yb_friction_matrix,
-                                                            plot_figure,
+from double_pendulum.experiments.experimental_utils import (plot_figure,
                                                             plot_figure_single,
                                                             save_data,
                                                             rev2rad,
                                                             rad2rev)
 
+from double_pendulum.model.friction_matrix import yb_friction_matrix
 from double_pendulum.utils.filters.low_pass import lowpass_filter
 
 

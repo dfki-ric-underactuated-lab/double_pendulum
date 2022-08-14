@@ -17,6 +17,8 @@ class LQRController(AbstractController):
                  torque_limit=[0.0, 1.0],
                  model_pars=None):
 
+        super().__init__()
+
         # self.damping = np.asarray(damping)
         # self.cfric = np.asarray(coulomb_fric)
         # self.torque_limit = torque_limit

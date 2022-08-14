@@ -5,8 +5,7 @@ from double_pendulum.utils.csv_trajectory import load_trajectory
 
 
 init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
-read_with = "numpy"
-T, X, U = load_trajectory(init_csv_path, read_with=read_with)
+T, X, U = load_trajectory(init_csv_path)
 
 t1 = 1.2
 t2 = 3.4

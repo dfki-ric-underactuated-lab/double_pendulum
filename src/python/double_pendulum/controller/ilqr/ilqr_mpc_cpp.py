@@ -2,7 +2,7 @@ import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
 from double_pendulum.utils.csv_trajectory import load_trajectory
-#from double_pendulum.utils.pcw_polynomial import ResampleTrajectory
+from double_pendulum.utils.pcw_polynomial import ResampleTrajectory
 import cppilqr
 
 
@@ -17,6 +17,8 @@ class ILQRMPCCPPController(AbstractController):
                  inertia=[0.05472, 0.02522],
                  torque_limit=[0.0, 6.0],
                  model_pars=None):
+
+        super().__init__()
 
         # n_x = 4
         # n_u = 1
@@ -203,8 +205,6 @@ class ILQRMPCCPPController(AbstractController):
 
     def load_init_traj(self,
                        csv_path,
-                       read_with="numpy",
-                       keys="",
                        num_break=40,
                        poly_degree=3):
         # trajectory = np.loadtxt(csv_path, skiprows=1, delimiter=",")
@@ -218,13 +218,9 @@ class ILQRMPCCPPController(AbstractController):
 
         T, X, U = load_trajectory(
                         csv_path=csv_path,
-                        read_with=read_with,
-                        with_tau=True,
-                        keys=keys,
-                        resample=True,
-                        resample_dt=self.dt,
-                        num_break=num_break,
-                        poly_degree=poly_degree)
+                        with_tau=True)
+
+        T, X, U = ResampleTrajectory(T, X, U, self.dt, num_break, poly_degree)
 
         self.N_init = len(T)
         self.u1_init_traj = np.ascontiguousarray(U.T[0])

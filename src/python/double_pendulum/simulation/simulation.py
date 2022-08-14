@@ -253,6 +253,8 @@ class Simulator:
         #         nu[i] = tau + np.random.normal(0,
         #                                        self.unoise_sigmas[i],
         #                                        1)
+        nu[0] = np.clip(nu[0], -self.plant.torque_limit[0], self.plant.torque_limit[0])
+        nu[1] = np.clip(nu[1], -self.plant.torque_limit[1], self.plant.torque_limit[1])
         return nu
 
     def controller_step(self,

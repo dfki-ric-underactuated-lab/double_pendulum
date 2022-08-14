@@ -11,6 +11,8 @@ class CombinedController(AbstractController):
                  condition2,
                  compute_both=False):
 
+        super().__init__()
+
         self.controllers = [controller1, controller2]
         self.active = 0
 
@@ -57,6 +59,8 @@ class SimultaneousControllers(AbstractController):
     def __init__(self,
                  controllers,
                  forecast_con=0):
+
+        super().__init__()
 
         self.controllers = controllers
         self.fc_ind = forecast_con

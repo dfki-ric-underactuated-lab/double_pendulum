@@ -26,20 +26,14 @@ mpar.set_torque_limit(torque_limit)
 # trajectory parameters
 ## tmotors v1.0
 # csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
-# read_with = "pandas"  # for dircol traj
-# keys = "shoulder-elbow"
 
 ## tmotors v1.0
 csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-read_with = "numpy"
-keys = ""
 
 # tmotors v2.0
 #csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
-#read_with = "numpy"
-#keys = ""
 
-T, X, U = load_trajectory(csv_path, read_with, True, keys)
+T, X, U = load_trajectory(csv_path, True)
 dt, t_final, _, _ = trajectory_properties(T, X)
 goal = [np.pi, 0., 0., 0.]
 
@@ -75,8 +69,6 @@ def condition2(t, x):
 controller1 = TVLQRController(
         model_pars=mpar,
         csv_path=csv_path,
-        read_with=read_with,
-        keys=keys,
         torque_limit=torque_limit)
 
 controller1.set_cost_parameters(Q=Q, R=R, Qf=Qf)

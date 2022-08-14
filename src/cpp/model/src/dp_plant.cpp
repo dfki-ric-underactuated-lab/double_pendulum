@@ -46,6 +46,7 @@ void DPPlant::set_parameters(double m1, double m2,
                              double cf1, double cf2,
                              double g,
                              double tl1, double tl2){
+                             //double gr, double Ir){
     mass1 = m1;
     mass2 = m2;
     length1 = l1;
@@ -61,7 +62,8 @@ void DPPlant::set_parameters(double m1, double m2,
     gravity = g;
     torque_limit1 = tl1;
     torque_limit2 = tl2;
-
+    //gear_ratio = gr;
+    //motor_inertia = Ir;
 
 }
 
@@ -70,10 +72,10 @@ Eigen::Matrix<double, n_x/2, n_x/2> DPPlant::get_M(Eigen::Vector<double, n_x> x)
 
     Eigen::Matrix<double, n_x/2, n_x/2> M; // Mass matrix
 
-    M(0,0) = inertia1 + inertia2 + mass2*pow(length1, 2.) + 2.*mass2*length1*com2*cos(x(1));
-    M(0,1) = inertia2 + mass2*length1*com2*cos(x(1));
-    M(1,0) = inertia2 + mass2*length1*com2*cos(x(1));
-    M(1,1) = inertia2;
+    M(0,0) = inertia1 + inertia2 + mass2*pow(length1, 2.) + 2.*mass2*length1*com2*cos(x(1)); //+ pow(gear_ratio, 2.)*motor_inertia + motor_inertia;
+    M(0,1) = inertia2 + mass2*length1*com2*cos(x(1)); // + gear_ratio*motor_inertia;
+    M(1,0) = inertia2 + mass2*length1*com2*cos(x(1)); // + gear_ratio*motor_inertia;
+    M(1,1) = inertia2; // + pow(gear_ratio, 2.)*motor_inertia;
 
     if (verbose > 0){
         std::cout << "M:  ";

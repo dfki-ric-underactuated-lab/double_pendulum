@@ -18,6 +18,8 @@ class FeedforwardController(AbstractController):
                  model_pars=None,
                  csv_path=None):
 
+        super().__init__()
+
         self.mass = mass
         self.length = length
         self.com = com

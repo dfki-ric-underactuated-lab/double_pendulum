@@ -33,21 +33,15 @@ mpar_dp.set_torque_limit(torque_limit_pid)
 # trajectory parameters
 ## tmotors v1.0
 #csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
-#read_with = "pandas"  # for dircol traj
-#keys = "shoulder-elbow"
 
 # tmotors v1.0
 csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-read_with = "numpy"
-keys = ""
 
 # tmotors v2.0
 #csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
-#read_with = "numpy"
-#keys = ""
 
 # load reference trajectory
-T_des, X_des, U_des = load_trajectory(csv_path, read_with)
+T_des, X_des, U_des = load_trajectory(csv_path)
 dt = T_des[1] - T_des[0]
 t_final = T_des[-1] + 3
 goal = [np.pi, 0., 0., 0.]
@@ -109,7 +103,6 @@ sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
 controller1 = TVLQRController(
         csv_path=csv_path,
         urdf_path=urdf_path,
-        read_with=read_with,
         torque_limit=torque_limit,
         robot=robot)
 

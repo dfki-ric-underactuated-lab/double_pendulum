@@ -141,7 +141,6 @@ delays = np.linspace(0.0, (N_var-1)*dt, N_var)
 # latest_dir = sorted(os.listdir(os.path.join("../data", robot, "ilqr", "trajopt")))[-1]
 # init_csv_path = os.path.join("../data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
 init_csv_path = "../../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-read_with = "numpy"
 
 # swingup parameters
 start = [0., 0., 0., 0.]
@@ -189,7 +188,7 @@ ben = benchmarker(controller=controller,
                   integrator=integrator,
                   save_dir=save_dir)
 ben.set_model_parameter(model_pars=mpar)
-ben.set_init_traj(init_csv_path, read_with=read_with)
+ben.set_init_traj(init_csv_path)
 ben.set_cost_par(Q=Q, R=R, Qf=Qf)
 ben.compute_ref_cost()
 res = ben.benchmark(compute_model_robustness=compute_model_robustness,

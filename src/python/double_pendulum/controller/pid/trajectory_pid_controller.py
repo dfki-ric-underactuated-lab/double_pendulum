@@ -1,7 +1,7 @@
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
-from double_pendulum.utils.pcw_polynomial import FitPiecewisePolynomial, InterpolateVector
+from double_pendulum.utils.pcw_polynomial import InterpolateVector
 from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties
 
 
@@ -11,11 +11,11 @@ class TrajPIDController(AbstractController):
                  X=None,
                  U=None,
                  csv_path=None,
-                 read_with="pandas",
-                 keys="",
                  use_feed_forward_torque=True,
                  torque_limit=[0.0, 1.0],
                  num_break=40):
+
+        super().__init__()
 
         self.use_ff = use_feed_forward_torque
         self.torque_limit = torque_limit
@@ -24,9 +24,7 @@ class TrajPIDController(AbstractController):
         if csv_path is not None:
             self.T, self.X, self.U = load_trajectory(
                     csv_path=csv_path,
-                    read_with=read_with,
-                    with_tau=self.use_ff,
-                    keys=keys)
+                    with_tau=self.use_ff)
         elif T is not None and X is not None:
             self.T = T
             self.X = X

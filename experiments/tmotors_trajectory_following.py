@@ -19,20 +19,14 @@ torque_limit_pid = [6.0, 6.0]
 # trajectory parameters
 ## tmotors v1.0
 # csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
-# read_with = "pandas"  # for dircol traj
-# keys = "shoulder-elbow"
 
 ## tmotors v1.0
 csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-read_with = "numpy"
-keys = ""
 
 # tmotors v2.0
 # csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
-# read_with = "numpy"
-# keys = ""
 
-T, X, U = load_trajectory(csv_path, read_with, True, keys)
+T, X, U = load_trajectory(csv_path, True)
 dt, t_final, _, _ = trajectory_properties(T, X)
 t_final = t_final + 2.
 
@@ -65,8 +59,6 @@ def condition2(t, x):
         return True
 
 controller1 = TrajectoryController(csv_path=csv_path,
-                                   read_with=read_with,
-                                   keys=keys,
                                    torque_limit=torque_limit,
                                    kK_stabilization=True)
 controller1.init()

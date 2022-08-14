@@ -19,6 +19,8 @@ class PIDGravityCompensationController(AbstractController):
                  model_pars=None,
                  dt=0.01):
 
+        super().__init__()
+
         self.torque_limit = torque_limit
         if model_pars is not None:
             self.torque_limit = model_pars.tl

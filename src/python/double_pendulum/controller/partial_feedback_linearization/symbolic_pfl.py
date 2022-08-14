@@ -21,6 +21,8 @@ class SymbolicPFLController(AbstractController):
                  pfl_method="collocated",
                  reference="energy"):
 
+        super().__init__()
+
         self.mass = mass
         self.length = length
         self.com = com
@@ -211,6 +213,8 @@ class SymbolicPFLAndLQRController(AbstractController):
                  robot="acrobot",
                  pfl_method="collocated",
                  reference="energy"):
+
+        super().__init__()
 
         self.mass = mass
         self.length = length

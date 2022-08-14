@@ -3,6 +3,7 @@
 from abc import ABC, abstractmethod
 import numpy as np
 
+from double_pendulum.model.friction_matrix import yb_friction_matrix
 from double_pendulum.utils.filters.identity import identity_filter
 from double_pendulum.utils.filters.low_pass import lowpass_filter_rt
 from double_pendulum.utils.filters.kalman_filter import kalman_filter_rt
@@ -14,6 +15,14 @@ class AbstractController(ABC):
     Abstract controller class. All controller should inherit from
     this abstract class.
     """
+    def __init__(self):
+        self.set_filter_args()
+        self.set_friction_compensation()
+        self.x_hist = []
+        self.x_filt_hist = []
+        self.u_hist = [[0., 0.]]
+        self.u_fric_hist = []
+
     @abstractmethod
     def get_control_output_(self, x, t=None):
         """
@@ -42,9 +51,13 @@ class AbstractController(ABC):
     def get_control_output(self, x, t=None):
         self.x_hist.append(x)
         y = self.filter_measurement(x, self.u_hist[-1])
-        self.xfilt_hist.append(y)
+        self.x_filt_hist.append(y)
 
-        u = self.get_control_output_(x, t)
+        u = np.asarray(self.get_control_output_(y, t))
+
+        u_fric = self.get_friction_torque(y)
+        self.u_fric_hist.append(u_fric)
+        u += u_fric
 
         self.u_hist.append(u)
         return u
@@ -61,7 +74,6 @@ class AbstractController(ABC):
         """
 
     def init(self):
-        self.set_filter_args()
         self.init_filter()
         self.x_hist = []
         self.u_hist = [[0., 0.]]
@@ -110,10 +122,7 @@ class AbstractController(ABC):
 
     def init_filter(self):
 
-        if self.filt == None:
-            self.filter = identity_filter()
-
-        elif self.filt == "lowpass":
+        if self.filt == "lowpass":
             dof = self.filt_plant.dof
 
             self.filter = lowpass_filter_rt(
@@ -140,7 +149,7 @@ class AbstractController(ABC):
         elif self.filt == "unscented_kalman":
             dof = self.filt_plant.dof
             if self.filt_kwargs["ukalman_integrator"] == "euler":
-                 fx = self.filt_simulator.euler_integrator
+                fx = self.filt_simulator.euler_integrator
             elif self.filt_kwargs["ukalman_integrator"] == "runge_kutta":
                 fx = self.filt_simulator.runge_integrator
             self.filter = unscented_kalman_filter_rt(
@@ -150,6 +159,8 @@ class AbstractController(ABC):
                     process_noise=self.filt_kwargs["ukalman_process_noise_sigmas"],
                     measurement_noise=self.filt_kwargs["ukalman_meas_noise_sigmas"],
                     fx=fx)
+        else:
+            self.filter = identity_filter()
 
     def filter_measurement(self, x, last_u):
         x_filt = np.copy(x)
@@ -160,6 +171,17 @@ class AbstractController(ABC):
             x_filt[3] = np.where(np.abs(x_filt[3]) < self.filt_velocity_cut, 0, x_filt[3])
 
         # filter
-        x_filt = self.filter(x, last_u)
+        x_filt = self.filter(x_filt, last_u)
 
         return x_filt
+
+    def set_friction_compensation(self, damping=[0., 0.], coulomb_fric=[0., 0.]):
+        self.friction_terms = np.array([coulomb_fric[0],
+                                        damping[0],
+                                        coulomb_fric[1],
+                                        damping[1]])
+
+    def get_friction_torque(self, x):
+        friction_regressor_mat = yb_friction_matrix([x[2], x[3]])
+        tau_fric = np.dot(friction_regressor_mat, self.friction_terms)
+        return tau_fric

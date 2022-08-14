@@ -13,18 +13,26 @@ save_dir = os.path.join("data", "system_identification", timestamp)
 os.makedirs(save_dir)
 
 # recorded data from robot
+# measured_data_csv = [
+#         "../data/system_identification/excitation_trajectories_measured/trajectory-pos-20_measured.csv",
+#         "../data/system_identification/excitation_trajectories_measured/trajectory-pos-50-3x_measured.csv"
+#                     ]
+
 measured_data_csv = [
-        "../data/system_identification/excitation_trajectories_measured/trajectory-pos-20_measured.csv",
-        "../data/system_identification/excitation_trajectories_measured/trajectory-pos-50-3x_measured.csv"
-                    ]
-read_withs = ["pandas", "pandas"]
-keys = ["shoulder-elbow", "shoulder-elbow"]
+    "../data/system_identification/recorded_data_20220812/sys_id/20220812-055032-PM_measured.csv",
+    "../data/system_identification/recorded_data_20220812/sys_id/20220812-055903-PM_measured.csv",
+    "../data/system_identification/recorded_data_20220812/sys_id/20220812-060245-PM_measured.csv",
+    "../data/system_identification/recorded_data_20220812/sys_id/20220812-060440-PM_measured.csv",
+    "../data/system_identification/recorded_data_20220812/sys_id/20220812-061705-PM_measured.csv",
+    "../data/system_identification/recorded_data_20220812/sys_id/20220812-055640-PM_measured.csv",
+    "../data/system_identification/recorded_data_20220812/sys_id/20220812-060143-PM_measured.csv",
+    "../data/system_identification/recorded_data_20220812/sys_id/20220812-060329-PM_measured.csv",
+    "../data/system_identification/recorded_data_20220812/sys_id/20220812-061157-PM_measured.csv"
+    ]
 
 
 T, X, U = concatenate_trajectories(measured_data_csv,
-                                   read_withs=read_withs,
-                                   with_tau=True,
-                                   keys=keys)
+                                   with_tau=True)
 full_csv_path = os.path.join(save_dir, "full_trajectory.csv")
 save_trajectory(full_csv_path, T, X, U)
 plot_timeseries(T, X, U)
@@ -75,8 +83,6 @@ mpar_opt, mpar = run_system_identification(
         variable_mpar=variable_mpar,
         mp0=mp0,
         bounds=bounds,
-        read_with=read_withs,
-        keys=keys,
         optimization_method="least-squares",
         save_dir=save_dir,
         num_proc=0,

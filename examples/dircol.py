@@ -100,8 +100,6 @@ plant = SymbolicDoublePendulum(model_pars=mpar)
 sim = Simulator(plant=plant)
 
 controller = TrajectoryController(csv_path=traj_file,
-                                  read_with="numpy",
-                                  keys="",
                                   torque_limit=torque_limit,
                                   kK_stabilization=False)
 controller.init()

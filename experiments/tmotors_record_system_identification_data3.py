@@ -36,7 +36,6 @@ def condition2(t, x):
 # controller
 controller1 = TrajPIDController(T=T_des,
                                 X=X_des,
-                                read_with="numpy",
                                 use_feed_forward_torque=False,
                                 torque_limit=torque_limit,
                                 num_break=40)
@@ -45,7 +44,6 @@ controller1.init()
 
 controller2 = TrajPIDController(T=T_des,
                                 X=X_des,
-                                read_with="numpy",
                                 use_feed_forward_torque=False,
                                 torque_limit=torque_limit,
                                 num_break=40)

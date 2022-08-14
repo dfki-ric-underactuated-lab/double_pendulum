@@ -16,6 +16,8 @@ class FrictionCompensationController(AbstractController):
                  torque_limit=[0.0, 1.0],
                  model_pars=None):
 
+        super().__init__()
+
         self.mass = mass
         self.length = length
         self.com = com

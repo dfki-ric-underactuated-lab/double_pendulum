@@ -143,6 +143,7 @@ timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
 save_dir = os.path.join("data", robot, "pfl", pfl_method, timestamp)
 os.makedirs(save_dir)
 
+print(len(T), len(X), len(U))
 save_trajectory(csv_path=os.path.join(save_dir, "trajectory.csv"),
                 T=T,
                 X=X,

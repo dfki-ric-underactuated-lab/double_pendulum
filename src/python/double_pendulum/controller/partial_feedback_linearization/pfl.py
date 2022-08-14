@@ -16,6 +16,8 @@ class EnergyShapingPFLController(AbstractController):
                  inertia=[None, None],
                  torque_limit=[np.inf, np.inf]):
 
+        super().__init__()
+
         self.plant = SymbolicDoublePendulum(mass,
                                             length,
                                             com,
@@ -111,6 +113,8 @@ class EnergyShapingPFLAndLQRController(AbstractController):
                  coulomb_fric=[0.0, 0.0],
                  inertia=[None, None],
                  torque_limit=[np.inf, np.inf]):
+
+        super().__init__()
 
         self.en_controller = EnergyShapingPFLController(
             mass=mass,

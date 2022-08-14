@@ -55,7 +55,6 @@ sim = Simulator(plant=plant)
 
 controller1 = TrajPIDController(T=T_des,
                                 X=X_des,
-                                read_with="numpy",
                                 use_feed_forward_torque=False,
                                 torque_limit=torque_limit,
                                 num_break=40)
@@ -63,7 +62,6 @@ controller1.set_parameters(Kp=Kp, Ki=Ki, Kd=Kd)
 
 controller2 = TrajPIDController(T=T_des,
                                 X=X_des,
-                                read_with="numpy",
                                 use_feed_forward_torque=False,
                                 torque_limit=torque_limit,
                                 num_break=40)

@@ -23,6 +23,8 @@ class EnergyController(AbstractController):
                  torque_limit=[np.inf, np.inf],
                  model_pars=None):
 
+        super().__init__()
+
         self.mass = mass
         self.length = length
         self.com = com

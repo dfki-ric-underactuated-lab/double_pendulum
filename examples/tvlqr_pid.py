@@ -41,21 +41,15 @@ mpar_dp.set_torque_limit(torque_limit_pid)
 # trajectory parameters
 ## tmotors v1.0
 #csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
-#read_with = "pandas"  # for dircol traj
-#keys = "shoulder-elbow"
 
 ## tmotors v1.0
 csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-read_with = "numpy"
-keys = ""
 
 # tmotors v2.0
 #csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
-#read_with = "numpy"
-#keys = ""
 
 # load reference trajectory
-T_des, X_des, U_des = load_trajectory(csv_path, read_with)
+T_des, X_des, U_des = load_trajectory(csv_path)
 dt = T_des[1] - T_des[0]
 t_final = T_des[-1] + 5
 goal = [np.pi, 0., 0., 0.]
@@ -113,8 +107,8 @@ def condition1(t, x):
 
 def condition2(t, x):
     goal = [np.pi, 0., 0., 0.]
-    #eps = [0.2, 0.2, 0.8, 0.8]
-    eps = [0.1, 0.1, 0.4, 0.4]
+    eps = [0.2, 0.2, 0.8, 0.8]
+    #eps = [0.1, 0.1, 0.4, 0.4]
 
     y = wrap_angles_top(x)
 
@@ -142,13 +136,10 @@ sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
 controller1 = TVLQRController(
         model_pars=mpar,
         csv_path=csv_path,
-        read_with=read_with,
-        keys=keys,
         torque_limit=torque_limit,
         horizon=horizon)
 
 controller1.set_cost_parameters(Q=Q, R=R, Qf=Qf)
-controller1.init()
 
 # controller2 = PointPIDController(
 #         torque_limit=torque_limit_pid,
@@ -158,7 +149,6 @@ controller1.init()
 #         Ki=Ki,
 #         Kd=Kd)
 # controller2.set_goal(goal)
-# controller2.init()
 
 controller2 = ILQRMPCCPPController(model_pars=mpar)
 #controller2.set_start(start)
@@ -180,7 +170,6 @@ controller2.set_cost_parameters(sCu=sCu,
                                 fCp=fCp,
                                 fCv=fCv,
                                 fCen=fCen)
-controller2.init()
 
 controller = CombinedController(
         controller1=controller1,
@@ -188,6 +177,7 @@ controller = CombinedController(
         condition1=condition1,
         condition2=condition2,
         compute_both=False)
+controller.init()
 
 # simulate
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,

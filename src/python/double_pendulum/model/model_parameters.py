@@ -14,7 +14,8 @@ class model_parameters():
                  motor_inertia=0.,
                  gear_ratio=6,
                  torque_limit=[10.0, 10.0],
-                 dof=2):
+                 dof=2,
+                 filepath=None):
 
         self.m = mass
         self.l = length
@@ -33,6 +34,9 @@ class model_parameters():
                 self.I.append(mass[i]*com[i]*com[i])
             else:
                 self.I.append(inertia[i])
+
+        if filepath is not None:
+            self.load_yaml(filepath)
 
     def set_mass(self, mass):
         self.m = mass

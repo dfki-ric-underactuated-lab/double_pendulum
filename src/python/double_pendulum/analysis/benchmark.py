@@ -95,8 +95,8 @@ class benchmarker():
 
         self.simulator = Simulator(plant=self.plant)
 
-    def set_init_traj(self, trajectory_csv, read_with):
-        self.t_traj, self.x_traj, self.u_traj = load_trajectory(trajectory_csv, read_with)
+    def set_init_traj(self, trajectory_csv):
+        self.t_traj, self.x_traj, self.u_traj = load_trajectory(trajectory_csv)
         if len(self.u_traj) == len(self.x_traj):
             self.u_traj = self.u_traj[:-1]
         self.traj_following = True

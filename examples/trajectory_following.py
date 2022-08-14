@@ -8,8 +8,8 @@ from double_pendulum.controller.pid.trajectory_pid_controller import TrajPIDCont
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties
 
-robot = "double_pendulum"
-trajopt = "dircol"
+robot = "acrobot"
+trajopt = "ilqr"
 
 cfric = [0., 0.]
 motor_inertia = 0.
@@ -30,33 +30,26 @@ mpar.set_torque_limit(torque_limit)
 
 # csv file
 use_feed_forward_torque = True
-read_with = "pandas"
-keys = "shoulder-elbow"
 #latest_dir = sorted(os.listdir(os.path.join("data", robot, trajopt, "trajopt")))[-1]
 #csv_path = os.path.join("data", robot, trajopt, "trajopt", latest_dir, "trajectory.csv")
-#csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
+csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
 #csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
-csv_path = "../data/trajectories/double_pendulum/dircol/trajectory.csv"
+#csv_path = "../data/trajectories/double_pendulum/dircol/trajectory.csv"
 
-T_des, X_des, U_des = load_trajectory(csv_path, read_with=read_with)
+T_des, X_des, U_des = load_trajectory(csv_path)
 dt, t_final, x0, _ = trajectory_properties(T_des, X_des)
 
 plant = SymbolicDoublePendulum(model_pars=mpar)
 sim = Simulator(plant=plant)
 
 controller = TrajectoryController(csv_path=csv_path,
-                                  read_with=read_with,
-                                  keys=keys,
                                   torque_limit=torque_limit,
                                   kK_stabilization=False)
 # controller = TrajectoryInterpController(csv_path=csv_path,
 #                                   torque_limit=torque_limit,
-#                                   read_with=read_with,
-#                                   keys=keys,
 #                                   kK_stabilization=True,
 #                                   num_break=40)
 #controller = TrajPIDController(csv_path=csv_path,
-#                           read_with=read_with,
 #                           use_feed_forward_torque=use_feed_forward_torque,
 #                           torque_limit=torque_limit)
 #controller.set_parameters(Kp=200.0, Ki=0.0, Kd=2.0)

@@ -1,9 +1,10 @@
+import os
 import numpy as np
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-from double_pendulum.utils.csv_trajectory import load_trajectory, load_acceleration
+from double_pendulum.utils.csv_trajectory import load_trajectory_full
 
 
 def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
@@ -26,7 +27,9 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
                     X_des=None,
                     U_des=None,
                     X_meas=None,
+                    X_filt=None,
                     U_con=None,
+                    U_friccomp=None,
                     ACC_des=None,
                     save_to=None,
                     show=True
@@ -57,14 +60,19 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         ax[i].plot(T[:len(X)], np.asarray(X).T[1], label="q2", color="red")
         if not (X_des is None):
             ax[i].plot(T_des[:len(X_des)], np.asarray(X_des).T[0],
-                    ls="--", label="q1 desired", color="lightblue")
+                       ls="--", label="q1 desired", color="lightblue")
             ax[i].plot(T_des[:len(X_des)], np.asarray(X_des).T[1],
-                    ls="--", label="q2 desired", color="orange")
+                       ls="--", label="q2 desired", color="orange")
         if not (X_meas is None):
             ax[i].plot(T[:len(X_meas)], np.asarray(X_meas).T[0],
-                    ls="-", label="q1 measured", color="blue", alpha=0.2)
+                       ls="-", label="q1 measured", color="blue", alpha=0.2)
             ax[i].plot(T[:len(X_meas)], np.asarray(X_meas).T[1],
-                    ls="-", label="q2 measured", color="red", alpha=0.2)
+                       ls="-", label="q2 measured", color="red", alpha=0.2)
+        if not (X_filt is None):
+            ax[i].plot(T[:len(X_filt)], np.asarray(X_filt).T[0],
+                       ls="-", label="q1 filtered", color="darkblue")
+            ax[i].plot(T[:len(X_filt)], np.asarray(X_filt).T[1],
+                       ls="-", label="q2 filtered", color="brown")
         for line in pos_x_lines:
             ax[i].plot([line, line], [np.min(X.T[:2]), np.max(X.T[:2])],
                        ls="--", color="gray")
@@ -79,14 +87,19 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         ax[i].plot(T[:len(X)], np.asarray(X).T[3], label="q2 dot", color="red")
         if not (X_des is None):
             ax[i].plot(T_des[:len(X_des)], np.asarray(X_des).T[2],
-                    ls="--", label="q1 dot desired", color="lightblue")
+                       ls="--", label="q1 dot desired", color="lightblue")
             ax[i].plot(T_des[:len(X_des)], np.asarray(X_des).T[3],
-                    ls="--", label="q2 dot desired", color="orange")
+                       ls="--", label="q2 dot desired", color="orange")
         if not (X_meas is None):
             ax[i].plot(T[:len(X_meas)], np.asarray(X_meas).T[2],
-                    ls="-", label="q1 dot measured", color="blue", alpha=0.2)
+                       ls="-", label="q1 dot measured", color="blue", alpha=0.2)
             ax[i].plot(T[:len(X_meas)], np.asarray(X_meas).T[3],
-                    ls="-", label="q2 dot measured", color="red", alpha=0.2)
+                       ls="-", label="q2 dot measured", color="red", alpha=0.2)
+        if not (X_filt is None):
+            ax[i].plot(T[:len(X_filt)], np.asarray(X_filt).T[2],
+                       ls="-", label="q1 dot filtered", color="darkblue")
+            ax[i].plot(T[:len(X_filt)], np.asarray(X_filt).T[3],
+                       ls="-", label="q2 dot filtered", color="brown")
         for line in vel_x_lines:
             ax[i].plot([line, line], [np.min(X.T[2:]), np.max(X.T[2:])],
                        ls="--", color="gray")
@@ -101,9 +114,9 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         ax[i].plot(T[:len(ACC)], np.asarray(ACC).T[1], label="q2 ddot", color="red")
         if not (ACC_des is None):
             ax[i].plot(T_des[:len(ACC_des)], np.asarray(ACC_des).T[0],
-                    ls="--", label="q1 ddot desired", color="lightblue")
+                       ls="--", label="q1 ddot desired", color="lightblue")
             ax[i].plot(T_des[:len(ACC_des)], np.asarray(ACC_des).T[1],
-                    ls="--", label="q2 ddot desired", color="orange")
+                       ls="--", label="q2 ddot desired", color="orange")
         for line in acc_x_lines:
             ax[i].plot([line, line], [np.min(X.T[2:]), np.max(X.T[2:])],
                        ls="--", color="gray")
@@ -118,14 +131,19 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         ax[i].plot(T[:len(U)], np.asarray(U).T[1, :len(T)], label="u2", color="red")
         if not (U_des is None):
             ax[i].plot(T_des[:len(U_des)], np.asarray(U_des).T[0],
-                    ls="--", label="u1 desired", color="lightblue")
+                       ls="--", label="u1 desired", color="lightblue")
             ax[i].plot(T_des[:len(U_des)], np.asarray(U_des).T[1],
-                    ls="--", label="u2 desired", color="orange")
+                       ls="--", label="u2 desired", color="orange")
         if not (U_con is None):
             ax[i].plot(T[:len(U_con)], np.asarray(U_con).T[0],
-                    ls="-", label="u1 controller", color="blue", alpha=0.2)
+                       ls="-", label="u1 controller", color="blue", alpha=0.2)
             ax[i].plot(T[:len(U_con)], np.asarray(U_con).T[1],
-                    ls="-", label="u2 controller", color="red", alpha=0.2)
+                       ls="-", label="u2 controller", color="red", alpha=0.2)
+        if not (U_friccomp is None):
+            ax[i].plot(T[:len(U_friccomp)], np.asarray(U_friccomp).T[0],
+                       ls="-", label="u1 friction compensation", color="darkblue")
+            ax[i].plot(T[:len(U_friccomp)], np.asarray(U_friccomp).T[1],
+                       ls="-", label="u2 friction_compensation", color="brown")
         for line in tau_x_lines:
             ax[i].plot([line, line], [np.min(U), np.max(U)],
                        ls="--", color="gray")
@@ -153,37 +171,202 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
     plt.close()
 
 
-def plot_timeseries_csv(csv_path, read_with="pandas", keys="shoulder-elbow"):
-    # if read_with == "pandas":
-    #     data = pd.read_csv(csv_path)
-    #     time = data["time"].tolist()
-    #     shoulder_pos = data["shoulder_pos"].tolist()
-    #     shoulder_vel = data["shoulder_vel"].tolist()
-    #     shoulder_trq = data["shoulder_torque"].tolist()
+def plot_figures(save_dir,
+                 index,
+                 meas_time,
+                 shoulder_meas_pos,
+                 shoulder_meas_vel,
+                 shoulder_meas_tau,
+                 elbow_meas_pos,
+                 elbow_meas_vel,
+                 elbow_meas_tau,
+                 shoulder_tau_controller,
+                 elbow_tau_controller,
+                 shoulder_filtered_vel=None,
+                 elbow_filtered_vel=None,
+                 shoulder_des_time=None,
+                 shoulder_des_pos=None,
+                 shoulder_des_vel=None,
+                 shoulder_des_tau=None,
+                 elbow_des_time=None,
+                 elbow_des_pos=None,
+                 elbow_des_vel=None,
+                 elbow_des_tau=None,
+                 shoulder_fric_tau=None,
+                 elbow_fric_tau=None,
+                 error=None):
 
-    #     elbow_pos = data["elbow_pos"].tolist()
-    #     elbow_vel = data["elbow_vel"].tolist()
-    #     elbow_trq = data["elbow_torque"].tolist()
+    # position plot of elbow
+    print('plotting started')
+    print('plotting elbow position')
+    fig, ax = plt.subplots()
+    plt.plot(meas_time[:index], elbow_meas_pos[:index], label='measured position')
+    if not (elbow_des_pos is None):
+        plt.plot(elbow_des_time, elbow_des_pos, label="desired position")
+    # trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Position (rad)")
+    plt.title("Elbow Position (rad) vs Time (s)")
+    plt.legend()
+    plt.draw()
+    plt.savefig(os.path.join(save_dir, 'elbow_swingup_pos.pdf'))
 
-    #     if "shoulder_acc" in data.keys() and "elbow_acc" in data.keys():
-    #         shoulder_acc = data["shoulder_acc"].tolist()
-    #         elbow_acc = data["elbow_acc"].tolist()
-    #         ACC = np.asarray([shoulder_acc, elbow_acc]).T
-    #         plot_acc = True
-    #     else:
-    #         plot_acc = False
-    #         ACC = None
+    # velocity plot of elbow
+    print('plotting elbow velocity')
+    fig, ax = plt.subplots()
+    plt.plot(meas_time[:index], elbow_meas_vel[:index], label="measured velocity")
+    if not (elbow_filtered_vel is None):
+        plt.plot(meas_time[:index], elbow_filtered_vel[:index], label="filtered velocity")
+    if not (elbow_des_vel is None):
+        plt.plot(elbow_des_time, elbow_des_vel, label="desired velocity")
+    # trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Velocity (rad)")
+    plt.title("Elbow Velocity (rad) vs Time (s)")
+    plt.legend()
+    plt.draw()
+    plt.savefig(os.path.join(save_dir, 'elbow_swingup_vel.pdf'))
 
-    # X = np.asarray([shoulder_pos, elbow_pos, shoulder_vel, elbow_vel]).T
-    # U = np.asarray([shoulder_trq, elbow_trq]).T
+    # torque plot for elbow
+    print('plotting elbow torque')
+    fig, ax = plt.subplots()
+    plt.plot(meas_time[:index], elbow_meas_tau[:index], label="total commanded torque")
+    plt.plot(meas_time[:index], elbow_tau_controller[:index], label="controller torque")
+    if not (elbow_des_tau is None):
+        plt.plot(elbow_des_time, elbow_des_tau, label="desired torque")
+    if not (elbow_fric_tau is None):
+        plt.plot(meas_time[:index], elbow_fric_tau[:index], label="friction comp. torque")
+    # trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Torque (Nm)")
+    plt.title("Elbow Torque (Nm) vs Time (s)")
+    plt.legend()
+    plt.draw()
+    plt.savefig(os.path.join(save_dir, 'elbow_swingup_torque.pdf'))
 
-    T, X, U = load_trajectory(csv_path, read_with, keys)
-    ACC = load_acceleration(csv_path, read_with, keys)
+    # position plot of shoulder
+    print('plotting shoulder position')
+    fig, ax = plt.subplots()
+    plt.plot(meas_time[:index], shoulder_meas_pos[:index], label="measured position")
+    if not (shoulder_des_pos is None):
+        plt.plot(shoulder_des_time, shoulder_des_pos, label="desired position")
+    # trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Position (rad)")
+    plt.title("Shoulder Position (rad) vs Time (s)")
+    plt.legend()
+    plt.draw()
+    plt.savefig(os.path.join(save_dir, 'shoulder_swingup_pos.pdf'))
 
-    plot_acc = ACC is not None
+    # velocity plot of shoulder
+    print('plotting shoulder velocity')
+    fig, ax = plt.subplots()
+    plt.plot(meas_time[:index], shoulder_meas_vel[:index], label="measured velocity")
+    if not (shoulder_filtered_vel is None):
+        plt.plot(meas_time[:index], shoulder_filtered_vel[:index], label="filtered velocity")
+    if not (shoulder_des_vel is None):
+        plt.plot(shoulder_des_time, shoulder_des_vel, label="desired velocity")
+    # trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Velocity (rad)")
+    plt.title("Shoulder Velocity (rad) vs Time (s)")
+    plt.legend()
+    plt.draw()
+    plt.savefig(os.path.join(save_dir, 'shoulder_swingup_vel.pdf'))
 
-    plot_timeseries(T=T,
-                    X=X,
-                    U=U,
-                    ACC=ACC,
-                    plot_acc=plot_acc)
+    # torque plot for shoulder
+    print('plotting shoulder torque')
+    fig, ax = plt.subplots()
+    plt.plot(meas_time[:index], shoulder_meas_tau[:index], label="total commanded torque")
+    plt.plot(meas_time[:index], shoulder_tau_controller[:index], label="controller torque")
+    if not (shoulder_des_tau is None):
+        plt.plot(shoulder_des_time, shoulder_des_tau, label="desired torque")
+    if not (shoulder_fric_tau is None):
+        plt.plot(meas_time[:index], shoulder_fric_tau[:index], label="friction comp. torque")
+    # trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Torque (Nm)")
+    plt.title("Shoulder Torque (Nm) vs Time (s)")
+    plt.legend()
+    plt.draw()
+    plt.savefig(os.path.join(save_dir, 'shoulder_swingup_torque.pdf'))
+
+    plt.show()
+
+
+# def plot_figure_single(save_dir,
+#                        date,
+#                        index,
+#                        meas_time,
+#                        shoulder_meas_pos,
+#                        shoulder_meas_vel,
+#                        shoulder_meas_tau,
+#                        elbow_meas_pos,
+#                        elbow_meas_vel,
+#                        elbow_meas_tau,
+#                        shoulder_tau_controller,
+#                        elbow_tau_controller,
+#                        shoulder_filtered_vel=None,
+#                        elbow_filtered_vel=None,
+#                        shoulder_des_time=None,
+#                        shoulder_des_pos=None,
+#                        shoulder_des_vel=None,
+#                        shoulder_des_tau=None,
+#                        elbow_des_time=None,
+#                        elbow_des_pos=None,
+#                        elbow_des_vel=None,
+#                        elbow_des_tau=None,
+#                        shoulder_fric_tau=None,
+#                        elbow_fric_tau=None,
+#                        error=None):
+# 
+#     fig, ax = plt.subplots(3,
+#                            1,
+#                            figsize=(18, 9),
+#                            sharex="all")
+# 
+#     # position plot
+#     ax[0].plot(meas_time[:index], shoulder_meas_pos[:index], label="shoulder measured position", color="blue")
+#     ax[0].plot(meas_time[:index], elbow_meas_pos[:index], label='elbow measured position', color="green")
+#     if not (shoulder_des_pos is None):
+#         ax[0].plot(shoulder_des_time, shoulder_des_pos, label="shoulder desired position", color="lightblue")
+#     if not (elbow_des_pos is None):
+#         ax[0].plot(elbow_des_time, elbow_des_pos, label="elbow desired position", color="lightgreen")
+#     ax[0].set_ylabel("Position (rad)")
+#     ax[0].legend()
+# 
+#     # velocity plot
+#     ax[1].plot(meas_time[:index], shoulder_meas_vel[:index], label="shoulder measured velocity", color="blue")
+#     if not (shoulder_filtered_vel is None):
+#         ax[1].plot(meas_time[:index], shoulder_filtered_vel[:index], label="shoulder filtered velocity", color="darkviolet")
+#     ax[1].plot(meas_time[:index], elbow_meas_vel[:index], label="elbow measured velocity", color="green")
+#     if not (elbow_filtered_vel is None):
+#         ax[1].plot(meas_time[:index], elbow_filtered_vel[:index], label="elbow filtered velocity", color="orange")
+#     if not (shoulder_des_vel is None):
+#         ax[1].plot(shoulder_des_time, shoulder_des_vel, label="shoulder desired velocity", color="lightblue")
+#     if not (elbow_des_vel is None):
+#         ax[1].plot(elbow_des_time, elbow_des_vel, label="elbow desired velocity", color="lightgreen")
+#     ax[1].set_ylabel("Velocity (rad)")
+#     ax[1].legend()
+# 
+#     # torque plot for elbow
+#     print('plotting elbow torque')
+#     ax[2].plot(meas_time[:index], shoulder_meas_tau[:index], label="shoulder total commanded torque", color="blue")
+#     ax[2].plot(meas_time[:index], shoulder_tau_controller[:index], label="shoulder controller torque", color="aqua")
+#     ax[2].plot(meas_time[:index], elbow_meas_tau[:index], label="elbow total commanded torque", color="green")
+#     ax[2].plot(meas_time[:index], elbow_tau_controller[:index], label="elbow controller torque", color="lime")
+#     if not (shoulder_des_tau is None):
+#         ax[2].plot(shoulder_des_time, shoulder_des_tau, label="shoulder desired torque", color="lightblue")
+#     if not (shoulder_fric_tau is None):
+#         ax[2].plot(meas_time[:index], shoulder_fric_tau[:index], label="shoulder friction comp. torque", color="darkviolet")
+#     if not (elbow_des_tau is None):
+#         ax[2].plot(elbow_des_time, elbow_des_tau, label="elbow desired torque", color="lightgreen")
+#     if not (elbow_fric_tau is None):
+#         ax[2].plot(meas_time[:index], elbow_fric_tau[:index], label="elbow friction comp. torque", color="orange")
+#     ax[2].set_xlabel("Time (s)")
+#     ax[2].set_ylabel("Torque (Nm)")
+#     ax[2].legend()
+# 
+#     plt.savefig(os.path.join(save_dir, f'{date}_combiplot.pdf'))
+#     plt.show()
+# 

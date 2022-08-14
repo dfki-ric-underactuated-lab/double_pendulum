@@ -53,6 +53,19 @@ fCen: 6.36798375e+01
 # fCv2: 100.0
 # fCen: 0.0
 
+# sCu1: 0.1
+# sCu2: 0.1
+# sCp1: 0.0001
+# sCp2: 0.0001
+# sCv1: 0.0
+# sCv2: 0.0
+# sCen: 0.0
+# fCp1: 10000.
+# fCp2: 10000.0
+# fCv1: 100.0
+# fCv2: 100.0
+# fCen: 0.0
+
 max_iter: 10
 break_cost_redu: 0.000001
 regu_init: 100.0

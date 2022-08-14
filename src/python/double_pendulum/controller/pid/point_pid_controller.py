@@ -8,6 +8,8 @@ class PointPIDController(AbstractController):
                  torque_limit=[1.0, 1.0],
                  dt=0.01):
 
+        super().__init__()
+
         self.torque_limit = torque_limit
         self.dt = dt
 

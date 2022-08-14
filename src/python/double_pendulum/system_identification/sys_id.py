@@ -1,7 +1,5 @@
-import sys
 import os
 import numpy as np
-import pandas as pd
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 
@@ -10,7 +8,7 @@ from double_pendulum.system_identification.dynamics import build_identification_
 from double_pendulum.system_identification.loss import errfunc
 from double_pendulum.system_identification.plotting import plot_torques
 from double_pendulum.utils.optimization import solve_least_squares, cma_optimization, scipy_par_optimization
-from double_pendulum.utils.csv_trajectory import load_trajectory, concatenate_trajectories
+from double_pendulum.utils.csv_trajectory import concatenate_trajectories
 
 
 def run_system_identification(measured_data_csv,
@@ -18,8 +16,6 @@ def run_system_identification(measured_data_csv,
                               variable_mpar,
                               mp0,
                               bounds,
-                              read_with="pandas",
-                              keys="shoulder-elbow",
                               optimization_method="least_squares",
                               save_dir=".",
                               num_proc=0,
@@ -29,9 +25,7 @@ def run_system_identification(measured_data_csv,
 
     Q, phi = build_identification_matrices(fixed_mpar,
                                            variable_mpar,
-                                           measured_data_csv,
-                                           read_with=read_with,
-                                           keys=keys)
+                                           measured_data_csv)
 
     if optimization_method in ["least_squares", "least-squares"]:
 
@@ -43,7 +37,8 @@ def run_system_identification(measured_data_csv,
             x0 = np.copy(mp0)
             b = np.copy(bounds)
 
-        mp_opt_raw = solve_least_squares(loss_function,
+        mp_opt_raw = solve_least_squares(
+                loss_function,
                 x0,
                 b,
                 maxfevals=maxfevals)
@@ -57,7 +52,8 @@ def run_system_identification(measured_data_csv,
             x0 = np.copy(mp0)
             b = np.copy(bounds)
 
-        mp_opt_raw = cma_optimization(loss_function,
+        mp_opt_raw = cma_optimization(
+                        loss_function,
                         x0,
                         b,
                         save_dir=os.path.join(save_dir, "outcmaes/"),
@@ -75,7 +71,8 @@ def run_system_identification(measured_data_csv,
             x0 = np.copy(mp0)
             b = np.copy(bounds)
 
-        mp_opt_raw = scipy_par_optimization(loss_function,
+        mp_opt_raw = scipy_par_optimization(
+                loss_function,
                 x0,
                 b.T,
                 method=optimization_method,
@@ -99,10 +96,7 @@ def run_system_identification(measured_data_csv,
     print("Mean root mean squared error: ", rmse)
 
     # plotting results
-    T, X, U = concatenate_trajectories(measured_data_csv,
-                                       read_withs=read_with,
-                                       keys=keys,
-                                       with_tau=True)
+    T, X, U = concatenate_trajectories(measured_data_csv, with_tau=True)
     plot_torques(T, Q[::2, 0], Q[1::2, 0], Q_opt[::2], Q_opt[1::2])
 
     all_par = fixed_mpar

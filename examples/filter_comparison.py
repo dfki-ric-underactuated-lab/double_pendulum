@@ -50,7 +50,7 @@ plant = SymbolicDoublePendulum(model_pars=mpar)
 sim = Simulator(plant=plant)
 
 process_noise = [0., 0., 0., 0.]
-measurement_noise = [0.01, 0.01, 0.2, 0.2]
+measurement_noise = [0.1, 0.1, 0.2, 0.2]
 
 lowpass = lowpass_filter_rt(
         dim_x=4,
@@ -87,7 +87,7 @@ X_lowpass = np.asarray(X_lowpass)
 X_ukalman = np.asarray(X_ukalman)
 
 fig, ax = plt.subplots(4, 1,
-        figsize=(18, 12),
+        figsize=(9, 6),
         sharex="all")
 
 for i in range(4):

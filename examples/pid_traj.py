@@ -17,19 +17,14 @@ mpar.load_yaml(model_par_path)
 
 # trajectory
 csv_path = "../data/system_identification/excitation_trajectories/trajectory-pos-50.csv"
-read_with = "pandas"
-keys = "shoulder-elbow"
 with_tau = False
 num_break = 250
 # csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-# read_with = "numpy"
-# keys = ""
 # with_tau = True
 # num_break = 40
 
 # simulation parameters
-T_des, X_des, U_des = load_trajectory(csv_path, read_with=read_with,
-                                      keys=keys, with_tau=with_tau)
+T_des, X_des, U_des = load_trajectory(csv_path, with_tau=with_tau)
 dt, t_final, x0, _ = trajectory_properties(T_des, X_des)
 integrator = "runge_kutta"
 
@@ -43,8 +38,6 @@ plant = SymbolicDoublePendulum(model_pars=mpar)
 sim = Simulator(plant=plant)
 
 controller = TrajPIDController(csv_path=csv_path,
-                               read_with=read_with,
-                               keys=keys,
                                use_feed_forward_torque=with_tau,
                                torque_limit=mpar.tl,
                                num_break=num_break)
