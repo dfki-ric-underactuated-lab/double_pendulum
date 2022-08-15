@@ -89,6 +89,9 @@ def save_trajectory(csv_path,
         min_len = min(min_len, len(X_filt))
 
     if X_des is not None:
+        if len(X_des) < min_len:
+            diff_len = min_len - len(X_des)
+            X_des = np.append(X_des, np.zeros((diff_len, 4)), axis=0)
         data.append(np.array(X_des).T[0])
         data.append(np.array(X_des).T[1])
         data.append(np.array(X_des).T[2])
@@ -115,8 +118,11 @@ def save_trajectory(csv_path,
         min_len = min(min_len, len(U_meas))
 
     if U_des is not None:
-        data.append(np.array(U_des) .T[0])
-        data.append(np.array(U_des) .T[1])
+        if len(U_des) < min_len:
+            diff_len = min_len - len(U_des)
+            U_des = np.append(U_des, np.zeros((diff_len, 2)), axis=0)
+        data.append(np.array(U_des).T[0])
+        data.append(np.array(U_des).T[1])
         header += ",tau_des1,tau_des2"
         min_len = min(min_len, len(U_des))
 
@@ -209,8 +215,8 @@ def load_trajectory_full(csv_path):
                                      data["vel_filt1"], data["vel_filt2"]]).T
 
     if all((key in data.keys() for key in ["pos_des1", "pos_des2", "vel_des1", "vel_des2"])):
-        traj["X"] = np.asarray([data["pos_des1"], data["pos_des2"],
-                                data["vel_des1"], data["vel_des2"]]).T
+        traj["X_des"] = np.asarray([data["pos_des1"], data["pos_des2"],
+                                    data["vel_des1"], data["vel_des2"]]).T
 
     if all((key in data.keys() for key in ["tau_con1", "tau_con2"])):
         traj["U_con"] = np.asarray([data["tau_con1"], data["tau_con2"]]).T
@@ -251,7 +257,7 @@ def load_trajectory(csv_path, with_tau=True):
     if with_tau:
         U = traj["U"]
     else:
-        U = np.asarray([np.zeros_like(T), np.zeros_like(T)])
+        U = np.asarray([np.zeros_like(T), np.zeros_like(T)]).T
     return T, X, U
     
 

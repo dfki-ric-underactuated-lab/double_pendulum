@@ -64,7 +64,7 @@ def run_experiment(controller,
     print("Elbow Motor Status: Pos: {}, Vel: {}, Torque: {}".format(
         elbow_pos, elbow_vel, elbow_torque))
 
-    if input('Do you want to proceed for real time execution?(y) ') == 'y':
+    if input('Do you want to proceed for real time execution? (y/N) ') == 'y':
 
         (shoulder_pos,
          shoulder_vel,
@@ -75,6 +75,9 @@ def run_experiment(controller,
          elbow_vel,
          elbow_tau) = motor_elbow_controller.send_rad_command(
             0.0, 0.0, 0.0, 0.0, 0.0)
+
+        last_shoulder_pos = shoulder_pos
+        last_elbow_pos = elbow_pos
 
         # defining running index variables
         index = 0
@@ -122,10 +125,10 @@ def run_experiment(controller,
                 # store the measured sensor data of
                 # position, velocity and torque in each time step
                 pos_meas1[index] = shoulder_pos
-                vel_meas1[index] = shoulder_vel
+                #vel_meas1[index] = shoulder_vel
                 tau_meas1[index] = shoulder_tau
                 pos_meas2[index] = elbow_pos
-                vel_meas2[index] = elbow_vel
+                #vel_meas2[index] = elbow_vel
                 tau_meas2[index] = elbow_tau
 
                 # wait to enforce the demanded control frequency
@@ -141,6 +144,14 @@ def run_experiment(controller,
                 # store times
                 t += time.time() - start_loop
                 meas_time[index] = t
+
+                # velocities from position measurements
+                shoulder_vel = (shoulder_pos - last_shoulder_pos) / (meas_time[index] - meas_time[index-1])
+                elbow_vel = (elbow_pos - last_elbow_pos) / (meas_time[index] - meas_time[index-1])
+                last_shoulder_pos = shoulder_pos
+                last_elbow_pos = elbow_pos
+                vel_meas1[index] = shoulder_vel
+                vel_meas2[index] = elbow_vel
 
                 index += 1
                 # end of control loop
@@ -203,10 +214,11 @@ def run_experiment(controller,
                 T_des = None
 
             if len(X_des) > 0:
-                shoulder_des_pos = X_des.T[0]
-                shoulder_des_vel = X_des.T[2]
-                elbow_des_pos = X_des.T[1]
-                elbow_des_vel = X_des.T[3]
+                shoulder_des_pos = np.asarray(X_des).T[0]
+                shoulder_des_vel = np.asarray(X_des).T[2]
+                elbow_des_pos = np.asarray(X_des).T[1]
+                elbow_des_vel = np.asarray(X_des).T[3]
+                
             else:
                 shoulder_des_pos = None
                 shoulder_des_vel = None
@@ -215,8 +227,8 @@ def run_experiment(controller,
                 X_des = None
 
             if len(U_des) > 0:
-                shoulder_des_tau = U_des.T[0]
-                elbow_des_tau = U_des.T[1]
+                shoulder_des_tau = np.asarray(U_des).T[0]
+                elbow_des_tau = np.asarray(U_des).T[1]
             else:
                 shoulder_des_tau = None
                 elbow_des_tau = None

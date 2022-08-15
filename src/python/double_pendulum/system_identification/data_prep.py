@@ -1,62 +1,67 @@
 import numpy as np
 from scipy import signal
 
+from double_pendulum.utils.filters.low_pass import lowpass_filter
+from double_pendulum.utils.filters.butterworth import butterworth_filter
 
-def smooth_data_butter(t,
-                       shoulder_pos,
-                       shoulder_vel,
-                       shoulder_trq,
-                       elbow_pos,
-                       elbow_vel,
-                       elbow_trq):
-    """
-    velocity data filter
-    """
-    b_shoulder_vel, a_shoulder_vel = signal.butter(3, 0.2)
-    filtered_shoulder_vel = signal.filtfilt(b_shoulder_vel,
-                                            a_shoulder_vel,
-                                            shoulder_vel)
-    b_elbow_vel, a_elbow_vel = signal.butter(3, 0.2)
-    filtered_elbow_vel = signal.filtfilt(b_elbow_vel,
-                                         a_elbow_vel,
-                                         elbow_vel)
 
-    """
-    torque data filter
-    """
-    b_shoulder_trq, a_shoulder_trq = signal.butter(3, 0.1)
-    filtered_shoulder_trq = signal.filtfilt(b_shoulder_trq,
-                                            a_shoulder_trq,
-                                            shoulder_trq)
-    b_elbow_trq, a_elbow_trq = signal.butter(3, 0.1)
-    filtered_elbow_trq = signal.filtfilt(b_elbow_trq,
-                                         a_elbow_trq,
-                                         elbow_trq)
+def smooth_data(t,
+                shoulder_pos,
+                shoulder_vel,
+                shoulder_trq,
+                elbow_pos,
+                elbow_vel,
+                elbow_trq,
+                filt="butterworth"):
 
-    """
-    acceleration data filter
-    """
-    shoulder_vel3 = np.gradient(shoulder_pos, t)
-    b_shoulder_vel, a_shoulder_vel = signal.butter(3, 0.5)
-    shoulder_vel3 = signal.filtfilt(b_shoulder_vel,
-                                    a_shoulder_vel,
-                                    shoulder_vel3)
-    shoulder_acc_1 = np.gradient(shoulder_vel3, t)
-    b_shoulder_acc, a_shoulder_acc = signal.butter(3, 0.1)
-    filtered_shoulder_acc = signal.filtfilt(b_shoulder_acc,
-                                            a_shoulder_acc,
-                                            shoulder_acc_1)
+    if filt == "butterworth":
+        filtered_shoulder_vel = butterworth_filter(shoulder_vel, 3, 0.2)
+        filtered_elbow_vel = butterworth_filter(elbow_vel, 3, 0.2)
+        filtered_shoulder_trq = lowpass_filter(shoulder_trq, 0.3)
+        filtered_elbow_trq = lowpass_filter(elbow_trq, 0.3)
 
-    elbow_vel3 = np.gradient(elbow_pos, t)
-    b_elbow_vel, a_elbow_vel = signal.butter(3, 0.5)
-    elbow_vel3 = signal.filtfilt(b_elbow_vel,
-                                 a_elbow_vel,
-                                 elbow_vel3)
-    elbow_acc_1 = np.gradient(elbow_vel3, t)
-    b_elbow_acc, a_elbow_acc = signal.butter(3, 0.1)
-    filtered_elbow_acc = signal.filtfilt(b_elbow_acc,
-                                         a_elbow_acc,
-                                         elbow_acc_1)
+        # compute acceleration from positions and filter 2x
+        vel1 = np.gradient(shoulder_pos, t)
+        vel2 = np.gradient(elbow_pos, t)
+
+        vel1 = butterworth_filter(vel1, 3, 0.5)
+        vel2 = butterworth_filter(vel2, 3, 0.5)
+
+        filtered_shoulder_acc = np.gradient(vel1, t)
+        filtered_elbow_acc = np.gradient(vel2, t)
+
+        filtered_shoulder_acc = butterworth_filter(filtered_shoulder_acc, 3, 0.1)
+        filtered_elbow_acc = butterworth_filter(filtered_elbow_acc, 3, 0.1)
+
+    elif filt == "lowpass":
+        filtered_shoulder_vel = lowpass_filter(shoulder_vel, 0.3)
+        filtered_elbow_vel = lowpass_filter(elbow_vel, 0.3)
+        filtered_shoulder_trq = lowpass_filter(shoulder_trq, 0.3)
+        filtered_elbow_trq = lowpass_filter(elbow_trq, 0.3)
+
+        # compute acceleration from positions and filter 2x
+        vel1 = np.gradient(shoulder_pos, t)
+        vel2 = np.gradient(elbow_pos, t)
+
+        vel1 = lowpass_filter(vel1, 0.3)
+        vel2 = lowpass_filter(vel2, 0.3)
+
+        filtered_shoulder_acc = np.gradient(vel1, t)
+        filtered_elbow_acc = np.gradient(vel2, t)
+
+        filtered_shoulder_acc = lowpass_filter(filtered_shoulder_acc, 0.5)
+        filtered_elbow_acc = lowpass_filter(filtered_elbow_acc, 0.5)
+    else:
+        filtered_shoulder_vel = shoulder_vel
+        filtered_elbow_vel = elbow_vel
+        filtered_shoulder_trq = shoulder_trq
+        filtered_elbow_trq = elbow_trq
+        
+        vel1 = np.gradient(shoulder_pos, t)
+        vel2 = np.gradient(elbow_pos, t)
+
+        filtered_shoulder_acc = np.gradient(vel1, t)
+        filtered_elbow_acc = np.gradient(vel2, t)
 
     return (t,
             shoulder_pos,

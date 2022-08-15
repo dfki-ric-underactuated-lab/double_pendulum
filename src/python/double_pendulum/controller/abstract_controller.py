@@ -18,6 +18,7 @@ class AbstractController(ABC):
     def __init__(self):
         self.set_filter_args()
         self.set_friction_compensation()
+        self.set_gravity_compensation()
         self.x_hist = []
         self.x_filt_hist = []
         self.u_hist = [[0., 0.]]
@@ -58,6 +59,9 @@ class AbstractController(ABC):
         u_fric = self.get_friction_torque(y)
         self.u_fric_hist.append(u_fric)
         u += u_fric
+
+        u_grav = self.get_gravity_torque(y)
+        u += u_grav
 
         self.u_hist.append(u)
         return u
@@ -185,3 +189,14 @@ class AbstractController(ABC):
         friction_regressor_mat = yb_friction_matrix([x[2], x[3]])
         tau_fric = np.dot(friction_regressor_mat, self.friction_terms)
         return tau_fric
+
+    def set_gravity_compensation(self, plant=None):
+        self.grav_plant = plant
+
+    def get_gravity_torque(self, x):
+        if self.grav_plant is not None:
+            g = self.grav_plant.gravity_vector(x)
+            tau_grav = -np.dot(self.grav_plant.B, g)
+        else:
+            tau_grav = [0., 0.]
+        return np.asarray(tau_grav)

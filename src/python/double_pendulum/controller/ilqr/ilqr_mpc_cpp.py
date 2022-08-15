@@ -281,6 +281,9 @@ class ILQRMPCCPPController(AbstractController):
         u[self.active_act] = u_act
         # u = [0.0, u_act]
 
+        u[0] = np.clip(u[0], -self.torque_limit[0], self.torque_limit[0])
+        u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
+
         self.counter += 1
         # print(self.counter)
         return u

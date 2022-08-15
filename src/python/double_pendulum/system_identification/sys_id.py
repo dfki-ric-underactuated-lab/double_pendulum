@@ -21,11 +21,18 @@ def run_system_identification(measured_data_csv,
                               num_proc=0,
                               sigma0=0.1,
                               rescale=False,
-                              maxfevals=10000):
+                              maxfevals=10000,
+                              filt="butterworth"):
 
     Q, phi = build_identification_matrices(fixed_mpar,
                                            variable_mpar,
-                                           measured_data_csv)
+                                           measured_data_csv,
+                                           filt=filt)
+
+    Q_noisy, _ = build_identification_matrices(fixed_mpar,
+                                           variable_mpar,
+                                           measured_data_csv,
+                                           filt=None)
 
     if optimization_method in ["least_squares", "least-squares"]:
 
@@ -91,9 +98,13 @@ def run_system_identification(measured_data_csv,
     Q_opt = phi.dot(mp_opt)
     mae = mean_absolute_error(Q.flatten(), Q_opt.flatten())
     rmse = mean_squared_error(Q.flatten(), Q_opt.flatten(), squared=False)
+    mae_noisy = mean_absolute_error(Q_noisy.flatten(), Q_opt.flatten())
+    rmse_noisy = mean_squared_error(Q_noisy.flatten(), Q_opt.flatten(), squared=False)
 
-    print("Mean absolute error: ", mae)
-    print("Mean root mean squared error: ", rmse)
+    print("Mean absolute error (Filtered data): ", mae)
+    print("Mean root mean squared error (Filtered data): ", rmse)
+    print("Mean absolute error (Noisy data): ", mae_noisy)
+    print("Mean root mean squared error (Noisy data): ", rmse_noisy)
 
     # plotting results
     T, X, U = concatenate_trajectories(measured_data_csv, with_tau=True)

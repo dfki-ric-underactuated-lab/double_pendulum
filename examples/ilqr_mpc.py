@@ -11,30 +11,9 @@ from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
 robot = "acrobot"
+friction_compensation = True
 
 # # model parameters
-# mass = [0.608, 0.630]
-# length = [0.3, 0.2]
-# com = [0.275, 0.166]
-# # damping = [0.081, 0.0]
-# damping = [0.0, 0.0]
-# # cfric = [0.093, 0.186]
-# cfric = [0., 0.]
-# gravity = 9.81
-# inertia = [0.05472, 0.02522]
-# torque_limit = [0.0, 4.0]
-
-# model parameters
-# mass = [0.608, 0.5]
-# length = [0.3, 0.4]
-# com = [length[0], length[1]]
-# damping = [0.081, 0.081]
-# damping = [0.0, 0.0]
-# cfric = [0.093, 0.186]
-# gravity = 9.81
-# inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
-cfric = [0., 0.]
-motor_inertia = 0.
 if robot == "acrobot":
     torque_limit = [0.0, 6.0]
 if robot == "pendubot":
@@ -42,12 +21,16 @@ if robot == "pendubot":
 
 model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
 # model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
-mpar = model_parameters()
-mpar.load_yaml(model_par_path)
-mpar.set_motor_inertia(motor_inertia)
-# mpar.set_damping(damping)
-mpar.set_cfric(cfric)
-mpar.set_torque_limit(torque_limit)
+mpar = model_parameters(filepath=model_par_path)
+
+mpar_con = model_parameters(filepath=model_par_path)
+mpar_con.set_motor_inertia(0.)
+if friction_compensation:
+    mpar_con.set_damping([0., 0.])
+    mpar_con.set_cfric([0., 0.])
+# mpar_con.set_damping(damping)
+# mpar_con.set_cfric(cfric)
+mpar_con.set_torque_limit(torque_limit)
 
 # simulation parameter
 dt = 0.005
@@ -55,8 +38,8 @@ t_final = 10.0  # 4.985
 integrator = "runge_kutta"
 
 process_noise_sigmas = [0., 0., 0., 0.]
-meas_noise_sigmas = [0., 0., 0., 0.]
-meas_noise_cut = 0.0
+meas_noise_sigmas = [0., 0., 0.05, 0.05]
+meas_noise_cut = 0.1
 meas_noise_vfilter = "none"
 meas_noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}
 delay_mode = "None"
@@ -71,9 +54,9 @@ perturbation_taus = []
 N = 100
 con_dt = dt
 N_init = 1000
-max_iter = 2
+max_iter = 5
 max_iter_init = 1000
-regu_init = 100.
+regu_init = 1.
 max_regu = 10000.
 min_regu = 0.01
 break_cost_redu = 1e-6
@@ -94,9 +77,9 @@ goal = [np.pi, 0., 0., 0.]
 # tmotors v2.0
 # init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
 
-latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
-init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
-#init_csv_path = os.path.join("../data/trajectories", robot, "ilqr_v1.0/trajectory.csv")
+#latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
+#init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
+init_csv_path = os.path.join("../data/trajectories", robot, "ilqr_v1.0/trajectory.csv")
 #init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
 
 if robot == "acrobot":
@@ -122,12 +105,12 @@ if robot == "acrobot":
     # f_fCp = [final_prefac*3.82623819e+02, final_prefac*7.05315590e+03]
     # f_fCv = [final_prefac*5.89790058e+01, final_prefac*9.01459500e+01]
     # f_fCen = 0.0
-    f_sCu = [0.0001, 0.0001]
-    f_sCp = [0.1, 0.1]
+    f_sCu = [0.001, 0.001]
+    f_sCp = [0.01, 0.01]
     f_sCv = [0.01, 0.01]
     f_sCen = 0.0
-    f_fCp = [10., 10.]
-    f_fCv = [0.1, 0.1]
+    f_fCp = [100., 100.]
+    f_fCv = [1.0, 1.0]
     f_fCen = 0.0
 
 
@@ -196,7 +179,7 @@ sim.set_filter_parameters(meas_noise_cut=meas_noise_cut,
 sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
                          u_responsiveness=u_responsiveness)
 
-controller = ILQRMPCCPPController(model_pars=mpar)
+controller = ILQRMPCCPPController(model_pars=mpar_con)
 controller.set_start(start)
 controller.set_goal(goal)
 controller.set_parameters(N=N,
@@ -243,7 +226,15 @@ else:
     controller.load_init_traj(csv_path=init_csv_path,
                               num_break=40,
                               poly_degree=3)
+
+controller.set_filter_args(filt=meas_noise_vfilter, x0=goal, dt=dt, plant=plant,
+                           simulator=sim, velocity_cut=meas_noise_cut,
+                           filter_kwargs=filter_kwargs)
+if friction_compensation:
+    controller.set_friction_compensation(damping=mpar.b, coulomb_fric=mpar.cf)
+
 controller.init()
+
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
                                    tf=t_final, dt=dt, controller=controller,
                                    integrator="runge_kutta",

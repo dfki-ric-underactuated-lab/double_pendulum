@@ -1,7 +1,7 @@
 import numpy as np
 import sympy as smp
 
-from double_pendulum.system_identification.data_prep import smooth_data_butter
+from double_pendulum.system_identification.data_prep import smooth_data
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.utils.csv_trajectory import load_trajectory_full
 
@@ -93,7 +93,7 @@ class yb_matrix_sym():
 
 
 def build_identification_matrices(fixed_mpar, variable_mpar,
-                                  measured_data_filepath):
+                                  measured_data_filepath, filt="butterworth"):
 
     if type(measured_data_filepath) != list:
         measured_data_filepath = [measured_data_filepath]
@@ -115,14 +115,15 @@ def build_identification_matrices(fixed_mpar, variable_mpar,
             U = traj["U"]
 
         (ti, pos1, pos2, vel1, vel2,
-         acc1, acc2, tau1, tau2) = smooth_data_butter(
+         acc1, acc2, tau1, tau2) = smooth_data(
                                     t=T.tolist(),
                                     shoulder_pos=X.T[0],
                                     shoulder_vel=X.T[2],
                                     shoulder_trq=U.T[0],
                                     elbow_pos=X.T[1],
                                     elbow_vel=X.T[3],
-                                    elbow_trq=U.T[1])
+                                    elbow_trq=U.T[1],
+                                    filt=filt)
         if i == 0:
             filtered_time = np.asarray(ti)
             filtered_shoulder_pos = np.asarray(pos1)

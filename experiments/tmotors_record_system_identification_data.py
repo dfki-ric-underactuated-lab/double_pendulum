@@ -6,11 +6,7 @@ from double_pendulum.experiments.hardware_control_loop_tmotors import run_experi
 
 
 #excitation_traj_csv = "../data/system_identification/excitation_trajectories/trajectory-pos-20.csv"
-#read_with = "pandas"
-#keys = "shoulder-elbow"
 excitation_traj_csv = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-read_with = "numpy"
-keys = ""
 
 data = pd.read_csv(excitation_traj_csv)
 time_traj = np.asarray(data["time"])
@@ -37,10 +33,4 @@ run_experiment(controller=controller,
                can_port="can0",
                motor_ids=[7, 8],
                tau_limit=torque_limit,
-               friction_compensation=False,
-               friction_terms=None,
-               velocity_filter=None,
-               filter_args={"alpha": 0.2,
-                            "kernel_size": 5,
-                            "filter_size": 1},
-               save_dir="data/acrobot/tmotors/sysid")
+               save_dir="data/double-pendulum/tmotors/sysid")
