@@ -330,24 +330,44 @@ def load_trajectory(csv_path, with_tau=True):
 
 
 def concatenate_trajectories(csv_paths=[], with_tau=True):
-    if type(csv_paths) != list:
-        csv_paths = [csv_paths]
+    if type(csv_paths) == str:
+        # csv_paths = [csv_paths]
+        T_out, X_out, U_out = load_trajectory(csv_path=csv_path,
+                                              with_tau=with_tau)
+    elif type(csv_paths) == list:
 
-    T_outs = []
-    X_outs = []
-    U_outs = []
-    time = 0.
-    for i, cp in enumerate(csv_paths):
-        t, x, u = load_trajectory(csv_path=cp,
-                                  with_tau=with_tau)
-        T_outs.append(t + time)
-        time = T_outs[-1][-1] + (T_outs[-1][-1] - T_outs[-1][-2])
-        X_outs.append(x)
-        U_outs.append(u)
+        T_outs = []
+        X_outs = []
+        U_outs = []
+        time = 0.
+        for i, cp in enumerate(csv_paths):
+            traj = load_trajectory_full(cp)
 
-    T_out = np.concatenate(T_outs, axis=0)
-    X_out = np.concatenate(X_outs, axis=0)
-    U_out = np.concatenate(U_outs, axis=0)
+            T = traj["T"]
+
+            if traj["X"] is not None:
+                X = traj["X"]
+            else:
+                X = traj["X_meas"]
+
+            if traj["U"] is not None:
+                U = traj["U"]
+            else:
+                U = traj["U_meas"]
+
+            T_outs.append(T + time)
+            time = T_outs[-1][-1] + (T_outs[-1][-1] - T_outs[-1][-2])
+            X_outs.append(X)
+            U_outs.append(U)
+
+        T_out = np.concatenate(T_outs, axis=0)
+        X_out = np.concatenate(X_outs, axis=0)
+        U_out = np.concatenate(U_outs, axis=0)
+
+    else:
+        T_out = None
+        X_out = None
+        U_out = None
 
     return T_out, X_out, U_out
 

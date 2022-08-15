@@ -5,24 +5,24 @@ from double_pendulum.controller.combined_controller import CombinedController
 from double_pendulum.experiments.hardware_control_loop_tmotors import run_experiment
 
 
-torque_limit = [8.0, 8.0]
+torque_limit = [5.0, 5.0]
 
 # trajectory
-dt = 0.002
+dt = 0.005
 t_final = 10.0
 t1_final = 5.0
 N = int(t1_final / dt)
 T_des = np.linspace(0, t1_final, N+1)
 p1_des = np.linspace(0, -np.pi/2, N+1)
-p2_des = np.linspace(0, -np.pi/2, N+1)
+p2_des = np.linspace(0, np.pi/2, N+1)
 v1_des = np.diff(p1_des, append=p1_des[-1]) / dt
 v2_des = np.diff(p2_des, append=p2_des[-1]) / dt
 X_des = np.array([p1_des, p2_des, v1_des, v2_des]).T
 
 # controller parameters
-Kp = 200.
+Kp = 20.
 Ki = 0.
-Kd = 2.
+Kd = 1.
 
 
 def condition1(t, x):
@@ -61,10 +61,12 @@ run_experiment(controller=controller,
                dt=dt,
                t_final=t_final,
                can_port="can0",
-               motor_ids=[8, 9],
+               motor_ids=[7, 8],
                tau_limit=torque_limit,
-               friction_compensation=False,
-               friction_terms=None,
+               #friction_compensation=False,
+               #friction_terms=None,
+               friction_compensation=True,
+               friction_terms=[0.093, 0.186, 0.081, 0.0],
                velocity_filter="lowpass",
                filter_args={"alpha": 0.2,
                             "kernel_size": 5,

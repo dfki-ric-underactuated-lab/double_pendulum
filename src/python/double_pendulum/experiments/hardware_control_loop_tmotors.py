@@ -5,8 +5,8 @@ import numpy as np
 
 from motor_driver.canmotorlib import CanMotorController
 from double_pendulum.experiments.experimental_utils import setZeroPosition
-from double_poendulum.utils.csv_trajectory import save_trajectory
-from double_poendulum.utils.plotting import plot_timeseries, plot_figures
+from double_pendulum.utils.csv_trajectory import save_trajectory
+from double_pendulum.utils.plotting import plot_timeseries, plot_figures
 
 
 def run_experiment(controller,
@@ -14,11 +14,8 @@ def run_experiment(controller,
                    t_final=10,
                    can_port='can0',
                    motor_ids=[8, 9],
+                   motor_type='AK80_6_V1p1',
                    tau_limit=[4., 4.],
-                   tau_filter=None,
-                   tau_filter_args={"alpha": 0.5,
-                                    "kernel_size": 5,
-                                    "filter_size": 1},
                    save_dir="."):
 
     np.set_printoptions(formatter={'float': lambda x: "{0:0.4f}".format(x)})
@@ -38,8 +35,8 @@ def run_experiment(controller,
     motor_elbow_id = motor_ids[1]
 
     # Create motor controller objects
-    motor_shoulder_controller = CanMotorController(can_port, motor_shoulder_id)
-    motor_elbow_controller = CanMotorController(can_port, motor_elbow_id)
+    motor_shoulder_controller = CanMotorController(can_port, motor_shoulder_id, motor_type)
+    motor_elbow_controller = CanMotorController(can_port, motor_elbow_id, motor_type)
 
     (shoulder_pos,
      shoulder_vel,
@@ -246,9 +243,9 @@ def run_experiment(controller,
                             T_des=T_des,
                             X_des=X_des,
                             U_des=U_des,
-                            X_filt=np.asarray(controller.x_filt_hist),
-                            U_con=np.asarray(controller.u_hist),
-                            U_friccomp=np.asarray(controller.u_fric_hist),
+                            X_filt=np.asarray(controller.x_filt_hist)[:index-1],
+                            U_con=np.asarray(controller.u_hist)[:index-1],
+                            U_friccomp=np.asarray(controller.u_fric_hist)[:index-1],
                             save_to=os.path.join(save_dir_time, "combiplot.pdf"),
                             show=True)
                             

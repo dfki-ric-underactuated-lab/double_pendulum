@@ -143,7 +143,7 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
             ax[i].plot(T[:len(U_friccomp)], np.asarray(U_friccomp).T[0],
                        ls="-", label="u1 friction compensation", color="darkblue")
             ax[i].plot(T[:len(U_friccomp)], np.asarray(U_friccomp).T[1],
-                       ls="-", label="u2 friction_compensation", color="brown")
+                       ls="-", label="u2 friction compensation", color="brown")
         for line in tau_x_lines:
             ax[i].plot([line, line], [np.min(U), np.max(U)],
                        ls="--", color="gray")
