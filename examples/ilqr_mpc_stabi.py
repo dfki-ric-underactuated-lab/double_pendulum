@@ -10,8 +10,8 @@ from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory
 
-robot = "acrobot"
-friction_compensation = False
+robot = "pendubot"
+friction_compensation = True
 
 if robot == "acrobot":
     torque_limit = [0.0, 6.0]
@@ -37,7 +37,7 @@ t_final = 10.0  # 4.985
 integrator = "runge_kutta"
 
 process_noise_sigmas = [0., 0., 0., 0.]
-meas_noise_sigmas = [0., 0., 0., 0.]
+meas_noise_sigmas = [0., 0., 0.05, 0.05]
 delay_mode = "None"
 delay = 0.0
 u_noise_sigmas = [0., 0.]

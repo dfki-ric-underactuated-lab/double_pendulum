@@ -127,7 +127,8 @@ class AbstractController(ABC):
     def init_filter(self):
 
         if self.filt == "lowpass":
-            dof = self.filt_plant.dof
+            #dof = self.filt_plant.dof
+            dof = 2
 
             self.filter = lowpass_filter_rt(
                     dim_x=2*dof,

@@ -15,21 +15,25 @@ from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajector
 # model parameters
 urdf_path = "../data/urdfs/acrobot.urdf"
 robot = "acrobot"
+friction_compensation = True
 
 # damping = [0.081, 0.0]
-cfric = [0., 0.]
-motor_inertia = 0.
 torque_limit = [0.0, 6.0]
 torque_limit_pid = [6.0, 6.0]
 
 model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
 #model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
-mpar_dp = model_parameters()
-mpar_dp.load_yaml(model_par_path)
-mpar_dp.set_motor_inertia(motor_inertia)
-# mpar_dp.set_damping(damping)
-mpar_dp.set_cfric(cfric)
-mpar_dp.set_torque_limit(torque_limit_pid)
+
+mpar = model_parameters(filepath=model_par_path)
+
+# mpar_con = model_parameters(filepath=model_par_path)
+# #mpar_con.set_motor_inertia(0.)
+# if friction_compensation:
+#     mpar_con.set_damping([0., 0.])
+#     mpar_con.set_cfric([0., 0.])
+# mpar_con.set_torque_limit(torque_limit)
+
+
 # trajectory parameters
 ## tmotors v1.0
 #csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
@@ -48,18 +52,29 @@ goal = [np.pi, 0., 0., 0.]
 
 # simulation parameters
 x0 = [0.0, 0.0, 0.0, 0.0]
+integrator = "runge_kutta"
 
-process_noise_sigmas = [0., 0., 0., 0.]
-meas_noise_sigmas = [0., 0., 0.0, 0.0]
-meas_noise_cut = 0.0
-meas_noise_vfilter = "none"
-meas_noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}
+# noise
+process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
+meas_noise_sigmas = [0.0, 0.0, 0.05, 0.05]
 delay_mode = "None"
 delay = 0.0
 u_noise_sigmas = [0., 0.]
 u_responsiveness = 1.0
 perturbation_times = []
 perturbation_taus = []
+
+# filter args
+meas_noise_vfilter = "lowpass"
+meas_noise_cut = 0.1
+filter_kwargs = {"lowpass_alpha": [1., 1., 0.3, 0.3],
+                 "kalman_xlin": goal,
+                 "kalman_ulin": [0., 0.],
+                 "kalman_process_noise_sigmas": process_noise_sigmas,
+                 "kalman_meas_noise_sigmas": meas_noise_sigmas,
+                 "ukalman_integrator": integrator,
+                 "ukalman_process_noise_sigmas": process_noise_sigmas,
+                 "ukalman_meas_noise_sigmas": meas_noise_sigmas}
 
 # controller parameters
 Q = np.diag([0.64, 0.56, 0.13, 0.037])
@@ -87,16 +102,13 @@ def condition2(t, x):
         return True
 
 # init plant, simulator and controller
-plant = SymbolicDoublePendulum(model_pars=mpar_dp)
+plant = SymbolicDoublePendulum(model_pars=mpar)
 
 sim = Simulator(plant=plant)
 sim.set_process_noise(process_noise_sigmas=process_noise_sigmas)
 sim.set_measurement_parameters(meas_noise_sigmas=meas_noise_sigmas,
                                delay=delay,
                                delay_mode=delay_mode)
-sim.set_filter_parameters(meas_noise_cut=meas_noise_cut,
-                          meas_noise_vfilter=meas_noise_vfilter,
-                          meas_noise_vfilter_args=meas_noise_vfilter_args)
 sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
                          u_responsiveness=u_responsiveness)
 
@@ -105,30 +117,33 @@ controller1 = TVLQRController(
         urdf_path=urdf_path,
         torque_limit=torque_limit,
         robot=robot)
-
 controller1.set_cost_parameters(Q=Q, R=R, Qf=Qf)
-controller1.init()
 
 controller2 = PointPIDController(
         torque_limit=torque_limit_pid,
-        goal=goal,
         dt=dt)
 controller2.set_parameters(
         Kp=Kp,
         Ki=Ki,
         Kd=Kd)
-controller2.init()
+controller2.set_goal(goal)
 
 controller = CombinedController(
         controller1=controller1,
         controller2=controller2,
         condition1=condition1,
         condition2=condition2)
+controller.set_filter_args(filt=meas_noise_vfilter, x0=goal, dt=dt, plant=plant,
+                           simulator=sim, velocity_cut=meas_noise_cut,
+                           filter_kwargs=filter_kwargs)
+if friction_compensation:
+    controller.set_friction_compensation(damping=mpar.b, coulomb_fric=mpar.cf)
+controller.init()
 
 # simulate
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    tf=t_final, dt=dt, controller=controller,
-                                   integrator="runge_kutta",# imperfections=imperfections,
+                                   integrator="runge_kutta",
                                    plot_inittraj=True)
 # if imperfections:
 X_meas = sim.meas_x_values
@@ -145,9 +160,13 @@ save_trajectory(os.path.join(save_dir, "trajectory.csv"), T, X, U)
 
 plot_timeseries(T, X, U, None,
                 plot_energy=False,
-                pos_y_lines=[0.0, np.pi],
                 T_des=T_des,
                 X_des=X_des,
                 U_des=U_des,
-                X_meas=X_meas,
-                U_con=U_con)
+                X_filt=controller.x_filt_hist,
+                X_meas=sim.meas_x_values,
+                U_con=controller.u_hist,
+                U_friccomp=controller.u_fric_hist,
+                pos_y_lines=[0.0, np.pi],
+                tau_y_lines=[-torque_limit[1], torque_limit[1]],
+                save_to=os.path.join(save_dir, "timeseries"))

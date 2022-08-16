@@ -11,8 +11,6 @@ from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_pro
 # model parameters
 urdf_path = "../data/urdfs/acrobot.urdf"
 robot = "acrobot"
-cfric = [0., 0.]
-motor_inertia = 0.
 torque_limit = [0.0, 6.0]
 torque_limit_pid = [6.0, 6.0]
 
@@ -60,6 +58,11 @@ def condition2(t, x):
         print(f"Switched to PID control in state x {x} at time {t}")
         return True
 
+# measurement filter
+meas_noise_cut = 0.15
+meas_noise_vfilter = "lowpass"
+filter_kwargs = {"lowpass_alpha": [1., 1., 0.2, 0.2]}
+
 # setup controller
 controller1 = TVLQRController(
         csv_path=csv_path,
@@ -67,37 +70,44 @@ controller1 = TVLQRController(
         torque_limit=torque_limit,
         robot=robot)
 controller1.set_cost_parameters(Q=Q, R=R, Qf=Qf)
-controller1.init()
 
 controller2 = PointPIDController(
         torque_limit=torque_limit_pid,
-        goal=goal,
         dt=dt)
 controller2.set_parameters(
         Kp=Kp,
         Ki=Ki,
         Kd=Kd)
-controller2.init()
+controller2.set_goal(goal)
 
 controller = CombinedController(
         controller1=controller1,
         controller2=controller2,
         condition1=condition1,
         condition2=condition2)
+controller.set_filter_args(filt=meas_noise_vfilter,
+         velocity_cut=meas_noise_cut,
+         filter_kwargs=filter_kwargs)
+
+# gravity and friction compensation
+#model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+#mpar = model_parameters(filepath=model_par_path)
+#plant = SymbolicDoublePendulum(model_pars=mpar)
+#controller.set_gravity_compensation(plant=plant)
+
+#controller.set_friction_compensation(damping=mpar.b, coulomb_fric=mpar.cf)
+#controller.set_friction_compensation(damping=[0.005, 0.001], coulomb_fric=[0.093, 0.15])
+controller.set_friction_compensation(damping=[0., 0.001], coulomb_fric=[0., 0.15])
+#controller.set_friction_compensation(damping=[0.001, 0.001], coulomb_fric=[0.09, 0.078])
+#controller.set_friction_compensation(damping=[0., 0.001], coulomb_fric=[0., 0.078])
+
+controller.init()
 
 # run experiment
 run_experiment(controller=controller,
                dt=dt,
                t_final=t_final,
                can_port="can0",
-               motor_ids=[8, 9],
+               motor_ids=[7, 8],
                tau_limit=torque_limit_pid,
-               friction_compensation=True,
-               #friction_terms=[0.093, 0.081, 0.186, 0.0],
-               #friction_terms=[0.093, 0.005, 0.15, 0.001],
-               friction_terms=[0.0, 0.0, 0.15, 0.001],
-               velocity_filter="lowpass",
-               filter_args={"alpha": 0.2,
-                            "kernel_size": 5,
-                            "filter_size": 1},
                save_dir="data/acrobot/tmotors/tvlqr_drake_pid_results")

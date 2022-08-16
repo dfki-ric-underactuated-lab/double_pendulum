@@ -14,8 +14,8 @@ T_des = np.linspace(0, t_final, N+1)
 
 # u1 = np.zeros(N+1)
 
-# u1 = 0.4*np.sin(10.*T_des)
-# u2 = 0.8*np.cos(10.*T_des)
+u1 = 0.4*np.sin(10.*T_des)
+u2 = 0.8*np.cos(10.*T_des)
 
 # u1 = 0.6*np.sin(5.*T_des)
 # u2 = 0.4*np.cos(10.*T_des)
@@ -26,8 +26,8 @@ T_des = np.linspace(0, t_final, N+1)
 # u1 = np.zeros(N+1)
 # u2 = 0.8*np.cos(10.*T_des)
 
-u1 = np.zeros(N+1)
-u2 = 0.4*np.cos(5.*T_des)
+# u1 = np.zeros(N+1)
+# u2 = 0.4*np.cos(5.*T_des)
 
 U_des = np.array([u1, u2]).T
 

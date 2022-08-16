@@ -80,7 +80,8 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
         ax[i].set_ylabel("angle [rad]")
-        ax[i].legend(loc="best")
+        #ax[i].legend(loc="best")
+        ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
     if plot_vel:
         i += 1
         ax[i].plot(T[:len(X)], np.asarray(X).T[2], label="q1 dot", color="blue")
@@ -107,7 +108,8 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
         ax[i].set_ylabel("angular velocity [rad/s]")
-        ax[i].legend(loc="best")
+        #ax[i].legend(loc="best")
+        ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
     if plot_acc:
         i += 1
         ax[i].plot(T[:len(ACC)], np.asarray(ACC).T[0], label="q1 ddot", color="blue")
@@ -124,7 +126,8 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
         ax[i].set_ylabel("angular acceleration [rad/s^2]")
-        ax[i].legend(loc="best")
+        #ax[i].legend(loc="best")
+        ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
     if plot_tau:
         i += 1
         ax[i].plot(T[:len(U)], np.asarray(U).T[0, :len(T)], label="u1", color="blue")
@@ -151,7 +154,8 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
         ax[i].set_ylabel("input torque [Nm]")
-        ax[i].legend(loc="best")
+        #ax[i].legend(loc="best")
+        ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
     if plot_energy:
         i += 1
         ax[i].plot(T[:len(energy)], np.asarray(energy), label="energy")
@@ -162,11 +166,13 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
         ax[i].set_ylabel("energy [J]")
-        ax[i].legend(loc="best")
+        #ax[i].legend(loc="best")
+        ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
     ax[i].set_xlabel("time [s]")
     if not (save_to is None):
         plt.savefig(save_to, bbox_inches="tight")
     if show:
+        plt.tight_layout()
         plt.show()
     plt.close()
 

@@ -40,6 +40,16 @@ def run_experiment(controller,
 
     (shoulder_pos,
      shoulder_vel,
+     shoulder_torque) = motor_shoulder_controller.enable_motor()
+    print("Shoulder Motor Status: Pos: {}, Vel: {}, Torque: {}".format(
+        shoulder_pos, shoulder_vel, shoulder_torque))
+
+    elbow_pos, elbow_vel, elbow_torque = motor_elbow_controller.enable_motor()
+    print("Elbow Motor Status: Pos: {}, Vel: {}, Torque: {}".format(
+        elbow_pos, elbow_vel, elbow_torque))
+
+    (shoulder_pos,
+     shoulder_vel,
      shoulder_torque) = motor_shoulder_controller.send_rad_command(
         0.0, 0.0, 0.0, 0.0, 0.0)
 
@@ -53,16 +63,6 @@ def run_experiment(controller,
 
     print("Setting Elbow Motor to Zero Position...")
     setZeroPosition(motor_elbow_controller, elbow_pos, elbow_vel, elbow_torque)
-
-    (shoulder_pos,
-     shoulder_vel,
-     shoulder_torque) = motor_shoulder_controller.enable_motor()
-    print("Shoulder Motor Status: Pos: {}, Vel: {}, Torque: {}".format(
-        shoulder_pos, shoulder_vel, shoulder_torque))
-
-    elbow_pos, elbow_vel, elbow_torque = motor_elbow_controller.enable_motor()
-    print("Elbow Motor Status: Pos: {}, Vel: {}, Torque: {}".format(
-        elbow_pos, elbow_vel, elbow_torque))
 
     if input('Do you want to proceed for real time execution? (y/N) ') == 'y':
 
@@ -197,7 +197,8 @@ def run_experiment(controller,
             except TypeError:
                 pass
 
-            date = datetime.now().strftime("%Y%m%d-%I%M%S-%p")
+            #date = datetime.now().strftime("%Y%m%d-%I%M%S-%p")
+            date = datetime.now().strftime("%Y%m%d-%H%M%S")
             save_dir_time = os.path.join(save_dir, date)
             if not os.path.exists(save_dir_time):
                 os.makedirs(save_dir_time)
@@ -242,7 +243,7 @@ def run_experiment(controller,
                             X_meas=X_meas,
                             X_filt=np.asarray(controller.x_filt_hist),
                             X_des=X_des,
-                            U_con=np.asarray(controller.u_hist),
+                            U_con=np.asarray(controller.u_hist[1:]),
                             U_fric=np.asarray(controller.u_fric_hist),
                             U_meas=U_meas,
                             U_des=U_des,
@@ -256,7 +257,7 @@ def run_experiment(controller,
                             X_des=X_des,
                             U_des=U_des,
                             X_filt=np.asarray(controller.x_filt_hist)[:index-1],
-                            U_con=np.asarray(controller.u_hist)[:index-1],
+                            U_con=np.asarray(controller.u_hist)[1:index-1],
                             U_friccomp=np.asarray(controller.u_fric_hist)[:index-1],
                             save_to=os.path.join(save_dir_time, "combiplot.pdf"),
                             show=True)
@@ -270,8 +271,8 @@ def run_experiment(controller,
                          elbow_meas_pos=pos_meas2,
                          elbow_meas_vel=vel_meas2,
                          elbow_meas_tau=tau_meas2,
-                         shoulder_tau_controller=np.asarray(controller.u_hist).T[0],
-                         elbow_tau_controller=np.asarray(controller.u_hist).T[1],
+                         shoulder_tau_controller=np.asarray(controller.u_hist[1:]).T[0],
+                         elbow_tau_controller=np.asarray(controller.u_hist[1:]).T[1],
                          shoulder_des_time=T_des,
                          shoulder_des_pos=shoulder_des_pos,
                          shoulder_des_vel=shoulder_des_vel,
@@ -281,25 +282,19 @@ def run_experiment(controller,
                          elbow_des_vel=elbow_des_vel,
                          elbow_des_tau=elbow_des_tau,
                          error=None)
+    else:
+        print("Disabling Motors...")
 
-            # plot_figure_single(save_dir=save_dir_time,
-            #                    date=date,
-            #                    index=index-1,
-            #                    meas_time=meas_time,
-            #                    shoulder_meas_pos=pos_meas1,
-            #                    shoulder_meas_vel=vel_meas1,
-            #                    shoulder_meas_tau=tau_meas1,
-            #                    elbow_meas_pos=pos_meas2,
-            #                    elbow_meas_vel=vel_meas2,
-            #                    elbow_meas_tau=tau_meas2,
-            #                    shoulder_tau_controller=np.asarray(controller.u_hist).T[1],
-            #                    elbow_tau_controller=np.asarray(controller.u_hist).T[0],
-            #                    shoulder_des_time=T_des,
-            #                    shoulder_des_pos=shoulder_des_pos,
-            #                    shoulder_des_vel=shoulder_des_vel,
-            #                    shoulder_des_tau=shoulder_des_tau,
-            #                    elbow_des_time=T_des,
-            #                    elbow_des_pos=elbow_des_pos,
-            #                    elbow_des_vel=elbow_des_vel,
-            #                    elbow_des_tau=elbow_des_tau,
-            #                    error=None)
+        (shoulder_pos,
+         shoulder_vel,
+         shoulder_tau) = motor_shoulder_controller.disable_motor()
+
+        print("Shoulder Motor Status: Pos: {}, Vel: {}, Torque: {}".format(
+            shoulder_pos, shoulder_vel, shoulder_tau))
+
+        (elbow_pos,
+         elbow_vel,
+         elbow_tau) = motor_elbow_controller.disable_motor()
+
+        print("Elbow Motor Status: Pos: {}, Vel: {}, Torque: {}".format(
+            elbow_pos, elbow_vel, elbow_tau))

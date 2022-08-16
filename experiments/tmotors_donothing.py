@@ -18,9 +18,9 @@ u2 = np.zeros(N+1)
 U_des = np.array([u1, u2]).T
 
 # measurement filter
-# meas_noise_cut = 0.15
-# meas_noise_vfilter = "lowpass"
-# filter_kwargs = {"lowpass_alpha": [1., 1., 0.3, 0.3]}
+meas_noise_cut = 0.15
+meas_noise_vfilter = "lowpass"
+filter_kwargs = {"lowpass_alpha": [1., 1., 0.2, 0.2]}
 
 # controller
 controller = FeedForwardController(T=T_des,
@@ -28,20 +28,21 @@ controller = FeedForwardController(T=T_des,
                                    torque_limit=[0., 0.],
                                    num_break=40)
 
-# controller.set_filter_args(filt=meas_noise_vfilter,
-#          velocity_cut=meas_noise_cut,
-#          filter_kwargs=filter_kwargs)
+controller.set_filter_args(filt=meas_noise_vfilter,
+         velocity_cut=meas_noise_cut,
+         filter_kwargs=filter_kwargs)
 
 
 # gravity and friction compensation
-#model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-#mpar = model_parameters(filepath=model_par_path)
-#plant = SymbolicDoublePendulum(model_pars=mpar)
-#controller.set_gravity_compensation(plant=plant)
+# model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+# mpar = model_parameters(filepath=model_par_path)
+# plant = SymbolicDoublePendulum(model_pars=mpar)
+# controller.set_gravity_compensation(plant=plant)
 
 #controller.set_friction_compensation(damping=mpar.b, coulomb_fric=mpar.cf)
 #controller.set_friction_compensation(damping=[0.005, 0.001], coulomb_fric=[0.093, 0.15])
 #controller.set_friction_compensation(damping=[0.0, 0.01], coulomb_fric=[0.08, 0.04])
+#controller.set_friction_compensation(damping=[0.001, 0.001], coulomb_fric=[0.09, 0.078])
 
 controller.init()
 
