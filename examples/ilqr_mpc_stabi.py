@@ -77,12 +77,20 @@ goal = [np.pi, 0., 0., 0.]
 
 
 if robot == "acrobot":
+    # sCu = [0.1, 0.1]
+    # sCp = [.1, .01]
+    # sCv = [.1, .01]
+    # sCen = 0.0
+    # fCp = [10., 1.]
+    # fCv = [10., 1.]
+    # fCen = 0.0
+
     sCu = [0.1, 0.1]
-    sCp = [.1, .01]
-    sCv = [.1, .01]
+    sCp = [.1, .1]
+    sCv = [.01, .01]
     sCen = 0.0
-    fCp = [10., 1.]
-    fCv = [10., 1.]
+    fCp = [10., 10.]
+    fCv = [1., 1.]
     fCen = 0.0
 
 if robot == "pendubot":
@@ -91,7 +99,7 @@ if robot == "pendubot":
     sCv = [0.01, 0.01]
     sCen = 0.
     fCp = [10., 10.]
-    fCv = [0.1, 0.1]
+    fCv = [.1, .1]
     fCen = 0.
 
 # create save directory

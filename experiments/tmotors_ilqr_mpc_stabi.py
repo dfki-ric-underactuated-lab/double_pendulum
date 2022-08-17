@@ -10,7 +10,7 @@ from double_pendulum.model.model_parameters import model_parameters
 
 
 torque_limit = [5.0, 5.0]
-robot = "pendubot"
+robot = "acrobot"
 friction_compensation = True
 
 if robot == "acrobot":
@@ -38,7 +38,7 @@ t_final = 10.0  # 4.985
 
 # measurement filter
 meas_noise_cut = 0.
-meas_noise_vfilter = "lowpass"
+meas_noise_vfilter = "none"
 filter_kwargs = {"lowpass_alpha": [1., 1., 0.3, 0.3]}
 
 # controller
@@ -57,20 +57,20 @@ integrator = "runge_kutta"
 
 if robot == "acrobot":
     sCu = [0.1, 0.1]
-    sCp = [.1, .01]
-    sCv = [.1, .01]
+    sCp = [.1, .1]
+    sCv = [.01, .01]
     sCen = 0.0
-    fCp = [10., 1.]
-    fCv = [10., 1.]
+    fCp = [10., 10.]
+    fCv = [1., 1.]
     fCen = 0.0
 
 elif robot == "pendubot":
-    sCu = [0.0001, 0.0001]
+    sCu = [0.1, 0.1]
     sCp = [0.1, 0.1]
     sCv = [0.01, 0.01]
     sCen = 0.
     fCp = [10., 10.]
-    fCv = [0.1, 0.1]
+    fCv = [0.1, .1]
     fCen = 0.
 
 controller = ILQRMPCCPPController(model_pars=mpar_con)

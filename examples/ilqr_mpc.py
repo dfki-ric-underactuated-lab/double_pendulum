@@ -10,7 +10,7 @@ from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
-robot = "acrobot"
+robot = "pendubot"
 friction_compensation = True
 
 # # model parameters
@@ -28,20 +28,18 @@ mpar_con.set_motor_inertia(0.)
 if friction_compensation:
     mpar_con.set_damping([0., 0.])
     mpar_con.set_cfric([0., 0.])
-# mpar_con.set_damping(damping)
-# mpar_con.set_cfric(cfric)
 mpar_con.set_torque_limit(torque_limit)
 
 # simulation parameter
 dt = 0.005
 t_final = 10.0  # 4.985
 integrator = "runge_kutta"
+start = [0., 0., 0., 0.]
+goal = [np.pi, 0., 0., 0.]
 
-process_noise_sigmas = [0., 0., 0., 0.]
-meas_noise_sigmas = [0., 0., 0.05, 0.05]
-meas_noise_cut = 0.1
-meas_noise_vfilter = "none"
-meas_noise_vfilter_args = {"alpha": [1., 1., 1., 1.]}
+# noise
+process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
+meas_noise_sigmas = [0.0, 0.0, 0.05, 0.05]
 delay_mode = "None"
 delay = 0.0
 u_noise_sigmas = [0., 0.]
@@ -49,12 +47,25 @@ u_responsiveness = 1.0
 perturbation_times = []
 perturbation_taus = []
 
+# filter args
+meas_noise_vfilter = "none"
+meas_noise_cut = 0.
+filter_kwargs = {"lowpass_alpha": [1., 1., 0.3, 0.3],
+                 "kalman_xlin": goal,
+                 "kalman_ulin": [0., 0.],
+                 "kalman_process_noise_sigmas": process_noise_sigmas,
+                 "kalman_meas_noise_sigmas": meas_noise_sigmas,
+                 "ukalman_integrator": integrator,
+                 "ukalman_process_noise_sigmas": process_noise_sigmas,
+                 "ukalman_meas_noise_sigmas": meas_noise_sigmas}
+
+
 # controller parameters
 # N = 20
 N = 100
 con_dt = dt
 N_init = 1000
-max_iter = 5
+max_iter = 10
 max_iter_init = 1000
 regu_init = 1.
 max_regu = 10000.
@@ -62,10 +73,6 @@ min_regu = 0.01
 break_cost_redu = 1e-6
 trajectory_stabilization = True
 shifting = 1
-
-# swingup parameters
-start = [0., 0., 0., 0.]
-goal = [np.pi, 0., 0., 0.]
 
 # trajectory parameters
 ## tmotors v1.0
@@ -83,15 +90,23 @@ init_csv_path = os.path.join("../data/trajectories", robot, "ilqr_v1.0/trajector
 #init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
 
 if robot == "acrobot":
-    u_prefac = 1.
-    stage_prefac = 1.
-    final_prefac = 1.
-    sCu = [u_prefac*9.97938814e+01, u_prefac*9.97938814e+01]
-    sCp = [stage_prefac*2.06969312e+01, stage_prefac*7.69967729e+01]
-    sCv = [stage_prefac*1.55726136e-01, stage_prefac*5.42226523e-00]
+    # u_prefac = 1.
+    # stage_prefac = 1.
+    # final_prefac = 1.
+    # sCu = [u_prefac*9.97938814e+01, u_prefac*9.97938814e+01]
+    # sCp = [stage_prefac*2.06969312e+01, stage_prefac*7.69967729e+01]
+    # sCv = [stage_prefac*1.55726136e-01, stage_prefac*5.42226523e-00]
+    # sCen = 0.0
+    # fCp = [final_prefac*3.82623819e+02, final_prefac*7.05315590e+03]
+    # fCv = [final_prefac*5.89790058e+01, final_prefac*9.01459500e+01]
+    # fCen = 0.0
+
+    sCu = [.1, .1]
+    sCp = [.1, .1]
+    sCv = [0.01, 0.1]
     sCen = 0.0
-    fCp = [final_prefac*3.82623819e+02, final_prefac*7.05315590e+03]
-    fCv = [final_prefac*5.89790058e+01, final_prefac*9.01459500e+01]
+    fCp = [100., 10.]
+    fCv = [10., 1.]
     fCen = 0.0
 
     # stabilizaion cost par
@@ -105,12 +120,12 @@ if robot == "acrobot":
     # f_fCp = [final_prefac*3.82623819e+02, final_prefac*7.05315590e+03]
     # f_fCv = [final_prefac*5.89790058e+01, final_prefac*9.01459500e+01]
     # f_fCen = 0.0
-    f_sCu = [0.001, 0.001]
-    f_sCp = [0.01, 0.01]
-    f_sCv = [0.01, 0.01]
+    f_sCu = [0.1, 0.1]
+    f_sCp = [.1, .1]
+    f_sCv = [.01, .01]
     f_sCen = 0.0
-    f_fCp = [100., 100.]
-    f_fCv = [1.0, 1.0]
+    f_fCp = [10., 10.]
+    f_fCv = [1., 1.]
     f_fCen = 0.0
 
 
@@ -136,20 +151,36 @@ if robot == "acrobot":
     # fCen = 0.
 
 if robot == "pendubot":
-    sCu = [0.2, 0.2]
-    sCp = [0.1, 0.2]
-    sCv = [0.1, 0.1]
+    # sCu = [0.2, 0.2]
+    # sCp = [0.1, 0.2]
+    # sCv = [0.1, 0.1]
+    # sCen = 0.
+    # fCp = [2500., 500.]
+    # fCv = [500., 500.]
+    # fCen = 0.
+
+    sCu = [0.001, 0.001]
+    sCp = [0.01, 0.01]
+    sCv = [0.01, 0.01]
     sCen = 0.
-    fCp = [2500., 500.]
-    fCv = [500., 500.]
+    fCp = [100., 100.]
+    fCv = [1., 1.]
     fCen = 0.
+
+    # f_sCu = [0.0001, 0.0001]
+    # f_sCp = [0.1, 0.1]
+    # f_sCv = [0.01, 0.01]
+    # f_sCen = 0.
+    # f_fCp = [100., 1000.]
+    # f_fCv = [1.0, 10.0]
+    # f_fCen = 0.
 
     f_sCu = [0.0001, 0.0001]
     f_sCp = [0.1, 0.1]
     f_sCv = [0.01, 0.01]
     f_sCen = 0.
-    f_fCp = [100., 1000.]
-    f_fCv = [1.0, 10.0]
+    f_fCp = [10., 10.]
+    f_fCv = [0.1, 0.1]
     f_fCen = 0.
 
 init_sCu = sCu
@@ -173,9 +204,6 @@ sim.set_process_noise(process_noise_sigmas=process_noise_sigmas)
 sim.set_measurement_parameters(meas_noise_sigmas=meas_noise_sigmas,
                                delay=delay,
                                delay_mode=delay_mode)
-sim.set_filter_parameters(meas_noise_cut=meas_noise_cut,
-                          meas_noise_vfilter=meas_noise_vfilter,
-                          meas_noise_vfilter_args=meas_noise_vfilter_args)
 sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
                          u_responsiveness=u_responsiveness)
 

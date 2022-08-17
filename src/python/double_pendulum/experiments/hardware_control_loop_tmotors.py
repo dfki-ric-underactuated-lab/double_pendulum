@@ -259,6 +259,8 @@ def run_experiment(controller,
                             X_filt=np.asarray(controller.x_filt_hist)[:index-1],
                             U_con=np.asarray(controller.u_hist)[1:index-1],
                             U_friccomp=np.asarray(controller.u_fric_hist)[:index-1],
+                            pos_y_lines=[-np.pi, 0.0, np.pi],
+                            vel_y_lines=[0.0],
                             save_to=os.path.join(save_dir_time, "combiplot.pdf"),
                             show=True)
                             

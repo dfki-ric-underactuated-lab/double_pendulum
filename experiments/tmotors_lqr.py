@@ -5,7 +5,7 @@ from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.experiments.hardware_control_loop_tmotors import run_experiment
 
 
-robot = "pendubot"
+robot = "acrobot"
 torque_limit = [5.0, 5.0]
 friction_compensation = True
 
@@ -29,7 +29,7 @@ if friction_compensation:
 mpar_con.set_torque_limit(torque_limit_con)
 
 dt = 0.002
-t_final = 100.0
+t_final = 30.0
 goal = [np.pi, 0., 0., 0.]
 
 # measurement filter
@@ -39,18 +39,27 @@ filter_kwargs = {"lowpass_alpha": [1., 1., 0.2, 0.2]}
 
 # controller
 if robot == "acrobot":
-    Q = np.diag((0.97, 0.93, 0.39, 0.26))
-    R = np.diag((0.11, 0.11))
+    #Q = np.diag((0.97, 0.93, 0.39, 0.26))
+    #R = np.diag((0.11, 0.11))
+    #Q = np.diag((0.97, 0.93, 0.39, 0.26))
+    #R = np.diag((111.1, 111.1))
+
+    Q = np.diag([6.5, 0.0125, 9.36, 6.88])
+    R = np.diag([25., 25.])
+    ctg_cut = 1000000
 
 elif robot == "pendubot":
     Q = np.diag([0.0125, 6.5, 6.88, 9.36])
-    R = np.diag([0.024, 0.024])
+    #R = np.diag([0.024, 0.024])
+    R = np.diag([25., 25.])
+    ctg_cut = 1000
+
 
 controller = LQRController(model_pars=mpar_con)
 controller.set_goal(goal)
 controller.set_cost_matrices(Q=Q, R=R)
 controller.set_parameters(failure_value=0.0,
-                          cost_to_go_cut=100)
+                          cost_to_go_cut=ctg_cut)
 controller.set_filter_args(filt=meas_noise_vfilter,
          velocity_cut=meas_noise_cut,
          filter_kwargs=filter_kwargs)

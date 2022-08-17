@@ -9,7 +9,7 @@ from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.utils.plotting import plot_timeseries
 
 
-robot = "pendubot"
+robot = "acrobot"
 friction_compensation = True
 
 # model parameters
@@ -67,9 +67,11 @@ if robot == "acrobot":
     # [6.60845661 0.0203263  1.59384209 0.11347305 0.08903846]
     # 1.649609700742603735e+01 9.094310297259731612e+01 7.128663050519863653e-02 1.116726623434960083e-02 3.647472178659907360e+00
     #c[7.568227051118126880e+00, 1.851805841833500610e+00, 9.989157089721836247e-01, 9.994476149737525628e-01, 7.567700329462909714e-01]
-    Q = np.diag((0.97, 0.93, 0.39, 0.26))
-    R = np.diag((0.11, 0.11))
+    # Q = np.diag((0.97, 0.93, 0.39, 0.26))
+    # R = np.diag((0.11, 0.11))
 
+    Q = np.diag([0.65, 0.00125, 0.000936, 0.000688])
+    R = np.diag((25.0, 25.0))
     # tvlqr costs
     #Q = np.diag([0.64, 0.56, 0.13, 0.037])
     #R = np.eye(2)*0.82
@@ -79,8 +81,10 @@ elif robot == "pendubot":
     #x0 = [np.pi-0.05, 0.1, 0.0, 0.0]
 
     # [0.01251931 6.51187283 6.87772744 9.35785251 0.02354949]
-    Q = np.diag([0.0125, 6.5, 6.88, 9.36])
-    R = np.diag([0.024, 0.024])
+    #Q = np.diag([0.0125, 6.5, 6.88, 9.36])
+    #R = np.diag([0.024, 0.024])
+    Q = np.diag([0.00125, 0.65, 0.000688, 0.000936])
+    R = np.diag([25.0, 25.0])
     # [8.74006242e+01 1.12451099e-02 9.59966065e+01 8.99725246e-01 2.37517689e-01]
     #Q = np.diag([87.4, 0.012, 96.0, 0.9])
     #R = np.diag([0.23, 0.23])
@@ -107,7 +111,7 @@ controller = LQRController(model_pars=mpar_con)
 controller.set_goal(goal)
 controller.set_cost_matrices(Q=Q, R=R)
 controller.set_parameters(failure_value=0.0,
-                          cost_to_go_cut=100)
+                          cost_to_go_cut=1000)
 controller.set_filter_args(filt=meas_noise_vfilter, x0=goal, dt=dt, plant=plant,
                            simulator=sim, velocity_cut=meas_noise_cut,
                            filter_kwargs=filter_kwargs)

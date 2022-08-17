@@ -15,7 +15,7 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
 ## model parameters
-robot = "pendubot"
+robot = "acrobot"
 friction_compensation = True
 stabilization = "lqr"
 

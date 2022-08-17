@@ -2,7 +2,7 @@ import numpy as np
 
 from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.experiments.hardware_control_loop_tmotors import run_experiment as run_experiment_t
-from double_pendulum.experiments.hardware_control_loop_mjbots import run_experiment as run_experiment_mj
+#from double_pendulum.experiments.hardware_control_loop_mjbots import run_experiment as run_experiment_mj
 
 
 robot = "acrobot"
@@ -19,13 +19,13 @@ cfric = [0., 0.]
 gravity = 9.81
 inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
 if robot == "acrobot":
-    torque_limit = [0.0, 4.0]
+    torque_limit = [0.0, 6.0]
 if robot == "pendubot":
     torque_limit = [4.0, 0.0]
 
 # simulation parameter
 dt = 0.005
-t_final = 6.0
+t_final = 5.0
 integrator = "runge_kutta"
 
 # controller parameters
@@ -99,16 +99,16 @@ if motors == "tmotors":
                                   "kernel_size": 5,
                                   "filter_size": 1},
                      save_dir="data/acrobot/tmotors/ilqr_results/mpc")
-elif motors == "mjbots":
-    asyncio.run(run_experiment_mj(controller=controller,
-                                  dt=dt,
-                                  t_final=t_final,
-                                  motor_ids=[1, 2],
-                                  tau_limit=torque_limit,
-                                  friction_compensation=False,
-                                  friction_terms=[0.0, 0.0, 0.0, 0.0],
-                                  velocity_filter="lowpass",
-                                  filter_args={"alpha": 0.15,
-                                               "kernel_size": 21,
-                                               "filter_size": 21},
-                                  save_dir="data/acrobot/mjbots/ilqr_results/mpc"))
+# elif motors == "mjbots":
+#     asyncio.run(run_experiment_mj(controller=controller,
+#                                   dt=dt,
+#                                   t_final=t_final,
+#                                   motor_ids=[1, 2],
+#                                   tau_limit=torque_limit,
+#                                   friction_compensation=False,
+#                                   friction_terms=[0.0, 0.0, 0.0, 0.0],
+#                                   velocity_filter="lowpass",
+#                                   filter_args={"alpha": 0.15,
+#                                                "kernel_size": 21,
+#                                                "filter_size": 21},
+#                                   save_dir="data/acrobot/mjbots/ilqr_results/mpc"))
