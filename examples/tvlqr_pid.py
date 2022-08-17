@@ -8,16 +8,23 @@ from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.controller.tvlqr.tvlqr_controller import TVLQRController
 from double_pendulum.controller.pid.point_pid_controller import PointPIDController
 from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
+from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.controller.combined_controller import CombinedController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
 ## model parameters
-robot = "acrobot"
+robot = "pendubot"
 friction_compensation = True
+stabilization = "lqr"
 
-torque_limit = [0.0, 6.0]
+if robot == "pendubot":
+    torque_limit = [5.0, 0.0]
+    active_act = 0
+elif robot == "acrobot":
+    torque_limit = [0.0, 5.0]
+    active_act = 1
 torque_limit_pid = [6.0, 6.0]
 
 model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
@@ -29,11 +36,11 @@ mpar_con = model_parameters(filepath=model_par_path)
 if friction_compensation:
     mpar_con.set_damping([0., 0.])
     mpar_con.set_cfric([0., 0.])
-mpar_con.set_torque_limit(torque_limit_pid)
+mpar_con.set_torque_limit(torque_limit)
 
 ## trajectory parameters
 # csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"   # tmotors v1.0
-csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"  # tmotors v1.0
+csv_path = "../data/trajectories/"+robot+"/ilqr_v1.0/trajectory.csv"  # tmotors v1.0
 # csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"  # tmotors v2.0
 
 ## load reference trajectory
@@ -48,7 +55,7 @@ integrator = "runge_kutta"
 
 ## noise
 process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
-meas_noise_sigmas = [0.0, 0.0, 0.05, 0.05]
+meas_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
 delay_mode = "None"
 delay = 0.0
 u_noise_sigmas = [0., 0.]
@@ -57,8 +64,8 @@ perturbation_times = []
 perturbation_taus = []
 
 ## filter args
-meas_noise_vfilter = "lowpass"
-meas_noise_cut = 0.1
+meas_noise_vfilter = "none"
+meas_noise_cut = 0.
 filter_kwargs = {"lowpass_alpha": [1., 1., 0.3, 0.3],
                  "kalman_xlin": goal,
                  "kalman_ulin": [0., 0.],
@@ -78,6 +85,11 @@ Kp = 10.
 Ki = 0.
 Kd = 0.1
 horizon = 100
+
+## lqr controller
+Q_lqr = np.diag((0.97, 0.93, 0.39, 0.26))
+R_lqr = np.diag((1.1, 1.1))
+
 
 ## ilqr mpc controller
 N = 100
@@ -136,34 +148,42 @@ controller1 = TVLQRController(
 
 controller1.set_cost_parameters(Q=Q, R=R, Qf=Qf)
 
-# controller2 = PointPIDController(
-#         torque_limit=torque_limit_pid,
-#         dt=dt)
-# controller2.set_parameters(
-#         Kp=Kp,
-#         Ki=Ki,
-#         Kd=Kd)
-# controller2.set_goal(goal)
+if stabilization == "pid":
+    controller2 = PointPIDController(
+            torque_limit=torque_limit_pid,
+            dt=dt)
+    controller2.set_parameters(
+            Kp=Kp,
+            Ki=Ki,
+            Kd=Kd)
+    controller2.set_goal(goal)
+elif stabilization == "lqr":
+    controller2 = LQRController(model_pars=mpar_con)
+    controller2.set_goal(goal)
+    controller2.set_cost_matrices(Q=Q_lqr, R=R_lqr)
+    controller2.set_parameters(failure_value=0.0,
+                              cost_to_go_cut=100)
 
-controller2 = ILQRMPCCPPController(model_pars=mpar_con)
-controller2.set_goal(goal)
-controller2.set_parameters(N=N,
-                           dt=con_dt,
-                           max_iter=max_iter,
-                           regu_init=regu_init,
-                           max_regu=max_regu,
-                           min_regu=min_regu,
-                           break_cost_redu=break_cost_redu,
-                           integrator=integrator,
-                           trajectory_stabilization=trajectory_stabilization,
-                           shifting=shifting)
-controller2.set_cost_parameters(sCu=sCu,
-                                sCp=sCp,
-                                sCv=sCv,
-                                sCen=sCen,
-                                fCp=fCp,
-                                fCv=fCv,
-                                fCen=fCen)
+elif stabilization == "ilqr":
+    controller2 = ILQRMPCCPPController(model_pars=mpar_con)
+    controller2.set_goal(goal)
+    controller2.set_parameters(N=N,
+                               dt=con_dt,
+                               max_iter=max_iter,
+                               regu_init=regu_init,
+                               max_regu=max_regu,
+                               min_regu=min_regu,
+                               break_cost_redu=break_cost_redu,
+                               integrator=integrator,
+                               trajectory_stabilization=trajectory_stabilization,
+                               shifting=shifting)
+    controller2.set_cost_parameters(sCu=sCu,
+                                    sCp=sCp,
+                                    sCv=sCv,
+                                    sCen=sCen,
+                                    fCp=fCp,
+                                    fCv=fCv,
+                                    fCen=fCen)
 
 controller = CombinedController(
         controller1=controller1,
@@ -201,5 +221,5 @@ plot_timeseries(T, X, U, None,
                 U_con=controller.u_hist,
                 U_friccomp=controller.u_fric_hist,
                 pos_y_lines=[0.0, np.pi],
-                tau_y_lines=[-torque_limit[1], torque_limit[1]],
+                tau_y_lines=[-torque_limit[active_act], torque_limit[active_act]],
                 save_to=os.path.join(save_dir, "timeseries"))
