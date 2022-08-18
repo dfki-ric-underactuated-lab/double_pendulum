@@ -15,23 +15,24 @@ def smooth_data(t,
                 filt="butterworth"):
 
     if filt == "butterworth":
-        filtered_shoulder_vel = butterworth_filter(shoulder_vel, 3, 0.2)
-        filtered_elbow_vel = butterworth_filter(elbow_vel, 3, 0.2)
-        filtered_shoulder_trq = lowpass_filter(shoulder_trq, 0.3)
-        filtered_elbow_trq = lowpass_filter(elbow_trq, 0.3)
+        Wn = 0.02
+        filtered_shoulder_vel = butterworth_filter(shoulder_vel, 3, Wn)
+        filtered_elbow_vel = butterworth_filter(elbow_vel, 3, Wn)
+        filtered_shoulder_trq = butterworth_filter(shoulder_trq, 3, Wn)
+        filtered_elbow_trq = butterworth_filter(elbow_trq, 3, Wn)
 
         # compute acceleration from positions and filter 2x
         vel1 = np.gradient(shoulder_pos, t)
         vel2 = np.gradient(elbow_pos, t)
 
-        vel1 = butterworth_filter(vel1, 3, 0.5)
-        vel2 = butterworth_filter(vel2, 3, 0.5)
+        vel1 = butterworth_filter(vel1, 3, Wn)
+        vel2 = butterworth_filter(vel2, 3, Wn)
 
         filtered_shoulder_acc = np.gradient(vel1, t)
         filtered_elbow_acc = np.gradient(vel2, t)
 
-        filtered_shoulder_acc = butterworth_filter(filtered_shoulder_acc, 3, 0.1)
-        filtered_elbow_acc = butterworth_filter(filtered_elbow_acc, 3, 0.1)
+        filtered_shoulder_acc = butterworth_filter(filtered_shoulder_acc, 3, Wn)
+        filtered_elbow_acc = butterworth_filter(filtered_elbow_acc, 3, Wn)
 
     elif filt == "lowpass":
         filtered_shoulder_vel = lowpass_filter(shoulder_vel, 0.3)
