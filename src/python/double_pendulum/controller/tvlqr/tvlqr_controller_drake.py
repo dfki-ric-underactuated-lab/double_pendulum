@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from pydrake.systems.controllers import (FiniteHorizonLinearQuadraticRegulatorOptions,
                                          FiniteHorizonLinearQuadraticRegulator)
@@ -7,7 +8,7 @@ from pydrake.multibody.plant import MultibodyPlant
 
 from double_pendulum.controller.abstract_controller import AbstractController
 from double_pendulum.utils.csv_trajectory import load_trajectory
-
+from double_pendulum.utils.urdfs import generate_urdf
 
 #from pydrake.systems.primitives import FirstOrderTaylorApproximation
 #from pydrake... import LinearQuadraticRegulator
@@ -45,12 +46,16 @@ class TVLQRController(AbstractController):
     def __init__(self,
                  csv_path,
                  urdf_path,
+                 model_pars,
                  torque_limit=[0.0, 3.0],
-                 robot="acrobot"):
+                 robot="acrobot",
+                 save_dir="."):
 
         super().__init__()
 
-        self.urdf_path = urdf_path
+        self.urdf_path = os.path.join(save_dir, robot + ".urdf")
+        generate_urdf(urdf_path, self.urdf_path, model_pars=model_pars)
+
         self.torque_limit = torque_limit
         self.robot = robot
         if self.robot == "acrobot":

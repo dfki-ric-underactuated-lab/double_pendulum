@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from pydrake.systems.controllers import LinearQuadraticRegulator
 from pydrake.systems.primitives import FirstOrderTaylorApproximation
@@ -6,15 +7,21 @@ from pydrake.multibody.parsing import Parser
 from pydrake.multibody.plant import MultibodyPlant
 
 from double_pendulum.controller.abstract_controller import AbstractController
+from double_pendulum.utils.urdfs import generate_urdf
 
 
 class LQRController(AbstractController):
     def __init__(self,
                  urdf_path,
+                 model_pars,
                  robot="acrobot",
-                 torque_limit=[0.0, 1.0]):
+                 torque_limit=[0.0, 1.0],
+                 save_dir="."):
 
         super().__init__()
+
+        self.urdf_path = os.path.join(save_dir, robot + ".urdf")
+        generate_urdf(urdf_path, self.urdf_path, model_pars=model_pars)
 
         self.torque_limit = torque_limit
         self.robot = robot
@@ -24,7 +31,7 @@ class LQRController(AbstractController):
             self.active_motor = 0
 
         self.drake_robot = MultibodyPlant(time_step=0.0)
-        Parser(self.drake_robot).AddModelFromFile(urdf_path)
+        Parser(self.drake_robot).AddModelFromFile(self.urdf_path)
         self.drake_robot.Finalize()
         self.context = self.drake_robot.CreateDefaultContext()
 

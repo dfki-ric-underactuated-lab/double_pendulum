@@ -2,11 +2,10 @@
 <!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
      Commit Version: 1.5.1-0-g916b5db  Build Version: 1.5.7152.31018
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
-<robot
-  name="acrobot">
 <!-- Necessary for Pydrake, For hyrodyn comment out the base_weld joint-->
 <!-- For proper visualization in hyrodyn, change obj to STL-->
-
+<robot
+  name="acrobot">
   <joint name="base_weld" type="fixed">
       <parent link="world"/>
       <child link="base_link"/>
@@ -42,17 +41,6 @@
           rgba="0.89804 0.91765 0.92941 1" />
       </material>
     </visual>
-<!--
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="./meshes/base_link.obj" />
-      </geometry>
-    </collision>
--->    
   </link>
 
   <link
@@ -85,17 +73,6 @@
           rgba="0.75294 0.75294 0.75294 1" />
       </material>
     </visual>
-<!--    
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="./meshes/Link1.obj" />
-      </geometry>
-    </collision>
--->    
   </link>
 
   <joint
@@ -150,17 +127,6 @@
           rgba="0.75294 0.75294 0.75294 1" />
       </material>
     </visual>
-<!--
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="./meshes/Link2.obj" />
-      </geometry>
-    </collision>
--->    
   </link>
   
   <joint
@@ -215,17 +181,6 @@
           rgba="0.69804 0.69804 0.69804 1" />
       </material>
     </visual>
-<!--    
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="./meshes/Weight.obj" />
-      </geometry>
-    </collision>
--->    
   </link>
   
   <joint
@@ -241,8 +196,6 @@
     <axis
       xyz="0 0 0" />
   </joint>
-<!-- Necessary for Pydrake-->
-  
   <transmission type="SimpleTransmission" name="elbow_trans">
     <actuator name="Joint2"/>
     <joint name="Joint2"/>
