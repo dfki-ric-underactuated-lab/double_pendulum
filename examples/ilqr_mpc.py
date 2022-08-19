@@ -19,12 +19,12 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [6.0, 0.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
 # model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters(filepath=model_par_path)
 
 mpar_con = model_parameters(filepath=model_par_path)
-mpar_con.set_motor_inertia(0.)
+#mpar_con.set_motor_inertia(0.)
 if friction_compensation:
     mpar_con.set_damping([0., 0.])
     mpar_con.set_cfric([0., 0.])
@@ -86,7 +86,7 @@ shifting = 1
 
 #latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
 #init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
-init_csv_path = os.path.join("../data/trajectories", robot, "ilqr_v1.0/trajectory.csv")
+init_csv_path = os.path.join("../data/trajectories", robot, "ilqr_v1.0_new2/trajectory.csv")
 #init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
 
 if robot == "acrobot":
@@ -175,13 +175,22 @@ if robot == "pendubot":
     # f_fCv = [1.0, 10.0]
     # f_fCen = 0.
 
-    f_sCu = [0.0001, 0.0001]
-    f_sCp = [0.1, 0.1]
-    f_sCv = [0.01, 0.01]
-    f_sCen = 0.
-    f_fCp = [10., 10.]
-    f_fCv = [0.1, 0.1]
-    f_fCen = 0.
+    # f_sCu = [0.0001, 0.0001]
+    # f_sCp = [0.1, 0.1]
+    # f_sCv = [0.01, 0.01]
+    # f_sCen = 0.
+    # f_fCp = [10., 10.]
+    # f_fCv = [0.1, 0.1]
+    # f_fCen = 0.
+
+    f_sCu = sCu
+    f_sCp = sCp
+    f_sCv = sCv
+    f_sCen = sCen
+    f_fCp = fCp
+    f_fCv = fCv
+    f_fCen = fCen
+
 
 init_sCu = sCu
 init_sCp = sCp

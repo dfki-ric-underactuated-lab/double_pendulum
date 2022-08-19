@@ -17,9 +17,9 @@ elif robot == "acrobot":
     torque_limit_con = [0.0, 5.0]
     active_act = 1
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
 # model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
-#mpar = model_parameters(filepath=model_par_path)
+mpar = model_parameters(filepath=model_par_path)
 
 mpar_con = model_parameters(filepath=model_par_path)
 #mpar_con.set_motor_inertia(0.)
@@ -44,14 +44,21 @@ if robot == "acrobot":
     #Q = np.diag((0.97, 0.93, 0.39, 0.26))
     #R = np.diag((111.1, 111.1))
 
-    Q = np.diag([6.5, 0.0125, 9.36, 6.88])
-    R = np.diag([25., 25.])
+    #Q = np.diag([6.5, 0.0125, 9.36, 6.88])
+    #R = np.diag([25., 25.])
+    #Q = np.diag((0.97, 0.93, 0.39, 0.26))
+    #R = np.diag((.11, .11))
+    Q = 0.1*np.diag([0.65, 0.00125, 93.6, 0.000688])
+    #R = 100.*np.diag((.025, .025))
+    R = 100.*np.diag((.025, .025))
+
     ctg_cut = 1000000
 
 elif robot == "pendubot":
     Q = np.diag([0.0125, 6.5, 6.88, 9.36])
-    #R = np.diag([0.024, 0.024])
-    R = np.diag([25., 25.])
+    R = np.diag([0.024, 0.024])
+    #R = np.diag([0.24, 0.24])
+    #R = np.diag([2.5, 2.5])
     ctg_cut = 1000
 
 
@@ -65,7 +72,8 @@ controller.set_filter_args(filt=meas_noise_vfilter,
          filter_kwargs=filter_kwargs)
 
 if friction_compensation:
-    controller.set_friction_compensation(damping=[0.001, 0.001], coulomb_fric=[0.09, 0.078])
+    #controller.set_friction_compensation(damping=[0.001, 0.001], coulomb_fric=[0.09, 0.078])
+    controller.set_friction_compensation(damping=mpar.b, coulomb_fric=mpar.cf)
 controller.init()
 
 run_experiment(controller=controller,

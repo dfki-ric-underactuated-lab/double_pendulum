@@ -15,7 +15,7 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
 ## model parameters
-robot = "acrobot"
+robot = "pendubot"
 friction_compensation = True
 stabilization = "lqr"
 
@@ -27,7 +27,7 @@ elif robot == "acrobot":
     active_act = 1
 torque_limit_pid = [6.0, 6.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
 # model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters(filepath=model_par_path)
 
@@ -40,13 +40,15 @@ mpar_con.set_torque_limit(torque_limit)
 
 ## trajectory parameters
 # csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"   # tmotors v1.0
-csv_path = "../data/trajectories/"+robot+"/ilqr_v1.0/trajectory.csv"  # tmotors v1.0
+csv_path = "../data/trajectories/"+robot+"/ilqr_v1.0_new2/trajectory.csv"  # tmotors v1.0
 # csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"  # tmotors v2.0
 
 ## load reference trajectory
 T_des, X_des, U_des = load_trajectory(csv_path)
-dt = T_des[1] - T_des[0]
-t_final = T_des[-1] + 5
+#dt = T_des[1] - T_des[0]
+#t_final = T_des[-1] + 5
+dt = 0.002
+t_final = 10.
 goal = [np.pi, 0., 0., 0.]
 
 ## simulation parameters
@@ -55,7 +57,7 @@ integrator = "runge_kutta"
 
 ## noise
 process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
-meas_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
+meas_noise_sigmas = [0.0, 0.0, 0.05, 0.05]
 delay_mode = "None"
 delay = 0.0
 u_noise_sigmas = [0., 0.]
@@ -64,9 +66,9 @@ perturbation_times = []
 perturbation_taus = []
 
 ## filter args
-meas_noise_vfilter = "none"
-meas_noise_cut = 0.
-filter_kwargs = {"lowpass_alpha": [1., 1., 0.3, 0.3],
+meas_noise_vfilter = "lowpass"
+meas_noise_cut = 0.1
+filter_kwargs = {"lowpass_alpha": [1., 1., 0.2, 0.2],
                  "kalman_xlin": goal,
                  "kalman_ulin": [0., 0.],
                  "kalman_process_noise_sigmas": process_noise_sigmas,
@@ -76,8 +78,14 @@ filter_kwargs = {"lowpass_alpha": [1., 1., 0.3, 0.3],
                  "ukalman_meas_noise_sigmas": meas_noise_sigmas}
 
 ## controller parameters
-Q = np.diag([0.64, 0.56, 0.13, 0.037])
-R = np.eye(2)*0.82
+if robot == "acrobot":
+    Q = np.diag([0.64, 0.56, 0.13, 0.067])
+    R = np.eye(2)*0.82
+elif robot == "pendubot":
+    #Q = np.diag([0.64, 0.64, 0.4, 0.2])
+    #R = np.eye(2)*0.82
+    Q = 3.*np.diag([0.64, 0.64, 0.1, 0.1])
+    R = np.eye(2)*0.82
 Qf = np.copy(Q)
 
 ## PID controller
@@ -87,8 +95,14 @@ Kd = 0.1
 horizon = 100
 
 ## lqr controller
-Q_lqr = np.diag((0.97, 0.93, 0.39, 0.26))
-R_lqr = np.diag((1.1, 1.1))
+if robot == "acrobot":
+    # Q_lqr = np.diag((0.97, 0.93, 0.39, 0.26))
+    # R_lqr = np.diag((1.1, 1.1))
+    Q_lqr = 0.1*np.diag([0.65, 0.00125, 93.36, 0.000688])
+    R_lqr = 100.*np.diag((.025, .025))
+elif robot == "pendubot":
+    Q_lqr = np.diag([0.0125, 6.5, 6.88, 9.36])
+    R_lqr = np.diag([2.4, 2.4])
 
 
 ## ilqr mpc controller
@@ -117,8 +131,10 @@ def condition1(t, x):
 
 def condition2(t, x):
     goal = [np.pi, 0., 0., 0.]
-    eps = [0.2, 0.2, 0.8, 0.8]
+    eps = [0.2, 0.2, 1.5, 1.5]
+    #eps = [0.2, 0.2, 0.8, 0.8]
     #eps = [0.1, 0.1, 0.4, 0.4]
+    #eps = [0.1, 0.2, 2.0, 1.]
 
     y = wrap_angles_top(x)
 
@@ -196,6 +212,7 @@ controller.set_filter_args(filt=meas_noise_vfilter, x0=goal, dt=dt, plant=plant,
                            filter_kwargs=filter_kwargs)
 if friction_compensation:
     controller.set_friction_compensation(damping=mpar.b, coulomb_fric=mpar.cf)
+    #controller.set_friction_compensation(damping=[0., mpar.b[1]], coulomb_fric=[0., mpar.cf[1]])
 controller.init()
 
 ## simulate
@@ -205,7 +222,7 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    plot_inittraj=True)
 ## saving and plotting
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "tvlqr_pid", timestamp)
+save_dir = os.path.join("data", robot, "tvlqr", timestamp)
 os.makedirs(save_dir)
 
 os.system(f"cp {csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))

@@ -97,9 +97,9 @@ controller.set_filter_args(filt=meas_noise_vfilter,
 
 #controller.set_friction_compensation(damping=mpar.b, coulomb_fric=mpar.cf)
 #controller.set_friction_compensation(damping=[0.005, 0.001], coulomb_fric=[0.093, 0.15])
-controller.set_friction_compensation(damping=[0., 0.001], coulomb_fric=[0., 0.15])
+#controller.set_friction_compensation(damping=[0., 0.001], coulomb_fric=[0., 0.15])
 #controller.set_friction_compensation(damping=[0.001, 0.001], coulomb_fric=[0.09, 0.078])
-#controller.set_friction_compensation(damping=[0., 0.001], coulomb_fric=[0., 0.078])
+controller.set_friction_compensation(damping=[0., 0.001], coulomb_fric=[0., 0.078])
 
 controller.init()
 

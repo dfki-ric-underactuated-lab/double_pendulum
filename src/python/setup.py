@@ -19,6 +19,7 @@ setup(
         'sklearn',
         'cma',
         'mini-cheetah-motor-driver-socketcan',
+        'lxml',
         # 'moteus',
 
         # c++ python bindings

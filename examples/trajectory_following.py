@@ -8,11 +8,10 @@ from double_pendulum.controller.pid.trajectory_pid_controller import TrajPIDCont
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties
 
-robot = "acrobot"
+robot = "pendubot"
 trajopt = "ilqr"
+friction_compensation = False
 
-cfric = [0., 0.]
-motor_inertia = 0.
 if robot == "acrobot":
     torque_limit = [0.0, 6.0]
 if robot == "pendubot":
@@ -20,44 +19,71 @@ if robot == "pendubot":
 if robot == "double_pendulum":
     torque_limit = [6.0, 6.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
 #model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
-mpar = model_parameters()
-mpar.load_yaml(model_par_path)
-mpar.set_motor_inertia(motor_inertia)
-mpar.set_cfric(cfric)
-mpar.set_torque_limit(torque_limit)
+mpar = model_parameters(filepath=model_par_path)
 
 # csv file
 use_feed_forward_torque = True
 #latest_dir = sorted(os.listdir(os.path.join("data", robot, trajopt, "trajopt")))[-1]
 #csv_path = os.path.join("data", robot, trajopt, "trajopt", latest_dir, "trajectory.csv")
-csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
+csv_path = "../data/trajectories/"+robot+"/ilqr_v1.0_new2/trajectory.csv"
 #csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
 #csv_path = "../data/trajectories/double_pendulum/dircol/trajectory.csv"
 
 T_des, X_des, U_des = load_trajectory(csv_path)
 dt, t_final, x0, _ = trajectory_properties(T_des, X_des)
+goal = [np.pi, 0., 0., 0.]
+integrator = "runge_kutta"
 
+# noise
+process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
+meas_noise_sigmas = [0.0, 0.0, 0.05, 0.05]
+delay_mode = "None"
+delay = 0.0
+u_noise_sigmas = [0., 0.]
+u_responsiveness = 1.0
+perturbation_times = []
+perturbation_taus = []
+
+# filter args
+meas_noise_vfilter = "lowpass"
+meas_noise_cut = 0.1
+filter_kwargs = {"lowpass_alpha": [1., 1., 0.2, 0.2],
+                 "kalman_xlin": goal,
+                 "kalman_ulin": [0., 0.],
+                 "kalman_process_noise_sigmas": process_noise_sigmas,
+                 "kalman_meas_noise_sigmas": meas_noise_sigmas,
+                 "ukalman_integrator": integrator,
+                 "ukalman_process_noise_sigmas": process_noise_sigmas,
+                 "ukalman_meas_noise_sigmas": meas_noise_sigmas}
+
+## plant simulator and controller
 plant = SymbolicDoublePendulum(model_pars=mpar)
 sim = Simulator(plant=plant)
 
-controller = TrajectoryController(csv_path=csv_path,
-                                  torque_limit=torque_limit,
-                                  kK_stabilization=False)
-# controller = TrajectoryInterpController(csv_path=csv_path,
+# controller = TrajectoryController(csv_path=csv_path,
 #                                   torque_limit=torque_limit,
-#                                   kK_stabilization=True,
-#                                   num_break=40)
+#                                   kK_stabilization=True)
+controller = TrajectoryInterpController(csv_path=csv_path,
+                                  torque_limit=torque_limit,
+                                  kK_stabilization=True,
+                                  num_break=40)
 #controller = TrajPIDController(csv_path=csv_path,
 #                           use_feed_forward_torque=use_feed_forward_torque,
 #                           torque_limit=torque_limit)
 #controller.set_parameters(Kp=200.0, Ki=0.0, Kd=2.0)
+
+controller.set_filter_args(filt=meas_noise_vfilter, x0=goal, dt=dt, plant=plant,
+                           simulator=sim, velocity_cut=meas_noise_cut,
+                           filter_kwargs=filter_kwargs)
+if friction_compensation:
+    controller.set_friction_compensation(damping=mpar.b, coulomb_fric=mpar.cf)
 controller.init()
 
 T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    tf=t_final, dt=dt, controller=controller,
-                                   integrator="runge_kutta", phase_plot=False,
+                                   integrator=integrator, phase_plot=False,
                                    plot_inittraj=True, plot_forecast=False)
 plot_timeseries(T, X, U, None,
                 plot_energy=False,

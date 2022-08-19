@@ -57,6 +57,8 @@ class TrajectoryInterpController(AbstractController):
                  kK_stabilization=False,
                  num_break=40):
 
+        super().__init__()
+
         self.torque_limit = torque_limit
         self.kK_stabilization = kK_stabilization
 
