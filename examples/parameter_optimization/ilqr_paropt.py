@@ -10,31 +10,19 @@ from double_pendulum.utils.optimization import (cma_optimization,
                                                 scipy_par_optimization)
 
 
-interactive = False
-
 robot = "acrobot"
 
-# mass = [0.608, 0.630]
-# length = [0.3, 0.2]
-# com = [0.275, 0.166]
-# damping = [0.081, 0.0]
-# damping = [0.0, 0.0]
-# cfric = [0.093, 0.186]
-cfric = [0., 0.]
-# gravity = 9.81
-# inertia = [0.05472, 0.02522]
-motor_inertia = 0.
 if robot == "acrobot":
     torque_limit = [0.0, 6.0]
 if robot == "pendubot":
     torque_limit = [6.0, 0.0]
 
-model_par_path = "../../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters.yml"
+model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
-# mpar.set_damping(damping)
-mpar.set_cfric(cfric)
-mpar.set_motor_inertia(motor_inertia)
+mpar.set_damping([0., 0.])
+mpar.set_cfric([0., 0.])
+mpar.set_motor_inertia(0.)
 mpar.set_torque_limit(torque_limit)
 
 # simulation parameter
@@ -50,18 +38,6 @@ max_regu = 10000.
 min_regu = 0.01
 break_cost_redu = 1e-6
 
-# bounds = [
-#           [0.1, 100.],  # sCu
-#           [0., 100.],  # sCp1
-#           [0., 100.],  # sCp2
-#           [0., 100.],  # sCv1
-#           [0., 100.],  # sCv2
-#           [0., 1000000.],  # fCp1
-#           [0., 1000000.],  # fCp2
-#           [0., 100000.],  # fCv1
-#           [0., 100000.]  # fCv2
-#          ]
-# init_pars = [10., 1., 1., 1., 1., 10000., 10000., 100., 100.]
 bounds = [
           [0., 1.],  # sCu
           [0., 1.],  # sCp1
@@ -101,14 +77,6 @@ loss_func = ilqr_trajopt_loss(bounds=bounds,
                               goal=np.asarray(goal),
                               goal_weights=goal_weights)
 
-# loss_func.set_model_parameters(mass=mass,
-#                                length=length,
-#                                com=com,
-#                                damping=damping,
-#                                gravity=gravity,
-#                                coulomb_fric=cfric,
-#                                inertia=inertia,
-#                                torque_limit=torque_limit)
 loss_func.set_model_parameters(model_pars=mpar)
 loss_func.set_parameters(N=N,
                          dt=dt,
@@ -159,21 +127,6 @@ np.savetxt(os.path.join(save_dir, "time.txt"), [opt_time])
 mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
 
 par_dict = {
-            # "mass1": mass[0],
-            # "mass2": mass[1],
-            # "length1": length[0],
-            # "length2": length[1],
-            # "com1": com[0],
-            # "com2": com[1],
-            # "inertia1": inertia[0],
-            # "inertia2": inertia[1],
-            # "damping1": damping[0],
-            # "damping2": damping[1],
-            # "coulomb_friction1": cfric[0],
-            # "coulomb_friction2": cfric[1],
-            # "gravity": gravity,
-            # "torque_limit1": torque_limit[0],
-            # "torque_limit2": torque_limit[1],
             "dt": dt,
             "t_final": t_final,
             "integrator": integrator,

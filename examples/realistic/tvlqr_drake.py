@@ -15,7 +15,7 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
 # model parameters
-robot = "pendubot"
+robot = "acrobot"
 urdf_path = "../data/urdfs/"+robot+".urdf"
 friction_compensation = True
 stabilization = "lqr"
@@ -32,7 +32,7 @@ model_par_path = "../data/system_identification/identified_parameters/tmotors_v1
 #model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar_con = model_parameters(filepath=model_par_path)
-# mpar_con.set_motor_inertia(0.)
+mpar_con.set_motor_inertia(0.)
 if friction_compensation:
     mpar_con.set_damping([0., 0.])
     mpar_con.set_cfric([0., 0.])

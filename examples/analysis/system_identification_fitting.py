@@ -2,7 +2,8 @@ import os
 from datetime import datetime
 import numpy as np
 
-from double_pendulum.system_identification.sys_id import run_system_identification
+from double_pendulum.system_identification.sys_id import (run_system_identification,
+                                                          run_system_identification_nl)
 from double_pendulum.utils.plotting import plot_timeseries  # , plot_timeseries_csv
 from double_pendulum.utils.csv_trajectory import save_trajectory, concatenate_trajectories
 
@@ -40,8 +41,8 @@ measured_data_csv = [
     "../data/system_identification/recorded_data_20220815/sys_id/trajectory_07.csv",
     "../data/system_identification/recorded_data_20220815/sys_id/trajectory_08.csv",
     "../data/system_identification/recorded_data_20220815/sys_id/trajectory_09.csv",
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_10.csv",
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_11.csv",
+    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_10.csv",  # exitation traj
+    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_11.csv",  # swingup traj
     "../data/system_identification/recorded_data_20220815/sys_id/trajectory_12.csv",
     "../data/system_identification/recorded_data_20220815/sys_id/trajectory_13.csv",
     ]
@@ -114,6 +115,19 @@ bounds = np.array([[0.01, 0.5],      # r1*m1
                    #[0.0, 0.5]        # b2
                   ]).T
 
+# mpar_opt, mpar = run_system_identification(
+#         measured_data_csv=measured_data_csv,
+#         fixed_mpar=fixed_mpar,
+#         variable_mpar=variable_mpar,
+#         mp0=mp0,
+#         bounds=bounds,
+#         optimization_method="least-squares",
+#         save_dir=save_dir,
+#         num_proc=32,
+#         rescale=False,
+#         maxfevals=100000,
+#         filt="butterworth")
+
 mpar_opt, mpar = run_system_identification(
         measured_data_csv=measured_data_csv,
         fixed_mpar=fixed_mpar,
@@ -122,8 +136,8 @@ mpar_opt, mpar = run_system_identification(
         bounds=bounds,
         optimization_method="least-squares",
         save_dir=save_dir,
-        num_proc=0,
-        rescale=False,
+        num_proc=32,
+        rescale=True,
         maxfevals=100000,
         filt="butterworth")
 

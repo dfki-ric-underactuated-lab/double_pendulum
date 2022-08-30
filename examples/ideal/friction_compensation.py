@@ -16,7 +16,6 @@ robot = "double_pendulum"
 torque_limit = [10.0, 10.0]
 
 model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-# model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
@@ -30,37 +29,13 @@ dt = 0.002
 t_final = 10.0
 integrator = "runge_kutta"
 x0 = [np.pi/2., 0., 0., 0.]
-goal = [np.pi, 0., 0., 0.]
-
-process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
-meas_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
-meas_noise_cut = 0.0
-meas_noise_vfilter = "none"
-meas_noise_vfilter_args = {"alpha": [1., 1., 0.3, 0.3],
-                           "kalman":{"x_lin": goal, "u_lin": [0., 0.]}}
-delay_mode = "None"
-delay = 0.0
-u_noise_sigmas = [0., 0.]
-u_responsiveness = 1.0
-perturbation_times = []
-perturbation_taus = []
 
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
 save_dir = os.path.join("data", robot, "friction_compensation", timestamp)
 os.makedirs(save_dir)
 
 plant = SymbolicDoublePendulum(model_pars=mpar)
-
 sim = Simulator(plant=plant)
-sim.set_process_noise(process_noise_sigmas=process_noise_sigmas)
-sim.set_measurement_parameters(meas_noise_sigmas=meas_noise_sigmas,
-                               delay=delay,
-                               delay_mode=delay_mode)
-sim.set_filter_parameters(meas_noise_cut=meas_noise_cut,
-                          meas_noise_vfilter=meas_noise_vfilter,
-                          meas_noise_vfilter_args=meas_noise_vfilter_args)
-sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
-                         u_responsiveness=u_responsiveness)
 
 controller = FrictionCompensationController(model_pars=mpar)
 controller.init()

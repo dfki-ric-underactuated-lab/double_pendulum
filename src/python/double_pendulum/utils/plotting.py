@@ -1,10 +1,7 @@
 import os
 import numpy as np
-import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-
-from double_pendulum.utils.csv_trajectory import load_trajectory_full
 
 
 def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
@@ -37,11 +34,6 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
 
     n_subplots = np.sum([plot_pos, plot_vel, plot_tau, plot_acc, plot_energy])
 
-    fig, ax = plt.subplots(n_subplots,
-                           1,
-                           figsize=(18, n_subplots*3),
-                           sharex="all")
-
     SMALL_SIZE = 16
     MEDIUM_SIZE = 20
     BIGGER_SIZE = 24
@@ -54,106 +46,112 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
     mpl.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
     mpl.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
+    fig, ax = plt.subplots(n_subplots,
+                           1,
+                           figsize=(18, n_subplots*3),
+                           sharex="all")
+
+
     i = 0
     if plot_pos:
-        ax[i].plot(T[:len(X)], np.asarray(X).T[0], label="q1", color="blue")
-        ax[i].plot(T[:len(X)], np.asarray(X).T[1], label="q2", color="red")
+        ax[i].plot(T[:len(X)], np.asarray(X).T[0], label=r"$q_1$", color="blue")
+        ax[i].plot(T[:len(X)], np.asarray(X).T[1], label=r"$q_2$", color="red")
         if not (X_des is None):
             ax[i].plot(T_des[:len(X_des)], np.asarray(X_des).T[0],
-                       ls="--", label="q1 desired", color="lightblue")
+                       ls="--", label=r"$q_1$ desired", color="lightblue")
             ax[i].plot(T_des[:len(X_des)], np.asarray(X_des).T[1],
-                       ls="--", label="q2 desired", color="orange")
+                       ls="--", label=r"$q_2$ desired", color="orange")
         if not (X_meas is None):
             ax[i].plot(T[:len(X_meas)], np.asarray(X_meas).T[0],
-                       ls="-", label="q1 measured", color="blue", alpha=0.2)
+                       ls="-", label=r"$q_1$ measured", color="blue", alpha=0.2)
             ax[i].plot(T[:len(X_meas)], np.asarray(X_meas).T[1],
-                       ls="-", label="q2 measured", color="red", alpha=0.2)
+                       ls="-", label=r"$q_2$ measured", color="red", alpha=0.2)
         if not (X_filt is None):
             ax[i].plot(T[:len(X_filt)], np.asarray(X_filt).T[0],
-                       ls="-", label="q1 filtered", color="darkblue")
+                       ls="-", label=r"$q_1$ filtered", color="darkblue")
             ax[i].plot(T[:len(X_filt)], np.asarray(X_filt).T[1],
-                       ls="-", label="q2 filtered", color="brown")
+                       ls="-", label=r"$q_2$ filtered", color="brown")
         for line in pos_x_lines:
             ax[i].plot([line, line], [np.min(X.T[:2]), np.max(X.T[:2])],
                        ls="--", color="gray")
         for line in pos_y_lines:
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
-        ax[i].set_ylabel("angle [rad]")
+        ax[i].set_ylabel("angle [rad]", fontsize=20)
         #ax[i].legend(loc="best")
         ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
     if plot_vel:
         i += 1
-        ax[i].plot(T[:len(X)], np.asarray(X).T[2], label="q1 dot", color="blue")
-        ax[i].plot(T[:len(X)], np.asarray(X).T[3], label="q2 dot", color="red")
+        ax[i].plot(T[:len(X)], np.asarray(X).T[2], label=r"$\dot{q}_1$", color="blue")
+        ax[i].plot(T[:len(X)], np.asarray(X).T[3], label=r"$\dot{q}_1$", color="red")
         if not (X_des is None):
             ax[i].plot(T_des[:len(X_des)], np.asarray(X_des).T[2],
-                       ls="--", label="q1 dot desired", color="lightblue")
+                       ls="--", label=r"$\dot{q}_1$ desired", color="lightblue")
             ax[i].plot(T_des[:len(X_des)], np.asarray(X_des).T[3],
-                       ls="--", label="q2 dot desired", color="orange")
+                       ls="--", label=r"$\dot{q}_2$ desired", color="orange")
         if not (X_meas is None):
             ax[i].plot(T[:len(X_meas)], np.asarray(X_meas).T[2],
-                       ls="-", label="q1 dot measured", color="blue", alpha=0.2)
+                       ls="-", label=r"$\dot{q}_1$ measured", color="blue", alpha=0.2)
             ax[i].plot(T[:len(X_meas)], np.asarray(X_meas).T[3],
-                       ls="-", label="q2 dot measured", color="red", alpha=0.2)
+                       ls="-", label=r"$\dot{q}_2$ measured", color="red", alpha=0.2)
         if not (X_filt is None):
             ax[i].plot(T[:len(X_filt)], np.asarray(X_filt).T[2],
-                       ls="-", label="q1 dot filtered", color="darkblue")
+                       ls="-", label=r"$\dot{q}_1$ filtered", color="darkblue")
             ax[i].plot(T[:len(X_filt)], np.asarray(X_filt).T[3],
-                       ls="-", label="q2 dot filtered", color="brown")
+                       ls="-", label=r"$\dot{q}_2$ filtered", color="brown")
         for line in vel_x_lines:
             ax[i].plot([line, line], [np.min(X.T[2:]), np.max(X.T[2:])],
                        ls="--", color="gray")
         for line in vel_y_lines:
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
-        ax[i].set_ylabel("angular velocity [rad/s]")
+        ax[i].set_ylabel("velocity [rad/s]", fontsize=20)
         #ax[i].legend(loc="best")
         ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
     if plot_acc:
         i += 1
-        ax[i].plot(T[:len(ACC)], np.asarray(ACC).T[0], label="q1 ddot", color="blue")
-        ax[i].plot(T[:len(ACC)], np.asarray(ACC).T[1], label="q2 ddot", color="red")
+        ax[i].plot(T[:len(ACC)], np.asarray(ACC).T[0], label=r"$\ddot{q}_1$", color="blue")
+        ax[i].plot(T[:len(ACC)], np.asarray(ACC).T[1], label=r"$\ddot{q}_2$", color="red")
         if not (ACC_des is None):
             ax[i].plot(T_des[:len(ACC_des)], np.asarray(ACC_des).T[0],
-                       ls="--", label="q1 ddot desired", color="lightblue")
+                       ls="--", label=r"$\ddot{q}_1$ desired", color="lightblue")
             ax[i].plot(T_des[:len(ACC_des)], np.asarray(ACC_des).T[1],
-                       ls="--", label="q2 ddot desired", color="orange")
+                       ls="--", label=r"$\ddot{q}_2$ desired", color="orange")
         for line in acc_x_lines:
             ax[i].plot([line, line], [np.min(X.T[2:]), np.max(X.T[2:])],
                        ls="--", color="gray")
         for line in acc_y_lines:
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
-        ax[i].set_ylabel("angular acceleration [rad/s^2]")
+        ax[i].set_ylabel("acceleration [rad/s^2]", fontsize=20)
         #ax[i].legend(loc="best")
         ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
     if plot_tau:
         i += 1
-        ax[i].plot(T[:len(U)], np.asarray(U).T[0, :len(T)], label="u1", color="blue")
-        ax[i].plot(T[:len(U)], np.asarray(U).T[1, :len(T)], label="u2", color="red")
+        ax[i].plot(T[:len(U)], np.asarray(U).T[0, :len(T)], label=r"$u_1$", color="blue")
+        ax[i].plot(T[:len(U)], np.asarray(U).T[1, :len(T)], label=r"$u_2$", color="red")
         if not (U_des is None):
             ax[i].plot(T_des[:len(U_des)], np.asarray(U_des).T[0],
-                       ls="--", label="u1 desired", color="lightblue")
+                       ls="--", label=r"$u_1$ desired", color="lightblue")
             ax[i].plot(T_des[:len(U_des)], np.asarray(U_des).T[1],
-                       ls="--", label="u2 desired", color="orange")
+                       ls="--", label=r"$u_2$ desired", color="orange")
         if not (U_con is None):
             ax[i].plot(T[:len(U_con)], np.asarray(U_con).T[0],
-                       ls="-", label="u1 controller", color="blue", alpha=0.2)
+                       ls="-", label=r"$u_1$ controller", color="blue", alpha=0.2)
             ax[i].plot(T[:len(U_con)], np.asarray(U_con).T[1],
-                       ls="-", label="u2 controller", color="red", alpha=0.2)
+                       ls="-", label=r"$u_2$ controller", color="red", alpha=0.2)
         if not (U_friccomp is None):
             ax[i].plot(T[:len(U_friccomp)], np.asarray(U_friccomp).T[0],
-                       ls="-", label="u1 friction compensation", color="darkblue")
+                       ls="-", label=r"$u_1$ friction comp.", color="darkblue")
             ax[i].plot(T[:len(U_friccomp)], np.asarray(U_friccomp).T[1],
-                       ls="-", label="u2 friction compensation", color="brown")
+                       ls="-", label=r"$u_2$ friction comp.", color="brown")
         for line in tau_x_lines:
             ax[i].plot([line, line], [np.min(U), np.max(U)],
                        ls="--", color="gray")
         for line in tau_y_lines:
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
-        ax[i].set_ylabel("input torque [Nm]")
+        ax[i].set_ylabel("torque [Nm]", fontsize=20)
         #ax[i].legend(loc="best")
         ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
     if plot_energy:
@@ -165,10 +163,10 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         for line in energy_y_lines:
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
-        ax[i].set_ylabel("energy [J]")
+        ax[i].set_ylabel("energy [J]", fontsize=20)
         #ax[i].legend(loc="best")
         ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
-    ax[i].set_xlabel("time [s]")
+    ax[i].set_xlabel("time [s]", fontsize=20)
     if not (save_to is None):
         plt.savefig(save_to, bbox_inches="tight")
     if show:

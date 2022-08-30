@@ -85,6 +85,11 @@ class AbstractController(ABC):
 
         self.init_()
 
+    def reset(self):
+        self.set_filter_args()
+        self.set_friction_compensation()
+        self.set_gravity_compensation()
+
     def set_start(self, x):
         """
         Set the desired state for the controller. Optional.

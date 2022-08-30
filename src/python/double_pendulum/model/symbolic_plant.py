@@ -141,7 +141,6 @@ class SymbolicDoublePendulum():
     def symbolic_mass_matrix(self):
         # Spong eq. have additional self.m2*self.r2**2.0 term in all entries
         # and self.m1*self.r1**2.0 in M11.
-        # why? this has different results!
         # Guess: The axes for the inertias I1, I2 are defined different
         # Underactuated: center at rotation point, Spong: at com
         if self.formulas == "UnderactuatedLecture":
@@ -271,6 +270,7 @@ class SymbolicDoublePendulum():
     def linear_matrices(self, x0, u0):
         Alin = self.Alin_la(x0, u0)
         Blin = self.Blin_la(x0, u0)
+
         return np.asarray(Alin, dtype=float), np.asarray(Blin, dtype=float)
 
     def replace_parameters(self, mat):
@@ -329,24 +329,10 @@ class SymbolicDoublePendulum():
 
         Minv = np.linalg.inv(M)
 
-        # print("x", x)
-        # print("u", u)
-        # print("M", M)
-        # print("C", C)
-        # print("G", G)
-        # print("F", F)
-        # print("Minv", Minv[0, 0], Minv[0, 1], Minv[1, 0], Minv[1, 1])
-
         force = G + self.B.dot(u) - C.dot(vel)
-        # print("force", force)
-        # friction = np.where(np.abs(F) > np.abs(force),
-        #                     np.abs(force)*np.sign(F),
-        #                     F)
         friction = F
 
         accn = Minv.dot(force - friction)
-        # accn = Minv.dot(G + self.B.dot(tau) - C.dot(vel) - F)
-        # print("accn", accn)
         return accn
 
     def inverse_dynamics(self, x, acc):

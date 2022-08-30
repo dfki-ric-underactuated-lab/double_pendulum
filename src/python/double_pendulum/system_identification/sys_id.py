@@ -109,7 +109,7 @@ def run_system_identification(measured_data_csv,
 
     # plotting results
     # T, X, U = concatenate_trajectories(measured_data_csv, with_tau=True)
-    plot_torques(T, Q[::2, 0], Q[1::2, 0], Q_opt[::2], Q_opt[1::2])
+    plot_torques(T, Q[::2, 0], Q[1::2, 0], Q_opt[::2], Q_opt[1::2], save_to=os.path.join(save_dir, "torques.pdf"))
 
     all_par = fixed_mpar
     for i, key in enumerate(variable_mpar):
@@ -229,7 +229,7 @@ def run_system_identification_nl(measured_data_csv,
     mpar.load_dict(all_par)
 
     # plotting results
-    plot_torques(T, U.T[0], U.T[1], U_pred.T[0], U_pred.T[1])
-    plot_torques(T, U.T[0], U.T[1], U_pred_n.T[0], U_pred_n.T[1])
+    plot_torques(T, U.T[0], U.T[1], U_pred.T[0], U_pred.T[1], save_to=os.path.join(save_dir, "torques.pdf"))
+    plot_torques(T, U.T[0], U.T[1], U_pred_n.T[0], U_pred_n.T[1], save_to=os.path.join(save_dir, "torques_unfilterd.pdf"))
 
     return mp_opt, mpar

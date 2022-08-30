@@ -6,15 +6,13 @@ import pickle
 import pprint
 
 from double_pendulum.model.model_parameters import model_parameters
-from double_pendulum.controller.tvlqr.tvlqr_controller_drake import TVLQRController
+from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.analysis.benchmark import benchmarker
 from double_pendulum.analysis.utils import get_par_list
 
-
-# model parameters
 robot = "pendubot"
-urdf_path = "../../data/urdfs/"+robot+".urdf"
 
+# # model parameters
 if robot == "acrobot":
     torque_limit = [0.0, 6.0]
 if robot == "pendubot":
@@ -29,20 +27,50 @@ mpar.set_torque_limit(torque_limit)
 
 # simulation parameter
 dt = 0.005
-t_final = 6.0  # 4.985
+t_final = 10.0  # 4.985
 integrator = "runge_kutta"
-
-# init trajectory
-init_csv_path = os.path.join("../../data/trajectories", robot, "ilqr_v1.0_new2/trajectory.csv")
-
-# swingup parameters
 start = [0., 0., 0., 0.]
 goal = [np.pi, 0., 0., 0.]
 
-# acrobot good par
-Q = np.diag([0.64, 0.56, 0.13, 0.037])
-R = np.eye(1)*0.82
-Qf = np.copy(Q)
+# controller parameters
+N = 200
+N_init = 1000
+max_iter = 2
+max_iter_init = 100
+regu_init = 1.
+max_regu = 10000.
+min_regu = 0.0001
+break_cost_redu = 1e-6
+trajectory_stabilization = False
+
+if robot == "acrobot":
+    f_sCu = [0.0001, 0.0001]
+    f_sCp = [.1, .1]
+    f_sCv = [.01, .5]
+    f_sCen = 0.0
+    f_fCp = [10., 10.]
+    f_fCv = [1., 1.]
+    f_fCen = 1.0
+
+if robot == "pendubot":
+    f_sCu = [0.0001, 0.0001]
+    f_sCp = [0., 0.]
+    f_sCv = [0., 0.]
+    f_sCen = 0.
+    f_fCp = [10., 10.]
+    f_fCv = [.5, .5]
+    f_fCen = 0.
+
+Q = np.array([[f_sCp[0], 0., 0., 0.],
+              [0., f_sCp[1], 0., 0.],
+              [0., 0., f_sCv[0], 0.],
+              [0., 0., 0., f_sCv[1]]])
+Qf = np.array([[f_fCp[0], 0., 0., 0.],
+               [0., f_fCp[1], 0., 0.],
+               [0., 0., f_fCv[0], 0.],
+               [0., 0., 0., f_fCv[1]]])
+R = np.array([[f_sCu[0], 0.],
+              [0., f_sCu[1]]])
 
 # benchmark parameters
 eps = [0.1, 0.1, 0.5, 0.5]
@@ -96,16 +124,44 @@ delays = np.linspace(0.0, 0.04, N_var)  # [0.0, dt, 2*dt, 5*dt, 10*dt]
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "tvlqr_drake", "benchmark", timestamp)
+save_dir = os.path.join("data", robot, "ilqr", "mpc_benchmark_free", timestamp)
 os.makedirs(save_dir)
 
 # construct simulation objects
-controller = TVLQRController(csv_path=init_csv_path,
-                             urdf_path=urdf_path,
-                             model_pars=mpar,
-                             torque_limit=torque_limit,
-                             robot=robot)
-controller.set_cost_parameters(Q=Q, R=R, Qf=Qf)
+controller = ILQRMPCCPPController(model_pars=mpar)
+controller.set_start(start)
+controller.set_goal(goal)
+controller.set_parameters(N=N,
+                          dt=dt,
+                          max_iter=max_iter,
+                          regu_init=regu_init,
+                          max_regu=max_regu,
+                          min_regu=min_regu,
+                          break_cost_redu=break_cost_redu,
+                          integrator=integrator,
+                          trajectory_stabilization=trajectory_stabilization)
+controller.set_cost_parameters(sCu=f_sCu,
+                               sCp=f_sCp,
+                               sCv=f_sCv,
+                               sCen=f_sCen,
+                               fCp=f_fCp,
+                               fCv=f_fCv,
+                               fCen=f_fCen)
+controller.compute_init_traj(N=N_init,
+                             dt=dt,
+                             max_iter=max_iter_init,
+                             regu_init=regu_init,
+                             max_regu=max_regu,
+                             min_regu=min_regu,
+                             break_cost_redu=break_cost_redu,
+                             sCu=f_sCu,
+                             sCp=f_sCp,
+                             sCv=f_sCv,
+                             sCen=f_sCen,
+                             fCp=f_fCp,
+                             fCv=f_fCv,
+                             fCen=f_fCen,
+                             integrator=integrator)
 controller.init()
 
 ben = benchmarker(controller=controller,
@@ -118,7 +174,6 @@ ben = benchmarker(controller=controller,
                   integrator=integrator,
                   save_dir=save_dir)
 ben.set_model_parameter(model_pars=mpar)
-ben.set_init_traj(init_csv_path)
 ben.set_cost_par(Q=Q, R=R, Qf=Qf)
 ben.compute_ref_cost()
 res = ben.benchmark(compute_model_robustness=compute_model_robustness,
@@ -144,7 +199,6 @@ f = open(os.path.join(save_dir, "results.pkl"), 'wb')
 pickle.dump(res, f)
 f.close()
 
-os.system(f"cp {init_csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))
 mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
 
 par_dict = {
@@ -159,16 +213,27 @@ par_dict = {
             "goal_pos2": goal[1],
             "goal_vel1": goal[2],
             "goal_vel2": goal[3],
-            "sCu1": R[0],
-            "sCu2": R[0],
-            "sCp1": Q[0][0],
-            "sCp2": Q[1][1],
-            "sCv1": Q[2][2],
-            "sCv2": Q[3][3],
-            "fCp1": Qf[0][0],
-            "fCp2": Qf[1][1],
-            "fCv1": Qf[2][2],
-            "fCv2": Qf[3][3],
+            "N": N,
+            "N_init": N_init,
+            "max_iter": max_iter,
+            "max_iter_init": max_iter_init,
+            "regu_init": regu_init,
+            "max_regu": max_regu,
+            "min_regu": min_regu,
+            "break_cost_redu": break_cost_redu,
+            "trajectory_stabilization": trajectory_stabilization,
+            "sCu1": f_sCu[0],
+            "sCu2": f_sCu[1],
+            "sCp1": f_sCp[0],
+            "sCp2": f_sCp[1],
+            "sCv1": f_sCv[0],
+            "sCv2": f_sCv[1],
+            "sCen": f_sCen,
+            "fCp1": f_fCp[0],
+            "fCp2": f_fCp[1],
+            "fCv1": f_fCv[0],
+            "fCv2": f_fCv[1],
+            "fCen": f_fCen,
             "epsilon": eps,
             "check_only_final_state": check_only_final_state
             }

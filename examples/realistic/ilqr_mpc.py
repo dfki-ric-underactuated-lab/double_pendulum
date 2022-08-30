@@ -10,7 +10,7 @@ from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
-robot = "pendubot"
+robot = "acrobot"
 friction_compensation = True
 
 # # model parameters

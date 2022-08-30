@@ -6,19 +6,22 @@ import pickle
 import pprint
 
 from double_pendulum.model.model_parameters import model_parameters
-from double_pendulum.controller.tvlqr.tvlqr_controller_drake import TVLQRController
+from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl import (SymbolicPFLController,
+                                                                                    SymbolicPFLAndLQRController)
 from double_pendulum.analysis.benchmark import benchmarker
 from double_pendulum.analysis.utils import get_par_list
 
-
 # model parameters
 robot = "pendubot"
-urdf_path = "../../data/urdfs/"+robot+".urdf"
+pfl_method = "collocated"
+with_lqr = True
 
 if robot == "acrobot":
-    torque_limit = [0.0, 6.0]
+    torque_limit = [0.0, 5.0]
+    active_act = 1
 if robot == "pendubot":
-    torque_limit = [6.0, 0.0]
+    torque_limit = [5.0, 0.0]
+    active_act = 0
 
 model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
 mpar = model_parameters(filepath=model_par_path)
@@ -27,22 +30,61 @@ mpar.set_damping([0., 0.])
 mpar.set_cfric([0., 0.])
 mpar.set_torque_limit(torque_limit)
 
-# simulation parameter
-dt = 0.005
-t_final = 6.0  # 4.985
+# simulation parameters
 integrator = "runge_kutta"
-
-# init trajectory
-init_csv_path = os.path.join("../../data/trajectories", robot, "ilqr_v1.0_new2/trajectory.csv")
-
-# swingup parameters
-start = [0., 0., 0., 0.]
 goal = [np.pi, 0., 0., 0.]
+dt = 0.01
+start = [0.1, 0.0, 0.0, 0.0]
+t_final = 10.0
 
-# acrobot good par
-Q = np.diag([0.64, 0.56, 0.13, 0.037])
-R = np.eye(1)*0.82
-Qf = np.copy(Q)
+# controller parameters
+if robot == "acrobot":
+    # lqr parameters
+    Q = np.diag((0.97, 0.93, 0.39, 0.26))
+    R = np.diag((0.11, 0.11))
+    if pfl_method == "collocated":
+        #par = [6.78389278, 5.66430937, 9.98022384]  # oldpar
+        par = [0.0093613, 0.99787652, 0.9778557]
+    elif pfl_method == "noncollocated":
+        par = [9.19534629, 2.24529733, 5.90567362]  # good
+elif robot == "pendubot":
+    # lqr parameters
+    Q = np.diag([0.00125, 0.65, 0.000688, 0.000936])
+    R = np.diag([25.0, 25.0])
+    if pfl_method == "collocated":
+        par = [8.0722899, 4.92133648, 3.53211381]  # good
+    elif pfl_method == "noncollocated":
+        par = [26.34039456, 99.99876263, 11.89097532]
+
+if robot == "acrobot":
+    sCu = [.1, .1]
+    sCp = [.1, .1]
+    sCv = [0.01, 0.1]
+    sCen = 0.0
+    fCp = [100., 10.]
+    fCv = [10., 1.]
+    fCen = 0.0
+
+if robot == "pendubot":
+
+    sCu = [0.001, 0.001]
+    sCp = [0.01, 0.01]
+    sCv = [0.01, 0.01]
+    sCen = 0.
+    fCp = [100., 100.]
+    fCv = [1., 1.]
+    fCen = 0.
+
+Q_cost = np.array([[sCp[0], 0., 0., 0.],
+              [0., sCp[1], 0., 0.],
+              [0., 0., sCv[0], 0.],
+              [0., 0., 0., sCv[1]]])
+Qf_cost = np.array([[fCp[0], 0., 0., 0.],
+               [0., fCp[1], 0., 0.],
+               [0., 0., fCv[0], 0.],
+               [0., 0., 0., fCv[1]]])
+R_cost = np.array([[sCu[0], 0.],
+              [0., sCu[1]]])
 
 # benchmark parameters
 eps = [0.1, 0.1, 0.5, 0.5]
@@ -96,17 +138,34 @@ delays = np.linspace(0.0, 0.04, N_var)  # [0.0, dt, 2*dt, 5*dt, 10*dt]
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "tvlqr_drake", "benchmark", timestamp)
+save_dir = os.path.join("data", robot, "pfl", "benchmark_"+pfl_method, timestamp)
 os.makedirs(save_dir)
 
 # construct simulation objects
-controller = TVLQRController(csv_path=init_csv_path,
-                             urdf_path=urdf_path,
-                             model_pars=mpar,
-                             torque_limit=torque_limit,
-                             robot=robot)
-controller.set_cost_parameters(Q=Q, R=R, Qf=Qf)
+if with_lqr:
+    controller = SymbolicPFLAndLQRController(model_pars=mpar,
+                                             robot=robot,
+                                             pfl_method=pfl_method)
+    controller.lqr_controller.set_cost_parameters(p1p1_cost=Q[0, 0],
+                                                  p2p2_cost=Q[1, 1],
+                                                  v1v1_cost=Q[2, 2],
+                                                  v2v2_cost=Q[3, 3],
+                                                  p1v1_cost=0.,
+                                                  p1v2_cost=0.,
+                                                  p2v1_cost=0.,
+                                                  p2v2_cost=0.,
+                                                  u1u1_cost=R[0, 0],
+                                                  u2u2_cost=R[1, 1],
+                                                  u1u2_cost=0.)
+else:  # without lqr
+    controller = SymbolicPFLController(model_pars=mpar,
+                                       robot=robot,
+                                       pfl_method=pfl_method)
+
+controller.set_goal(goal)
+controller.set_cost_parameters_(par)
 controller.init()
+
 
 ben = benchmarker(controller=controller,
                   x0=start,
@@ -118,8 +177,7 @@ ben = benchmarker(controller=controller,
                   integrator=integrator,
                   save_dir=save_dir)
 ben.set_model_parameter(model_pars=mpar)
-ben.set_init_traj(init_csv_path)
-ben.set_cost_par(Q=Q, R=R, Qf=Qf)
+ben.set_cost_par(Q=Q_cost, R=R_cost, Qf=Qf_cost)
 ben.compute_ref_cost()
 res = ben.benchmark(compute_model_robustness=compute_model_robustness,
                     compute_noise_robustness=compute_noise_robustness,
@@ -144,7 +202,6 @@ f = open(os.path.join(save_dir, "results.pkl"), 'wb')
 pickle.dump(res, f)
 f.close()
 
-os.system(f"cp {init_csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))
 mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
 
 par_dict = {
@@ -159,16 +216,26 @@ par_dict = {
             "goal_pos2": goal[1],
             "goal_vel1": goal[2],
             "goal_vel2": goal[3],
-            "sCu1": R[0],
-            "sCu2": R[0],
-            "sCp1": Q[0][0],
-            "sCp2": Q[1][1],
-            "sCv1": Q[2][2],
-            "sCv2": Q[3][3],
-            "fCp1": Qf[0][0],
-            "fCp2": Qf[1][1],
-            "fCv1": Qf[2][2],
-            "fCv2": Qf[3][3],
+            "sCu1": sCu[0],
+            "sCu2": sCu[1],
+            "sCp1": sCp[0],
+            "sCp2": sCp[1],
+            "sCv1": sCv[0],
+            "sCv2": sCv[1],
+            "sCen": sCen,
+            "fCp1": fCp[0],
+            "fCp2": fCp[1],
+            "fCv1": fCv[0],
+            "fCv2": fCv[1],
+            "fCen": fCen,
+            "pfl_par1": par[0],
+            "pfl_par2": par[1],
+            "pfl_par3": par[2],
+            "lqr_q11": Q[0,0],
+            "lqr_q22": Q[1,1],
+            "lqr_q33": Q[2,2],
+            "lqr_q44": Q[3,3],
+            "lqr_r11": R[0,0],
             "epsilon": eps,
             "check_only_final_state": check_only_final_state
             }

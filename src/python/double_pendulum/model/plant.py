@@ -10,7 +10,10 @@ class DoublePendulumPlant():
                  gravity=9.81,
                  coulomb_fric=[0.0, 0.0],
                  inertia=[None, None],
-                 torque_limit=[np.inf, np.inf]):
+                 motor_inertia=0.,
+                 gear_ratio=6,
+                 torque_limit=[np.inf, np.inf],
+                 model_pars=None):
 
         self.m = mass
         self.l = length
@@ -19,7 +22,27 @@ class DoublePendulumPlant():
         self.g = gravity
         self.coulomb_fric = coulomb_fric
         self.I = []
+        self.Ir = motor_inertia
+        self.gr = gear_ratio
         self.torque_limit = torque_limit
+
+        for i in range(len(inertia)):
+            if inertia[i] is None:
+                self.I.append(mass[i]*com[i]*com[i])
+            else:
+                self.I.append(inertia[i])
+
+        if model_pars is not None:
+            self.m = model_pars.m
+            self.l = model_pars.l
+            self.com = model_pars.r
+            self.b = model_pars.b
+            self.coulomb_fric = model_pars.cf
+            self.g = model_pars.g
+            self.I = model_pars.I
+            self.Ir = model_pars.Ir
+            self.gr = model_pars.gr
+            self.torque_limit = model_pars.tl
 
         self.dof = 2
         self.n_actuators = 2
@@ -28,12 +51,6 @@ class DoublePendulumPlant():
         self.workspace_range = [[-1.2*np.sum(self.l), 1.2*np.sum(self.l)],
                                 [-1.2*np.sum(self.l), 1.2*np.sum(self.l)]]
 
-        for i in range(self.dof):
-            if inertia[i] is None:
-                self.I.append(mass[i]*com[i]*com[i])
-            else:
-                self.I.append(inertia[i])
-
         if torque_limit[0] == 0:
             self.B = np.array([[0, 0], [0, 1]])
         elif torque_limit[1] == 0:
@@ -41,7 +58,7 @@ class DoublePendulumPlant():
         else:
             self.B = np.array([[1, 0], [0, 1]])
 
-        self.formulas = "Spong"
+        self.formulas = "UnderactuatedLecture"
 
     def forward_kinematics(self, pos):
         """
@@ -59,14 +76,15 @@ class DoublePendulumPlant():
         pos = np.copy(x[:self.dof])
         # vel = np.copy(x[self.dof:])
 
-        # Spong eq. have additional self.m2*self.r2**2.0 term in all entries
-        # why? this has different results!
         if self.formulas == "UnderactuatedLecture":
             m00 = self.I[0] + self.I[1] + self.m[1]*self.l[0]**2.0 + \
-                    2*self.m[1]*self.l[0]*self.com[1]*np.cos(pos[1])
-            m01 = self.I[1] + self.m[1]*self.l[0]*self.com[1]*np.cos(pos[1])
-            m10 = self.I[1] + self.m[1]*self.l[0]*self.com[1]*np.cos(pos[1])
-            m11 = self.I[1]
+                    2*self.m[1]*self.l[0]*self.com[1]*np.cos(pos[1]) + \
+                    self.gr**2.0*self.Ir + self.Ir
+            m01 = self.I[1] + self.m[1]*self.l[0]*self.com[1]*np.cos(pos[1]) - \
+                    self.gr*self.Ir
+            m10 = self.I[1] + self.m[1]*self.l[0]*self.com[1]*np.cos(pos[1]) - \
+                    self.gr*self.Ir
+            m11 = self.I[1] + self.gr**2.0*self.Ir
             M = np.array([[m00, m01], [m10, m11]])
 
         elif self.formulas == "Spong":
@@ -127,7 +145,7 @@ class DoublePendulumPlant():
 
         F = np.zeros(self.dof)
         for i in range(self.dof):
-            F[i] = self.b[i]*vel[i] + self.coulomb_fric[i]*np.sign(vel[i])
+            F[i] = self.b[i]*vel[i] + self.coulomb_fric[i]*np.arctan(100*vel[i])
         return F
 
     def kinetic_energy(self, x):
@@ -164,10 +182,10 @@ class DoublePendulumPlant():
         Minv = np.linalg.inv(M)
 
         force = G + self.B.dot(tau) - C.dot(vel)
-        friction = np.where(np.abs(F) > np.abs(force), force*np.sign(F), F)
+        #friction = np.where(np.abs(F) > np.abs(force), force*np.sign(F), F)
+        friction = F
 
         accn = Minv.dot(force - friction)
-        # accn = Minv.dot(G + self.B.dot(tau) - C.dot(vel) - F)
         return accn
 
     def rhs(self, t, state, tau):
@@ -181,3 +199,113 @@ class DoublePendulumPlant():
         res[2] = accn[0]
         res[3] = accn[1]
         return res
+
+    def get_Mx(self, x, tau):
+        Mx = np.zeros((2*self.dof, self.dof, self.dof))
+        Mx[1, 0, 0] = -2*self.l[0]*self.m[1]*self.com[1]*np.sin(x[1])
+        Mx[1, 0, 1] = -self.l[0]*self.m[1]*self.com[1]*np.sin(x[1])
+        Mx[1, 1, 0] = -self.l[0]*self.m[1]*self.com[1]*np.sin(x[1])
+        Mx[1, 1, 1] = 0
+        return Mx
+
+    def get_Minvx(self, x, tau):
+        Minvx = np.zeros((2*self.dof, self.dof, self.dof))
+
+        den = -self.I[0]*self.I[1] - self.I[1]*self.l[0]**2.*self.m[1] + \
+                (self.l[0]*self.m[1]*self.com[1]*np.cos(x[1]))**2.
+
+        h1 = self.l[0]*self.m[1]*self.com[1]
+
+        Minvx[1, 0, 0] = -2.*self.I[1]*h1**2.*np.sin(x[1])*np.cos(x[1]) / den**2.
+        Minvx[1, 0, 1] = 2*h1**2.*(self.I[1] + h1*np.cos(x[1])**2.*np.sin(x[1])) / den**2. - h1*np.sin(x[0]) / den
+        Minvx[1, 1, 0] = 2*h1**2.*(self.I[1] + h1*np.cos(x[1])**2.*np.sin(x[1])) / den**2. - h1*np.sin(x[0]) / den
+        Minvx[1, 1, 1] = 2*h1**2*(-self.I[0]-self.I[1]*self.l[0]**2.*self.m[1] - 2*h1*np.cos(x[1])**2.*np.sin(x[1])) / den**2.
+        return Minvx
+
+    def get_Cx(self, x, tau):
+        Cx = np.zeros((2*self.dof, self.dof, self.dof))
+
+        h1 = self.l[0]*self.m[1]*self.com[1]
+
+        Cx[1, 0, 0] = -2.*h1*np.cos(x[1])*x[3]
+        Cx[1, 0, 1] = -h1*np.cos(x[1])*x[3]
+        Cx[1, 1, 0] = h1*np.cos(x[1])*x[2]
+
+        Cx[2, 1, 0] = h1*np.sin(x[1])
+
+        Cx[3, 0, 0] = -2*h1*np.sin(x[1])
+        Cx[3, 0, 1] = -h1*np.sin(x[1])
+
+        return Cx
+
+    def get_Gx(self, x, tau):
+        Gx = np.zeros((self.dof, 2*self.dof))
+
+        Gx[0, 0] = -self.g*self.m[0]*self.com[0]*np.cos(x[0]) - \
+                    self.g*self.m[1]*(self.l[0]*np.cos(x[0]) + self.com[1]*np.cos(x[0]+x[1]))
+        Gx[0, 1] = -self.g*self.m[1]*self.com[1]*np.cos(x[0]+x[1])
+
+        Gx[1, 0] = -self.g*self.m[1]*self.com[1]*np.cos(x[0]+x[1])
+        Gx[1, 1] = -self.g*self.m[1]*self.com[1]*np.cos(x[0]+x[1])
+
+        return Gx
+
+    def get_Fx(self, x, tau):
+        Fx = np.zeros((self.dof, 2*self.dof))
+
+        Fx[0, 2] = self.b[0]
+        Fx[1, 3] = self.b[1]
+        return Fx
+
+    def get_Alin(self, x, u):
+        M = self.mass_matrix(x)
+        C = self.coriolis_matrix(x)
+        G = self.gravity_vector(x)
+        F = self.coulomb_vector(x)
+
+        Minv = np.linalg.inv(M)
+
+        #Mx = self.get_Mx(x, u)
+        Minvx = self.get_Minvx(x, u)
+        Cx = self.get_Cx(x, u)
+        Gx = self.get_Gx(x, u)
+        Fx = self.get_Fx(x, u)
+
+        Alin = np.zeros((2*self.dof, 2*self.dof))
+        Alin[0, 2] = 1.
+        Alin[1, 3] = 1.
+
+        qddx = np.zeros((self.dof, 2*self.dof))
+        qddx[0, 2] = 1.
+        qddx[1, 3] = 1.
+
+        Diff1 = np.zeros((self.dof, 2*self.dof))
+        Diff2 = np.zeros((self.dof, 2*self.dof))
+        tmpCx = np.zeros((self.dof, 2*self.dof))
+
+        # ToDo: Make simple without loop and tmps
+        for i in range(2*self.dof):
+            tmp = np.dot(Minvx[i], (np.dot(self.B, u) - np.dot(C, x[2:]) + G - F))
+            Diff1[0, i] = tmp[0]
+            Diff2[1, i] = tmp[1]
+
+            tmp2 = np.dot(Cx[i], x[2:])
+            tmpCx[0, i] = tmp2[0]
+            tmpCx[1, i] = tmp2[1]
+            
+        Diff2 = np.dot(Minv, -tmpCx - np.dot(C, qddx) + Gx - Fx)
+
+        Alin[2:, : ] = Diff1 + Diff2
+        return Alin
+
+    def get_Blin(self, x, u):
+        Blin = np.zeros((2*self.dof, self.dof))
+        M = self.mass_matrix(x)
+        Minv = np.linalg.inv(M)
+        Blin[2:, :] = np.dot(Minv, self.B)
+        return Blin
+
+    def linear_matrices(self, x0, u0):
+        Alin = self.get_Alin(x0, u0)
+        Blin = self.get_Blin(x0, u0)
+        return Alin, Blin

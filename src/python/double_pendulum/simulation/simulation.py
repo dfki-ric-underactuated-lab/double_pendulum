@@ -508,7 +508,7 @@ class Simulator:
         if save_video:
             print(f"Saving video to {video_name}.mp4")
             Writer = mplanimation.writers['ffmpeg']
-            writer = Writer(fps=60, bitrate=1800)
+            writer = Writer(fps=60, bitrate=18000)
             animation.save(video_name+'.mp4', writer=writer)
             print("Saving video done.")
         else:

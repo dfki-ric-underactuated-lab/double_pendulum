@@ -1,15 +1,26 @@
+import os
+from pathlib import Path
 import numpy as np
 from pydrake.systems.trajectory_optimization import DirectCollocation
 from pydrake.trajectories import PiecewisePolynomial
 from pydrake.all import Solve  # pydrake.all should be replaced by real path
 
 from double_pendulum.trajectory_optimization.direct_collocation import dircol_utils
+from double_pendulum.utils.urdfs import generate_urdf
 
 
 class dircol_calculator():
-    def __init__(self, urdf_path, system_name):
-        self.urdf_path = urdf_path
-        self.system_name = system_name
+    def __init__(self,
+                 urdf_path,
+                 robot,
+                 model_pars,
+                 save_dir="."):
+        self.urdf_path = os.path.join(save_dir, robot + ".urdf")
+        generate_urdf(urdf_path, self.urdf_path, model_pars=model_pars)
+        self.system_name = robot
+
+        meshes_path = os.path.join(Path(urdf_path).parent, "meshes")
+        os.system(f"cp -r {meshes_path} {save_dir}")
 
         self.plant, self.context, self.scene_graph = dircol_utils.create_plant_from_urdf(self.urdf_path)
 

@@ -9,24 +9,24 @@ from double_pendulum.utils.optimization import (cma_optimization,
                                                 scipy_par_optimization)
 
 
-# interactive = False
-
-# model parameters
 robot = "acrobot"
 
-mass = [0.608, 0.630]
-length = [0.3, 0.2]
-com = [0.275, 0.166]
-# damping = [0.081, 0.0]
-damping = [0.0, 0.0]
-# cfric = [0.093, 0.186]
-cfric = [0., 0.]
-gravity = 9.81
-inertia = [0.05472, 0.02522]
+# model parameter
 if robot == "acrobot":
-    torque_limit = [0.0, 6.0]
+    torque_limit = [0.0, 5.0]
+    active_act = 1
 if robot == "pendubot":
-    torque_limit = [6.0, 0.0]
+    torque_limit = [5.0, 0.0]
+    active_act = 0
+
+model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+mpar = model_parameters()
+mpar.load_yaml(model_par_path)
+mpar.set_motor_inertia(0.)
+if not with_cfric:
+    mpar.set_cfric([0.0, 0.0])
+    mpar.set_damping([0.0, 0.0])
+mpar.set_torque_limit(torque_limit)
 
 # simulation parameter
 dt = 0.005
@@ -80,14 +80,7 @@ loss_func = ilqrmpc_swingup_loss(bounds=bounds,
                                  goal=np.asarray(goal),
                                  csv_path=init_csv_path)
 
-loss_func.set_model_parameters(mass=mass,
-                               length=length,
-                               com=com,
-                               damping=damping,
-                               gravity=gravity,
-                               coulomb_fric=cfric,
-                               inertia=inertia,
-                               torque_limit=torque_limit)
+loss_func.set_model_parameters(model_pars=mpar)
 loss_func.set_parameters(N=N,
                          dt=dt,
                          max_iter=max_iter,

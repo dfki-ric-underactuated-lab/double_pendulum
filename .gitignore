@@ -5,5 +5,10 @@ src/cpp/bin/*
 src/cpp/controllers/ilqr/bin/*
 src/cpp/controllers/ilqr/obj/*
 src/cpp/python/*.so
-examples/data/*
+examples/ideal/data/*
+examples/realistic/data/*
+examples/analysis/data/*
+examples/benchmarks/data/*
+examples/parameter_optimization/data/*
+examples/reimplemented_papers/data/*
 experiments/data/*

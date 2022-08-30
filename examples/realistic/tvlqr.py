@@ -15,7 +15,7 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
 ## model parameters
-robot = "pendubot"
+robot = "acrobot"
 friction_compensation = True
 stabilization = "lqr"
 
@@ -27,7 +27,7 @@ elif robot == "acrobot":
     active_act = 1
 torque_limit_pid = [6.0, 6.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
 # model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters(filepath=model_par_path)
 
@@ -40,7 +40,7 @@ mpar_con.set_torque_limit(torque_limit)
 
 ## trajectory parameters
 # csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"   # tmotors v1.0
-csv_path = "../data/trajectories/"+robot+"/ilqr_v1.0_new2/trajectory.csv"  # tmotors v1.0
+csv_path = "../data/trajectories/"+robot+"/ilqr_v1.0/trajectory.csv"  # tmotors v1.0
 # csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"  # tmotors v2.0
 
 ## load reference trajectory
@@ -87,12 +87,12 @@ elif robot == "pendubot":
     Q = 3.*np.diag([0.64, 0.64, 0.1, 0.1])
     R = np.eye(2)*0.82
 Qf = np.copy(Q)
+horizon = 100
 
 ## PID controller
 Kp = 10.
 Ki = 0.
 Kd = 0.1
-horizon = 100
 
 ## lqr controller
 if robot == "acrobot":

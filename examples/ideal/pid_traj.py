@@ -9,19 +9,16 @@ from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_pro
 
 
 # model parameters
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 # mpar.set_damping([0., 0.])
 # mpar.set_cfric([0., 0.])
 
 # trajectory
-csv_path = "../data/system_identification/excitation_trajectories/trajectory-pos-50.csv"
+csv_path = "../../data/system_identification/excitation_trajectories/trajectory-pos-50.csv"
 with_tau = False
 num_break = 250
-# csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-# with_tau = True
-# num_break = 40
 
 # simulation parameters
 T_des, X_des, U_des = load_trajectory(csv_path, with_tau=with_tau)
@@ -45,18 +42,17 @@ controller = TrajPIDController(csv_path=csv_path,
 controller.set_parameters(Kp=Kp, Ki=Ki, Kd=Kd)
 controller.init()
 
-# T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
-#                                    tf=t_final, dt=dt, controller=controller,
-#                                    integrator=integrator, plot_inittraj=True,
-#                                    save_video=False,
-#                                    anim_dt=0.02)
+T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
+                                   tf=t_final, dt=dt, controller=controller,
+                                   integrator=integrator, plot_inittraj=True,
+                                   save_video=False,
+                                   anim_dt=0.02)
 
-T, X, U = sim.simulate(t0=0.0, x0=x0,
-                       tf=t_final, dt=dt, controller=controller,
-                       integrator=integrator)
+# T, X, U = sim.simulate(t0=0.0, x0=x0,
+#                        tf=t_final, dt=dt, controller=controller,
+#                        integrator=integrator)
 
-plot_timeseries(T, X, U, None,
-                plot_energy=False,
+plot_timeseries(T, X, U,
                 pos_y_lines=[-np.pi, 0.0, np.pi],
                 T_des=T_des,
                 X_des=X_des)

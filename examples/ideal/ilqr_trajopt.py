@@ -14,42 +14,18 @@ from double_pendulum.controller.trajectory_following.trajectory_controller impor
 
 robot = "acrobot"
 
-# # model parameters
-# mass = [0.608, 0.630]
-# length = [0.3, 0.2]
-# com = [0.275, 0.166]
-# damping = [0.081, 0.0]
-# # damping = [0.0, 0.0]
-# # cfric = [0.093, 0.186]
-# cfric = [0., 0.]
-# gravity = 9.81
-# inertia = [0.05472, 0.02522]
-# torque_limit = [0.0, 6.0]
-
-# model parameters
-# mass = [0.608, 0.63]
-# length = [0.3, 0.4]
-# com = [length[0], length[1]]
-# damping = [0.081, 0.081]
-# damping = [0.0005, 0.0001]
-# damping = [0., 0.]
-# cfric = [0.093, 0.186]
-cfric = [0., 0.]
-# gravity = 9.81
-# inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
-motor_inertia = 0.
 if robot == "acrobot":
-    torque_limit = [0.0, 4.0]
+    torque_limit = [0.0, 5.0]
 if robot == "pendubot":
-    torque_limit = [4.0, 0.0]
+    torque_limit = [5.0, 0.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
 #model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
-mpar.set_motor_inertia(motor_inertia)
-# mpar.set_damping(damping)
-mpar.set_cfric(cfric)
+mpar.set_motor_inertia(0.0)
+mpar.set_damping([0., 0.])
+mpar.set_cfric([0., 0.])
 mpar.set_torque_limit(torque_limit)
 
 # controller parameters
@@ -179,12 +155,12 @@ if robot == "acrobot":
     # 4.84307636e-03 7.78152311e-03 2.69548072e+02 9.99254272e+03
     # 8.55215256e+02 2.50563565e+02 2.57191000e+01]
 if robot == "pendubot":
-    sCu = [0.2, 0.2]
+    sCu = [1., 1.]
     sCp = [0.1, 0.2]
     sCv = [0., 0.]
     sCen = 0.
-    fCp = [2500., 500.]
-    fCv = [500., 500.]
+    fCp = [10., 20.]
+    fCv = [10., 20.]
     fCen = 0.
 
 # swingup parameters
@@ -193,14 +169,6 @@ goal = [np.pi, 0., 0., 0.]
 
 t0 = time.time()
 il = ilqr_calculator()
-# il.set_model_parameters(mass=mass,
-#                         length=length,
-#                         com=com,
-#                         damping=damping,
-#                         gravity=gravity,
-#                         coulomb_fric=cfric,
-#                         inertia=inertia,
-#                         torque_limit=torque_limit)
 il.set_model_parameters(model_pars=mpar)
 il.set_parameters(N=N,
                   dt=dt,

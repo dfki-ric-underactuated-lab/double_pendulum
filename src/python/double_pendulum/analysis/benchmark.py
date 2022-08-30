@@ -13,6 +13,9 @@ class benchmarker():
                  dt,
                  t_final,
                  goal,
+                 epsilon=[0.1, 0.1, 1.0, 1.0],
+                 check_only_final_state=False,
+                 friction_compensation=True,
                  integrator="runge_kutta",
                  save_dir="benchmark"):
         self.controller = controller
@@ -20,6 +23,9 @@ class benchmarker():
         self.dt = dt
         self.t_final = t_final
         self.goal = np.asarray(goal)
+        self.epsilon = epsilon
+        self.check_only_final_state = check_only_final_state
+        self.friction_compensation = friction_compensation
         self.integrator = integrator
         self.save_dir = save_dir
 
@@ -133,11 +139,27 @@ class benchmarker():
             self.ref_cost_free = self.compute_cost(self.x_traj, self.u_traj, mode="free")
             self.ref_cost_tf = self.compute_cost(self.x_traj, self.u_traj, mode="trajectory_following")
 
-    def check_goal_success(self, x_traj, pos_eps=0.1, vel_eps=0.5):
-        lp = wrap_angles_top(x_traj[-1])
-        pos_succ = np.max(lp[:2] - self.goal[:2]) < pos_eps
-        vel_succ = np.max(lp[2:] - self.goal[2:]) < vel_eps
-        return (pos_succ and vel_succ)
+    def check_goal_success(self, x_traj):
+        if self.check_only_final_state:
+            lp = wrap_angles_top(x_traj[-1])
+            pos1_succ = np.abs(lp[0] - self.goal[0]) < self.epsilon[0]
+            pos2_succ = np.abs(lp[1] - self.goal[1]) < self.epsilon[1]
+            vel1_succ = np.abs(lp[2] - self.goal[2]) < self.epsilon[2]
+            vel2_succ = np.abs(lp[3] - self.goal[3]) < self.epsilon[3]
+            succ = pos1_succ and pos2_succ and vel1_succ and vel2_succ
+        else:
+            succ = False
+            for x in x_traj:
+                lp = wrap_angles_top(x)
+                pos1_succ = np.abs(lp[0] - self.goal[0]) < self.epsilon[0]
+                pos2_succ = np.abs(lp[1] - self.goal[1]) < self.epsilon[1]
+                vel1_succ = np.abs(lp[2] - self.goal[2]) < self.epsilon[2]
+                vel2_succ = np.abs(lp[3] - self.goal[3]) < self.epsilon[3]
+                succ = pos1_succ and pos2_succ and vel1_succ and vel2_succ
+                if succ:
+                    break
+
+        return succ
 
     def compute_success_measure(self, x_traj, u_traj):
         X = np.asarray(x_traj)
@@ -172,6 +194,9 @@ class benchmarker():
                                        torque_limit=torque_limit)
 
         simulator = Simulator(plant=plant)
+        self.controller.reset()
+        if self.friction_compensation:
+            self.controller.set_friction_compensation(damping=self.damping, coulomb_fric=self.cfric)
         self.controller.init()
 
         T, X, U = simulator.simulate(t0=0., x0=self.x0, tf=self.t_final,
@@ -369,8 +394,8 @@ class benchmarker():
                                     meas_noise_mode="vel",
                                     meas_noise_sigma_list=[],
                                     meas_noise_cut=0.,
-                                    meas_noise_vfilters=["None", "lowpass", "kalman"],
-                                    meas_noise_vfilter_args={"alpha": 0.3}):
+                                    meas_noise_vfilters=["None"],
+                                    meas_noise_vfilter_args={"lowpass_alpha": 0.3}):
         # maybe add noise frequency
         # (on the real system noise frequency seems so be higher than
         # control frequency -> no frequency neccessary here)
@@ -387,6 +412,17 @@ class benchmarker():
                 rep_C_tf = []
                 rep_SUCC = []
                 for _ in range(repetitions):
+                    self.controller.set_filter_args(filt=nf,
+                           x0=self.goal,
+                           dt=self.dt,
+                           plant=self.plant,
+                           simulator=self.simulator,
+                           velocity_cut=meas_noise_cut,
+                           filter_kwargs=meas_noise_vfilter_args)
+
+                    self.controller.reset()
+                    if self.friction_compensation:
+                        self.controller.set_friction_compensation(damping=self.damping, coulomb_fric=self.cfric)
                     self.controller.init()
                     if meas_noise_mode == "posvel":
                         meas_noise_sigmas = [na, na, na, na]
@@ -394,10 +430,10 @@ class benchmarker():
                         meas_noise_sigmas = [0., 0., na, na]
                     self.simulator.set_measurement_parameters(
                             meas_noise_sigmas=meas_noise_sigmas)
-                    self.simulator.set_filter_parameters(
-                            meas_noise_cut=meas_noise_cut,
-                            meas_noise_vfilter=nf,
-                            meas_noise_vfilter_args=meas_noise_vfilter_args)
+                    # self.simulator.set_filter_parameters(
+                    #         meas_noise_cut=meas_noise_cut,
+                    #         meas_noise_vfilter=nf,
+                    #         meas_noise_vfilter_args=meas_noise_vfilter_args)
                     T, X, U = self.simulator.simulate(
                             t0=0.0,
                             tf=self.t_final,
@@ -422,8 +458,8 @@ class benchmarker():
             res_dict[nf]["successes"] = SUCC
             res_dict[nf]["noise_mode"] = meas_noise_mode
             res_dict[nf]["noise_cut"] = meas_noise_cut
-            res_dict[nf]["noise_vfilter"] = nf
-            res_dict[nf]["noise_vfilter_args"] = meas_noise_vfilter_args
+            #res_dict[nf]["noise_vfilter"] = nf
+            #res_dict[nf]["noise_vfilter_args"] = meas_noise_vfilter_args
         return res_dict
 
     def check_unoise_robustness(self,
@@ -441,6 +477,9 @@ class benchmarker():
             rep_C_tf = []
             rep_SUCC = []
             for _ in range(repetitions):
+                self.controller.reset()
+                if self.friction_compensation:
+                    self.controller.set_friction_compensation(damping=self.damping, coulomb_fric=self.cfric)
                 self.controller.init()
                 u_noise_sigmas = np.zeros(len(self.torque_limit))
                 for i in range(len(self.torque_limit)):
@@ -480,6 +519,9 @@ class benchmarker():
         C_tf = []
         SUCC = []
         for ur in u_responses:
+            self.controller.reset()
+            if self.friction_compensation:
+                self.controller.set_friction_compensation(damping=self.damping, coulomb_fric=self.cfric)
             self.controller.init()
             self.simulator.set_motor_parameters(u_responsiveness=ur)
             T, X, U = self.simulator.simulate(
@@ -511,6 +553,9 @@ class benchmarker():
         C_tf = []
         SUCC = []
         for de in delays:
+            self.controller.reset()
+            if self.friction_compensation:
+                self.controller.set_friction_compensation(damping=self.damping, coulomb_fric=self.cfric)
             self.controller.init()
             self.simulator.set_measurement_parameters(
                     delay=de,

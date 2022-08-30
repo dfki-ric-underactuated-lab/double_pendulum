@@ -54,6 +54,56 @@ class LQRController(AbstractController):
         self.Q = np.asarray(Q)
         self.R = np.asarray(R)
 
+    def set_cost_parameters(self,
+                            p1p1_cost=1.,     # 1000., 0.001
+                            p2p2_cost=1.,     # 1000., 0.001
+                            v1v1_cost=1.,     # 1000.
+                            v2v2_cost=1.,     # 1000.
+                            p1p2_cost=0.,     # -500
+                            v1v2_cost=0.,     # -500
+                            p1v1_cost=0.,
+                            p1v2_cost=0.,
+                            p2v1_cost=0.,
+                            p2v2_cost=0.,
+                            u1u1_cost=0.01):    # 100., 0.01
+        # state cost matrix
+        self.Q = np.array([[p1p1_cost, p1p2_cost, p1v1_cost, p1v2_cost],
+                           [p1p2_cost, p2p2_cost, p2v1_cost, p2v2_cost],
+                           [p1v1_cost, p2v1_cost, v1v1_cost, v1v2_cost],
+                           [p1v2_cost, p2v2_cost, v1v2_cost, v2v2_cost]])
+
+        # control cost matrix
+        self.R = np.array([[u1u1_cost]])
+        # self.R = np.array([[u2u2_cost]])
+
+    # def set_cost_parameters_(self,
+    #                          pars=[1., 1., 1., 1.,
+    #                                0., 0., 0., 0., 0., 0.,
+    #                                0.01, 0.01, 0.]):
+    #     self.set_cost_parameters(p1p1_cost=pars[0],
+    #                              p2p2_cost=pars[1],
+    #                              v1v1_cost=pars[2],
+    #                              v2v2_cost=pars[3],
+    #                              p1v1_cost=pars[4],
+    #                              p1v2_cost=pars[5],
+    #                              p2v1_cost=pars[6],
+    #                              p2v2_cost=pars[7],
+    #                              u1u1_cost=pars[8],
+    #                              u2u2_cost=pars[9],
+    #                              u1u2_cost=pars[10])
+
+    def set_cost_parameters_(self,
+                             pars=[1., 1., 1., 1., 1.]):
+        self.set_cost_parameters(p1p1_cost=pars[0],
+                                 p2p2_cost=pars[1],
+                                 v1v1_cost=pars[2],
+                                 v2v2_cost=pars[3],
+                                 p1v1_cost=0.0,
+                                 p1v2_cost=0.0,
+                                 p2v1_cost=0.0,
+                                 p2v2_cost=0.0,
+                                 u1u1_cost=pars[4])
+
     def init_(self):
         # Linearization of the system
         self.drake_robot_lin = FirstOrderTaylorApproximation(
