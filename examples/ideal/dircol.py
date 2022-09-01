@@ -13,30 +13,58 @@ from double_pendulum.controller.trajectory_following.trajectory_controller impor
 
 
 # model parameters
+design = "design_A.0"
+model = "model_2.0"
 robot = "acrobot"
-urdf_path = "../data/urdfs/"+robot+".urdf"
+
+urdf_path = "../../data/urdfs/design_A.0/model_1.0/"+robot+".urdf"
+
+torque_limit_active = 6.0
+if robot == "acrobot":
+    torque_limit = [0.0, torque_limit_active]
+if robot == "pendubot":
+    torque_limit = [torque_limit_active, 0.0]
+if robot == "double_pendulum":
+    torque_limit = [torque_limit_active, torque_limit_active]
+
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
+mpar = model_parameters()
+mpar.load_yaml(model_par_path)
+mpar.set_motor_inertia(0.)
+mpar.set_damping([0., 0.])
+mpar.set_cfric([0., 0.])
+mpar.set_torque_limit(torque_limit)
+
 
 # Trajectory parameters
 initial_state = (0.0, 0.0, 0., 0.)
 final_state = (np.pi, 0.0, 0.0, 0.0)
 n = 100
-init_traj_time_interval = [0., 6.]
+init_traj_time_interval = [0., 10.]
 freq = 1000
 
 # limits
-torque_limit_active = 6.0
 theta_limit = float(np.deg2rad(360.))
-speed_limit = 7
-minimum_timestep = 0.05
-maximum_timestep = 0.4
+speed_limit = 10
+minimum_timestep = 0.01
+maximum_timestep = 0.2
 
 # costs
-R = 0.1
-time_panalization = 0
+R = 0.001
+time_panalization = 0.
+
+# saving
+timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
+save_dir = os.path.join("data", design, model, robot, "dircol", "trajopt", timestamp)
+os.makedirs(save_dir)
+
 
 # Direct Collocation calculation
 t0 = time.time()
-dc = dircol_calculator(urdf_path, robot)
+dc = dircol_calculator(urdf_path,
+        robot,
+        model_pars=mpar,
+        save_dir=save_dir)
 dc.compute_trajectory(
     n=n,
     tau_limit=torque_limit_active,
@@ -52,11 +80,6 @@ dc.compute_trajectory(
 
 T, X, U = dc.get_trajectory(freq=freq)
 print("Computing time: ", time.time() - t0, "s")
-
-# saving
-timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "dircol", "trajopt", timestamp)
-os.makedirs(save_dir)
 
 traj_file = os.path.join(save_dir, "trajectory.csv")
 save_trajectory(csv_path=traj_file,
@@ -74,24 +97,6 @@ plot_timeseries(T, X, U, None,
 # dc.animate_trajectory()
 
 # simulate in python plant
-cfric = [0., 0.]
-# gravity = 9.81
-# inertia = [mass[0]*length[0]**2, mass[1]*length[1]**2]
-motor_inertia = 0.
-if robot == "acrobot":
-    torque_limit = [0.0, torque_limit_active]
-if robot == "pendubot":
-    torque_limit = [torque_limit_active, 0.0]
-if robot == "double_pendulum":
-    torque_limit = [torque_limit_active, torque_limit_active]
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-mpar = model_parameters()
-mpar.load_yaml(model_par_path)
-mpar.set_motor_inertia(motor_inertia)
-# mpar.set_damping(damping)
-mpar.set_cfric(cfric)
-mpar.set_torque_limit(torque_limit)
-
 dt = T[1] - T[0]
 t_final = T[-1]
 x0 = X[0]

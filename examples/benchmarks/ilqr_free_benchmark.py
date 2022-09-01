@@ -10,6 +10,8 @@ from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.analysis.benchmark import benchmarker
 from double_pendulum.analysis.utils import get_par_list
 
+design = "design_A.0"
+model = "model_2.0"
 robot = "pendubot"
 
 # # model parameters
@@ -18,7 +20,7 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [6.0, 0.0]
 
-model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_motor_inertia(0.)
 mpar.set_damping([0., 0.])
@@ -124,7 +126,7 @@ delays = np.linspace(0.0, 0.04, N_var)  # [0.0, dt, 2*dt, 5*dt, 10*dt]
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "ilqr", "mpc_benchmark_free", timestamp)
+save_dir = os.path.join("data", design, model, robot, "ilqr", "benchmark_free", timestamp)
 os.makedirs(save_dir)
 
 # construct simulation objects

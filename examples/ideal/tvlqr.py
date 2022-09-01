@@ -10,6 +10,9 @@ from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
 ## model parameters
+design = "design_A.0"
+model = "model_2.0"
+traj_model = "model_2.1"
 robot = "acrobot"
 
 if robot == "pendubot":
@@ -19,24 +22,15 @@ elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
     active_act = 1
 
-model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_motor_inertia(0.)
 mpar.set_damping([0., 0.])
 mpar.set_cfric([0., 0.])
-#mpar.set_mass([mpar.m[0], 0.9*mpar.m[1]])
-mpar.set_inertia([0.05, mpar.I[1]])
 mpar.set_torque_limit(torque_limit)
 
-mpar_con = model_parameters(filepath=model_par_path)
-mpar_con.set_motor_inertia(0.)
-mpar_con.set_damping([0., 0.])
-mpar_con.set_cfric([0., 0.])
-mpar_con.set_torque_limit(torque_limit)
-
 ## trajectory parameters
-# csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"   # tmotors v1.0
-csv_path = "../../data/trajectories/"+robot+"/ilqr_v1.0_new2/trajectory.csv"  # tmotors v1.0
+csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
 
 ## load reference trajectory
 T_des, X_des, U_des = load_trajectory(csv_path)
@@ -68,7 +62,7 @@ plant = SymbolicDoublePendulum(model_pars=mpar)
 sim = Simulator(plant=plant)
 
 controller = TVLQRController(
-        model_pars=mpar_con,
+        model_pars=mpar,
         csv_path=csv_path,
         torque_limit=torque_limit,
         horizon=horizon)

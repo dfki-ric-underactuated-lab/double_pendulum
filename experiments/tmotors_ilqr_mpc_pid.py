@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 from double_pendulum.model.model_parameters import model_parameters
@@ -10,29 +11,24 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties
 
 
-cfric = [0., 0.]
-motor_inertia = 0.
+design = "design_A.0"
+model = "model_2.0"
+traj_model = "model_2.1"
+robot = "acrobot"
+
 torque_limit = [0.0, 6.0]
 torque_limit_pid = [6.0, 6.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-#model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
-mpar.set_motor_inertia(motor_inertia)
-# mpar.set_damping(damping)
-mpar.set_cfric(cfric)
+mpar.set_motor_inertia(0.)
+# mpar.set_damping([0., 0.])
+mpar.set_cfric([0., 0.])
 mpar.set_torque_limit(torque_limit)
 
 # trajectory parameters
-## tmotors v1.0
-# csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
-
-## tmotors v1.0
-csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-
-# tmotors v2.0
-#csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+csv_path = os.path.join("../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
 
 T, X, U = load_trajectory(csv_path, True)
 dt, t_final, _, _ = trajectory_properties(T, X)
@@ -127,10 +123,9 @@ controller = CombinedController(
         condition2=condition2)
 
 # gravity and friction compensation
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-mpar = model_parameters(filepath=model_par_path)
-plant = SymbolicDoublePendulum(model_pars=mpar)
-#controller.set_gravity_compensation(plant=plant)
+model_par_path = "../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
+#mpar = model_parameters(filepath=model_par_path)
+#plant = SymbolicDoublePendulum(model_pars=mpar)
 
 #controller.set_friction_compensation(damping=mpar.b, coulomb_fric=mpar.cf)
 #controller.set_friction_compensation(damping=[0.005, 0.001], coulomb_fric=[0.093, 0.15])
@@ -144,4 +139,4 @@ run_experiment(controller=controller,
                can_port="can0",
                motor_ids=[7, 8],
                tau_limit=torque_limit,
-               save_dir="data/acrobot/tmotors/ilqr_pid_results")
+               save_dir="data/"+design+"acrobot/tmotors/ilqr_pid_results")

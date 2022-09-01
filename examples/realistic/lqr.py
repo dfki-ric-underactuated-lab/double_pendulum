@@ -9,10 +9,12 @@ from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.utils.plotting import plot_timeseries
 
 
+# model parameters
+design = "design_A.0"
+model = "model_2.0"
 robot = "acrobot"
 friction_compensation = True
 
-# model parameters
 if robot == "pendubot":
     torque_limit = [5.0, 0.0]
     active_act = 0
@@ -20,8 +22,7 @@ elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
     active_act = 1
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
-# model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 
 mpar_con = model_parameters(filepath=model_par_path)

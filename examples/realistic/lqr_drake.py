@@ -10,8 +10,11 @@ from double_pendulum.utils.plotting import plot_timeseries
 
 
 # model parameters
+design = "design_A.0"
+model = "model_2.0"
 robot = "acrobot"
-urdf_path = "../data/urdfs/"+robot+".urdf"
+
+urdf_path = "../../data/urdfs/design_A.0/model_1.0/"+robot+".urdf"
 friction_compensation = True
 
 if robot == "pendubot":
@@ -21,7 +24,7 @@ elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
     active_act = 1
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar_con = model_parameters(filepath=model_par_path)
 #mpar_con.set_motor_inertia(0.)
@@ -108,7 +111,7 @@ sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
                          u_responsiveness=u_responsiveness)
 
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "lqr_drake", timestamp)
+save_dir = os.path.join("data", design, model, robot, "lqr_drake", timestamp)
 os.makedirs(save_dir)
 
 controller = LQRController(

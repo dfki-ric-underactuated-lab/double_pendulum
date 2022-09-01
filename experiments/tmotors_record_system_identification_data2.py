@@ -3,6 +3,7 @@ import numpy as np
 from double_pendulum.controller.trajectory_following.feed_forward import FeedForwardController
 from double_pendulum.experiments.hardware_control_loop_tmotors import run_experiment
 
+design = "design_A.0"
 
 torque_limit = [4.0, 4.0]
 
@@ -44,4 +45,4 @@ run_experiment(controller=controller,
                can_port="can0",
                motor_ids=[7, 8],
                tau_limit=torque_limit,
-               save_dir="data/double-pendulum/tmotors/sysid")
+               save_dir="data/"+design+"/double-pendulum/tmotors/sysid")

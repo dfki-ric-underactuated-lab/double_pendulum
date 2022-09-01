@@ -8,7 +8,8 @@ from double_pendulum.controller.ilqr.paropt import ilqrmpc_swingup_loss
 from double_pendulum.utils.optimization import (cma_optimization,
                                                 scipy_par_optimization)
 
-
+design = "design_A.0"
+model = "model_2.0"
 robot = "acrobot"
 
 # model parameter
@@ -19,13 +20,12 @@ if robot == "pendubot":
     torque_limit = [5.0, 0.0]
     active_act = 0
 
-model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(0.)
-if not with_cfric:
-    mpar.set_cfric([0.0, 0.0])
-    mpar.set_damping([0.0, 0.0])
+mpar.set_cfric([0.0, 0.0])
+mpar.set_damping([0.0, 0.0])
 mpar.set_torque_limit(torque_limit)
 
 # simulation parameter
@@ -56,8 +56,7 @@ init_pars = [0.1, 0., 0., 0., 0., 100., 100., 10., 10.]
 # swingup parameters
 start = [0.0, 0.0, 0.0, 0.0]
 goal = [np.pi, 0, 0, 0]
-if robot == "acrobot":
-    init_csv_path = "../data/acrobot/ilqr/trajopt/20220307-115818/trajectory.csv"
+init_csv_path = os.path,join("../../data/trajectories/", design, traj_model, robot, "ilqr_1/trajectory.csv")
 
 # optimization parameters
 optimization_method = "cma"  # "Nelder-Mead"
@@ -70,7 +69,7 @@ tolstagnation = 100
 num_proc = 0
 
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "ilqr", "mpc_paropt", timestamp)
+save_dir = os.path.join("data", design, model, robot, "ilqr", "mpc_paropt", timestamp)
 os.makedirs(save_dir)
 
 # loss object
@@ -121,19 +120,9 @@ np.savetxt(os.path.join(save_dir, "controller_par.csv"), best_par)
 np.savetxt(os.path.join(save_dir, "time.txt"), [opt_time])
 os.system(f"cp {init_csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))
 
-par_dict = {"mass1": mass[0],
-            "mass2": mass[1],
-            "length1": length[0],
-            "length2": length[1],
-            "com1": com[0],
-            "com2": com[1],
-            "inertia1": inertia[0],
-            "inertia2": inertia[1],
-            "damping1": damping[0],
-            "damping2": damping[1],
-            "coulomb_friction1": cfric[0],
-            "coulomb_friction2": cfric[1],
-            "gravity": gravity,
+mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
+
+par_dict = {
             "torque_limit1": torque_limit[0],
             "torque_limit2": torque_limit[1],
             "dt": dt,

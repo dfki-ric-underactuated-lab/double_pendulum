@@ -31,20 +31,20 @@ os.makedirs(save_dir)
 #     "../data/system_identification/recorded_data_20220812/sys_id/20220812-061157-PM_measured.csv"
 #     ]
 measured_data_csv = [
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_00.csv",
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_01.csv",
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_02.csv",
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_03.csv",
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_04.csv",
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_05.csv",
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_06.csv",
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_07.csv",
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_08.csv",
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_09.csv",
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_10.csv",  # exitation traj
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_11.csv",  # swingup traj
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_12.csv",
-    "../data/system_identification/recorded_data_20220815/sys_id/trajectory_13.csv",
+    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_00.csv",
+    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_01.csv",
+    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_02.csv",
+    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_03.csv",
+    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_04.csv",
+    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_05.csv",
+    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_06.csv",
+    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_07.csv",
+    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_08.csv",
+    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_09.csv",
+    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_10.csv",  # exitation traj
+    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_11.csv",  # swingup traj
+    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_12.csv",
+    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_13.csv",
     ]
 
 

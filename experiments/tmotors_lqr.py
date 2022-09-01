@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 from double_pendulum.model.model_parameters import model_parameters
@@ -5,7 +6,11 @@ from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.experiments.hardware_control_loop_tmotors import run_experiment
 
 
+design = "design_A.0"
+model = "model_2.0"
+traj_model = "model_2.1"
 robot = "acrobot"
+
 torque_limit = [5.0, 5.0]
 friction_compensation = True
 
@@ -17,8 +22,7 @@ elif robot == "acrobot":
     torque_limit_con = [0.0, 5.0]
     active_act = 1
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
-# model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 
 mpar_con = model_parameters(filepath=model_par_path)
@@ -82,4 +86,4 @@ run_experiment(controller=controller,
                can_port="can0",
                motor_ids=[7, 8],
                tau_limit=torque_limit,
-               save_dir="data/"+robot+"/tmotors/lqr_results")
+               save_dir=os.path.join("data", design, robot, "tmotors/lqr_results"))

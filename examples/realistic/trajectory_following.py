@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
@@ -8,8 +9,11 @@ from double_pendulum.controller.pid.trajectory_pid_controller import TrajPIDCont
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties
 
+design = "design_A.0"
+model = "model_2.0"
+traj_model = "model_2.1"
 robot = "pendubot"
-trajopt = "ilqr"
+
 friction_compensation = False
 
 if robot == "acrobot":
@@ -19,17 +23,12 @@ if robot == "pendubot":
 if robot == "double_pendulum":
     torque_limit = [6.0, 6.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
-#model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 
 # csv file
 use_feed_forward_torque = True
-#latest_dir = sorted(os.listdir(os.path.join("data", robot, trajopt, "trajopt")))[-1]
-#csv_path = os.path.join("data", robot, trajopt, "trajopt", latest_dir, "trajectory.csv")
-csv_path = "../data/trajectories/"+robot+"/ilqr_v1.0_new2/trajectory.csv"
-#csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
-#csv_path = "../data/trajectories/double_pendulum/dircol/trajectory.csv"
+csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
 
 T_des, X_des, U_des = load_trajectory(csv_path)
 dt, t_final, x0, _ = trajectory_properties(T_des, X_des)

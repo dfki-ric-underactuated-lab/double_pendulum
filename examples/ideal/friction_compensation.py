@@ -9,19 +9,19 @@ from double_pendulum.controller.friction_compensation.friction_compensation_cont
 from double_pendulum.utils.plotting import plot_timeseries
 
 
+design = "design_A.0"
+model = "model_1.0"
 robot = "double_pendulum"
 
-# cfric = [0., 0.]
-# motor_inertia = 0.
 torque_limit = [10.0, 10.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
-#mpar.set_motor_inertia(motor_inertia)
-#mpar.set_damping(damping)
-#mpar.set_cfric(cfric)
+#mpar.set_motor_inertia(0.)
+#mpar.set_damping([0., 0.])
+#mpar.set_cfric([0., 0.])
 mpar.set_torque_limit(torque_limit)
 
 # simulation parameters

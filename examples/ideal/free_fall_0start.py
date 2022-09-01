@@ -12,8 +12,11 @@ from double_pendulum.utils.csv_trajectory import load_trajectory, save_trajector
 
 
 # model parameters
+design = "design_A.0"
+model = "model_1.0"
 torque_limit = [6.0, 6.0]
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_torque_limit(torque_limit)

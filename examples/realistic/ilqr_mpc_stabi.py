@@ -10,7 +10,10 @@ from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory
 
+design = "design_A.0"
+model = "model_2.0"
 robot = "acrobot"
+
 friction_compensation = True
 
 if robot == "acrobot":
@@ -20,8 +23,7 @@ if robot == "pendubot":
     torque_limit = [6.0, 0.0]
     active_act = 1
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
-# model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 
 mpar_con = model_parameters(filepath=model_par_path)
@@ -104,7 +106,7 @@ if robot == "pendubot":
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "ilqr", "mpc", timestamp)
+save_dir = os.path.join("data", design, model, robot, "ilqr", "mpc", timestamp)
 os.makedirs(save_dir)
 
 # construct simulation objects

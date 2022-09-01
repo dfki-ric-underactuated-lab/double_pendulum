@@ -9,7 +9,10 @@ from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_pro
 
 
 # model parameters
-model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+design = "design_A.0"
+model = "model_2.0"
+
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 # mpar.set_damping([0., 0.])

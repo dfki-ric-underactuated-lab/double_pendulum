@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 from double_pendulum.controller.trajectory_following.feed_forward import FeedForwardController
@@ -6,6 +7,7 @@ from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.model.model_parameters import model_parameters
 
 
+design = "design_A.0"
 torque_limit = [5.0, 5.0]
 
 # trajectory
@@ -34,7 +36,7 @@ controller.set_filter_args(filt=meas_noise_vfilter,
 
 
 # gravity and friction compensation
-# model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+# model_par_path = "../data/system_identification/identified_parameters/design_A.0/model_1.0/model_parameters.yml"
 # mpar = model_parameters(filepath=model_par_path)
 # plant = SymbolicDoublePendulum(model_pars=mpar)
 # controller.set_gravity_compensation(plant=plant)
@@ -52,4 +54,4 @@ run_experiment(controller=controller,
                can_port="can0",
                motor_ids=[7, 8],
                tau_limit=torque_limit,
-               save_dir="data/double-pendulum/tmotors/sysid")
+               save_dir=os.path.join("data", design, "double-pendulum/tmotors/sysid")

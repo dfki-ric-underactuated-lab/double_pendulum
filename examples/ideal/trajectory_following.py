@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
@@ -8,7 +9,10 @@ from double_pendulum.controller.pid.trajectory_pid_controller import TrajPIDCont
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties
 
-robot = "pendubot"
+design = "design_A.0"
+model = "model_2.0"
+traj_model = "model_2.1"
+robot = "acrobot"
 
 if robot == "acrobot":
     torque_limit = [0.0, 6.0]
@@ -17,7 +21,7 @@ if robot == "pendubot":
 if robot == "double_pendulum":
     torque_limit = [6.0, 6.0]
 
-model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_motor_inertia(0.0)
 mpar.set_damping([0., 0.])
@@ -26,7 +30,9 @@ mpar.set_torque_limit(torque_limit)
 
 # csv file
 use_feed_forward_torque = True
-csv_path = "../../data/trajectories/"+robot+"/ilqr_v1.0_new2/trajectory.csv"
+csv_path = os.path.join("../../data/trajectories/",
+                        design, traj_model, robot,
+                        "ilqr_1/trajectory.csv")
 
 T_des, X_des, U_des = load_trajectory(csv_path)
 dt, t_final, x0, _ = trajectory_properties(T_des, X_des)

@@ -10,8 +10,12 @@ from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
 # model parameters
-robot = "acrobot"
-urdf_path = "../../data/urdfs/"+robot+".urdf"
+design = "design_A.0"
+model = "model_2.0"
+traj_model = "model_2.1"
+robot = "pendubot"
+
+urdf_path = "../../data/urdfs/design_A.0/model_1.0/"+robot+".urdf"
 
 if robot == "pendubot":
     torque_limit = [5.0, 0.0]
@@ -20,30 +24,20 @@ elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
     active_act = 1
 
-model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
-#mpar.set_motor_inertia(0.0)
-#mpar.set_damping([0., 0.])
-#mpar.set_cfric([0., 0.])
-#mpar.set_mass([mpar.m[0], 0.9*mpar.m[1]])
-#mpar.set_inertia([0.95*mpar.I[0], mpar.I[1]])
-#mpar.set_torque_limit(torque_limit)
-
-mpar_con = model_parameters(filepath=model_par_path)
-#mpar_con.set_motor_inertia(0.)
-#mpar_con.set_damping([0., 0.])
-#mpar_con.set_cfric([0., 0.])
-mpar_con.set_cfric([np.pi/2*mpar.cf[0], np.pi/2*mpar.cf[1]])
-#mpar_con.set_torque_limit(torque_limit)
+mpar.set_motor_inertia(0.0)
+mpar.set_damping([0., 0.])
+mpar.set_cfric([0., 0.])
+mpar.set_torque_limit(torque_limit)
 
 # trajectory parameters
-#csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"  # tmotors v1.0
-csv_path = "../../data/trajectories/"+robot+"/ilqr_v1.0_new2/trajectory.csv"  # tmotors v1.0
+init_csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
 
 # load reference trajectory
 T_des, X_des, U_des = load_trajectory(csv_path)
-#dt = T_des[1] - T_des[0]
-dt = 0.005
+dt = T_des[1] - T_des[0]
+#dt = 0.005
 t_final = T_des[-1] #  + 5
 goal = [np.pi, 0., 0., 0.]
 
@@ -61,7 +55,7 @@ elif robot == "pendubot":
 Qf = np.copy(Q)
 
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "tvlqr_drake", timestamp)
+save_dir = os.path.join("data", design, model, robot, "tvlqr_drake", timestamp)
 os.makedirs(save_dir)
 
 # init plant, simulator and controller
@@ -71,7 +65,7 @@ sim = Simulator(plant=plant)
 controller = TVLQRController(
         csv_path=csv_path,
         urdf_path=urdf_path,
-        model_pars=mpar_con,
+        model_pars=mpar,
         torque_limit=torque_limit,
         robot=robot,
         save_dir=save_dir)

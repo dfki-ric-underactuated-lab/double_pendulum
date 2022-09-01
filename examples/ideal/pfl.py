@@ -13,7 +13,10 @@ from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl impo
                                                                                     SymbolicPFLAndLQRController)
 
 # model parameters
-robot = "acrobot"
+design = "design_A.0"
+model = "model_2.0"
+robot = "pendubot"
+
 pfl_method = "collocated"
 with_lqr = True
 
@@ -24,7 +27,7 @@ if robot == "pendubot":
     torque_limit = [5.0, 0.0]
     active_act = 0
 
-model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_motor_inertia(0.)
 mpar.set_damping([0., 0.])
@@ -34,7 +37,7 @@ mpar.set_torque_limit(torque_limit)
 # simulation parameters
 integrator = "runge_kutta"
 goal = [np.pi, 0., 0., 0.]
-dt = 0.01
+dt = 0.002
 x0 = [0.1, 0.0, 0.0, 0.0]
 t_final = 10.0
 
@@ -57,7 +60,8 @@ elif robot == "pendubot":
     Q = np.diag([0.00125, 0.65, 0.000688, 0.000936])
     R = np.diag([25.0, 25.0])
     if pfl_method == "collocated":
-        par = [8.0722899, 4.92133648, 3.53211381]
+        #par = [8.0722899, 4.92133648, 3.53211381]
+        par = [8.8295605, 6.78718988, 4.42965278]
     elif pfl_method == "noncollocated":
         #par = [26.34039456, 99.99876263, 11.89097532]
         par = [8.0722899, 4.92133648, 3.53211381]
@@ -114,7 +118,7 @@ des_energy = controller.desired_energy
 
 # saving and plotting
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "pfl", pfl_method, timestamp)
+save_dir = os.path.join("data", design, model, robot, "pfl", pfl_method, timestamp)
 os.makedirs(save_dir)
 
 save_trajectory(csv_path=os.path.join(save_dir, "trajectory.csv"),

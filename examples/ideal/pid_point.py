@@ -9,10 +9,12 @@ from double_pendulum.controller.pid.point_pid_controller import PointPIDControll
 from double_pendulum.utils.plotting import plot_timeseries
 
 # model parameters
+design = "design_A.0"
+model = "model_1.0"
 robot = "double_pendulum"
 torque_limit = [5.0, 5.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_torque_limit(torque_limit)
@@ -31,7 +33,7 @@ Kd = 0.1
 
 # setup savedir
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "point_pid", timestamp)
+save_dir = os.path.join("data", design, model, robot, "point_pid", timestamp)
 os.makedirs(save_dir)
 
 # setup simulation objects

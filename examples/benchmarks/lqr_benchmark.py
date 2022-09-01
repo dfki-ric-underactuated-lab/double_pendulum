@@ -10,6 +10,8 @@ from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.analysis.benchmark import benchmarker
 from double_pendulum.analysis.utils import get_par_list
 
+design = "design_A.0"
+model = "model_2.0"
 robot = "acrobot"
 
 # model parameters
@@ -23,7 +25,7 @@ elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
     active_act = 1
 
-model_par_path = "../../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -48,9 +50,12 @@ R = np.diag((0.11, 0.11))
 Qf = np.copy(Q)
 
 # benchmark parameters
-N_var = 3
+eps = [0.1, 0.1, 0.5, 0.5]
+check_only_final_state = False
 
-compute_model_robustness = False
+N_var = 21
+
+compute_model_robustness = True
 mpar_vars = ["Ir",
              "m1r1", "I1", "b1", "cf1",
              "m2r2", "m2", "I2", "b2", "cf2"]
@@ -58,13 +63,13 @@ mpar_vars = ["Ir",
 Ir_var_list = np.linspace(0., 1e-4, N_var)
 m1r1_var_list = get_par_list(mpar.m[0]*mpar.r[0], 0.75, 1.25, N_var)
 I1_var_list = get_par_list(mpar.I[0], 0.75, 1.25, N_var)
-b1_var_list = np.linspace(0., 0.01, N_var)
-cf1_var_list = np.linspace(0., 0.2, N_var)
+b1_var_list = np.linspace(-0.1, 0.1, N_var)
+cf1_var_list = np.linspace(-0.2, 0.2, N_var)
 m2r2_var_list = get_par_list(mpar.m[1]*mpar.r[1], 0.75, 1.25, N_var)
 m2_var_list = get_par_list(mpar.m[1], 0.75, 1.25, N_var)
 I2_var_list = get_par_list(mpar.I[1], 0.75, 1.25, N_var)
-b2_var_list = np.linspace(0., 0.01, N_var)
-cf2_var_list = np.linspace(0., 0.2, N_var)
+b2_var_list = np.linspace(-0.1, 0.1, N_var)
+cf2_var_list = np.linspace(-0.2, 0.2, N_var)
 
 modelpar_var_lists = {"Ir": Ir_var_list,
                       "m1r1": m1r1_var_list,
@@ -79,26 +84,24 @@ modelpar_var_lists = {"Ir": Ir_var_list,
 
 compute_noise_robustness = True
 meas_noise_mode = "vel"
-meas_noise_sigma_list = np.linspace(0.0, 0.5, N_var)
+meas_noise_sigma_list = np.linspace(0.0, 0.5, N_var)  # [0.0, 0.05, 0.1, 0.3, 0.5]
 meas_noise_cut = 0.0
 meas_noise_vfilters = ["None", "lowpass"]
-meas_noise_vfilter_args = {
-        "alpha": [1., 1., 0.3, 0.3],
-        "kalman": {"x_lin": goal, "u_lin": [0., 0.]}}
+meas_noise_vfilter_args = {"lowpass_alpha": [1., 1., 0.3, 0.3]}
 
-compute_unoise_robustness = False
+compute_unoise_robustness = True
 u_noise_sigma_list = np.linspace(0.0, 2.0, N_var)
 
-compute_uresponsiveness_robustness = False
-u_responses = np.linspace(1.0, 2.0, N_var)
+compute_uresponsiveness_robustness = True
+u_responses = np.linspace(0.1, 2.1, N_var)  # [1.0, 1.3, 1.5, 2.0]
 
-compute_delay_robustness = False
-delay_mode = "vel"
-delays = np.linspace(0.0, (N_var-1)*dt, N_var)
+compute_delay_robustness = True
+delay_mode = "posvel"
+delays = np.linspace(0.0, 0.04, N_var)  # [0.0, dt, 2*dt, 5*dt, 10*dt]
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("../data", robot, "lqr", "benchmark", timestamp)
+save_dir = os.path.join("data", design, model, robot, "lqr", "benchmark", timestamp)
 os.makedirs(save_dir)
 
 # construct simulation objects
@@ -124,6 +127,8 @@ ben = benchmarker(controller=controller,
                   dt=dt,
                   t_final=t_final,
                   goal=goal,
+                  epsilon=eps,
+                  check_only_final_state=check_only_final_state,
                   integrator=integrator,
                   save_dir=save_dir)
 ben.set_model_parameter(model_pars=mpar)

@@ -10,6 +10,8 @@ from double_pendulum.utils.optimization import (cma_optimization,
                                                 scipy_par_optimization)
 
 
+design = "design_A.0"
+model = "model_2.0"
 robot = "acrobot"
 
 if robot == "acrobot":
@@ -17,7 +19,7 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [6.0, 0.0]
 
-model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_damping([0., 0.])
@@ -67,7 +69,7 @@ tolstagnation = 100
 num_proc = 2
 
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("../data", robot, "ilqr", "trajopt_paropt", timestamp)
+save_dir = os.path.join("data", design, model, robot, "ilqr", "trajopt_paropt", timestamp)
 os.makedirs(save_dir)
 
 # loss function setup

@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties
@@ -7,6 +8,8 @@ from double_pendulum.controller.pid.point_pid_controller import PointPIDControll
 from double_pendulum.controller.combined_controller import CombinedController
 from double_pendulum.experiments.hardware_control_loop_tmotors import run_experiment
 
+design = "design_A.0"
+traj_model = "model_2.1"
 robot = "acrobot"
 
 # model parameters
@@ -17,14 +20,7 @@ if robot == "pendubot":
 torque_limit_pid = [6.0, 6.0]
 
 # trajectory parameters
-## tmotors v1.0
-# csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
-
-## tmotors v1.0
-csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-
-# tmotors v2.0
-# csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+csv_path = os.path.join("../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
 
 T, X, U = load_trajectory(csv_path, True)
 dt, t_final, _, _ = trajectory_properties(T, X)
@@ -93,4 +89,4 @@ run_experiment(controller=controller,
                filter_args={"alpha": 0.2,
                             "kernel_size": 5,
                             "filter_size": 1},
-               save_dir="data/acrobot/tmotors/ilqr_results/traj_following")
+               save_dir=os.path.join("data", design, robot, "tmotors/ilqr_results/traj_following")

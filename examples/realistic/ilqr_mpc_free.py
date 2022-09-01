@@ -10,22 +10,21 @@ from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory
 
+design = "design_A.0"
+model = "model_2.0"
 robot = "acrobot"
 
-cfric = [0., 0.]
-motor_inertia = 0.
 if robot == "acrobot":
     torque_limit = [0.0, 4.0]
 if robot == "pendubot":
     torque_limit = [4.0, 0.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-# model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
-mpar.set_motor_inertia(motor_inertia)
-# mpar.set_damping(damping)
-mpar.set_cfric(cfric)
+mpar.set_motor_inertia(0.)
+mpar.set_damping([0., 0.])
+mpar.set_cfric([0., 0.])
 mpar.set_torque_limit(torque_limit)
 
 # simulation parameter
@@ -34,7 +33,7 @@ t_final = 10.0
 integrator = "runge_kutta"
 
 process_noise_sigmas = [0., 0., 0., 0.]
-meas_noise_sigmas = [0., 0., 0., 0.]
+meas_noise_sigmas = [0., 0., 0.05, 0.05]
 meas_noise_cut = 0.0
 meas_noise_vfilter = "none"
 meas_noise_vfilter_args = {"alpha": [1., 1., 0.3, 0.3]}
@@ -58,8 +57,6 @@ trajectory_stabilization = False
 
 # swingup parameters
 start = [0., 0., 0., 0.]
-# start = [np.pi-0.2, -0.2, 0., 0.]
-# start = [1.0, -2.1, -0.5, 1.5]
 goal = [np.pi, 0., 0., 0.]
 
 if robot == "acrobot":
@@ -91,7 +88,7 @@ if robot == "pendubot":
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "ilqr", "mpc_free", timestamp)
+save_dir = os.path.join("data", design, model, robot, "ilqr", "mpc_free", timestamp)
 os.makedirs(save_dir)
 
 # construct simulation objects

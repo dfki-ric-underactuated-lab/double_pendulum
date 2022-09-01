@@ -10,15 +10,18 @@ from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
-robot = "acrobot"
+## model parameters
+design = "design_A.0"
+model = "model_2.0"
+traj_model = "model_2.1"
+robot = "pendubot"
 
-# # model parameters
 if robot == "acrobot":
     torque_limit = [0.0, 6.0]
 if robot == "pendubot":
     torque_limit = [6.0, 0.0]
 
-model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_motor_inertia(0.)
 mpar.set_damping([0., 0.])
@@ -27,7 +30,7 @@ mpar.set_torque_limit(torque_limit)
 
 # simulation parameter
 dt = 0.005
-t_final = 5.985
+t_final = 10.  # 5.985
 integrator = "runge_kutta"
 start = [0., 0., 0., 0.]
 goal = [np.pi, 0., 0., 0.]
@@ -47,7 +50,7 @@ break_cost_redu = 1e-6
 trajectory_stabilization = True
 shifting = 1
 
-init_csv_path = os.path.join("../../data/trajectories", robot, "ilqr_v1.0_new2/trajectory.csv")
+init_csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
 
 if robot == "acrobot":
     sCu = [.1, .1]
@@ -102,7 +105,7 @@ if robot == "pendubot":
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "ilqr", "mpc", timestamp)
+save_dir = os.path.join("data", design, model, robot, "ilqr", "mpc", timestamp)
 os.makedirs(save_dir)
 
 # construct simulation objects

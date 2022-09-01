@@ -15,7 +15,11 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
 ## model parameters
+design = "design_A.0"
+model = "model_2.0"
+traj_model = "model_2.1"
 robot = "acrobot"
+
 friction_compensation = True
 stabilization = "lqr"
 
@@ -27,8 +31,7 @@ elif robot == "acrobot":
     active_act = 1
 torque_limit_pid = [6.0, 6.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-# model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 
 mpar_con = model_parameters(filepath=model_par_path)
@@ -39,9 +42,7 @@ if friction_compensation:
 mpar_con.set_torque_limit(torque_limit)
 
 ## trajectory parameters
-# csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"   # tmotors v1.0
-csv_path = "../data/trajectories/"+robot+"/ilqr_v1.0/trajectory.csv"  # tmotors v1.0
-# csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"  # tmotors v2.0
+csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
 
 ## load reference trajectory
 T_des, X_des, U_des = load_trajectory(csv_path)
@@ -222,7 +223,7 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    plot_inittraj=True)
 ## saving and plotting
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "tvlqr", timestamp)
+save_dir = os.path.join("data", design, model, robot, "tvlqr_and_stabi", timestamp)
 os.makedirs(save_dir)
 
 os.system(f"cp {csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))

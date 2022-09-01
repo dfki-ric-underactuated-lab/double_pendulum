@@ -10,7 +10,11 @@ from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
+design = "design_A.0"
+model = "model_2.0"
+traj_model = "model_2.1"
 robot = "acrobot"
+
 friction_compensation = True
 
 # # model parameters
@@ -19,8 +23,7 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [6.0, 0.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
-# model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 
 mpar_con = model_parameters(filepath=model_par_path)
@@ -75,19 +78,7 @@ trajectory_stabilization = True
 shifting = 1
 
 # trajectory parameters
-## tmotors v1.0
-# init_csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
-
-## tmotors v1.0
-# init_csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory2.csv"
-
-# tmotors v2.0
-# init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
-
-#latest_dir = sorted(os.listdir(os.path.join("data", robot, "ilqr", "trajopt")))[-1]
-#init_csv_path = os.path.join("data", robot, "ilqr", "trajopt", latest_dir, "trajectory.csv")
-init_csv_path = os.path.join("../data/trajectories", robot, "ilqr_v1.0_new2/trajectory.csv")
-#init_csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+init_csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
 
 if robot == "acrobot":
     # u_prefac = 1.

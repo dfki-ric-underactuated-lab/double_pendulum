@@ -12,7 +12,10 @@ from double_pendulum.analysis.benchmark import benchmarker
 from double_pendulum.analysis.utils import get_par_list
 
 # model parameters
+design = "design_A.0"
+model = "model_2.0"
 robot = "pendubot"
+
 pfl_method = "collocated"
 with_lqr = True
 
@@ -23,7 +26,7 @@ if robot == "pendubot":
     torque_limit = [5.0, 0.0]
     active_act = 0
 
-model_par_path = "../../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_motor_inertia(0.)
 mpar.set_damping([0., 0.])
@@ -138,7 +141,7 @@ delays = np.linspace(0.0, 0.04, N_var)  # [0.0, dt, 2*dt, 5*dt, 10*dt]
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "pfl", "benchmark_"+pfl_method, timestamp)
+save_dir = os.path.join("data", design, model, robot, "ilqr", "benchmark_"+pfl_method, timestamp)
 os.makedirs(save_dir)
 
 # construct simulation objects

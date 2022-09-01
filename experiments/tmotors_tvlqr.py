@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 from double_pendulum.model.model_parameters import model_parameters
@@ -11,7 +12,11 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties
 
 
+design = "design_A.0"
+model = "model_2.0"
+traj_model = "model_2.1"
 robot = "pendubot"
+
 torque_limit = [5.0, 5.0]
 friction_compensation = True
 stabilization = "lqr"
@@ -22,8 +27,7 @@ if robot == "pendubot":
 elif robot == "acrobot":
     torque_limit_con = [0.0, 5.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters_new2.yml"
-#model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 
 mpar_con = model_parameters(filepath=model_par_path)
@@ -34,9 +38,7 @@ if friction_compensation:
 mpar_con.set_torque_limit(torque_limit_con)
 
 ## trajectory parameters
-# csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"   # tmotors v1.0
-csv_path = "../data/trajectories/"+robot+"/ilqr_v1.0_new2/trajectory.csv"  # tmotors v1.0
-# csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"  # tmotors v2.0
+csv_path = os.path.join("../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
 
 #T, X, U = load_trajectory(csv_path, True)
 #dt, t_final, _, _ = trajectory_properties(T, X)
@@ -180,4 +182,4 @@ run_experiment(controller=controller,
                can_port="can0",
                motor_ids=[7, 8],
                tau_limit=torque_limit,
-               save_dir="data/acrobot/tmotors/tvlqr_stab_results")
+               save_dir=os.path.join("data", design, robot, "tmotors/tvlqr_stab_results")

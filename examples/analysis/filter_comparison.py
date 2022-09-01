@@ -10,7 +10,7 @@ from double_pendulum.utils.filters.low_pass import lowpass_filter_rt
 from double_pendulum.utils.filters.kalman_filter import kalman_filter_rt
 from double_pendulum.utils.filters.unscented_kalman_filter import unscented_kalman_filter_rt
 
-csv_path = "../data/trajectories/acrobot/noisy_trajectory.csv"
+csv_path = "../../data/trajectories/design_B.0/model_1.2/acrobot/noisy_trajectory.csv"
 #T, X, U = load_trajectory(csv_path, "numpy")
 
 data = np.loadtxt(csv_path, skiprows=1, delimiter=",")
@@ -39,7 +39,7 @@ cfric = [0., 0.]
 motor_inertia = 0.
 torque_limit = [0.0, 6.0]
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../../data/system_identification/identified_parameters/design_B.0/model_h2.0/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)

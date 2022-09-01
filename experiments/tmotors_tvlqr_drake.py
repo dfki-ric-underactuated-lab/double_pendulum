@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 from double_pendulum.model.model_parameters import model_parameters
@@ -9,20 +10,27 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties
 
 # model parameters
-urdf_path = "../data/urdfs/acrobot.urdf"
+design = "design_A.0"
+model = "model_2.0"
+traj_model = "model_2.1"
 robot = "acrobot"
+urdf_path = "../data/urdfs/"+robot+".urdf"
+
+friction_compensation = True
+
 torque_limit = [0.0, 6.0]
 torque_limit_pid = [6.0, 6.0]
 
+model_par_path = "../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
+mpar = model_parameters(filepath=model_par_path)
+#mpar.set_motor_inertia(0.)
+if friction_compensation:
+    mpar.set_damping([0., 0.])
+    mpar.set_cfric([0., 0.])
+mpar.set_torque_limit(torque_limit)
+
 # trajectory parameters
-## tmotors v1.0
-# csv_path = "../data/trajectories/acrobot/dircol/acrobot_tmotors_swingup_1000Hz.csv"
-
-## tmotors v1.0
-csv_path = "../data/trajectories/acrobot/ilqr_v1.0/trajectory.csv"
-
-# tmotors v2.0
-#csv_path = "../data/trajectories/acrobot/ilqr/trajectory.csv"
+csv_path = os.path.join("../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
 
 T, X, U = load_trajectory(csv_path, True)
 dt, t_final, _, _ = trajectory_properties(T, X)
@@ -110,4 +118,4 @@ run_experiment(controller=controller,
                can_port="can0",
                motor_ids=[7, 8],
                tau_limit=torque_limit_pid,
-               save_dir="data/acrobot/tmotors/tvlqr_drake_pid_results")
+               save_dir=os.path.join("data", design, robot, "tmotors/tvlqr_drake_pid_results")
