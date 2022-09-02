@@ -301,7 +301,8 @@ class Simulator:
         plt.tight_layout()
         for ap in self.animation_plots[:-1]:
             ap.set_data([], [])
-        self.animation_plots[-1].set_text("t = 0.000")
+        t0 = self.par_dict["t0"]
+        self.animation_plots[-1].set_text("t = "+str(round(t0, 3)))
 
         self.ee_poses = []
         self.tau_arrowarcs = []
@@ -333,6 +334,7 @@ class Simulator:
         """
         dt = par_dict["dt"]
         # x0 = par_dict["x0"]
+        t0 = par_dict["t0"]
         controller = par_dict["controller"]
         integrator = par_dict["integrator"]
         # imperfections = par_dict["imperfections"]
@@ -491,10 +493,11 @@ class Simulator:
 
         self.animation_plots.append(text_plot)
 
-        num_steps = int(tf / anim_dt)
+        num_steps = int((tf - t0)/ anim_dt)
         self.par_dict = {}
         self.par_dict["dt"] = dt
         self.par_dict["x0"] = x0
+        self.par_dict["t0"] = t0
         self.par_dict["anim_dt"] = anim_dt
         self.par_dict["controller"] = controller
         self.par_dict["integrator"] = integrator
