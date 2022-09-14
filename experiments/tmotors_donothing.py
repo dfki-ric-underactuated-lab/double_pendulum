@@ -7,12 +7,12 @@ from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.model.model_parameters import model_parameters
 
 
-design = "design_A.0"
+design = "design_C.0"
 torque_limit = [5.0, 5.0]
 
 # trajectory
 dt = 0.005
-t_final = 30.0
+t_final = 10.0
 N = int(t_final / dt)
 T_des = np.linspace(0, t_final, N+1)
 u1 = np.zeros(N+1)
@@ -20,7 +20,7 @@ u2 = np.zeros(N+1)
 U_des = np.array([u1, u2]).T
 
 # measurement filter
-meas_noise_cut = 0.15
+meas_noise_cut = 0.1
 meas_noise_vfilter = "lowpass"
 filter_kwargs = {"lowpass_alpha": [1., 1., 0.2, 0.2]}
 
@@ -45,6 +45,7 @@ controller.set_filter_args(filt=meas_noise_vfilter,
 #controller.set_friction_compensation(damping=[0.005, 0.001], coulomb_fric=[0.093, 0.15])
 #controller.set_friction_compensation(damping=[0.0, 0.01], coulomb_fric=[0.08, 0.04])
 #controller.set_friction_compensation(damping=[0.001, 0.001], coulomb_fric=[0.09, 0.078])
+controller.set_friction_compensation(damping=[0.001, 0.001], coulomb_fric=[0.12, 0.078])
 
 controller.init()
 
@@ -54,4 +55,4 @@ run_experiment(controller=controller,
                can_port="can0",
                motor_ids=[7, 8],
                tau_limit=torque_limit,
-               save_dir=os.path.join("data", design, "double-pendulum/tmotors/sysid")
+               save_dir=os.path.join("data", design, "double-pendulum/tmotors/donothing"))
