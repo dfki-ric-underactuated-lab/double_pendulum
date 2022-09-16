@@ -21,6 +21,7 @@ setup(
         'mini-cheetah-motor-driver-socketcan',
         'lxml',
         # 'moteus',
+        'inputs',
 
         # c++ python bindings
         'cython',
