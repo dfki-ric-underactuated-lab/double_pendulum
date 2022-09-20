@@ -11,7 +11,7 @@ from double_pendulum.analysis.benchmark import benchmarker
 from double_pendulum.analysis.utils import get_par_list
 
 design = "design_A.0"
-model = "model_2.0"
+model = "model_2.1"
 robot = "acrobot"
 
 # model parameters
@@ -25,7 +25,7 @@ elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
     active_act = 1
 
-model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model[:-1]+"0"+"/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)

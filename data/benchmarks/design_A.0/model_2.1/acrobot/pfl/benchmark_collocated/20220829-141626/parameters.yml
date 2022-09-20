@@ -1,0 +1,65 @@
+check_only_final_state: false
+dt: 0.01
+epsilon:
+- 0.1
+- 0.1
+- 0.5
+- 0.5
+fCen: 0.0
+fCp1: 100.0
+fCp2: 10.0
+fCv1: 10.0
+fCv2: 1.0
+goal_pos1: 3.141592653589793
+goal_pos2: 0.0
+goal_vel1: 0.0
+goal_vel2: 0.0
+integrator: runge_kutta
+lqr_q11: !!python/object/apply:numpy.core.multiarray.scalar
+- &id001 !!python/object/apply:numpy.dtype
+  args:
+  - f8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  CtejcD0K7z8=
+lqr_q22: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  w/UoXI/C7T8=
+lqr_q33: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  9ihcj8L12D8=
+lqr_q44: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  pHA9Ctej0D8=
+lqr_r11: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  KVyPwvUovD8=
+pfl_par1: 0.0093613
+pfl_par2: 0.99787652
+pfl_par3: 0.9778557
+sCen: 0.0
+sCp1: 0.1
+sCp2: 0.1
+sCu1: 0.1
+sCu2: 0.1
+sCv1: 0.01
+sCv2: 0.1
+start_pos1: 0.1
+start_pos2: 0.0
+start_vel1: 0.0
+start_vel2: 0.0
+t_final: 10.0

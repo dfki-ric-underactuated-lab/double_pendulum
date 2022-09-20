@@ -13,7 +13,7 @@ from double_pendulum.analysis.utils import get_par_list
 
 # model parameters
 design = "design_A.0"
-model = "model_2.0"
+model = "model_2.1"
 robot = "pendubot"
 
 pfl_method = "collocated"
@@ -26,7 +26,7 @@ if robot == "pendubot":
     torque_limit = [5.0, 0.0]
     active_act = 0
 
-model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model[:-1]+"0"+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_motor_inertia(0.)
 mpar.set_damping([0., 0.])

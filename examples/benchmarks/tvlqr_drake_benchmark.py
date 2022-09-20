@@ -13,8 +13,7 @@ from double_pendulum.analysis.utils import get_par_list
 
 # model parameters
 design = "design_A.0"
-model = "model_2.0"
-traj_model = "model_2.1"
+model = "model_2.1"
 robot = "pendubot"
 
 urdf_path = "../../data/urdfs/design_A.0/model_1.0/"+robot+".urdf"
@@ -24,7 +23,7 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [6.0, 0.0]
 
-model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model[:-1]+"0"+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_motor_inertia(0.)
 mpar.set_damping([0., 0.])
@@ -37,7 +36,7 @@ t_final = 6.0  # 4.985
 integrator = "runge_kutta"
 
 # init trajectory
-init_csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
+init_csv_path = os.path.join("../../data/trajectories", design, model, robot, "ilqr_1/trajectory.csv")
 
 # swingup parameters
 start = [0., 0., 0., 0.]
@@ -100,7 +99,7 @@ delays = np.linspace(0.0, 0.04, N_var)  # [0.0, dt, 2*dt, 5*dt, 10*dt]
 
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", design, model, robot, version, "tvlqr_drake", "benchmark", timestamp)
+save_dir = os.path.join("data", design, model, robot, "tvlqr_drake", "benchmark", timestamp)
 os.makedirs(save_dir)
 
 # construct simulation objects
@@ -108,7 +107,8 @@ controller = TVLQRController(csv_path=init_csv_path,
                              urdf_path=urdf_path,
                              model_pars=mpar,
                              torque_limit=torque_limit,
-                             robot=robot)
+                             robot=robot,
+                             save_dir=save_dir)
 controller.set_cost_parameters(Q=Q, R=R, Qf=Qf)
 controller.init()
 
