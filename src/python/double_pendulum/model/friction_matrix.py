@@ -4,6 +4,8 @@ import numpy as np
 
 def yb_friction_matrix(dq_vec):
     """
+    matrix to be multiplied with damping/friction coefficients
+    resulting in equation of motion contribution
 
     Parameters
     ----------
@@ -15,10 +17,9 @@ def yb_friction_matrix(dq_vec):
 
     Returns
     -------
-        numpy array
+    numpy array
         shape=(2,4)
-        matrix to be multiplied with damping/friction coefficients
-        resulting in equation of motion contribution
+        friction matrix
     """
 
     y_11 = math.atan(100*dq_vec[0])

@@ -357,7 +357,6 @@ class DoublePendulumPlant():
             state of the double pendulum,
             order=[angle1, angle2, velocity1, velocity2],
             units=[rad, rad, rad/s, rad/s]
-
         tau : array_like, shape=(2,), dtype=float
             actuation input/motor torque,
             order=[u1, u2],
@@ -397,7 +396,6 @@ class DoublePendulumPlant():
             state of the double pendulum,
             order=[angle1, angle2, velocity1, velocity2],
             units=[rad, rad, rad/s, rad/s]
-
         tau : array_like, shape=(2,), dtype=float
             actuation input/motor torque,
             order=[u1, u2],

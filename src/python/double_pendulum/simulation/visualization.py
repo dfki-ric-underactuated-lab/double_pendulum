@@ -4,6 +4,32 @@ from numpy import radians as rad
 
 
 def get_arrow(radius, centX, centY, angle_, theta2_, color_='black'):
+    """
+    Get circular arrow for visualizing motir torque.
+
+    Parameters
+    ----------
+    radius : float
+        radius, unit=[m]
+    centX : float
+        arrow center x-coordintate
+    centY : float
+        arrow center y-coordintate
+    angle_ : float
+        orientation of the arrow
+    theta2_ : float
+        the arrow does extend over this angle
+    color_ : string or matplotlib color object
+        color of the arrow
+         (Default value = 'black')
+
+    Returns
+    -------
+    matplotlib.patches.Arc
+        Arrow arc
+    matplotlib.patches.RegularPolygon
+        Arrow head
+    """
     arc = Arc([centX, centY],
               radius,
               radius,
@@ -20,13 +46,31 @@ def get_arrow(radius, centX, centY, angle_, theta2_, color_='black'):
 
     head = RegularPolygon((endX, endY),            # (x,y)
                           3,                       # number of vertices
-                          radius/20,                # radius
+                          radius/20,               # radius
                           rad(angle_+theta2_),     # orientation
                           color=color_)
     return arc, head
 
 
 def set_arrow_properties(arc, head, tau, x, y):
+    """
+    Set arrow properties
+
+    Changes are made directly in the provided arc and head objects
+
+    Parameters
+    ----------
+    arc : matplotlib.patches.Arc
+        Arrow arc
+    head : matplotlib.patches.RegularPolygon
+        Arrow head
+    tau : float
+        motor torque the arrow is supposed to visualize
+    x : float
+        x-coordinate
+    y : float
+        y-coordinate
+    """
     tau_rad = np.clip(0.1*np.abs(tau) + 0.2, -1, 1)
     if tau > 0:
         theta2 = -40

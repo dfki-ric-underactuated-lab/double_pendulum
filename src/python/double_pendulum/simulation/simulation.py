@@ -12,6 +12,18 @@ from double_pendulum.utils.filters.unscented_kalman_filter import unscented_kalm
 
 
 class Simulator:
+    """
+    Simulator class
+    simulates and optionally animates the double pendulum motion.
+    Animation is done with matplotlib Funcanimation.
+
+    Parameters
+    ----------
+    plant : SymbolicDoublePendulum or DoublePendulumPlant object
+        A plant object containing the kinematics and dynamics of the
+        double pendulum
+
+    """
     def __init__(self, plant):
         self.plant = plant
 
@@ -21,13 +33,42 @@ class Simulator:
         self.reset()
 
     def set_state(self, t, x):
+        """
+        Set the time and state of the double pendulum
+
+        Parameters
+        ----------
+        t : float
+            time, units=[s]
+
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        """
         self.x = np.copy(x)
         self.t = t
 
     def get_state(self):
+        """
+        Get the double pendulum state
+
+        Returns
+        -------
+        float
+            time, unit=[s]
+        numpy_array
+            shape=(4,)
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        """
         return self.t, self.x
 
     def reset_data_recorder(self):
+        """
+        Reset the internal data record of the simulator
+        """
         self.t_values = []
         self.x_values = []
         self.tau_values = []
@@ -37,12 +78,48 @@ class Simulator:
         self.con_u_values = []
 
     def record_data(self, t, x, tau=None):
+        """
+        Record a data point in the simulator's internal record
+
+        Parameters
+        ----------
+        t : float
+            time, units=[s]
+
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+
+        tau : array_like, shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
         self.t_values.append(t)
         self.x_values.append(list(x))
         if tau is not None:
             self.tau_values.append(list(tau))
 
     def get_trajectory_data(self):
+        """
+        Get the rocrded trajectory data
+
+        Returns
+        -------
+        numpy_array
+            time points, unit=[s]
+            shape=(N,)
+        numpy_array
+            shape=(N, 4)
+            states, units=[rad, rad, rad/s, rad/s]
+            order=[angle1, angle2, velocity1, velocity2]
+        numpy_array
+            shape=(N, 2)
+            actuations/motor torques
+            order=[u1, u2],
+            units=[Nm]
+        """
         T = np.asarray(self.t_values)
         X = np.asarray(self.x_values)
         U = np.asarray(self.tau_values)
@@ -50,6 +127,17 @@ class Simulator:
 
     def set_process_noise(self,
                           process_noise_sigmas=[0., 0., 0., 0.]):
+        """
+        Set parameters for process noise (Gaussian)
+
+        Parameters
+        ----------
+        process_noise_sigmas : array_like
+            shape=(4,)
+            Gaussian standard deviations for the process noise.
+            Each entry in the list corresponds to a state variable.
+            (Default value = [0., 0., 0., 0.])
+        """
         self.process_noise_sigmas = process_noise_sigmas
 
     def set_measurement_parameters(self,
@@ -58,7 +146,34 @@ class Simulator:
                                    meas_noise_sigmas=[0., 0., 0., 0.],
                                    delay=0.0,
                                    delay_mode="None"):
+        """
+        Set parameters for state measuremts
 
+        The state measurement is described by
+        x_meas(t) = C*x(t-delay) + D*u(t-delay) + N(sigma)
+
+        Parameters
+        ----------
+        C : numpy_array
+            state-state measurement matrix
+            (Default value = np.eye(4))
+        D : numpy_array
+            state-torque measurement matrix
+            (Default value = np.zeros((4, 2))
+
+        meas_noise_sigmas : array_like
+            Standard deviations of Gaussian measurement noise
+            (Default value = [0., 0., 0., 0.])
+        delay : float
+            time delay of measurements, unit=[s]
+             (Default value = 0.0)
+        delay_mode : string
+            string determining what state variables are delayed:
+            "None": no delay
+            "vel": velocity measurements are delayed
+            "posvel": position and velocity measurements are delayed
+             (Default value = "None")
+        """
         self.meas_C = C
         self.meas_D = D
         self.meas_noise_sigmas = meas_noise_sigmas
@@ -69,6 +184,27 @@ class Simulator:
                               meas_noise_cut=0.0,
                               meas_noise_vfilter="None",
                               meas_noise_vfilter_args={"alpha": [1., 1., 1., 1.]}):
+        """
+        Set filter parameters for filtering raw measurments
+
+        Parameters
+        ----------
+        meas_noise_cut : float
+            measurements smaller than this value will be set to 0.
+            (they are assumed to be noise)
+            For meas_noise_cut==0.0, the measurement is not cut
+            (Default value = 0.0)
+        meas_noise_vfilter : string
+            string determining the velocity noise filter
+            "None": No filter
+            "lowpass": lowpass filter
+            "kalman": kalman filter
+            "unscented_kalman": unscented kalman filter
+            (Default value = "None")
+        meas_noise_vfilter_args : dict
+            dictionary containing parameters for the velocity filter
+            (Default value = {"alpha": [1., 1., 1., 1.]})
+        """
 
         self.meas_noise_cut = meas_noise_cut
         self.meas_noise_vfilter = meas_noise_vfilter
@@ -77,17 +213,57 @@ class Simulator:
     def set_motor_parameters(self,
                              u_noise_sigmas=[0., 0.],
                              u_responsiveness=1.):
+        """
+        Set parameters for the motors
+
+        The applied motor torque (u_out) is related to the commanded torque
+        (u) and the last torque output (u_last) via
+
+        u_out = u_responsiveness*u + (1-u_responsiveness)*u_last + N(sigma)
+
+        Parameters
+        ----------
+        u_noise_sigmas : array_like
+            shape=(2,)
+            Standard deviation of the gaussian noise for the torque produced by
+            the motors
+            (Default value = [0., 0.])
+
+        u_responsiveness : float
+            resonsiveness of the motors
+            (Default value = 1.)
+        """
         self.u_noise_sigmas = u_noise_sigmas
         self.u_responsiveness = u_responsiveness
 
     def set_disturbances(self,
                          perturbation_times=[],
                          perturbation_taus=[]):
+        """
+        Set disturbances (hits) happening during the simulation.
+        (Not yet implemented)
 
+        Parameters
+        ----------
+        perturbation_times : array_like
+             (Default value = [])
+        perturbation_taus : array_like
+             (Default value = [])
+        """
         self.perturbation_times = perturbation_times
         self.perturbation_taus = perturbation_taus
 
     def reset(self):
+        """
+        Reset the Simulator
+        Resets
+            - the internal data recorder
+            - the filter + arguments
+            - the process noise
+            - the measurement parameters
+            - the motor parameters
+            - perturbations
+        """
 
         self.process_noise_sigmas = [0., 0., 0., 0.]
 
@@ -111,6 +287,22 @@ class Simulator:
         self.reset_data_recorder()
 
     def init_filter(self, x0, dt, integrator):
+        """
+        Initialize the filter
+
+        Parameters
+        ----------
+        x0 : array_like, shape=(4,), dtype=float,
+            reference state if a linearization is needed (Kalman filter),
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        dt : float
+            timestep, unit=[s]
+        integrator : string
+            string determining the integration method
+            "euler" : Euler integrator
+            "runge_kutta" : Runge Kutta integrator
+        """
         if self.meas_noise_vfilter == "lowpass":
             dof = self.plant.dof
 
@@ -150,9 +342,61 @@ class Simulator:
                     fx=fx)
 
     def euler_integrator(self, y, dt, t, tau):
+        """
+        Performs a Euler integration step
+
+        Parameters
+        ----------
+        y : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        dt : float
+            timestep, unit=[s]
+        t : float
+            time, unit=[s]
+        tau : array_like, shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+
+        Returns
+        -------
+        numpy_array
+            shape=(4,), dtype=float,
+            new state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        """
         return self.plant.rhs(t, y, tau)
 
     def runge_integrator(self, y, dt, t, tau):
+        """
+        Performs a Runge-Kutta integration step
+
+        Parameters
+        ----------
+        y : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        dt : float
+            timestep, unit=[s]
+        t : float
+            time, unit=[s]
+        tau : array_like, shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+
+        Returns
+        -------
+        numpy_array
+            shape=(4,), dtype=float,
+            new state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        """
         k1 = self.plant.rhs(t, y, tau)
         k2 = self.plant.rhs(t + 0.5 * dt, y + 0.5 * dt * k1, tau)
         k3 = self.plant.rhs(t + 0.5 * dt, y + 0.5 * dt * k2, tau)
@@ -160,6 +404,25 @@ class Simulator:
         return (k1 + 2 * (k2 + k3) + k4) / 6.0
 
     def step(self, tau, dt, integrator="runge_kutta"):
+        """
+        Performs a simulation step with the specified integrator.
+        Also adds process noise to the integration result.
+        Uses and updates the internal state
+
+        Parameters
+        ----------
+        tau : array_like, shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        dt : float
+            timestep, unit=[s]
+        integrator : string
+            string determining the integration method
+            "euler" : Euler integrator
+            "runge_kutta" : Runge Kutta integrator
+             (Default value = "runge_kutta")
+        """
         tau = np.clip(tau,
                       -np.asarray(self.plant.torque_limit),
                       np.asarray(self.plant.torque_limit))
@@ -179,6 +442,35 @@ class Simulator:
         #_ = self.get_measurement(dt)
 
     def get_control_u(self, controller, x, t, dt):
+        """
+        Get the control signal from the controller
+
+        Parameters
+        ----------
+        controller : Controller object
+            Controller whose control signal is used
+            If None, motir torques are set to 0.
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float,
+            time, units=[s], not used
+        dt : float
+            timestep, unit=[s]
+
+        Returns
+        -------
+        array-like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        bool
+            Flag stating real time calculation
+            True: The calculation was performed in real time
+            False: The calculation was not performed in real time
+        """
         realtime = True
         if controller is not None:
             t0 = time.time()
@@ -191,6 +483,27 @@ class Simulator:
         return u, realtime
 
     def get_measurement(self, dt):
+        """
+        Get a measurement from the internal state
+
+        The state measurement is described by
+        x_meas(t) = C*x(t-delay) + D*u(t-delay) + N(sigma)
+
+        (parameters set by set_measurement_parameters)
+
+        Parameters
+        ----------
+        dt : float
+            timestep, unit=[s]
+
+        Returns
+        -------
+        numpy_array
+            shape=(4,), dtype=float,
+            measured state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        """
 
         x_meas = np.copy(self.x)
 
@@ -218,6 +531,26 @@ class Simulator:
         return x_meas
 
     def filter_measurement(self, x):
+        """
+        Filter a measured state.
+
+        (parameters set in set_filter_parameters)
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+
+        Returns
+        -------
+        numpy_array
+            shape=(4,), dtype=float,
+            filters state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        """
         x_filt = np.copy(x)
 
         # velocity cut
@@ -234,6 +567,33 @@ class Simulator:
         return x_filt
 
     def get_real_applied_u(self, u):
+        """
+        Get the torque that the motor actually applies.
+
+        The applied motor torque (u_out) is related to the commanded torque
+        (u) and the last torque output (u_last) via
+
+        u_out = u_responsiveness*u + (1-u_responsiveness)*u_last + N(sigma)
+
+        (parameters set in set_motor_parameters)
+
+        Parameters
+        ----------
+        tau : array_like, shape=(2,), dtype=float
+            desired actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+
+
+        Returns
+        -------
+        array-like
+            shape=(2,), dtype=float
+            actual actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+
+        """
         nu = np.copy(u)
 
         # tau responsiveness
@@ -261,6 +621,35 @@ class Simulator:
                         dt,
                         controller=None,
                         integrator="runge_kutta"):
+        """
+        Perorm a full simulation step including
+            - get measurement
+            - filter measurement
+            - get controller signal
+            - calculate actual applied torques
+            - integrate the eom
+
+        Parameters
+        ----------
+        dt : float
+            timestep, unit=[s]
+        controller : Controller object
+            Controller whose control signal is used
+            If None, motir torques are set to 0.
+             (Default value = None)
+        integrator : string
+            string determining the integration method
+            "euler" : Euler integrator
+            "runge_kutta" : Runge Kutta integrator
+             (Default value = "runge_kutta")
+
+        Returns
+        -------
+        bool
+            Flag stating real time calculation
+            True: The calculation was performed in real time
+            False: The calculation was not performed in real time
+        """
 
         x_meas = self.get_measurement(dt)
         #x_meas = self.meas_x_values[-1]
@@ -274,7 +663,48 @@ class Simulator:
         return realtime
 
     def simulate(self, t0, x0, tf, dt, controller=None,
-            integrator="runge_kutta"): #, imperfections=False):
+            integrator="runge_kutta"):
+        """
+        Simulate the double pendulum for a time period under the control of a
+        controller
+
+        Parameters
+        ----------
+        t0 : float,
+            start time, units=[s]
+        x0 : array_like, shape=(4,), dtype=float,
+            initial state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        tf : float
+            final time, units=[s]
+        dt : float
+            timestep, unit=[s]
+        controller : Controller object
+            Controller whose control signal is used
+            If None, motir torques are set to 0.
+             (Default value = None)
+        integrator : string
+            string determining the integration method
+            "euler" : Euler integrator
+            "runge_kutta" : Runge Kutta integrator
+             (Default value = "runge_kutta")
+
+        Returns
+        -------
+        list
+            time points, unit=[s]
+            shape=(N,)
+        list
+            shape=(N, 4)
+            states, units=[rad, rad, rad/s, rad/s]
+            order=[angle1, angle2, velocity1, velocity2]
+        list
+            shape=(N, 2)
+            actuations/motor torques
+            order=[u1, u2],
+            units=[Nm]
+        """
         self.set_state(t0, x0)
         self.reset_data_recorder()
         self.record_data(t0, np.copy(x0), None)
@@ -288,9 +718,7 @@ class Simulator:
         return self.t_values, self.x_values, self.tau_values
 
     def _animation_init(self):
-        """
-        init of the animation plot
-        """
+        """init of the animation plot"""
         self.animation_ax.set_xlim(self.plant.workspace_range[0][0],
                                    self.plant.workspace_range[0][1])
         self.animation_ax.set_ylim(self.plant.workspace_range[1][0],
@@ -329,9 +757,7 @@ class Simulator:
         return self.animation_plots + self.tau_arrowarcs + self.tau_arrowheads
 
     def _animation_step(self, par_dict):
-        """
-        simulation of a single step which also updates the animation plot
-        """
+        """simulation of a single step which also updates the animation plot"""
         dt = par_dict["dt"]
         # x0 = par_dict["x0"]
         t0 = par_dict["t0"]
@@ -427,14 +853,75 @@ class Simulator:
         return self.animation_plots + self.tau_arrowarcs + self.tau_arrowheads
 
     def simulate_and_animate(self, t0, x0, tf, dt, controller=None,
-                             integrator="runge_kutta",# imperfections=False,
+                             integrator="runge_kutta",
                              plot_inittraj=False, plot_forecast=False,
                              plot_trail=True,
                              phase_plot=False, save_video=False,
                              video_name="pendulum_swingup", anim_dt=0.02):
         """
-        Simulation and animation of the pendulum motion
-        The animation is only implemented for 2d serial chains
+        Simulate and animate the double pendulum for a time period under the
+        control of a controller.
+        The animation is only implemented for 2d serial chains.
+
+        Parameters
+        ----------
+        t0 : float,
+            start time, units=[s]
+        x0 : array_like, shape=(4,), dtype=float,
+            initial state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        tf : float
+            final time, units=[s]
+        dt : float
+            timestep, unit=[s]
+        controller : Controller object
+            Controller whose control signal is used
+            If None, motir torques are set to 0.
+            (Default value = None)
+        integrator : string
+            string determining the integration method
+            "euler" : Euler integrator
+            "runge_kutta" : Runge Kutta integrator
+             (Default value = "runge_kutta")
+        plot_inittraj : bool
+            Whether to plot an initial (reference) trajectory
+            (Default value = False)
+        plot_forecast : bool
+            Whether to plot a forcasted trajectory
+            (Default value = False)
+        plot_trail : bool
+            Whether to plot a trail for the masses
+            (Default value = True)
+        phase_plot : bool
+            not used
+            (Default value = False)
+        save_video : bool
+            Whether to render and save a video of the animation.
+            Will be saved to video_name
+            (Default value = False)
+        video_name : string
+            filepath where a video of the animation is stored if
+            save_video==True
+            (Default value = "pendulum_swingup")
+        anim_dt : float
+            timestep used for the animation, unit=[s]
+            (Default value = 0.02)
+
+        Returns
+        -------
+        list
+            time points, unit=[s]
+            shape=(N,)
+        list
+            shape=(N, 4)
+            states, units=[rad, rad, rad/s, rad/s]
+            order=[angle1, angle2, velocity1, velocity2]
+        list
+            shape=(N, 2)
+            actuations/motor torques
+            order=[u1, u2],
+            units=[Nm]
         """
 
         self.plot_inittraj = plot_inittraj
