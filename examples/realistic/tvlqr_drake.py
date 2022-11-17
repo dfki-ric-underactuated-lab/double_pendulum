@@ -19,7 +19,7 @@ design = "design_A.0"
 model = "model_2.0"
 traj_model = "model_2.1"
 robot = "acrobot"
-urdf_path = "../../data/urdfs/"+robot+".urdf"
+urdf_path = "../../data/urdfs/design_A.0/model_1.0/"+robot+".urdf"
 
 friction_compensation = True
 stabilization = "lqr"
