@@ -22,7 +22,6 @@ class Simulator:
     plant : SymbolicDoublePendulum or DoublePendulumPlant object
         A plant object containing the kinematics and dynamics of the
         double pendulum
-
     """
     def __init__(self, plant):
         self.plant = plant
@@ -40,7 +39,6 @@ class Simulator:
         ----------
         t : float
             time, units=[s]
-
         x : array_like, shape=(4,), dtype=float,
             state of the double pendulum,
             order=[angle1, angle2, velocity1, velocity2],
@@ -228,7 +226,6 @@ class Simulator:
             Standard deviation of the gaussian noise for the torque produced by
             the motors
             (Default value = [0., 0.])
-
         u_responsiveness : float
             resonsiveness of the motors
             (Default value = 1.)
@@ -461,7 +458,7 @@ class Simulator:
 
         Returns
         -------
-        array-like
+        numpy_array
             shape=(2,), dtype=float
             actuation input/motor torque,
             order=[u1, u2],

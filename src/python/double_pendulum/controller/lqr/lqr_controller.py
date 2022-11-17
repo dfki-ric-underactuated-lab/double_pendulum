@@ -7,6 +7,51 @@ from double_pendulum.model.plant import DoublePendulumPlant
 
 
 class LQRController(AbstractController):
+    """
+    LQRController.
+    Controller which uses LQR to stabilize a (unstable) fixpoint.
+
+    Parameters
+    ----------
+    mass : array_like, optional
+        shape=(2,), dtype=float, default=[0.5, 0.6]
+        masses of the double pendulum,
+        [m1, m2], units=[kg]
+    length : array_like, optional
+        shape=(2,), dtype=float, default=[0.3, 0.2]
+        link lengths of the double pendulum,
+        [l1, l2], units=[m]
+    com : array_like, optional
+        shape=(2,), dtype=float, default=[0.3, 0.3]
+        center of mass lengths of the double pendulum links
+        [r1, r2], units=[m]
+    damping : array_like, optional
+        shape=(2,), dtype=float, default=[0.1, 0.1]
+        damping coefficients of the double pendulum actuators
+        [b1, b2], units=[kg*m/s]
+    gravity : float, optional
+        default=9.81
+        gravity acceleration (pointing downwards),
+        units=[m/s²]
+    coulomb_fric : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 0.0]
+        coulomb friction coefficients for the double pendulum actuators
+        [cf1, cf2], units=[Nm]
+    inertia : array_like, optional
+        shape=(2,), dtype=float, default=[None, None]
+        inertia of the double pendulum links
+        [I1, I2], units=[kg*m²]
+        if entry is None defaults to point mass m*l² inertia for the entry
+    torque_limit : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 1.0]
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+    model_pars : model_parameters object, optional
+        object of the model_parameters class, default=None
+        Can be used to set all model parameters above
+        If provided, the model_pars parameters overwrite
+        the other provided parameters
+    """
     def __init__(self,
                  mass=[0.5, 0.6],
                  length=[0.3, 0.2],
@@ -61,6 +106,18 @@ class LQRController(AbstractController):
         self.set_filter_args()
 
     def set_goal(self, x=[np.pi, 0., 0., 0.]):
+        """set_goal.
+        Set goal for the controller.
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+            (Default value=[np.pi, 0., 0., 0.])
+        """
+
         y = x.copy()
         y[0] = y[0] % (2*np.pi)
         y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi
@@ -68,6 +125,19 @@ class LQRController(AbstractController):
 
     def set_parameters(self, failure_value=np.nan,
                        cost_to_go_cut=15.):
+        """set_parameters.
+        Set parameters for this controller.
+
+        Parameters
+        ----------
+        failure_value : float
+            if the cost-to-go exceeds cost_to_go_cut this value is retured as torque
+            (Default value=np.nan)
+        cost_to_go_cut : float
+            if the cost-to-go exceeds this values the controller
+            returns failure_value
+            (Default value=15.)
+        """
         self.failure_value = failure_value
         self.cost_to_go_cut = cost_to_go_cut
 
@@ -85,6 +155,58 @@ class LQRController(AbstractController):
                             u1u1_cost=0.01,    # 100., 0.01
                             u2u2_cost=0.01,    # 100., 0.01
                             u1u2_cost=0.):
+        """set_cost_parameters.
+        Parameters of Q and R matrices. The parameters are
+
+        Q = ((p1p1, p1p2, p1v1, p1v2),
+             (p1p2, p2p2, p2v1, p2v2),
+             (p1v1, p2v1, v1v1, v1v2),
+             (p1v2, p2v2, v1v2, v2v2))
+        R = ((u1u1, u1u2),
+             (u1u2, u2u2))
+
+        Parameters
+        ----------
+        p1p1_cost : float
+            p1p1_cost
+            (Default value=1.)
+        p2p2_cost : float
+            p2p2_cost
+            (Default value=1.)
+        v1v1_cost : float
+            v1v1_cost
+            (Default value=1.)
+        v2v2_cost : float
+            v2v2_cost
+            (Default value=0.)
+        p1p2_cost : float
+            p1p2_cost
+            (Default value=0.)
+        v1v2_cost : float
+            v1v2_cost
+            (Default value=0.)
+        p1v1_cost : float
+            p1v1_cost
+            (Default value=0.)
+        p1v2_cost : float
+            p1v2_cost
+            (Default value=0.)
+        p2v1_cost : float
+            p2v1_cost
+            (Default value=0.)
+        p2v2_cost : float
+            p2v2_cost
+            (Default value=0.)
+        u1u1_cost : float
+            u1u1_cost
+            (Default value=0.01)
+        u2u2_cost : float
+            u2u2_cost
+            (Default value=0.01)
+        u1u2_cost : float
+            u1u2_cost
+            (Default value=0.)
+        """
         # state cost matrix
         self.Q = np.array([[p1p1_cost, p1p2_cost, p1v1_cost, p1v2_cost],
                            [p1p2_cost, p2p2_cost, p2v1_cost, p2v2_cost],
@@ -113,6 +235,24 @@ class LQRController(AbstractController):
 
     def set_cost_parameters_(self,
                              pars=[1., 1., 1., 1., 1.]):
+        """
+        Set the diagonal parameters of Q and R matrices with a list.
+
+        The parameters are
+        Q = ((pars[0], 0, 0, 0),
+             (0, pars[1], 0, 0),
+             (0, 0, pars[2], 0),
+             (0, 0, 0, pars[3]))
+        R = ((pars[4], 0)
+             (0, pars[4]))
+
+
+        Parameters
+        ----------
+        pars : list
+            shape=(5,), dtype=float
+            (Default value=[1., 1., 1., 1., 1.])
+        """
         self.set_cost_parameters(p1p1_cost=pars[0],
                                  p2p2_cost=pars[1],
                                  v1v1_cost=pars[2],
@@ -126,14 +266,52 @@ class LQRController(AbstractController):
                                  u1u2_cost=0.0)
 
     def set_cost_matrices(self, Q, R):
+        """
+        Set the Q and R matrices directly.
+
+        Parameters
+        ----------
+        Q : numpy_array
+            shape=(4,4)
+            Q-matrix describing quadratic state cost
+        R : numpy_array
+            shape=(2,2)
+            R-matrix describing quadratic control cost
+        """
+
         self.Q = np.asarray(Q)
         self.R = np.asarray(R)
 
     def init_(self):
+        """
+        Initalize the controller.
+        """
         Alin, Blin = self.splant.linear_matrices(x0=self.xd, u0=[0.0, 0.0])
         self.K, self.S, _ = lqr(Alin, Blin, self.Q, self.R)
 
     def get_control_output_(self, x, t=None):
+        """
+        The function to compute the control input for the double pendulum's
+        actuator(s).
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float, optional
+            time, unit=[s]
+            (Default value=None)
+
+        Returns
+        -------
+        array_like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
         y = x.copy()
 
         y[0] = y[0] % (2*np.pi)
@@ -155,6 +333,53 @@ class LQRController(AbstractController):
 
 
 class LQRController_nonsymbolic(AbstractController):
+    """
+    LQRController.
+    Controller which uses LQR to stabilize a (unstable) fixpoint.  This version
+    of the LQR controller does not use the symbolic plant and thus is
+    compatible with the cma-es optimizer for parameter optimization.
+
+    Parameters
+    ----------
+    mass : array_like, optional
+        shape=(2,), dtype=float, default=[0.5, 0.6]
+        masses of the double pendulum,
+        [m1, m2], units=[kg]
+    length : array_like, optional
+        shape=(2,), dtype=float, default=[0.3, 0.2]
+        link lengths of the double pendulum,
+        [l1, l2], units=[m]
+    com : array_like, optional
+        shape=(2,), dtype=float, default=[0.3, 0.3]
+        center of mass lengths of the double pendulum links
+        [r1, r2], units=[m]
+    damping : array_like, optional
+        shape=(2,), dtype=float, default=[0.1, 0.1]
+        damping coefficients of the double pendulum actuators
+        [b1, b2], units=[kg*m/s]
+    gravity : float, optional
+        default=9.81
+        gravity acceleration (pointing downwards),
+        units=[m/s²]
+    coulomb_fric : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 0.0]
+        coulomb friction coefficients for the double pendulum actuators
+        [cf1, cf2], units=[Nm]
+    inertia : array_like, optional
+        shape=(2,), dtype=float, default=[None, None]
+        inertia of the double pendulum links
+        [I1, I2], units=[kg*m²]
+        if entry is None defaults to point mass m*l² inertia for the entry
+    torque_limit : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 1.0]
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+    model_pars : model_parameters object, optional
+        object of the model_parameters class, default=None
+        Can be used to set all model parameters above
+        If provided, the model_pars parameters overwrite
+        the other provided parameters
+    """
     def __init__(self,
                  mass=[0.5, 0.6],
                  length=[0.3, 0.2],
@@ -205,6 +430,17 @@ class LQRController_nonsymbolic(AbstractController):
         self.set_filter_args()
 
     def set_goal(self, x=[np.pi, 0., 0., 0.]):
+        """set_goal.
+        Set goal for the controller.
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+            (Default value=[np.pi, 0., 0., 0.])
+        """
         y = x.copy()
         y[0] = y[0] % (2*np.pi)
         y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi
@@ -212,6 +448,19 @@ class LQRController_nonsymbolic(AbstractController):
 
     def set_parameters(self, failure_value=np.nan,
                        cost_to_go_cut=15.):
+        """set_parameters.
+        Set parameters for this controller.
+
+        Parameters
+        ----------
+        failure_value : float
+            if the cost-to-go exceeds cost_to_go_cut this value is retured as torque
+            (Default value=np.nan)
+        cost_to_go_cut : float
+            if the cost-to-go exceeds this values the controller
+            returns failure_value
+            (Default value=15.)
+        """
         self.failure_value = failure_value
         self.cost_to_go_cut = cost_to_go_cut
 
@@ -229,6 +478,58 @@ class LQRController_nonsymbolic(AbstractController):
                             u1u1_cost=0.01,    # 100., 0.01
                             u2u2_cost=0.01,    # 100., 0.01
                             u1u2_cost=0.):
+        """set_cost_parameters.
+        Parameters of Q and R matrices. The parameters are
+
+        Q = ((p1p1, p1p2, p1v1, p1v2),
+             (p1p2, p2p2, p2v1, p2v2),
+             (p1v1, p2v1, v1v1, v1v2),
+             (p1v2, p2v2, v1v2, v2v2))
+        R = ((u1u1, u1u2),
+             (u1u2, u2u2))
+
+        Parameters
+        ----------
+        p1p1_cost : float
+            p1p1_cost
+            (Default value=1.)
+        p2p2_cost : float
+            p2p2_cost
+            (Default value=1.)
+        v1v1_cost : float
+            v1v1_cost
+            (Default value=1.)
+        v2v2_cost : float
+            v2v2_cost
+            (Default value=0.)
+        p1p2_cost : float
+            p1p2_cost
+            (Default value=0.)
+        v1v2_cost : float
+            v1v2_cost
+            (Default value=0.)
+        p1v1_cost : float
+            p1v1_cost
+            (Default value=0.)
+        p1v2_cost : float
+            p1v2_cost
+            (Default value=0.)
+        p2v1_cost : float
+            p2v1_cost
+            (Default value=0.)
+        p2v2_cost : float
+            p2v2_cost
+            (Default value=0.)
+        u1u1_cost : float
+            u1u1_cost
+            (Default value=0.01)
+        u2u2_cost : float
+            u2u2_cost
+            (Default value=0.01)
+        u1u2_cost : float
+            u1u2_cost
+            (Default value=0.)
+        """
         # state cost matrix
         self.Q = np.array([[p1p1_cost, p1p2_cost, p1v1_cost, p1v2_cost],
                            [p1p2_cost, p2p2_cost, p2v1_cost, p2v2_cost],
@@ -257,6 +558,24 @@ class LQRController_nonsymbolic(AbstractController):
 
     def set_cost_parameters_(self,
                              pars=[1., 1., 1., 1., 1.]):
+        """
+        Set the diagonal parameters of Q and R matrices with a list.
+
+        The parameters are
+        Q = ((pars[0], 0, 0, 0),
+             (0, pars[1], 0, 0),
+             (0, 0, pars[2], 0),
+             (0, 0, 0, pars[3]))
+        R = ((pars[4], 0)
+             (0, pars[4]))
+
+
+        Parameters
+        ----------
+        pars : list
+            shape=(5,), dtype=float
+            (Default value=[1., 1., 1., 1., 1.])
+        """
         self.set_cost_parameters(p1p1_cost=pars[0],
                                  p2p2_cost=pars[1],
                                  v1v1_cost=pars[2],
@@ -270,14 +589,51 @@ class LQRController_nonsymbolic(AbstractController):
                                  u1u2_cost=0.0)
 
     def set_cost_matrices(self, Q, R):
+        """
+        Set the Q and R matrices directly.
+
+        Parameters
+        ----------
+        Q : numpy_array
+            shape=(4,4)
+            Q-matrix describing quadratic state cost
+        R : numpy_array
+            shape=(2,2)
+            R-matrix describing quadratic control cost
+        """
         self.Q = np.asarray(Q)
         self.R = np.asarray(R)
 
     def init_(self):
+        """
+        Initalize the controller.
+        """
         Alin, Blin = self.plant.linear_matrices(x0=self.xd, u0=[0.0, 0.0])
         self.K, self.S, _ = lqr(Alin, Blin, self.Q, self.R)
 
     def get_control_output_(self, x, t=None):
+        """
+        The function to compute the control input for the double pendulum's
+        actuator(s).
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float, optional
+            time, unit=[s]
+            (Default value=None)
+
+        Returns
+        -------
+        array_like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
         y = x.copy()
         y[0] = y[0] % (2*np.pi)
         y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi

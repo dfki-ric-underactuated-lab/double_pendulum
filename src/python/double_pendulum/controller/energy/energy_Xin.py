@@ -6,10 +6,59 @@ from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 
 
 class EnergyController(AbstractController):
-    """
+    """EnergyController
     Energy-based controller for acrobot swingup based on this paper:
     https://onlinelibrary.wiley.com/doi/abs/10.1002/rnc.1184
+
+    Parameters
+    ----------
+    mass : array_like, optional
+        shape=(2,), dtype=float, default=[1.0, 1.0]
+        masses of the double pendulum,
+        [m1, m2], units=[kg]
+    length : array_like, optional
+        shape=(2,), dtype=float, default=[0.5, 0.5]
+        link lengths of the double pendulum,
+        [l1, l2], units=[m]
+    com : array_like, optional
+        shape=(2,), dtype=float, default=[0.5, 0.5]
+        center of mass lengths of the double pendulum links
+        [r1, r2], units=[m]
+    damping : array_like, optional
+        shape=(2,), dtype=float, default=[0.5, 0.5]
+        damping coefficients of the double pendulum actuators
+        [b1, b2], units=[kg*m/s]
+    gravity : float, optional
+        default=9.81
+        gravity acceleration (pointing downwards),
+        units=[m/s²]
+    coulomb_fric : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 0.0]
+        coulomb friction coefficients for the double pendulum actuators
+        [cf1, cf2], units=[Nm]
+    inertia : array_like, optional
+        shape=(2,), dtype=float, default=[None, None]
+        inertia of the double pendulum links
+        [I1, I2], units=[kg*m²]
+        if entry is None defaults to point mass m*l² inertia for the entry
+    motor_inertia : float, optional
+        default=0.0
+        inertia of the actuators/motors
+        [Ir1, Ir2], units=[kg*m²]
+    gear_ratio : int, optional
+        gear ratio of the motors, default=6
+    torque_limit : array_like, optional
+        shape=(2,), dtype=float, default=[np.inf, np.inf]
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+    model_pars : model_parameters object, optional
+        object of the model_parameters class, default=None
+        Can be used to set all model parameters above
+        If provided, the model_pars parameters overwrite
+        the other provided parameters
+        (Default value=None)
     """
+
     def __init__(self,
                  mass=[1.0, 1.0],
                  length=[0.5, 0.5],
@@ -60,16 +109,41 @@ class EnergyController(AbstractController):
                                             torque_limit=self.torque_limit)
 
     def set_parameters(self, kp=1., kd=1., kv=1.):
+        """set_parameters.
+        Set controller gains.
+
+        Parameters
+        ----------
+        kp : float
+            gain for position error
+        kd : float
+            gain
+        kv : float
+            gain for velocity error
+        """
         self.kp = kp
         self.kd = kd
         self.kv = kv
 
     def set_goal(self, x):
+        """set_goal.
+        Set goal for the controller.
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        """
         self.desired_x = x
         self.desired_energy = self.plant.total_energy(x)
 
     def check_parameters(self):
-        # check parameters
+        """
+        Check if the parameters fulfill the convergence conditions presented in
+        the paper.
+        """
         a1 = self.inertia[0] + self.mass[1]*self.length[0]**2.
         a2 = self.inertia[1]
         a3 = self.mass[1]*self.com[1]*self.length[0]
@@ -106,9 +180,34 @@ class EnergyController(AbstractController):
         print("Bound on torque: ", tmax)
 
     def init_(self):
+        """
+        Initialize the controller.
+        """
         self.en = []
 
     def get_control_output_(self, x, t=None):
+        """
+        The function to compute the control input for the double pendulum's
+        actuator(s).
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float, optional
+            time, unit=[s]
+            (Default value=None)
+
+        Returns
+        -------
+        array_like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
         pos = np.copy(x[:2])
         vel = np.copy(x[2:])
 
@@ -138,10 +237,31 @@ class EnergyController(AbstractController):
         return u
 
     def save(self, path="log_energy.csv"):
+        """
+        Save the energy trajectory to file.
+
+        Parameters
+        ----------
+        path : string or path object
+            path where the energy will be save in a txt file
+        """
         np.savetxt(path, self.en)
 
 
 def kd_func(q2, a1, a2, a3, b1, b2, Er):
+    """
+    Function to check the convergence property of kd.
+
+    Parameters
+    ----------
+    q2 : float
+    a1 : float
+    a2 : float
+    a3 : float
+    b1 : float
+    b2 : float
+    Er : float
+    """
     Del = a1*a2 - (a3*np.cos(q2))**2.
     Phi = np.sqrt(b1**2.+b2**2.+2.*b1*b2*np.cos(q2))
     M11 = a1 + a2 + 2.*a3*np.cos(q2)

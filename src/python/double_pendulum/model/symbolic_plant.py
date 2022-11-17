@@ -555,12 +555,10 @@ class SymbolicDoublePendulum():
             state of the double pendulum,
             order=[angle1, angle2, velocity1, velocity2],
             units=[rad, rad, rad/s, rad/s]
-
         u0 : array_like, shape=(2,), dtype=float
             actuation input/motor torque,
             order=[u1, u2],
             units=[Nm]
-
 
         Returns
         -------
@@ -570,7 +568,6 @@ class SymbolicDoublePendulum():
         array_like
             shape=(4,2),
             B-matrix
-
         """
         Alin = self.Alin_la(x0, u0)
         Blin = self.Blin_la(x0, u0)
@@ -785,7 +782,6 @@ class SymbolicDoublePendulum():
             state of the double pendulum,
             order=[angle1, angle2, velocity1, velocity2],
             units=[rad, rad, rad/s, rad/s]
-
         u : array_like, shape=(2,), dtype=float
             actuation input/motor torque,
             order=[u1, u2],
@@ -821,7 +817,6 @@ class SymbolicDoublePendulum():
             state of the double pendulum,
             order=[angle1, angle2, velocity1, velocity2],
             units=[rad, rad, rad/s, rad/s]
-
         acc : array_like, shape=(2,), dtype=float
             joint acceleration,
             order=[acc1, acc2],
@@ -858,7 +853,6 @@ class SymbolicDoublePendulum():
             state of the double pendulum,
             order=[angle1, angle2, velocity1, velocity2],
             units=[rad, rad, rad/s, rad/s]
-
         u : array_like, shape=(2,), dtype=float
             actuation input/motor torque,
             order=[u1, u2],

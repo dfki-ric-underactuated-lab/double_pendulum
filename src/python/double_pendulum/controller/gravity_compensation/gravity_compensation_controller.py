@@ -5,6 +5,51 @@ from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 
 
 class GravityCompensationController(AbstractController):
+    """GravityCompensationController
+    Controller to compensate the gravitational force.
+
+    Parameters
+    ----------
+    mass : array_like, optional
+        shape=(2,), dtype=float, default=[0.5, 0.6]
+        masses of the double pendulum,
+        [m1, m2], units=[kg]
+    length : array_like, optional
+        shape=(2,), dtype=float, default=[0.3, 0.2]
+        link lengths of the double pendulum,
+        [l1, l2], units=[m]
+    com : array_like, optional
+        shape=(2,), dtype=float, default=[0.3, 0.2]
+        center of mass lengths of the double pendulum links
+        [r1, r2], units=[m]
+    damping : array_like, optional
+        shape=(2,), dtype=float, default=[0.1, 0.1]
+        damping coefficients of the double pendulum actuators
+        [b1, b2], units=[kg*m/s]
+    gravity : float, optional
+        default=9.81
+        gravity acceleration (pointing downwards),
+        units=[m/s²]
+    coulomb_fric : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 0.0]
+        coulomb friction coefficients for the double pendulum actuators
+        [cf1, cf2], units=[Nm]
+    inertia : array_like, optional
+        shape=(2,), dtype=float, default=[None, None]
+        inertia of the double pendulum links
+        [I1, I2], units=[kg*m²]
+        if entry is None defaults to point mass m*l² inertia for the entry
+    torque_limit : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 1.0]
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+    model_pars : model_parameters object, optional
+        object of the model_parameters class, default=None
+        Can be used to set all model parameters above
+        If provided, the model_pars parameters overwrite
+        the other provided parameters
+        (Default value=None)
+    """
     def __init__(self,
                  mass=[0.5, 0.6],
                  length=[0.3, 0.2],
@@ -49,6 +94,28 @@ class GravityCompensationController(AbstractController):
                                              torque_limit=self.torque_limit)
 
     def get_control_output_(self, x, t=None):
+        """
+        The function to compute the control input for the double pendulum's
+        actuator(s) in order to compensate for the gravitational force.
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float, optional
+            time, unit=[s]
+            (Default value=None)
+
+        Returns
+        -------
+        array_like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
 
         g = self.splant.gravity_vector(x)
         u = -np.dot(self.splant.B, g)

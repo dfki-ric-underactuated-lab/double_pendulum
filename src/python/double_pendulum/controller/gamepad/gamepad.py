@@ -6,6 +6,17 @@ import threading
 
 
 class GamePad(object):
+    """Gamepad Controller
+    Controller class to operate the double pendulum with a gamepad.
+
+    Parameters
+    ----------
+    gamepad_name: string
+        string refering to the gamepad type
+        Currently supported:
+            - "Logitech Logitech RumblePad 2 USB"
+        (Default value="Logitech Logitech RumblePad 2 USB")
+    """
 
     def __init__(self, gamepad_name="Logitech Logitech RumblePad 2 USB"):
 
@@ -38,6 +49,9 @@ class GamePad(object):
         self._monitor_thread.start()
 
     def read(self):
+        """ 
+        Method to read the gamepad input.
+        """
         x1 = self.LeftJoystickX
         #y1 = self.LeftJoystickY
         #x2 = self.RightJoystickX
@@ -48,6 +62,9 @@ class GamePad(object):
         return [x1, y2]
 
     def _monitor_controller(self):
+        """ 
+        Method to monitor inputs from the gamepad.
+        """
         while True:
             events = get_gamepad()
             for event in events:

@@ -11,6 +11,29 @@ from double_pendulum.utils.urdfs import generate_urdf
 
 
 class LQRController(AbstractController):
+    """
+    LQRController.
+    Controller which uses LQR to stabilize a (unstable) fixpoint.
+    Uses drake LQR.
+
+    Parameters
+    ----------
+    urdf_path : string or path object
+        path to urdf file
+    model_pars : model_parameters object
+        object of the model_parameters class
+    robot : string
+        robot which is used, Options:
+            - acrobot
+            - pendubot
+    torque_limit : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 1.0]
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+    save_dir : string
+        path to directory where log data can be stored
+        (necessary for temporaray generated urdf)
+    """
     def __init__(self,
                  urdf_path,
                  model_pars,
@@ -43,6 +66,17 @@ class LQRController(AbstractController):
         self.drake_robot.get_actuation_input_port().FixValue(self.context, [0])
 
     def set_goal(self, x=[np.pi, 0., 0., 0.]):
+        """set_goal.
+        Set goal for the controller.
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+            (Default value=[np.pi, 0., 0., 0.])
+        """
         y = x.copy()
         y[0] = y[0] % (2*np.pi)
         y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi
@@ -51,6 +85,18 @@ class LQRController(AbstractController):
         self.xd = np.asarray(y)
 
     def set_cost_matrices(self, Q, R):
+        """
+        Set the Q and R matrices directly.
+
+        Parameters
+        ----------
+        Q : numpy_array
+            shape=(4,4)
+            Q-matrix describing quadratic state cost
+        R : numpy_array
+            shape=(2,2)
+            R-matrix describing quadratic control cost
+        """
         self.Q = np.asarray(Q)
         self.R = np.asarray(R)
 
@@ -66,6 +112,51 @@ class LQRController(AbstractController):
                             p2v1_cost=0.,
                             p2v2_cost=0.,
                             u1u1_cost=0.01):    # 100., 0.01
+        """set_cost_parameters.
+        Parameters of Q and R matrices. The parameters are
+
+        Q = ((p1p1, p1p2, p1v1, p1v2),
+             (p1p2, p2p2, p2v1, p2v2),
+             (p1v1, p2v1, v1v1, v1v2),
+             (p1v2, p2v2, v1v2, v2v2))
+        R = ((u1u1))
+
+        Parameters
+        ----------
+        p1p1_cost : float
+            p1p1_cost
+            (Default value=1.)
+        p2p2_cost : float
+            p2p2_cost
+            (Default value=1.)
+        v1v1_cost : float
+            v1v1_cost
+            (Default value=1.)
+        v2v2_cost : float
+            v2v2_cost
+            (Default value=0.)
+        p1p2_cost : float
+            p1p2_cost
+            (Default value=0.)
+        v1v2_cost : float
+            v1v2_cost
+            (Default value=0.)
+        p1v1_cost : float
+            p1v1_cost
+            (Default value=0.)
+        p1v2_cost : float
+            p1v2_cost
+            (Default value=0.)
+        p2v1_cost : float
+            p2v1_cost
+            (Default value=0.)
+        p2v2_cost : float
+            p2v2_cost
+            (Default value=0.)
+        u1u1_cost : float
+            u1u1_cost
+            (Default value=0.01)
+        """
         # state cost matrix
         self.Q = np.array([[p1p1_cost, p1p2_cost, p1v1_cost, p1v2_cost],
                            [p1p2_cost, p2p2_cost, p2v1_cost, p2v2_cost],
@@ -94,6 +185,23 @@ class LQRController(AbstractController):
 
     def set_cost_parameters_(self,
                              pars=[1., 1., 1., 1., 1.]):
+        """
+        Set the diagonal parameters of Q and R matrices with a list.
+
+        The parameters are
+        Q = ((pars[0], 0, 0, 0),
+             (0, pars[1], 0, 0),
+             (0, 0, pars[2], 0),
+             (0, 0, 0, pars[3]))
+        R = ((pars[4]))
+
+
+        Parameters
+        ----------
+        pars : list
+            shape=(5,), dtype=float
+            (Default value=[1., 1., 1., 1., 1.])
+        """
         self.set_cost_parameters(p1p1_cost=pars[0],
                                  p2p2_cost=pars[1],
                                  v1v1_cost=pars[2],
@@ -105,6 +213,9 @@ class LQRController(AbstractController):
                                  u1u1_cost=pars[4])
 
     def init_(self):
+        """
+        Initalize the controller.
+        """
         # Linearization of the system
         self.drake_robot_lin = FirstOrderTaylorApproximation(
                 self.drake_robot,
@@ -118,6 +229,28 @@ class LQRController(AbstractController):
                 self.R)
 
     def get_control_output_(self, x, t=None):
+        """
+        The function to compute the control input for the double pendulum's
+        actuator(s).
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float, optional
+            time, unit=[s]
+            (Default value=None)
+
+        Returns
+        -------
+        array_like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
         y = x.copy()
         y[0] = y[0] % (2*np.pi)
         y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi

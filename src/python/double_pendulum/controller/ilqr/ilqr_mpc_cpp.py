@@ -7,6 +7,53 @@ import cppilqr
 
 
 class ILQRMPCCPPController(AbstractController):
+    """ ILQR Controller
+
+    iLQR MPC controller 
+    This controller uses the python bindings of the Cpp ilqr optimizer.
+
+    Parameters
+    ----------
+    mass : array_like, optional
+        shape=(2,), dtype=float, default=[0.608, 0.630]
+        masses of the double pendulum,
+        [m1, m2], units=[kg]
+    length : array_like, optional
+        shape=(2,), dtype=float, default=[0.3, 0.2]
+        link lengths of the double pendulum,
+        [l1, l2], units=[m]
+    com : array_like, optional
+        shape=(2,), dtype=float, default=[0.275, 0.166]
+        center of mass lengths of the double pendulum links
+        [r1, r2], units=[m]
+    damping : array_like, optional
+        shape=(2,), dtype=float, default=[0.081, 0.0]
+        damping coefficients of the double pendulum actuators
+        [b1, b2], units=[kg*m/s]
+    gravity : float, optional
+        default=9.81
+        gravity acceleration (pointing downwards),
+        units=[m/s²]
+    coulomb_fric : array_like, optional
+        shape=(2,), dtype=float, default=[0.093, 0.186]
+        coulomb friction coefficients for the double pendulum actuators
+        [cf1, cf2], units=[Nm]
+    inertia : array_like, optional
+        shape=(2,), dtype=float, default=[None, None]
+        inertia of the double pendulum links
+        [I1, I2], units=[kg*m²]
+        if entry is None defaults to point mass m*l² inertia for the entry
+    torque_limit : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 6.0]
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+    model_pars : model_parameters object, optional
+        object of the model_parameters class, default=None
+        Can be used to set all model parameters above
+        If provided, the model_pars parameters overwrite
+        the other provided parameters
+        (Default value=None)
+    """
     def __init__(self,
                  mass=[0.608, 0.630],
                  length=[0.3, 0.2],
@@ -51,22 +98,82 @@ class ILQRMPCCPPController(AbstractController):
             self.active_act = 1
 
     def set_start(self, x=[0., 0., 0., 0.]):
+        """set_start
+        Set start state for the controller.
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+            (Default value=[0., 0., 0., 0.])
+        """
         self.start = np.asarray(x)
 
     def set_goal(self, x=[np.pi, 0., 0., 0.]):
+        """set_goal.
+        Set goal for the controller.
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+            (Default value=[np.pi, 0., 0., 0.])
+        """
         self.goal = np.asarray(x)
 
     def set_parameters(self,
                        N=1000,
                        dt=0.005,
                        max_iter=1,
-                       regu_init=1,
+                       regu_init=1.,
                        max_regu=10000.,
                        min_regu=0.01,
                        break_cost_redu=1e-6,
                        integrator="runge_kutta",
                        trajectory_stabilization=True,
                        shifting=1):
+        """
+
+        Parameters
+        ----------
+        N : int
+            number of timesteps for horizon
+            (Default value = 1000)
+        dt : float
+            timestep for horizon
+            (Default value = 0.005)
+        max_iter : int
+            maximum of optimization iterations per step
+            (Default value = 1)
+        regu_init : float
+            inital regularization
+            (Default value = 1.)
+        max_regu : float
+            maximum regularization
+            (Default value = 10000.)
+        min_regu : float
+            minimum regularization
+            (Default value = 0.01)
+        break_cost_redu : float
+            Stop the optimization at this cost reduction.
+             (Default value = 1e-6)
+        integrator : string
+            string determining the integration method
+            "euler" : Euler integrator
+            "runge_kutta" : Runge Kutta integrator
+             (Default value = "runge_kutta")
+        trajectory_stabilization : bool
+            Whether to stabilize a trajectory or optimize freely
+            (Default value = True)
+        shifting : int
+            The trajectory will be shifted this number of timesteps
+            to warm start the optimization at the next timestep
+            (Default value = 1)
+        """
         self.N = N
         self.dt = dt
         self.max_iter = max_iter
@@ -100,6 +207,38 @@ class ILQRMPCCPPController(AbstractController):
                             fCp=[1000., 1000.],
                             fCv=[10., 10.],
                             fCen=0.):
+        """
+        Set cost parameters used for optimization.
+
+        Parameters
+        ----------
+        sCu : list
+            shape=(2,), dtype=float
+            stage cost weights for control input
+            (Default value = [0.005, 0.005])
+        sCp : list
+            shape=(2,), dtype=float
+            stage cost weights for position error
+            (Default value = [0.,0.])
+        sCv : list
+            shape=(2,), dtype=float
+            stage cost weights for velocity error
+            (Default value = [0., 0.])
+        sCen : float
+            stage cost weight for energy error
+            (Default value = 0.)
+        fCp : list
+            shape=(2,), dtype=float
+            final cost weights for position error
+             (Default value = [1000., 1000.])
+        fCv : list
+            shape=(2,), dtype=float
+            final cost weights for velocity error
+             (Default value = [10., 10.])
+        fCen : float
+            final cost weight for energy error
+            (Default value = 0.)
+        """
         self.sCu = sCu
         self.sCp = sCp
         self.sCv = sCv
@@ -125,6 +264,39 @@ class ILQRMPCCPPController(AbstractController):
                                   fCp=[1000., 1000.],
                                   fCv=[10., 10.],
                                   fCen=0.):
+        """
+        Set cost parameters used for optimization for the stabilization of the
+        final state of the trajectory.
+
+        Parameters
+        ----------
+        sCu : list
+            shape=(2,), dtype=float
+            stage cost weights for control input
+            (Default value = [0.005, 0.005])
+        sCp : list
+            shape=(2,), dtype=float
+            stage cost weights for position error
+            (Default value = [0.,0.])
+        sCv : list
+            shape=(2,), dtype=float
+            stage cost weights for velocity error
+            (Default value = [0., 0.])
+        sCen : float
+            stage cost weight for energy error
+            (Default value = 0.)
+        fCp : list
+            shape=(2,), dtype=float
+            final cost weights for position error
+             (Default value = [1000., 1000.])
+        fCv : list
+            shape=(2,), dtype=float
+            final cost weights for velocity error
+             (Default value = [10., 10.])
+        fCen : float
+            final cost weight for energy error
+            (Default value = 0.)
+        """
         self.f_sCu = sCu
         self.f_sCp = sCp
         self.f_sCv = sCv
@@ -139,6 +311,17 @@ class ILQRMPCCPPController(AbstractController):
                                    0., 0.,
                                    1000., 1000.,
                                    10., 10.]):
+        """
+        Set cost parameters used for optimization in form of a list.
+        (used for parameter optimization)
+
+        Parameters
+        ----------
+        pars : list
+            list order=[sCu1, sCu2, sCp1, sCp2, sCv1, sCv2, fCp1, fCp2, fCv1, fCv2]
+            energy costs are set to 0.
+            (Default value = [0.005, 0., 0., 0., 0., 1000., 1000., 10., 10.])
+        """
         self.sCu = [pars[0], pars[0]]
         self.sCp = [pars[1], pars[2]]
         self.sCv = [pars[3], pars[4]]
@@ -163,6 +346,65 @@ class ILQRMPCCPPController(AbstractController):
                           fCv=[10., 10.],
                           fCen=0.,
                           integrator="runge_kutta"):
+        """
+
+        Compute an initial trajectory.
+
+        Parameters
+        ----------
+        N : int
+            number of timesteps for horizon
+            (Default value = 1000)
+        dt : float
+            timestep for horizon
+            (Default value = 0.005)
+        max_iter : int
+            maximum of optimization iterations per step
+            (Default value = 1)
+        regu_init : float
+            inital regularization
+            (Default value = 1.)
+        max_regu : float
+            maximum regularization
+            (Default value = 10000.)
+        min_regu : float
+            minimum regularization
+            (Default value = 0.01)
+        break_cost_redu : float
+            Stop the optimization at this cost reduction.
+             (Default value = 1e-6)
+        sCu : list
+            shape=(2,), dtype=float
+            stage cost weights for control input
+            (Default value = [0.005, 0.005])
+        sCp : list
+            shape=(2,), dtype=float
+            stage cost weights for position error
+            (Default value = [0.,0.])
+        sCv : list
+            shape=(2,), dtype=float
+            stage cost weights for velocity error
+            (Default value = [0., 0.])
+        sCen : float
+            stage cost weight for energy error
+            (Default value = 0.)
+        fCp : list
+            shape=(2,), dtype=float
+            final cost weights for position error
+             (Default value = [1000., 1000.])
+        fCv : list
+            shape=(2,), dtype=float
+            final cost weights for velocity error
+             (Default value = [10., 10.])
+        fCen : float
+            final cost weight for energy error
+            (Default value = 0.)
+        integrator : string
+            string determining the integration method
+            "euler" : Euler integrator
+            "runge_kutta" : Runge Kutta integrator
+             (Default value = "runge_kutta")
+        """
 
         if integrator == "euler":
             integrator_int = 0
@@ -207,15 +449,22 @@ class ILQRMPCCPPController(AbstractController):
                        csv_path,
                        num_break=40,
                        poly_degree=3):
-        # trajectory = np.loadtxt(csv_path, skiprows=1, delimiter=",")
-        # self.N_init = np.shape(trajectory)[0]
-        # self.u1_init_traj = np.ascontiguousarray(trajectory.T[5])
-        # self.u2_init_traj = np.ascontiguousarray(trajectory.T[6])
-        # self.p1_init_traj = np.ascontiguousarray(trajectory.T[1])
-        # self.p2_init_traj = np.ascontiguousarray(trajectory.T[2])
-        # self.v1_init_traj = np.ascontiguousarray(trajectory.T[3])
-        # self.v2_init_traj = np.ascontiguousarray(trajectory.T[4])
+        """
+        Load initial trajectory from csv file.
 
+        Parameters
+        ----------
+        csv_path : string or path object
+            path to csv file where the trajectory is stored.
+            csv file should use standarf formatting used in this repo.
+            
+        num_break : int
+            number of break points used for interpolation
+            (Default value = 40)
+        poly_degree : int
+            degree of polynomials used for interpolation
+            (Default value = 3)
+        """
         T, X, U = load_trajectory(
                         csv_path=csv_path,
                         with_tau=True)
@@ -232,6 +481,9 @@ class ILQRMPCCPPController(AbstractController):
 
 
     def init_(self):
+        """ 
+        Initalize the controller.
+        """
         self.ilmpc = cppilqr.cppilqrmpc(self.N, self.N_init)
         self.ilmpc.set_parameters(self.integrator_int,
                                   self.dt,
@@ -273,7 +525,28 @@ class ILQRMPCCPPController(AbstractController):
                                    self.traj_stab)
 
     def get_control_output_(self, x, t=None):
-        # print("get control output")
+        """
+        The function to compute the control input for the double pendulum's
+        actuator(s).
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float, optional
+            time, unit=[s]
+            (Default value=None)
+
+        Returns
+        -------
+        array_like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
         u_act = self.ilmpc.get_control_output(x[0], x[1], x[2], x[3])
 
         # u = [self.u1_traj[0], self.u2_traj[0]]
@@ -285,10 +558,27 @@ class ILQRMPCCPPController(AbstractController):
         u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
 
         self.counter += 1
-        # print(self.counter)
         return u
 
     def get_init_trajectory(self):
+        """
+        Get the initial (reference) trajectory used by the controller.
+
+        Returns
+        -------
+        numpy_array
+            time points, unit=[s]
+            shape=(N,)
+        numpy_array
+            shape=(N, 4)
+            states, units=[rad, rad, rad/s, rad/s]
+            order=[angle1, angle2, velocity1, velocity2]
+        numpy_array
+            shape=(N, 2)
+            actuations/motor torques
+            order=[u1, u2],
+            units=[Nm]
+        """
 
         u1_traj = self.u1_init_traj
         u2_traj = self.u2_init_traj
@@ -305,6 +595,21 @@ class ILQRMPCCPPController(AbstractController):
         return T, X, U
 
     def get_forecast(self):
+        """
+        Get the MPC forecast trajectory as planned by the controller.
+        numpy_array
+            time points, unit=[s]
+            shape=(N,)
+        numpy_array
+            shape=(N, 4)
+            states, units=[rad, rad, rad/s, rad/s]
+            order=[angle1, angle2, velocity1, velocity2]
+        numpy_array
+            shape=(N, 2)
+            actuations/motor torques
+            order=[u1, u2],
+            units=[Nm]
+        """
 
         u1_traj = self.ilmpc.get_u1_traj()
         u2_traj = self.ilmpc.get_u2_traj()
