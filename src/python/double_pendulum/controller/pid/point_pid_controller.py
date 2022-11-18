@@ -4,6 +4,19 @@ from double_pendulum.controller.abstract_controller import AbstractController
 
 
 class PointPIDController(AbstractController):
+    """PointPIDController
+    PID controller with a fix state as goal.
+
+    Parameters
+    ----------
+    torque_limit : array_like, optional
+        shape=(2,), dtype=float, default=[1.0, 1.0]
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+    dt : float
+        timestep , unit=[s]
+        (Default value=0.01)
+    """
     def __init__(self,
                  torque_limit=[1.0, 1.0],
                  dt=0.01):
@@ -24,18 +37,65 @@ class PointPIDController(AbstractController):
         self.errors2 = []
 
     def set_parameters(self, Kp, Ki, Kd):
+        """
+        Set controller gains.
+
+        Parameters
+        ----------
+        Kp : float
+            Gain for position error
+        Ki : float
+            Gain for integrated error
+        Kd : float
+            Gain for differentiated error
+        """
         self.Kp = Kp
         self.Ki = Ki
         self.Kd = Kd
 
     def set_goal(self, x):
+        """set_goal.
+        Set goal for the controller.
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        """
         self.goal = x
 
     def init_(self):
+        """
+        Initialize the controller.
+        """
         self.errors1 = []
         self.errors2 = []
 
     def get_control_output_(self, x, t=None):
+        """
+        The function to compute the control input for the double pendulum's
+        actuator(s).
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float, optional
+            time, unit=[s]
+            (Default value=None)
+
+        Returns
+        -------
+        array_like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
         e1 = self.goal[0] - x[0]
         e2 = self.goal[1] - x[1]
         e1 = (e1 + np.pi) % (2*np.pi) - np.pi

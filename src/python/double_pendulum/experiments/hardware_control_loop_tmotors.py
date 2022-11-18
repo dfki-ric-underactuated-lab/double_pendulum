@@ -11,12 +11,44 @@ from double_pendulum.utils.plotting import plot_timeseries, plot_figures
 
 def run_experiment(controller,
                    dt=0.01,
-                   t_final=10,
+                   t_final=10.,
                    can_port='can0',
                    motor_ids=[8, 9],
                    motor_type='AK80_6_V1p1',
                    tau_limit=[4., 4.],
                    save_dir="."):
+    """run_experiment.
+    Hardware control loop for tmotor system.
+
+    Parameters
+    ----------
+    controller : controller object
+        controller which gives the control signal
+    dt : float
+        timestep of the control, unit=[s]
+        (Default value=0.01)
+    t_final : float
+        duration of the experiment
+        (Default value=10.)
+    can_port : string
+        the can port which is used to control the motors
+        (Default value="can0")
+    motor_ids : list
+        shape=(2,), dtype=int
+        ids of the 2 motors
+        (Default value=[8, 9])
+    motor_type : string
+        the motor type being used
+        (Default value="AK80_6_V1p1")
+    tau_limit : array_like, optional
+        shape=(2,), dtype=float,
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+        (Default value=[4., 4.])
+    save_dir : string of path object
+        directory where log data will be stored
+        (Default value=".")
+    """
 
     np.set_printoptions(formatter={'float': lambda x: "{0:0.4f}".format(x)})
 
@@ -219,7 +251,7 @@ def run_experiment(controller,
                 shoulder_des_vel = np.asarray(X_des).T[2]
                 elbow_des_pos = np.asarray(X_des).T[1]
                 elbow_des_vel = np.asarray(X_des).T[3]
-                
+
             else:
                 shoulder_des_pos = None
                 shoulder_des_vel = None
@@ -263,7 +295,7 @@ def run_experiment(controller,
                             vel_y_lines=[0.0],
                             save_to=os.path.join(save_dir_time, "combiplot.pdf"),
                             show=True)
-                            
+
             plot_figures(save_dir=save_dir_time,
                          index=index-1,
                          meas_time=meas_time,

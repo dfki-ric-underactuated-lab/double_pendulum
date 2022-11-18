@@ -69,37 +69,54 @@ def iterative_ricatti(A, B, Q, R, n):
     return Kk, Pk
 
 def solve_differential_ricatti(A, B, Q, R, n, dt):
+    """
+    Implementation based on
+    'The numerical solution of the matrix Riccati differential equation'
+    E.Davison, E.Maki
+    https://ieeexplore.ieee.org/document/1100210?arnumber=1100210
+
+    note:
+    paper       here    usually
+    \mathcal{a} al
+    C           C
+    K           S
+    exp(at)     Ct
+    R^-1 B^T p  K
+    """
 
     si = int(np.shape(A)[0])
 
     al = np.block([[A, multi_dot([-B, inv(R), B.T])],
                    [-Q, -A.T]])
 
-    #C_part1 = inv(np.eye(2*si) - dt/2.*al + dt**2/12.*np.dot(al, al))
-    #C_part2 = np.eye(2*si) + dt/2.*al + dt**2/12.*np.dot(al, al)
-    #C = np.dot(C_part1, C_part2)
-
     # Taylor
+    # eq. (11) and (12)
     al2 = np.dot(al, al)
-    al3 = np.dot(al2, al)
-    al4 = np.dot(al3, al)
-    al5 = np.dot(al4, al)
-    C = np.eye(2*si) + dt*al + dt**2/2.*al2 + dt**3/6.*al3 + dt**4/24.*al4 + dt**5/120*al5
+    #al3 = np.dot(al2, al)
+    #al4 = np.dot(al3, al)
+    #al5 = np.dot(al4, al)
+    #C = np.eye(2*si) + dt*al + dt**2/2.*al2 + dt**3/6.*al3 + dt**4/24.*al4 + dt**5/120*al5
+    C_part1 = inv(np.eye(2*si) - dt/2.*al + dt**2/12.*al2)
+    C_part2 = np.eye(2*si) + dt/2.*al + dt**2/12.*al2
+    C = np.dot(C_part1, C_part2)
 
     Ct = [C]
     for i in range(1, n):
         ct = np.dot(Ct[-1], C)
         Ct.append(ct)
 
+    # equation (9)
     s0 = -np.dot(inv(Ct[-1][-si:, -si:]), Ct[-1][-si:,:si])
     S = [s0]
     for i in range(1, n):
+        # equation (8)
         s = np.dot(Ct[i][-si:,:si] + np.dot(Ct[i][-si:, -si:], s0),
                    inv(Ct[i][:si,:si] + np.dot(Ct[i][:si, -si:], s0)))
         S.append(s)
 
     K = []
     for i in range(n):
+        # equation (5) rhs
         k = multi_dot([inv(R), B.T, S[i]])
         K.append(k)
 

@@ -6,6 +6,43 @@ from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_pro
 
 
 class TrajPIDController(AbstractController):
+    """TrajPIDController
+    PID controller for following a trajectory.
+
+    Parameters
+    ----------
+    T : array_like
+        shape=(N,)
+        time points of reference trajectory, unit=[s]
+        (Default value=None)
+    X : array_like
+        shape=(N, 4)
+        reference trajectory states
+        order=[angle1, angle2, velocity1, velocity2]
+        units=[rad, rad, rad/s, rad/s]
+        (Default value=None)
+    U : array_like
+        shape=(N, 2)
+        reference trajectory actuations/motor torques
+        order=[u1, u2],
+        units=[Nm]
+        (Default value=None)
+    csv_path : string or path object
+        path to csv file where the trajectory is stored.
+        csv file should use standarf formatting used in this repo.
+        If T, X, or U are provided they are preferred.
+        (Default value=None)
+    use_feed_forward_torque : bool
+        whether to use feed forward torque for the control output
+        (Default value=True)
+    torque_limit : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 1.0]
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+    num_break : int
+        number of break points used for interpolation
+        (Default value = 40)
+    """
     def __init__(self,
                  T=None,
                  X=None,
@@ -62,15 +99,52 @@ class TrajPIDController(AbstractController):
         self.errors2 = []
 
     def set_parameters(self, Kp, Ki, Kd):
+        """
+        Set controller gains.
+
+        Parameters
+        ----------
+        Kp : float
+            Gain for position error
+        Ki : float
+            Gain for integrated error
+        Kd : float
+            Gain for differentiated error
+        """
         self.Kp = Kp
         self.Ki = Ki
         self.Kd = Kd
 
     def init_(self):
+        """
+        Initialize the controller.
+        """
         self.errors1 = []
         self.errors2 = []
 
     def get_control_output_(self, x, t):
+        """
+        The function to compute the control input for the double pendulum's
+        actuator(s).
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float, optional
+            time, unit=[s]
+            (Default value=None)
+
+        Returns
+        -------
+        array_like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
         tt = min(t, self.max_t)
 
         p = self.P_interp.get_value(tt)
@@ -108,4 +182,22 @@ class TrajPIDController(AbstractController):
         return u
 
     def get_init_trajectory(self):
+        """
+        Get the initial (reference) trajectory used by the controller.
+
+        Returns
+        -------
+        numpy_array
+            time points, unit=[s]
+            shape=(N,)
+        numpy_array
+            shape=(N, 4)
+            states, units=[rad, rad, rad/s, rad/s]
+            order=[angle1, angle2, velocity1, velocity2]
+        numpy_array
+            shape=(N, 2)
+            actuations/motor torques
+            order=[u1, u2],
+            units=[Nm]
+        """
         return self.T, self.X, self.U

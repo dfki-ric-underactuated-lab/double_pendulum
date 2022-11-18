@@ -32,7 +32,8 @@ class LQRController(AbstractController):
         [tl1, tl2], units=[Nm, Nm]
     save_dir : string
         path to directory where log data can be stored
-        (necessary for temporaray generated urdf)
+        (necessary for temporary generated urdf)
+        (Default value=".")
     """
     def __init__(self,
                  urdf_path,

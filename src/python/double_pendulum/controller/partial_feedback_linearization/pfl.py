@@ -6,6 +6,51 @@ from double_pendulum.controller.lqr.lqr_controller import LQRController
 
 
 class EnergyShapingPFLController(AbstractController):
+    """EnergyShapingPFLController
+    Controller based on partial feedback linearization (PFL) which controls the nergy
+    of the double pendulum. Uses collocated pfl for the acrobot.
+    For non-collocated pfl and/or the pendubot use the SymbolicPFLController.
+    It is based in these papers by Spong:
+        - https://www.sciencedirect.com/science/article/pii/S1474667017474040?via%3Dihub
+        - https://ieeexplore.ieee.org/document/341864
+        - https://www.sciencedirect.com/science/article/pii/S1474667017581057?via%3Dihub
+
+    Parameters
+    ----------
+    mass : array_like, optional
+        shape=(2,), dtype=float, default=[1.0, 1.0]
+        masses of the double pendulum,
+        [m1, m2], units=[kg]
+    length : array_like, optional
+        shape=(2,), dtype=float, default=[0.5, 0.5]
+        link lengths of the double pendulum,
+        [l1, l2], units=[m]
+    com : array_like, optional
+        shape=(2,), dtype=float, default=[0.5, 0.5]
+        center of mass lengths of the double pendulum links
+        [r1, r2], units=[m]
+    damping : array_like, optional
+        shape=(2,), dtype=float, default=[0.5, 0.5]
+        damping coefficients of the double pendulum actuators
+        [b1, b2], units=[kg*m/s]
+    gravity : float, optional
+        default=9.81
+        gravity acceleration (pointing downwards),
+        units=[m/s²]
+    coulomb_fric : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 0.0]
+        coulomb friction coefficients for the double pendulum actuators
+        [cf1, cf2], units=[Nm]
+    inertia : array_like, optional
+        shape=(2,), dtype=float, default=[None, None]
+        inertia of the double pendulum links
+        [I1, I2], units=[kg*m²]
+        if entry is None defaults to point mass m*l² inertia for the entry
+    torque_limit : array_like, optional
+        shape=(2,), dtype=float, default=[np.inf, np.inf]
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+    """
     def __init__(self,
                  mass=[1.0, 1.0],
                  length=[0.5, 0.5],
@@ -41,20 +86,79 @@ class EnergyShapingPFLController(AbstractController):
         self.set_parameters()
 
     def set_cost_parameters(self, kpos=0.3, kvel=0.005, ken=1.0):
+        """
+        Set controller gains
+
+        Parameters
+        ----------
+        kpos : float
+            Gain for position error
+            (Default value = 0.3)
+        kvel : float
+            Gain for velocity error
+            (Default value = 0.005)
+        ken : float
+            Gain for energy error
+            (Default value = 1.0)
+        """
         self.k1 = kpos
         self.k2 = kvel
         self.k3 = ken
 
     def set_cost_parameters_(self, pars=[0.3, 0.005, 1.0]):
+        """
+        Set controller gains with a list.
+        (Useful for parameter optimization)
+
+        Parameters
+        ----------
+        pars : list
+            shape=(3,)
+            list containing the controller gains in the order
+            [kpos, kvel, ken]
+            (Default value = [0.3, 0.005, 1.0])
+        """
         self.k1 = pars[0]
         self.k2 = pars[1]
         self.k3 = pars[2]
 
     def set_goal(self, x):
-        self.desired_energy = self.plant.total_energy(x)  # *1.1
+        """set_goal.
+        Set goal for the controller.
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        """
+        self.desired_energy = self.plant.total_energy(x)
         self.desired_x = x
 
     def get_control_output_(self, x, t=None):
+        """
+        The function to compute the control input for the double pendulum's
+        actuator(s).
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float, optional
+            time, unit=[s]
+            (Default value=None)
+
+        Returns
+        -------
+        array_like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
         pos = np.copy(x[:2])
         vel = np.copy(x[2:])
 
@@ -100,10 +204,59 @@ class EnergyShapingPFLController(AbstractController):
         return u
 
     def save(self, path="log_energy.csv"):
+        """
+        Save the energy trajectory to file.
+
+        Parameters
+        ----------
+        path : string or path object
+            path where the energy will be save in a txt file
+        """
         np.savetxt(path, self.en)
 
 
 class EnergyShapingPFLAndLQRController(AbstractController):
+    """EnergyShapingPFLAndLQRController
+    Controller based on partial feedback linearization which controls the nergy
+    of the double pendulum. If the LQR controller returns a feasible value the
+    control switches to LQR control.
+
+    Parameters
+    ----------
+    mass : array_like, optional
+        shape=(2,), dtype=float, default=[1.0, 1.0]
+        masses of the double pendulum,
+        [m1, m2], units=[kg]
+    length : array_like, optional
+        shape=(2,), dtype=float, default=[0.5, 0.5]
+        link lengths of the double pendulum,
+        [l1, l2], units=[m]
+    com : array_like, optional
+        shape=(2,), dtype=float, default=[0.5, 0.5]
+        center of mass lengths of the double pendulum links
+        [r1, r2], units=[m]
+    damping : array_like, optional
+        shape=(2,), dtype=float, default=[0.5, 0.5]
+        damping coefficients of the double pendulum actuators
+        [b1, b2], units=[kg*m/s]
+    gravity : float, optional
+        default=9.81
+        gravity acceleration (pointing downwards),
+        units=[m/s²]
+    coulomb_fric : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 0.0]
+        coulomb friction coefficients for the double pendulum actuators
+        [cf1, cf2], units=[Nm]
+    inertia : array_like, optional
+        shape=(2,), dtype=float, default=[None, None]
+        inertia of the double pendulum links
+        [I1, I2], units=[kg*m²]
+        if entry is None defaults to point mass m*l² inertia for the entry
+    torque_limit : array_like, optional
+        shape=(2,), dtype=float, default=[np.inf, np.inf]
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+    """
     def __init__(self,
                  mass=[1.0, 1.0],
                  length=[0.5, 0.5],
@@ -139,18 +292,67 @@ class EnergyShapingPFLAndLQRController(AbstractController):
         self.en = []
 
     def set_cost_parameters_(self, pars=[0.3, 0.005, 1.0]):
+        """
+        Set controller gains for the PFL controller with a list.
+
+        Parameters
+        ----------
+        pars : list
+            shape=(3,)
+            list containing the controller gains in the order
+            [kpos, kvel, ken]
+            (Default value = [0.3, 0.005, 1.0])
+        """
         self.en_controller.set_cost_parameters_(pars)
 
     def set_goal(self, x):
+        """set_goal.
+        Set goal for the controller.
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        """
         self.en_controller.set_goal(x)
         self.lqr_controller.set_goal(x)
         self.desired_energy = self.en_controller.plant.total_energy(x)
 
     def init_(self):
+        """
+        Initialize the PFL and LQR controller.
+        """
         self.en_controller.init_()
         self.lqr_controller.init_()
 
     def get_control_output_(self, x, t=None, verbose=False):
+        """
+        The function to compute the control input for the double pendulum's
+        actuator(s).
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float, optional
+            time, unit=[s]
+            (Default value=None)
+        verbose : bool
+            Whether to print when the active controller is switched.
+            (Default value = False)
+
+        Returns
+        -------
+        array_like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
         u = self.lqr_controller.get_control_output_(x)
 
         energy = self.en_controller.plant.total_energy(x)

@@ -5,6 +5,29 @@ from double_pendulum.utils.pcw_polynomial import FitPiecewisePolynomial, Interpo
 
 
 class FeedForwardController(AbstractController):
+    """FeedforwardController
+    Controller which executes a feedforward torque trajectory
+
+    Parameters
+    ----------
+    T : array_like
+        shape=(N,)
+        time points of reference trajectory, unit=[s]
+        (Default value=None)
+    U : array_like
+        shape=(N, 2)
+        reference trajectory actuations/motor torques
+        order=[u1, u2],
+        units=[Nm]
+        (Default value=None)
+    torque_limit : array_like, optional
+        shape=(2,), dtype=float, default=[1.0, 1.0]
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+    num_break : int
+        number of break points used for interpolation
+        (Default value = 40)
+    """
     def __init__(self,
                  T,
                  U,
@@ -25,6 +48,28 @@ class FeedForwardController(AbstractController):
                 poly_degree=3)
 
     def get_control_output_(self, x, t):
+        """
+        The function to compute the control input for the double pendulum's
+        actuator(s).
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float, optional
+            time, unit=[s]
+            (Default value=None)
+
+        Returns
+        -------
+        array_like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
         tt = min(t, self.T[-1])
 
         uu = self.U_interp.get_value(tt)

@@ -9,7 +9,7 @@ import cppilqr
 class ILQRMPCCPPController(AbstractController):
     """ ILQR Controller
 
-    iLQR MPC controller 
+    iLQR MPC controller
     This controller uses the python bindings of the Cpp ilqr optimizer.
 
     Parameters
@@ -318,7 +318,7 @@ class ILQRMPCCPPController(AbstractController):
         Parameters
         ----------
         pars : list
-            list order=[sCu1, sCu2, sCp1, sCp2, sCv1, sCv2, fCp1, fCp2, fCv1, fCv2]
+            list order=[sCu1, sCp1, sCp2, sCv1, sCv2, fCp1, fCp2, fCv1, fCv2]
             energy costs are set to 0.
             (Default value = [0.005, 0., 0., 0., 0., 1000., 1000., 10., 10.])
         """
@@ -457,7 +457,6 @@ class ILQRMPCCPPController(AbstractController):
         csv_path : string or path object
             path to csv file where the trajectory is stored.
             csv file should use standarf formatting used in this repo.
-            
         num_break : int
             number of break points used for interpolation
             (Default value = 40)
@@ -481,7 +480,7 @@ class ILQRMPCCPPController(AbstractController):
 
 
     def init_(self):
-        """ 
+        """
         Initalize the controller.
         """
         self.ilmpc = cppilqr.cppilqrmpc(self.N, self.N_init)

@@ -43,6 +43,34 @@ from double_pendulum.utils.urdfs import generate_urdf
 
 
 class TVLQRController(AbstractController):
+    """TVLQRController
+    Controller to stabilize a trajectory with TVLQR
+    Uses the TVLQR controller from drake.
+
+    Parameters
+    ----------
+    csv_path : string or path object
+        path to csv file where the trajectory is stored.
+        csv file should use standarf formatting used in this repo.
+        If T, X, or U are provided they are preferred.
+        (Default value="")
+    urdf_path : string or path object
+        path to urdf file
+    model_pars : model_parameters object
+        object of the model_parameters class
+    torque_limit : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 3.0]
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+    robot : string
+        robot which is used, Options:
+            - "acrobot"
+            - "pendubot"
+    save_dir : string
+        path to directory where log data can be stored
+        (necessary for temporary generated urdf)
+        (Default value=".")
+    """
     def __init__(self,
                  csv_path,
                  urdf_path,
@@ -89,13 +117,35 @@ class TVLQRController(AbstractController):
                             Q=np.diag([4., 4., 0.1, 0.1]),
                             R=2*np.eye(1),
                             Qf=np.zeros((4, 4))):
+        """set_cost_parameters
+        Set the cost matrices Q, R and Qf.
+        (Qf for the final stabilization)
+
+        Parameters
+        ----------
+        Q : numpy_array
+            shape=(4,4)
+            Q-matrix describing quadratic state cost
+            (Default value=np.diag([4., 4., 0.1, 0.1]))
+        R : numpy_array
+            shape=(2,2)
+            R-matrix describing quadratic control cost
+            (Default value=2*np.eye(1))
+        Qf : numpy_array
+            shape=(4,4)
+            Q-matrix describing quadratic state cost
+            for the final point stabilization
+            (Default value=np.zeros((4, 4)))
+        """
 
         self.Q = np.asarray(Q)
         self.R = np.asarray(R)
         self.Qf = np.asarray(Qf)
 
     def init_(self):
-
+        """
+        Initalize the controller.
+        """
         # self.time_traj = self.time_traj.reshape(self.time_traj.shape[0], -1)
         x0_desc = np.vstack((self.pos1_traj,
                              self.pos2_traj,
@@ -125,6 +175,24 @@ class TVLQRController(AbstractController):
                                                            options=options)
 
     def get_init_trajectory(self):
+        """
+        Get the initial (reference) trajectory used by the controller.
+
+        Returns
+        -------
+        numpy_array
+            time points, unit=[s]
+            shape=(N,)
+        numpy_array
+            shape=(N, 4)
+            states, units=[rad, rad, rad/s, rad/s]
+            order=[angle1, angle2, velocity1, velocity2]
+        numpy_array
+            shape=(N, 2)
+            actuations/motor torques
+            order=[u1, u2],
+            units=[Nm]
+        """
         T = self.time_traj
         X = np.asarray([self.pos1_traj,
                         self.pos2_traj,
@@ -136,6 +204,28 @@ class TVLQRController(AbstractController):
         return T, X, U
 
     def get_control_output_(self, x, t):
+        """
+        The function to compute the control input for the double pendulum's
+        actuator(s).
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float, optional
+            time, unit=[s]
+            (Default value=None)
+
+        Returns
+        -------
+        array_like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
         # ti = float(np.min(t, self.max_t))
 
         error_state = np.reshape(x, (np.shape(x)[0], 1)) - self.tvlqr.x0.value(t)

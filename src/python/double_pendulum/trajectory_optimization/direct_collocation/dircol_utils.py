@@ -12,6 +12,23 @@ from pydrake.multibody.parsing import Parser
 
 
 def create_plant_from_urdf(urdf_path):
+    """
+    Create a pydrake plant froma  urdf file.
+
+    Parameters
+    ----------
+    urdf_path : string or path object
+        path to urdf file
+
+    Returns
+    -------
+    pydrake.multibody.plant.MultibodyPlant
+        pydrake plant
+    pydrake.systems.Context
+        pydrake context
+    pydrake.geometry.SceneGraph
+        pydrake scene graph
+    """
     plant = MultibodyPlant(time_step=0.0)
     scene_graph = SceneGraph()
     plant.RegisterAsSourceForSceneGraph(scene_graph)
@@ -23,6 +40,26 @@ def create_plant_from_urdf(urdf_path):
 
 
 def construct_trajectories(dircol, result):
+    """
+    Construct trajectories from direct collocation result.
+
+    Parameters
+    ----------
+    dircol : pydrake.systems.trajectory_optimization.DirectCollocation
+        pydrake direct collocation object
+    result :
+
+    Returns
+    -------
+    pydrake.trajectories.PiecewisePolynomial_[float]
+        state trajectory
+    pydrake.trajectories.PiecewisePolynomial_[float]
+        acceleration trajectory
+    pydrake.trajectories.PiecewisePolynomial_[float]
+        jerk trajectory
+    pydrake.trajectories.PiecewisePolynomial_[float]
+        torque trajectory
+    """
     x_traj = dircol.ReconstructStateTrajectory(result)
     acc_traj = x_traj.derivative(derivative_order=1)
     jerk_traj = x_traj.derivative(derivative_order=2)
@@ -30,6 +67,25 @@ def construct_trajectories(dircol, result):
     return x_traj, acc_traj, jerk_traj, u_traj
 
 def extract_data_from_polynomial(polynomial, frequency):
+    """
+    Extract data points from pydrake polnomial
+
+    Parameters
+    ----------
+    polynomial : pydrake.trajectories.PiecewisePolynomial_[float]
+        polynomial to be sampled for data points
+    frequency : float
+        Frequency of the extracted data trajectory
+
+    Returns
+    -------
+    numpy_array
+        shape=(N, 4)
+        state trajectory
+    numpy_array
+        shape=(N,)
+        time trajectory
+    """
     n_points = int(polynomial.end_time() / (1 / frequency))
     time_traj = np.linspace(polynomial.start_time(),
                             polynomial.end_time(),
@@ -42,6 +98,18 @@ def extract_data_from_polynomial(polynomial, frequency):
     return extracted_data, extracted_time
 
 def animation(plant, scene_graph, x_trajectory):
+    """
+    Animate a trajectory in browser window.
+
+    Parameters
+    ----------
+    plant : pydrake.multibody.plant.MultibodyPlant
+        pydrake plant
+    scene_graph : pydrake.geometry.SceneGraph
+        pydrake scene graph
+    x_trajectory : pydrake.trajectories.PiecewisePolynomial_[float]
+        state trajectory to be animated
+    """
     proc, zmq_url, web_url = start_zmq_server_as_subprocess(server_args=[])
     builder = DiagramBuilder()
     source = builder.AddSystem(TrajectorySource(x_trajectory))
@@ -67,4 +135,3 @@ def animation(plant, scene_graph, x_trajectory):
     simulator.AdvanceTo(duration)
     meshcat.stop_recording()
     meshcat.publish_recording()
-

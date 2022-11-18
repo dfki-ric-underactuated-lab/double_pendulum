@@ -10,6 +10,26 @@ from double_pendulum.utils.urdfs import generate_urdf
 
 
 class dircol_calculator():
+    """dircol_calculator
+    Class to calculate a trajectory for the double pendulum, acrobot or
+    pendubot with the direct collocation method. Implementation uses drake.
+
+    Parameters
+    ----------
+    urdf_path : string or path object
+        path to urdf file
+    robot : string
+        robot which is used, Options:
+            - "double_pendulum"
+            - "acrobot"
+            - "pendubot"
+    model_pars : model_parameters object
+        object of the model_parameters class
+    save_dir : string
+        path to directory where log data can be stored
+        (necessary for temporary generated urdf)
+        (Default value=".")
+    """
     def __init__(self,
                  urdf_path,
                  robot,
@@ -32,10 +52,45 @@ class dircol_calculator():
                            theta_limit,
                            speed_limit,
                            R,
-                           time_panalization,
+                           time_penalization,
                            init_traj_time_interval,
                            minimum_timestep,
                            maximum_timestep):
+        """compute_trajectory.
+
+        Parameters
+        ----------
+        n : int
+            number of knot points for the trajectory
+        tau_limit : float
+            torque limit, unit=[Nm]
+        initial_state : array_like
+            shape=(4,)
+            initial_state for the trajectory
+        final_state : array_like
+            shape=(4,)
+            final_state for the trajectory
+        theta_limit : float
+            position limit
+        speed_limit : float
+            velocity limit
+        R : float
+            control/motor torque cost
+        time_penalization : float
+            cost for trajectory length
+        init_traj_time_interval : list
+            shape=(2,)
+            initial time interval for trajectory
+        minimum_timestep : float
+            minimum timestep size, unit=[s]
+        maximum_timestep : float
+            maximum timestep size, unit=[s]
+
+        Raises
+        ------
+        AssertionError
+            If the optmization is not successful
+        """
         self.dircol = DirectCollocation(
                 self.plant,
                 self.context,
@@ -58,8 +113,8 @@ class dircol_calculator():
         if self.plant.num_actuators() > 1:
             self.dircol.AddConstraintToAllKnotPoints(-torque_limit <= u[0])
             self.dircol.AddConstraintToAllKnotPoints(u[0] <= torque_limit)
-            # self.dircol.AddConstraintToAllKnotPoints(-torque_limit <= u[1])
-            # self.dircol.AddConstraintToAllKnotPoints(u[1] <= torque_limit)
+            self.dircol.AddConstraintToAllKnotPoints(-torque_limit <= u[1])
+            self.dircol.AddConstraintToAllKnotPoints(u[1] <= torque_limit)
             self.dircol.AddRunningCost(R * u[0] ** 2)
             self.dircol.AddRunningCost(R * u[1] ** 2)
         else:
@@ -87,7 +142,7 @@ class dircol_calculator():
         self.dircol.prog().AddBoundingBoxConstraint(final_state, final_state, self.dircol.final_state())
 
         # Add a final cost equal to the total duration.
-        self.dircol.AddFinalCost(self.dircol.time() * time_panalization)
+        self.dircol.AddFinalCost(self.dircol.time() * time_penalization)
         initial_x_trajectory = PiecewisePolynomial.FirstOrderHold(
             init_traj_time_interval,
             np.column_stack((initial_state, final_state)))
@@ -101,6 +156,29 @@ class dircol_calculator():
          self.u_traj) = dircol_utils.construct_trajectories(self.dircol, self.result)
 
     def get_trajectory(self, freq):
+        """
+        Get the trajectory found by the optimization.
+
+        Parameters
+        ----------
+        freq : float
+            frequency with which the trajectory is sampled
+
+        Returns
+        -------
+        numpy_array
+            time points, unit=[s]
+            shape=(N,)
+        numpy_array
+            shape=(N, 4)
+            states, units=[rad, rad, rad/s, rad/s]
+            order=[angle1, angle2, velocity1, velocity2]
+        numpy_array
+            shape=(N, 2)
+            actuations/motor torques
+            order=[u1, u2],
+            units=[Nm]
+        """
         X, T = dircol_utils.extract_data_from_polynomial(self.x_traj, freq)
 
         if self.system_name == 'acrobot':
@@ -120,5 +198,8 @@ class dircol_calculator():
         return T, X, U
 
     def animate_trajectory(self):
+        """
+        Animate the trajectory, found by the optimization, with the drake
+        meshcat viewer in a browser window.
+        """
         dircol_utils.animation(self.plant, self.scene_graph, self.x_traj)
-

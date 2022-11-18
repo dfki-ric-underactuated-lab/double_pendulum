@@ -29,6 +29,50 @@ async def run_experiment(controller,
                                       "kernel_size": 5,
                                       "filter_size": 1},
                          save_dir="."):
+    """run_experiment.
+    Hardware control loop for mjbot system.
+    Has to be called with async.
+
+    Parameters
+    ----------
+    controller : controller object
+        controller which gives the control signal
+    dt : float
+        timestep of the control, unit=[s]
+        (Default value=0.01)
+    t_final : float
+        duration of the experiment
+        (Default value=10.)
+    motor_ids : list
+        shape=(2,), dtype=int
+        ids of the 2 motors
+        (Default value=[1, 2])
+    tau_limit : array_like, optional
+        shape=(2,), dtype=float,
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+        (Default value=[4., 4.])
+    friction_compensation : bool
+        Whether to compensate for friction
+        Should be removed. Friction can be compensated for at controller level.
+        (Default value=False)
+    friction_terms : list
+        shape=(4,)
+        Friction terms used for the friction compensation.
+        Should be removed. Friction can be compensated for at controller level.
+        (Default value=[0.093, 0.186, 0.081, 0.0])
+    velocity_filter : string
+        string determining what velocity filter should be used.
+        Should be removed. Filtering can be done at controller level.
+        (Default value=None)
+    filter_args : dict
+        dictionary with arguments for the velocity filter
+        Should be removed. Filtering can be done at controller level.
+        (Default value={"alpha": 0.3, "kernel_size": 5, "filter_size": 1})
+    save_dir : string of path object
+        directory where log data will be stored
+        (Default value=".")
+    """
 
     n = int(t_final/dt)
 

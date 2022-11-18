@@ -9,6 +9,62 @@ from double_pendulum.utils.pcw_polynomial import InterpolateVector, InterpolateM
 
 
 class TVLQRController(AbstractController):
+    """TVLQRController
+    Controller to stabilize a trajectory with TVLQR
+
+    Parameters
+    ----------
+    mass : array_like, optional
+        shape=(2,), dtype=float, default=[0.5, 0.6]
+        masses of the double pendulum,
+        [m1, m2], units=[kg]
+    length : array_like, optional
+        shape=(2,), dtype=float, default=[0.3, 0.2]
+        link lengths of the double pendulum,
+        [l1, l2], units=[m]
+    com : array_like, optional
+        shape=(2,), dtype=float, default=[0.3, 0.2]
+        center of mass lengths of the double pendulum links
+        [r1, r2], units=[m]
+    damping : array_like, optional
+        shape=(2,), dtype=float, default=[0.1, 0.1]
+        damping coefficients of the double pendulum actuators
+        [b1, b2], units=[kg*m/s]
+    gravity : float, optional
+        default=9.81
+        gravity acceleration (pointing downwards),
+        units=[m/s²]
+    coulomb_fric : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 0.0]
+        coulomb friction coefficients for the double pendulum actuators
+        [cf1, cf2], units=[Nm]
+    inertia : array_like, optional
+        shape=(2,), dtype=float, default=[None, None]
+        inertia of the double pendulum links
+        [I1, I2], units=[kg*m²]
+        if entry is None defaults to point mass m*l² inertia for the entry
+    torque_limit : array_like, optional
+        shape=(2,), dtype=float, default=[0.0, 1.0]
+        torque limit of the motors
+        [tl1, tl2], units=[Nm, Nm]
+    model_pars : model_parameters object, optional
+        object of the model_parameters class, default=None
+        Can be used to set all model parameters above
+        If provided, the model_pars parameters overwrite
+        the other provided parameters
+        (Default value=None)
+    csv_path : string or path object
+        path to csv file where the trajectory is stored.
+        csv file should use standarf formatting used in this repo.
+        If T, X, or U are provided they are preferred.
+        (Default value="")
+    num_break : int
+        number of break points used for interpolation
+        (Default value = 40)
+    horizon : int
+        horizon for the finite horizon Riccati equation
+        (Default value=100)
+    """
     def __init__(self,
                  mass=[0.5, 0.6],
                  length=[0.3, 0.2],
@@ -94,18 +150,51 @@ class TVLQRController(AbstractController):
                             Q=np.diag([4., 4., 0.1, 0.1]),
                             R=2*np.eye(1),
                             Qf=np.diag([4., 4., 0.1, 0.1])):
+        """set_cost_parameters
+        Set the cost matrices Q, R and Qf.
+        (Qf for the final stabilization)
 
+        Parameters
+        ----------
+        Q : numpy_array
+            shape=(4,4)
+            Q-matrix describing quadratic state cost
+            (Default value=np.diag([4., 4., 0.1, 0.1]))
+        R : numpy_array
+            shape=(2,2)
+            R-matrix describing quadratic control cost
+            (Default value=2*np.eye(1))
+        Qf : numpy_array
+            shape=(4,4)
+            Q-matrix describing quadratic state cost
+            for the final point stabilization
+            (Default value=np.diag([4., 4., 0.1, 0.1]))
+        """
         self.Q = np.asarray(Q)
         self.R = np.asarray(R)
         self.Qf = np.asarray(Qf)
 
     def set_goal(self, x=[np.pi, 0., 0., 0.]):
+        """set_goal.
+        Set goal for the controller.
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+            (Default value=[np.pi, 0., 0., 0.])
+        """
         y = x.copy()
         y[0] = y[0] % (2*np.pi)
         y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi
         self.goal = np.asarray(y)
 
     def init_(self):
+        """
+        Initalize the controller.
+        """
         self.K = []
         # self.k = []
         # for i in range(len(self.T[:-1])):
@@ -130,6 +219,28 @@ class TVLQRController(AbstractController):
                 poly_degree=3)
 
     def get_control_output_(self, x, t):
+        """
+        The function to compute the control input for the double pendulum's
+        actuator(s).
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float, optional
+            time, unit=[s]
+            (Default value=None)
+
+        Returns
+        -------
+        array_like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
 
         if t <= self.max_t:
             tt = min(t, self.max_t)
@@ -144,11 +255,29 @@ class TVLQRController(AbstractController):
             u = - np.asarray(self.K_final.dot(x_error))[0]
             # u = [tau[1], tau[1]]
 
-        # print(self.K_interp.get_value(tt))
+        #print(t, x_error, self.U_interp.get_value(tt), self.K_interp.get_value(tt)[1], u)
 
         u[0] = np.clip(u[0], -self.torque_limit[0], self.torque_limit[0])
         u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
         return u
 
     def get_init_trajectory(self):
+        """
+        Get the initial (reference) trajectory used by the controller.
+
+        Returns
+        -------
+        numpy_array
+            time points, unit=[s]
+            shape=(N,)
+        numpy_array
+            shape=(N, 4)
+            states, units=[rad, rad, rad/s, rad/s]
+            order=[angle1, angle2, velocity1, velocity2]
+        numpy_array
+            shape=(N, 2)
+            actuations/motor torques
+            order=[u1, u2],
+            units=[Nm]
+        """
         return self.T, self.X, self.U
