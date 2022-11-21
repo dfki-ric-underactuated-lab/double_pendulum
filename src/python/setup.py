@@ -10,7 +10,7 @@ setup(
         # general
         'numpy',
         'matplotlib',
-        'bitstring',
+        # 'bitstring',
         # 'pyyaml',
         'pandas',
         # 'argparse',
@@ -18,9 +18,9 @@ setup(
         'sympy',
         'sklearn',
         'cma',
-        'mini-cheetah-motor-driver-socketcan',
         'lxml',
-        # 'moteus',
+        'mini-cheetah-motor-driver-socketcan',
+        'moteus',
         'inputs',
 
         # c++ python bindings
@@ -30,13 +30,21 @@ setup(
         'drake',
         'meshcat',
         'IPython',
-        'filterpy'
+        'filterpy',
         # 'crocoddyl',
 
         # # reinforcement learning
         # 'tensorflow>=2.6.0',
         # 'pickle5',
         # 'stable_baselines3'
+
+        # documentation
+        'sphinx',
+        'sphinx-rtd-theme',
+        'numpydoc',
+
+        # testing
+        'pytest',
     ],
     classifiers=[
           'Development Status :: 5 - Stable',
