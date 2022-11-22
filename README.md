@@ -5,7 +5,8 @@
 
 <div align="center">
 <img width="368" src="docs/figures/double_pendulum_CAD.png">
-<img width="400" src="docs/figures/chaotic_freefall_long_exposure_shot.jpg">
+<img width="360" src="hardware/double_pendulum_animation.gif" />
+<img width="410" src="docs/figures/chaotic_freefall_long_exposure_shot.jpg">
 </div>
 
 ## Introduction #
@@ -88,8 +89,6 @@ fraction of successful swing-up motions under varying conditions.
 </div>
 
 ## Authors #
-
-<img align="right" img width="350" src="hardware/double_pendulum_animation.gif" />
 
 * [Shivesh Kumar](https://robotik.dfki-bremen.de/en/about-us/staff/shku02.html) (Project Supervisor)
 * [Felix Wiebe](https://robotik.dfki-bremen.de/en/about-us/staff/fewi01.html) (Software Maintainer)
