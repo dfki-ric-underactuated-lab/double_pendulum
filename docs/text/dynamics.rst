@@ -8,7 +8,7 @@ pendulum dynamics.
 Equation of Motion
 ~~~~~~~~~~~~~~~~~~
 
-.. image:: figures/schematic.png
+.. image:: ../figures/schematic.png
    :width: 50%
    :align: center
 

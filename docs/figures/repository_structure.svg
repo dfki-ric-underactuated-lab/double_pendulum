@@ -1,0 +1,755 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="360mm"
+   height="207.87659mm"
+   viewBox="0 0 360 207.87659"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="overview.svg"
+   inkscape:export-filename="/home/dfki.uni-bremen.de/fwiebe/Development/underactuated_lab/caprr-release-version/docs/figures/repository_structure.png"
+   inkscape:export-xdpi="500"
+   inkscape:export-ydpi="500">
+  <defs
+     id="defs2">
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker7264"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend">
+      <path
+         transform="scale(-0.6)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         id="path7262"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker7152"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path7150"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker7064"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path7062"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker6970"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path6968"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5869"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path5867"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Mend"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path1292"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Lend"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path1286"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Send"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path1280"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Send"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path1298"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-0.3,0,0,-0.3,0.69,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Mend-1"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path1292-7"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Mend-17"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path1292-1"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Mend-17-1"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path1292-1-7"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5869-4"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path5867-0"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5869-5"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path5867-1"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="532.34141"
+     inkscape:cy="313.21922"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1099"
+     inkscape:window-x="1920"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-129.12343)">
+    <rect
+       style="fill:#f6cddf;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.78416866;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect31-0-2-4-3"
+       width="99.215828"
+       height="47.092396"
+       x="260.39209"
+       y="169.51552"
+       ry="4.6241221" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444447px;line-height:1.25;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+       x="291.51285"
+       y="177.59058"
+       id="text23408-3-8-6"
+       transform="scale(1.0037881,0.9962262)"><tspan
+         sodipodi:role="line"
+         id="tspan23406-6-3-7"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444447px;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+         x="291.51285"
+         y="177.59058">Simulation</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;line-height:1.25;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+       x="277.57385"
+       y="184.52673"
+       id="text23408-3-6-4-5"
+       transform="scale(1.0037881,0.9962262)"><tspan
+         sodipodi:role="line"
+         id="tspan23406-6-1-0-3"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+         x="277.57385"
+         y="184.52673"> Integrating Dynamics</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="283.5"
+       y="191.284"
+       id="text850"><tspan
+         sodipodi:role="line"
+         id="tspan848"
+         x="283.5"
+         y="191.284"
+         style="font-size:4.23333311px;stroke-width:0.26458332">Optional:</tspan><tspan
+         sodipodi:role="line"
+         x="283.5"
+         y="196.57567"
+         style="font-size:4.23333311px;stroke-width:0.26458332"
+         id="tspan858">  - Process Noise</tspan><tspan
+         sodipodi:role="line"
+         x="283.5"
+         y="201.86732"
+         style="font-size:4.23333311px;stroke-width:0.26458332"
+         id="tspan852">  - Measurement Noise</tspan><tspan
+         sodipodi:role="line"
+         x="283.5"
+         y="207.159"
+         style="font-size:4.23333311px;stroke-width:0.26458332"
+         id="tspan854">  - Delay</tspan><tspan
+         sodipodi:role="line"
+         x="283.5"
+         y="212.45067"
+         style="font-size:4.23333311px;stroke-width:0.26458332"
+         id="tspan856">  - Motor Responsiveness</tspan></text>
+    <rect
+       style="fill:#a5d6cc;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.78416866;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect31-0-2-4-3-5"
+       width="99.215828"
+       height="47.092396"
+       x="130.39209"
+       y="209.51552"
+       ry="4.6241221" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444494px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="151.59015"
+       y="216.92006"
+       id="text877"><tspan
+         sodipodi:role="line"
+         id="tspan875"
+         x="151.59015"
+         y="216.92006"
+         style="stroke-width:0.26458332">Abstract Controller</tspan></text>
+    <rect
+       style="fill:#87ada4;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.36844039;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect31-0-2-4-3-5-0"
+       width="55.328106"
+       height="18.642384"
+       x="166.84283"
+       y="222.4308"
+       ry="1.8305432" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.41635489px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.16014162"
+       x="182.48441"
+       y="226.48055"
+       id="text877-3"><tspan
+         sodipodi:role="line"
+         id="tspan875-7"
+         x="182.48441"
+         y="226.48055"
+         style="font-size:4.23333311px;stroke-width:0.16014162">Controller</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="134.54329"
+       y="235.70741"
+       id="text925"><tspan
+         sodipodi:role="line"
+         id="tspan923"
+         x="134.54329"
+         y="235.70741"
+         style="stroke-width:0.26458332">- Logging</tspan><tspan
+         sodipodi:role="line"
+         x="134.54329"
+         y="240.99908"
+         style="stroke-width:0.26458332"
+         id="tspan931">- Filtering</tspan><tspan
+         sodipodi:role="line"
+         x="134.54329"
+         y="246.29074"
+         style="stroke-width:0.26458332"
+         id="tspan927">- Friction Compensation</tspan><tspan
+         sodipodi:role="line"
+         x="134.54329"
+         y="251.58241"
+         style="stroke-width:0.26458332"
+         id="tspan929">- Gravity Compensation</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="169.03381"
+       y="232.02217"
+       id="text935"><tspan
+         sodipodi:role="line"
+         id="tspan933"
+         x="169.03381"
+         y="232.02217"
+         style="stroke-width:0.26458332">- init_()</tspan><tspan
+         sodipodi:role="line"
+         x="169.03381"
+         y="237.31384"
+         style="stroke-width:0.26458332"
+         id="tspan937">- get_control_output_(x)</tspan></text>
+    <rect
+       style="fill:#d2c1e4;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.78416866;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect31-0-2-4-3-8"
+       width="99.215828"
+       height="47.092396"
+       x="0.39208433"
+       y="169.51552"
+       ry="4.6241221" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444447px;line-height:1.25;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+       x="42.11097"
+       y="177.59052"
+       id="text23408-3-8-6-8"
+       transform="scale(1.0037881,0.9962262)"><tspan
+         sodipodi:role="line"
+         id="tspan23406-6-3-7-6"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444447px;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+         x="42.11097"
+         y="177.59052">Plant</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;line-height:1.25;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+       x="14.91779"
+       y="184.52667"
+       id="text23408-3-6-4-5-0"
+       transform="scale(1.0037881,0.9962262)"><tspan
+         sodipodi:role="line"
+         id="tspan23406-6-1-0-3-4"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+         x="14.91779"
+         y="184.52667"> Kinematics &amp; Dynamics</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="19.490084"
+       y="194.89546"
+       id="text990"><tspan
+         sodipodi:role="line"
+         id="tspan988"
+         x="19.490084"
+         y="194.89546"
+         style="stroke-width:0.26458332">- Linearizations</tspan><tspan
+         sodipodi:role="line"
+         x="19.490084"
+         y="200.18713"
+         style="stroke-width:0.26458332"
+         id="tspan992">- Dynamics Derivatives</tspan><tspan
+         sodipodi:role="line"
+         x="19.490084"
+         y="205.47879"
+         style="stroke-width:0.26458332"
+         id="tspan994">- Energy</tspan></text>
+    <rect
+       style="fill:#f6dc9b;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.78416866;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect31-0-2-4-3-59"
+       width="99.215828"
+       height="47.092396"
+       x="260.39209"
+       y="249.51552"
+       ry="4.6241221" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444447px;line-height:1.25;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+       x="290.53391"
+       y="257.89365"
+       id="text23408-3-8-6-7"
+       transform="scale(1.0037881,0.9962262)"><tspan
+         sodipodi:role="line"
+         id="tspan23406-6-3-7-8"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444447px;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+         x="290.53391"
+         y="257.89365">Hardware</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;line-height:1.25;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+       x="280.20972"
+       y="264.8298"
+       id="text23408-3-6-4-5-5"
+       transform="scale(1.0037881,0.9962262)"><tspan
+         sodipodi:role="line"
+         id="tspan23406-6-1-0-3-3"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+         x="280.20972"
+         y="264.8298"> Motor Control Loop</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="276.62091"
+       y="266.25562"
+       id="text850-3"><tspan
+         sodipodi:role="line"
+         x="276.62091"
+         y="270.00113"
+         style="font-size:4.23333311px;stroke-width:0.26458332"
+         id="tspan856-3" /><tspan
+         sodipodi:role="line"
+         x="276.62091"
+         y="275.29279"
+         style="font-size:4.23333311px;stroke-width:0.26458332"
+         id="tspan1055">- Low level Interface</tspan><tspan
+         sodipodi:role="line"
+         x="276.62091"
+         y="280.58444"
+         style="font-size:4.23333311px;stroke-width:0.26458332"
+         id="tspan1057">- Logging </tspan></text>
+    <rect
+       style="fill:#cec887;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.18538623;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect31-0-2-4-3-59-7"
+       width="27.999134"
+       height="9.3265944"
+       x="323.74396"
+       y="267.09314"
+       ry="0.91580206" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.41635489px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.16014162"
+       x="327.00101"
+       y="272.48419"
+       id="text877-3-8"><tspan
+         sodipodi:role="line"
+         id="tspan875-7-7"
+         x="327.00101"
+         y="272.48419"
+         style="font-size:4.23333311px;stroke-width:0.16014162">T-Motors</tspan></text>
+    <rect
+       style="fill:#cec887;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.18538623;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect31-0-2-4-3-59-7-4"
+       width="27.999134"
+       height="9.3265944"
+       x="323.78174"
+       y="280.53021"
+       ry="0.91580206" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.41635489px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.16014162"
+       x="329.15546"
+       y="286.45038"
+       id="text877-3-8-1"><tspan
+         sodipodi:role="line"
+         id="tspan875-7-7-9"
+         x="329.15546"
+         y="286.45038"
+         style="font-size:4.23333311px;stroke-width:0.16014162">Mjbots</tspan></text>
+    <rect
+       style="fill:#92cddf;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.78416866;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect31-0-2-4-3-0-7"
+       width="99.215828"
+       height="47.092396"
+       x="130.39209"
+       y="289.51553"
+       ry="4.6241221" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444447px;line-height:1.25;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+       x="165.69359"
+       y="296.90683"
+       id="text23408-3-8-6-9-9"
+       transform="scale(1.0037881,0.9962262)"><tspan
+         sodipodi:role="line"
+         id="tspan23406-6-3-7-88-9"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444447px;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+         x="165.69359"
+         y="296.90683">Analysis</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;line-height:1.25;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+       x="148.06447"
+       y="304.06784"
+       id="text23408-3-6-4-5-58-3"
+       transform="scale(1.0037881,0.9962262)"><tspan
+         sodipodi:role="line"
+         id="tspan23406-6-1-0-3-43-2"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+         x="148.06447"
+         y="304.06784">Controller Performance</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="143.83115"
+       y="312.74118"
+       id="text1187"><tspan
+         sodipodi:role="line"
+         id="tspan1185"
+         x="143.83115"
+         y="312.74118"
+         style="stroke-width:0.26458332">- Region of Attraction Calculation</tspan><tspan
+         sodipodi:role="line"
+         x="143.83115"
+         y="318.03284"
+         style="stroke-width:0.26458332"
+         id="tspan1189">- Benchmarking</tspan><tspan
+         sodipodi:role="line"
+         x="143.83115"
+         y="323.32452"
+         style="stroke-width:0.26458332"
+         id="tspan1191">- Parameter Optimization</tspan></text>
+    <rect
+       style="fill:#f6697b;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.78416866;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect31-0-2-4-3-0-4"
+       width="99.215828"
+       height="47.092396"
+       x="0.39208433"
+       y="249.51552"
+       ry="4.6241221" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444447px;line-height:1.25;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+       x="18.0793"
+       y="257.51422"
+       id="text23408-3-8-6-9-3"
+       transform="scale(1.0037881,0.9962262)"><tspan
+         sodipodi:role="line"
+         id="tspan23406-6-3-7-88-7"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444447px;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+         x="18.0793"
+         y="257.51422">System Identification</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="10.08372"
+       y="270.89941"
+       id="text1222"><tspan
+         sodipodi:role="line"
+         id="tspan1220"
+         x="10.08372"
+         y="270.89941"
+         style="stroke-width:0.26458332">- Trajectory data from hardware</tspan><tspan
+         sodipodi:role="line"
+         x="10.08372"
+         y="276.19107"
+         style="stroke-width:0.26458332"
+         id="tspan1224">- Identify dynamic parameters</tspan><tspan
+         sodipodi:role="line"
+         x="10.08372"
+         y="281.48276"
+         style="stroke-width:0.26458332"
+         id="tspan1226">- Least-square optimization</tspan></text>
+    <rect
+       style="fill:#f669df;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.78416866;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect31-0-2-4-3-0-0"
+       width="99.215828"
+       height="47.092396"
+       x="130.39209"
+       y="129.51552"
+       ry="4.6241221" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444447px;line-height:1.25;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+       x="180.90044"
+       y="136.68022"
+       id="text23408-3-8-6-9-2"
+       transform="scale(1.0037881,0.9962262)"><tspan
+         sodipodi:role="line"
+         id="tspan23406-6-3-7-88-1"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444447px;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+         x="181.88161"
+         y="136.68022">Trajectory Optimization/ </tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.64444447px;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+         x="180.90044"
+         y="143.73578"
+         id="tspan1255">Reinforcement Learning</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;line-height:1.25;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+       x="150.46083"
+       y="152.04723"
+       id="text23408-3-6-4-5-58-7"
+       transform="scale(1.0037881,0.9962262)"><tspan
+         sodipodi:role="line"
+         id="tspan23406-6-1-0-3-43-5"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;font-family:'Bell MT';-inkscape-font-specification:'Bell MT, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
+         x="150.46083"
+         y="152.04723"> Offline Computation</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="161.34238"
+       y="160.48814"
+       id="text1259"><tspan
+         sodipodi:role="line"
+         id="tspan1257"
+         x="161.34238"
+         y="160.48814"
+         style="font-size:4.93888903px;stroke-width:0.26458332">- Trajectories</tspan><tspan
+         sodipodi:role="line"
+         x="161.34238"
+         y="166.66176"
+         style="font-size:4.93888903px;stroke-width:0.26458332"
+         id="tspan1261">- Policies</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.9857161;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Mend)"
+       d="m 101.48872,184.50356 c 2.73776,-20.99276 12.18156,-33.30713 27.03234,-38.62421"
+       id="path1263"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.96342039;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Mend-1)"
+       d="m 231.03108,229.06791 c 2.67583,-20.51793 11.90603,-32.55376 26.4209,-37.75057"
+       id="path1263-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.96018618;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Mend-17)"
+       d="m 231.01095,238.56132 c 2.68531,20.30848 11.94819,32.22145 26.51447,37.36521"
+       id="path1263-1"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.96018618;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Mend-17-1)"
+       d="m 101.47595,200.14506 c 2.68531,20.30848 11.9482,32.22145 26.51448,37.36521"
+       id="path1263-1-0"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker5869)"
+       d="M 49.892857,246.72916 V 219.89285"
+       id="path5865"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker5869-4)"
+       d="M 179.60772,287.36158 V 260.52527"
+       id="path5865-8"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.02824163;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker5869-5)"
+       d="m 179.6896,177.79177 v 28.37351"
+       id="path5865-6"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker7264)"
+       d="m 101.56242,192.23034 70.88868,-0.26279 c 2.70891,-0.1666 2.39401,-3.64049 7.27629,-3.90158 4.2207,0.14826 4.56715,3.79281 7.55943,3.84658 l 58.46751,-0.21675"
+       id="path6966"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+  </g>
+</svg>

@@ -8,10 +8,10 @@ Welcome to Double Pendulum's documentation!
 
 |pic1| |pic2|
 
-.. |pic1| image:: figures/chaotic_freefall_long_exposure_shot.jpg
+.. |pic1| image:: ../figures/chaotic_freefall_long_exposure_shot.jpg
    :width: 45%
 
-.. |pic2| image:: figures/double_pendulum_animation.gif
+.. |pic2| image:: ../figures/double_pendulum_animation.gif
    :width: 45%
 
 This project offers an open-source and low-cost kit to test control algorithms
@@ -28,7 +28,7 @@ with the simulator and the real system. This repository describes the hardware
 (CAD, Bill Of Materials (BOM) etc.) required to build the physical system and
 provides the software (URDF models, simulation and controller) to control it.
 
-.. image:: figures/Logo_Underactuated_Lab.*
+.. image:: ../figures/Logo_Underactuated_Lab.*
    :width: 100%
    :align: center
 

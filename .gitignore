@@ -13,3 +13,4 @@ examples/parameter_optimization/data/*
 examples/reimplemented_papers/data/*
 experiments/data/*
 docs/build/*
+docs/text/generated/*
