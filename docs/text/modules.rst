@@ -5,4 +5,6 @@
     Double Pendulum Dynamics <dynamics.rst>
     Installation <installation.rst>
     Software Documentation <generated/double_pendulum>
-    Hardware Experiment Guide <usage_instructions.rst>
+    Motor Setup <motors.rst>
+    Testbench Setup <hardware.rst>
+    Experiments <experiments.rst>

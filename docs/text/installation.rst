@@ -22,8 +22,9 @@ We recommend using a virtual python environment.
     git clone git@git.hb.dfki.de:underactuated-robotics/release_version/caprr-release-version.git
 
 
-3. cd caprr-release-version::
-
+3. Install the double pendulum package::
+   
+    cd caprr-release-version
     make install
 
 

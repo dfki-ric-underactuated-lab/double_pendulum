@@ -6,7 +6,7 @@ pendulum dynamics.
 
 
 Equation of Motion
-~~~~~~~~~~~~~~~~~~
+------------------
 
 .. image:: ../figures/schematic.png
    :width: 50%
@@ -113,8 +113,8 @@ and the actuator selection matrix :math:`\mat {D}`
 for the fully actuated system, the pendubot or the acrobot.
 
 
-### Energy of the Pendulum
---------------------------
+Energy
+------
 
 -  Kinetic Energy
 .. math::
