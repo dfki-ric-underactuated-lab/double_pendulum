@@ -9,31 +9,31 @@ class model_parameters():
     Parameters
     ----------
     mass : array_like, optional
-        shape=(2,), dtype=float, default=[1.0, 1.0]
+        shape=(2,), dtype=float, default=[0.608, 0.630]
         masses of the double pendulum,
         [m1, m2], units=[kg]
     length : array_like, optional
-        shape=(2,), dtype=float, default=[0.5, 0.5]
+        shape=(2,), dtype=float, default=[0.3, 0.4]
         link lengths of the double pendulum,
         [l1, l2], units=[m]
     com : array_like, optional
-        shape=(2,), dtype=float, default=[0.5, 0.5]
+        shape=(2,), dtype=float, default=[0.275, 0.415]
         center of mass lengths of the double pendulum links
         [r1, r2], units=[m]
     damping : array_like, optional
-        shape=(2,), dtype=float, default=[0.5, 0.5]
+        shape=(2,), dtype=float, default=[0.005, 0.005]
         damping coefficients of the double pendulum actuators
         [b1, b2], units=[kg*m/s]
     gravity : float, optional
         default=9.81
         gravity acceleration (pointing downwards),
         units=[m/s²]
-    coulomb_fric : array_like, optional
-        shape=(2,), dtype=float, default=[0.0, 0.0]
+    cfric : array_like, optional
+        shape=(2,), dtype=float, default=[0.093, 0.14]
         coulomb friction coefficients for the double pendulum actuators
         [cf1, cf2], units=[Nm]
     inertia : array_like, optional
-        shape=(2,), dtype=float, default=[None, None]
+        shape=(2,), dtype=float, default=[0.0475, 0.0798]
         inertia of the double pendulum links
         [I1, I2], units=[kg*m²]
         if entry is None defaults to point mass m*l² inertia for the entry
@@ -44,16 +44,43 @@ class model_parameters():
     gear_ratio : int, optional
         gear ratio of the motors, default=6
     torque_limit : array_like, optional
-        shape=(2,), dtype=float, default=[np.inf, np.inf]
+        shape=(2,), dtype=float, default=[10.0, 10.0]
         torque limit of the motors
         [tl1, tl2], units=[Nm, Nm]
     dof : int, optional
         degrees of freedom of the double pendulum, default=2
         does not make sense to change
-    filepath : string or path object
+    filepath : string or path object, optional
         path to yaml file containing the the above parameters,
         if provided, the parameters from the yaml file will overwrite
         the other specified parameters
+        default = None
+    model_design : string, optional
+        string description of the design to set the parameters for that
+        specific design. model_design and model_id have to be set together.
+        Options:
+            - "A.0"
+            - "B.0"
+            - "C.0"
+            - "hD.0"
+        default=None
+    model_id : string, optional
+        string description of the model parameters for a design.
+        Parameters for the specific model of the design will be
+        loaded. model_design and model_id have to be set together.
+        Options:
+            - "1.0"
+            - "1.1"
+            - "2.0"
+            - ...
+        default=None
+    robot : string, optional
+        string describing the robot. Used to set the torque_limit when
+        using model_design and model_id. Options:
+            - "double_pendulum"
+            - "acrobot"
+            - "pendubot"
+        default="double_pendulum"
     """
     def __init__(self,
                  mass=[0.608, 0.630],
@@ -67,7 +94,10 @@ class model_parameters():
                  gear_ratio=6,
                  torque_limit=[10.0, 10.0],
                  dof=2,
-                 filepath=None):
+                 filepath=None,
+                 model_design=None,
+                 model_id=None,
+                 robot="double_pendulum"):
 
         self.m = mass
         self.l = length
@@ -89,6 +119,9 @@ class model_parameters():
 
         if filepath is not None:
             self.load_yaml(filepath)
+
+        if model_design is not None and model_id is not None:
+            self.load_model(model_design, model_id, robot)
 
     def set_mass(self, mass):
         """
@@ -341,3 +374,104 @@ class model_parameters():
 
     def __repr__(self):
         return self.__str__()
+
+    def load_model(self, model_design, model_id, robot):
+        if model_design == "A.0":
+            if model_id[0] == "1":
+                self.m = [0.608, 0.630]
+                self.l = [0.3, 0.2]
+                self.r = [0.275, 0.166]
+                self.b = [0.081, 0.0]
+                self.cf = [0.093, 0.186]
+                self.g = 9.81
+                self.I = [0.05472, 0.02522]
+                self.Ir = 0.000060719
+                self.gr = 6
+                self.tl = [10., 10.]
+                self.dof = 2
+            elif model_id[0] == "2":
+                self.m = [0.5476215952387185, 0.5978621372377623]
+                self.l = [0.3, 0.2]
+                self.r = [0.3, 0.2]
+                self.b = [0.011078054769767294, 0.004396496974140761]
+                self.cf = [0.09284176227841016, 0.07708291842936994]
+                self.g = 9.81
+                self.I = [0.053450262258304355, 0.024210710672023246]
+                self.Ir = 6.287203962819607e-05
+                self.gr = 6
+                self.tl = [10., 10.]
+                self.dof = 2
+
+        if model_design == "B.0":
+            if model_id[0] == "1":
+                self.m = [0.6870144235621288, 0.6018697747980919]
+                self.l = [0.3, 0.4]
+                self.r = [0.3, 0.4150911636151641]
+                self.b = [0.004999999999999999, 0.004999999999999999]
+                self.cf = [0.09299999999999999, 0.13999999999999999]
+                self.g = 9.81
+                self.I = [0.047501752876886474, 0.07977851452810676]
+                self.Ir = 8.823237128204706e-05
+                self.gr = 6.0
+                self.tl = [10.0, 10.0]
+                self.dof = 2
+            elif model_id[:2] == "h2":
+                self.m = [0.608, 0.63]
+                self.l = [0.3, 0.4]
+                self.r = [0.3, 0.4]
+                self.b = [0.004999999999999999, 0.004999999999999999]
+                self.cf = [0.093, 0.14]
+                self.g = 9.81
+                self.I = [0.05472, 0.10080000000000001]
+                self.Ir = 8.823237128204706e-05
+                self.gr = 6.0
+                self.tl = [10.0, 10.0]
+                self.dof = 2
+        if model_design == "C.0":
+            if model_id[0] == "3":
+                self.m = [0.6416936775868083, 0.5639360564500752]
+                self.l = [0.2, 0.3]
+                self.r = [0.2, 0.32126693265850237]
+                self.b = [0.001, 0.001]
+                self.cf = [0.093, 0.078]
+                self.g = 9.81
+                self.I = [0.026710760905753486, 0.05387812962959988]
+                self.Ir = 9.937281204851094e-05
+                self.gr = 6.0
+                self.tl = [10.0, 10.0]
+                self.dof = 2
+            elif model_id[:2] == "h1":
+                self.m = [0.5476215952387185, 0.5978621372377623]
+                self.l = [0.2, 0.3]
+                self.r = [0.2, 0.275]
+                self.b = [0.011078054769767294, 0.004396496974140761]
+                self.cf = [0.09284176227841016, 0.07708291842936994]
+                self.g = 9.81
+                self.I = [0.024210710672023246, 0.053450262258304355]
+                self.Ir = 6.287203962819607e-05
+                self.gr = 6.0
+                self.tl = [10.0, 10.0]
+                self.dof = 2
+        if model_design == "hD.0":
+            if model_id[:2] == "h1":
+                self.m = [0.5476215952387185, 0.5978621372377623]
+                self.l = [0.3, 0.3]
+                self.r = [0.3, 0.275]
+                self.b = [0.011078054769767294, 0.004396496974140761]
+                self.cf = [0.09284176227841016, 0.07708291842936994]
+                self.g = 9.81
+                self.I = [0.053450262258304355, 0.053450262258304355]
+                self.Ir = 6.287203962819607e-05
+                self.gr = 6.0
+                self.tl = [10.0, 10.0]
+                self.dof = 2
+
+        if model_id[-2:] == ".1":
+            self.b = [0., 0.]
+            self.cf = [0., 0.]
+            self.Ir = 0.
+
+        if robot == "acrobot":
+            self.tl[0] = 0.
+        elif robot == "pendubot":
+            self.tl[1] = 0.
