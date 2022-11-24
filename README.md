@@ -4,9 +4,9 @@
 </div>
 
 <div align="center">
-<img width="363" src="hardware/images/double_pendulum_CAD.png">
-<img width="355" src="docs/figures/double_pendulum_animation.gif" />
-<img width="405" src="docs/figures/chaotic_freefall_long_exposure_shot.jpg">
+<img width="300" src="hardware/images/double_pendulum_CAD.png">
+<img width="290" src="docs/figures/double_pendulum_animation.gif" />
+<img width="328" src="docs/figures/chaotic_freefall_long_exposure_shot.jpg">
 </div>
 
 ## Introduction #
