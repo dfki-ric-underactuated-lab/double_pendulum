@@ -86,9 +86,9 @@ the friction vector
     \mat{F} =
     \left[\begin{matrix}
         %b_1 \dot{q_1} + c_{f1} \text{sign}(\dot{q_1}) \\
-        %b_2 \dot{q_1} + c_{f2} \text{sign}(\dot{q_2})
+        %b_2 \dot{q_2} + c_{f2} \text{sign}(\dot{q_2})
         b_1 \dot{q_1} + c_{f1} \arctan(100\,\dot{q_1}) \\
-        b_2 \dot{q_1} + c_{f2} \arctan(100\,\dot{q_2})
+        b_2 \dot{q_2} + c_{f2} \arctan(100\,\dot{q_2})
     \end{matrix} \right]
     \label{eq:friction_matrix}
 

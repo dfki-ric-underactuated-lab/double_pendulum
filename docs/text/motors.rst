@@ -1,5 +1,8 @@
-Motor Configuration
+T-Motors (AK-80-6)
 ===================
+
+Initial Motor Setup
+-------------------
 
 The R-LINK Configuration Tool is used to configure the AK80-6 from
 T-Motors. Before starting to use the R-Link device make sure you have
@@ -17,13 +20,13 @@ the R-LINK module can be downloaded on the T-Motors website.
    drivers <https://learn.sparkfun.com/tutorials/how-to-install-ch340-drivers/all>`__
 
 Tutorials
----------
+~~~~~~~~~
 
 -  T-MOTOR: https://www.youtube.com/watch?v=hbqQCgebaF8
 -  Skyentific: https://www.youtube.com/watch?v=HzY9vzgPZkA
 
 UART Connection: R-Link module
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 R-LINK is a USB to serial port module, specially designed for CubeMars A
 Series of dynamical modular motors. It is possible to calibrate the
@@ -31,17 +34,17 @@ encoder in the module, change CAN ID settings, PID settings, as well as
 to control position, torque and speed of the motor within the
 configuration software tool.
 
-.. image:: ../../hardware/r-link_module.jpg
+.. image:: ../../hardware/images/r-link_module.jpg
    :width: 100%
    :align: center
 
 Instructions: R-Link Config Tool
---------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **User manual & configuration tool:**
 `store-en.tmotor.com <https://store-en.tmotor.com/goods.php?id=1085>`__
 
-.. image:: ../../hardware/r-link_wiring.PNG
+.. image:: ../../hardware/images/r-link_wiring.PNG
    :width: 100%
    :align: center
 
@@ -112,8 +115,78 @@ DRV8353M 100-V Three-Phase Smart Gate Driver from Texas Instruments:
   first Page under: 1. Features)
 | 
 
-PD-Controller
+Setting up the CAN interface
+----------------------------
+
+During regular operation the motors are commanded via CAN interface.
+To setup the CAN connection follow these steps:
+
+-  Run this command in the terminal to make sure that ``can0`` 
+   (or any other can interface depending on the system)
+   shows up as an interface after connecting the USB cable to your PC:
+   
+.. code:: 
+
+    ip link show
+
+-  Configure the ``can0`` interface to have a 1 Mbaud communication
+   frequency: 
+   
+.. code::
+
+    sudo ip link set can0 type can bitrate 1000000
+
+-  To bring up the ``can0`` interface, run: 
+  
+.. code:: 
+
+    sudo ip link set up can0
+
+Note: Alternatively, one could run the shell script
+``setup_caninterface.sh`` which will do the job for you.
+
+-  To change motor parameters such as CAN ID or to calibrate the
+   encoder, a serial connection is used. The serial terminal GUI used on
+   linux for this purpose is ``cutecom``
+
+Testing Motor Connection
+------------------------
+
+To test the connection to the motors, you can use the performance profiling
+script.  The script will print the communication frequencies to the terminal.
+
+| **Performance Profiler:** Sends and received 1000 zero commands to
+  measure the communication frequency with 1/2 motors.
+| 
+
+Python Driver
 -------------
+
+The Python - Motor communication is done with the `python driver <https://github.com/dfki-ric-underactuated-lab/mini-cheetah-tmotor-python-can>`__.
+The basic python interface is the following:
+
+Example Motor Initialization (for can interface ``can0`` and ``motor_id`` =1):
+
+.. code:: 
+
+    motor = CanMotorController(can_socket='can0', motor_id=1, socket_timeout=0.5)
+
+Available Functions:
+
+.. code:: 
+
+  pos, vel, tau = motor.enable_motor()
+  pos, vel, tau = motor.disable_motor()
+  pos, vel, tau = motor.set_zero_position()
+  pos, vel, tau = motor.send_deg_command(position_in_degrees, velocity_in_degrees, Kp, Kd, tau_ff)
+  pos, vel, tau = motor.send_rad_command(position_in_radians, velocity_in_radians, Kp, Kd, tau_ff)
+
+All functions return current position, velocity, torque in SI units
+except for ``send_deg_command``, which returns degrees instead of radians.
+
+
+Internal PD-Controller
+----------------------
 
 A proportional-derivative controller, which is based on the MIT
 Mini-Cheetah Motor, is implemented on the motor controller board. The
@@ -122,14 +195,16 @@ can bee seen that the control method is flexible, as pure position,
 speed, feedforward torque control or any combination of those is
 possible.
 
-.. image:: ../../hardware/motor_ak80-6_pdcontroller.png
+.. image:: ../../hardware/images/motor_ak80-6_pdcontroller.png
    :width: 80%
    :align: center
 
-In the `motor driver <https://github.com/dfki-ric-underactuated-lab/mini-cheetah-tmotor-python-can>`__ ,
+In the `python driver <https://github.com/dfki-ric-underactuated-lab/mini-cheetah-tmotor-python-can>`__ ,
 the::
 
     send_rad_command(Pdes, Pvel, Kp, Kd, tff)
 
 function lets you set desired position (Pdes), velocity (Pvel), Kp, Kd
 and feedforward torque (tff) values at every time step.
+
+

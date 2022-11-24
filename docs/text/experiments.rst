@@ -13,46 +13,22 @@ Hardware Experiment Guide
    </div>
 
 
-Setting up the CAN interface
-----------------------------
 
--  Run this command and make sure that ``can0`` (or any other can
-   interface depending on the system)shows up as an interface after
-   connecting the USB cable to your laptop: ``ip link show``
+Safety Notes
+------------
 
--  Configure the ``can0`` interface to have a 1 Mbaud communication
-   frequency: ``sudo ip link set can0 type can bitrate 1000000``
 
--  To bring up the ``can0`` interface, run: ``sudo ip link set up can0``
+When working with a real system be careful and mind the following safety
+measures:
 
-Note: Alternatively, one could run the shell script
-``setup_caninterface.sh`` which will do the job for you.
+- Brushless motors can be very powerful, moving with tremendous force and
+  speed. Always limit the range of motion, power, force and speed using
+  configurable parameters, current limited supplies, and mechanical design.
 
--  To change motor parameters such as CAN ID or to calibrate the
-   encoder, a serial connection is used. The serial terminal GUI used on
-   linux for this purpose is ``cutecom``
+- Stay away from the plane in which double pendulum is swinging. It is
+  recommended to have a safety cage surrounding the double pendulum in case the
+  parts of the pendulum get loose and fly away.
 
-Testing Communication
----------------------
+- Make sure you have access to emergency stop while doing experiments. Be extra
+  careful while operating in pure torque control loop.
 
-To enable one motor at ``0x01``, set zero position and disable the
-motor, run: ``python3 can_motorlib_test.py can0``
-
-Example Motor Initialization:
-``motor = CanMotorController(can_socket='can0', motor_id=0x01, socket_timeout=0.5)``
-
-Available Functions:
-
--  ``enable_motor()``
--  ``disable_motor()``
--  ``set_zero_position()``
--  ``send_deg_command(position_in_degrees, velocity_in_degrees, Kp, Kd, tau_ff):``
--  ``send_rad_command(position_in_radians, velocity_in_radians, Kp, Kd, tau_ff):``
-
-All functions return current position, velocity, torque in SI units
-except for ``send_deg_command``.
-
-| **Performance Profiler:** Sends and received 1000 zero commands to
-  measure the communication frequency with 1/2 motors. Be careful as the
-  motor torque will be set to zero.
-| 

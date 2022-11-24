@@ -8,7 +8,7 @@ the complete set up as well as the CAN bus. Further specifications are
 noted below or can be found within the documentation under the
 respective topics.
 
-.. image:: ../../hardware/double_pendulum_CAD.png
+.. image:: ../../hardware/images/double_pendulum_CAD.png
    :width: 100%
    :align: center
 
@@ -25,7 +25,7 @@ one used for MIT Mini-Cheetah, which is described in the documentation
 from Ben Katz. - `Ben Katz: MIT Mini-Cheetah
 Documentation <https://docs.google.com/document/d/1dzNVzblz6mqB3eZVEMyi2MtSngALHdgpTaDJIW_BpS4/edit>`__
 
-.. image:: ../../hardware/motor_ak80-6.jpg
+.. image:: ../../hardware/images/motor_ak80-6.jpg
    :width: 100%
    :align: center
 
@@ -98,7 +98,7 @@ disconnects the actuator from power supply and capacitor, if only the
 power supply gets diconnected the actuator will keep running with the
 energy stored in the capacitor.
 
-.. image:: ../../hardware/hardware_setup.png
+.. image:: ../../hardware/images/hardware_setup.png
    :width: 80%
    :align: center
 
@@ -195,7 +195,7 @@ signals and prevents the signals from being reflected at the wire ends.
 The CAN protocol is differential, hence no additional ground reference
 is needed. The diagram below displays the wiring of the CAN bus.
 
-.. image:: ../../hardware/can_bus.png
+.. image:: ../../hardware/images/can_bus.png
    :width: 100%
    :align: center
 
