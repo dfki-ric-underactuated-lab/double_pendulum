@@ -398,7 +398,7 @@ class Simulator:
         k2 = self.plant.rhs(t + 0.5 * dt, y + 0.5 * dt * k1, tau)
         k3 = self.plant.rhs(t + 0.5 * dt, y + 0.5 * dt * k2, tau)
         k4 = self.plant.rhs(t + dt, y + dt * k3, tau)
-        return (k1 + 2 * (k2 + k3) + k4) / 6.0
+        return (k1 + 2. * (k2 + k3) + k4) / 6.0
 
     def step(self, tau, dt, integrator="runge_kutta"):
         """
@@ -425,9 +425,11 @@ class Simulator:
                       np.asarray(self.plant.torque_limit))
 
         if integrator == "runge_kutta":
-            self.x += dt * self.runge_integrator(self.x, dt, self.t, tau)
+            self.x = np.add(self.x, dt * self.runge_integrator(self.x, dt, self.t, tau), casting="unsafe")
+            #self.x += dt * self.runge_integrator(self.x, dt, self.t, tau)
         elif integrator == "euler":
-            self.x += dt * self.euler_integrator(self.x, dt, self.t, tau)
+            self.x = np.add(self.x, dt * self.euler_integrator(self.x, dt, self.t, tau), casting="unsafe")
+            #self.x += dt * self.euler_integrator(self.x, dt, self.t, tau)
         else:
             raise NotImplementedError(
                    f'Sorry, the integrator {integrator} is not implemented.')
@@ -619,7 +621,7 @@ class Simulator:
                         controller=None,
                         integrator="runge_kutta"):
         """
-        Perorm a full simulation step including
+        Perform a full simulation step including
             - get measurement
             - filter measurement
             - get controller signal
@@ -709,8 +711,13 @@ class Simulator:
 
         self.init_filter(x0, dt, integrator)
 
-        while (self.t <= tf):
+        print("t", self.t)
+        N = 0
+        while (self.t < tf):
             _ = self.controller_step(dt, controller, integrator)
+            N += 1
+        print("sim N", N)
+        print("t", self.t)
 
         return self.t_values, self.x_values, self.tau_values
 

@@ -16,7 +16,7 @@ setup(
         # 'argparse',
         'scipy',
         'sympy',
-        'sklearn',
+        'scikit-learn',
         'cma',
         'lxml',
         'mini-cheetah-motor-driver-socketcan',

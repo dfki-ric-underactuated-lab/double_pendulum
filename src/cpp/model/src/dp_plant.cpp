@@ -481,15 +481,13 @@ Eigen::Matrix<double, n_x, n_x> DPPlant::get_dynx(Eigen::Vector<double, n_x> x,
         tmp24a(0,i) = tmp2a(0);
         tmp24a(1,i) = tmp2a(1);
 
-        for (int j=0; j<n_x; j++){
-            tmp2b = Cx(i)*vel;
-            tmp24b(0,i) = tmp2b(0);
-            tmp24b(1,i) = tmp2b(1);
-        }
+        tmp2b = Cx(i)*vel;
+        tmp24b(0,i) = tmp2b(0);
+        tmp24b(1,i) = tmp2b(1);
         
-
-        tmp24c = Minv*(-tmp24b - C*dynx_upper + Gx - Fx);
     }
+
+    tmp24c = Minv*(-tmp24b - C*dynx_upper + Gx - Fx);
 
     dynx_lower = tmp24a + tmp24c;
 

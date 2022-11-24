@@ -1,6 +1,7 @@
 PYTHON_ROOT = "src/python"
 CPP_ROOT = "src/cpp/python"
 DOC_ROOT = "docs/src"
+TEST_ROOT = "test"
 
 default: install
 
@@ -16,3 +17,6 @@ doc:
 	make -C $(DOC_ROOT) clean
 	make -C $(DOC_ROOT) generate_rst
 	make -C $(DOC_ROOT) html
+
+unittest:
+	make -C $(TEST_ROOT)

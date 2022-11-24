@@ -252,7 +252,7 @@ class LQRController(AbstractController):
             order=[u1, u2],
             units=[Nm]
         """
-        y = x.copy()
+        y = x.copy().astype(float)
         y[0] = y[0] % (2*np.pi)
         y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi
 

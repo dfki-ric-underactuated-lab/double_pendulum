@@ -65,10 +65,6 @@ class LQRController(AbstractController):
 
         super().__init__()
 
-        # self.damping = np.asarray(damping)
-        # self.cfric = np.asarray(coulomb_fric)
-        # self.torque_limit = torque_limit
-
         self.mass = mass
         self.length = length
         self.com = com
@@ -312,10 +308,11 @@ class LQRController(AbstractController):
             order=[u1, u2],
             units=[Nm]
         """
-        y = x.copy()
+        y = x.copy().astype(float)
 
-        y[0] = y[0] % (2*np.pi)
-        y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi
+        #y[0] = y[0] % (2*np.pi)
+        y[0] = (y[0] + np.pi - self.xd[0]) % (2*np.pi) - (np.pi - self.xd[0])
+        y[1] = (y[1] + np.pi - self.xd[1]) % (2*np.pi) - (np.pi - self.xd[1])
 
         y -= self.xd
 

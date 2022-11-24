@@ -1,1 +1,1 @@
-mv cppilqr.cpython-*.so $(python -c 'import site; print(site.getsitepackages()[0]+"/")')
+mv cppilqr.cpython-*.so $(python3 -c 'import site; print(site.getsitepackages()[0]+"/")')
