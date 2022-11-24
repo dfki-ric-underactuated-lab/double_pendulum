@@ -5,7 +5,7 @@
 
 <div align="center">
 <img width="363" src="hardware/images/double_pendulum_CAD.png">
-<img width="355" src="hardware/images/double_pendulum_animation.gif" />
+<img width="355" src="docs/figures/double_pendulum_animation.gif" />
 <img width="405" src="docs/figures/chaotic_freefall_long_exposure_shot.jpg">
 </div>
 
