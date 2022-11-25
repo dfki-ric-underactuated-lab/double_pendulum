@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-from double_pendulum.controller.lqr.roa_paropt import roa_alternate_opt
+from double_pendulum.controller.lqr.roa.roa_paropt import roa_alternate_opt
 
 
 init_pars = [1., 1., 1., 1., 1., 0.63, 0.3, 0.2]
@@ -13,7 +13,7 @@ maxfevals_per_opt = 50
 opt_order = ["d", "c"]
 roa_backend = "najafi"
 robot = "acrobot"
-num_proc = 2
+num_proc = 50
 
 
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")

@@ -3,9 +3,7 @@ import time
 import numpy as np
 import yaml
 
-from roatools.obj_fcts import caprr_coopt_interface
-# from roatools.vis import plotEllipse
-
+from double_pendulum.controller.lqr.roa.coopt_interface import caprr_coopt_interface
 from double_pendulum.utils.optimization import cma_optimization#, plot_cma_results
 
 

@@ -15,36 +15,36 @@ os.makedirs(save_dir)
 
 # recorded data from robot
 # measured_data_csv = [
-#         "../data/system_identification/excitation_trajectories_measured/trajectory-pos-20_measured.csv",
-#         #"../data/system_identification/excitation_trajectories_measured/trajectory-pos-50-3x_measured.csv"
-#                     ]
-
-# measured_data_csv = [
-#     "../data/system_identification/recorded_data_20220812/sys_id/20220812-055032-PM_measured.csv",
-#     "../data/system_identification/recorded_data_20220812/sys_id/20220812-055903-PM_measured.csv",
-#     "../data/system_identification/recorded_data_20220812/sys_id/20220812-060245-PM_measured.csv",
-#     "../data/system_identification/recorded_data_20220812/sys_id/20220812-060440-PM_measured.csv",
-#     "../data/system_identification/recorded_data_20220812/sys_id/20220812-061705-PM_measured.csv",
-#     "../data/system_identification/recorded_data_20220812/sys_id/20220812-055640-PM_measured.csv",
-#     "../data/system_identification/recorded_data_20220812/sys_id/20220812-060143-PM_measured.csv",
-#     "../data/system_identification/recorded_data_20220812/sys_id/20220812-060329-PM_measured.csv",
-#     "../data/system_identification/recorded_data_20220812/sys_id/20220812-061157-PM_measured.csv"
+#     "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_00.csv",
+#     "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_01.csv",
+#     "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_02.csv",
+#     "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_03.csv",
+#     "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_04.csv",
+#     "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_05.csv",
+#     "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_06.csv",
+#     "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_07.csv",
+#     "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_08.csv",
+#     "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_09.csv",
+#     "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_10.csv",  # exitation traj
+#     "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_11.csv",  # swingup traj
+#     "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_12.csv",
+#     "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_13.csv",
 #     ]
 measured_data_csv = [
-    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_00.csv",
-    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_01.csv",
-    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_02.csv",
-    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_03.csv",
-    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_04.csv",
-    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_05.csv",
-    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_06.csv",
-    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_07.csv",
-    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_08.csv",
-    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_09.csv",
-    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_10.csv",  # exitation traj
-    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_11.csv",  # swingup traj
-    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_12.csv",
-    "../../data/experiment_records/design_A.0/20220815/sys_id/trajectory_13.csv",
+    "../../data/experiment_records/design_C.0/20220914/sys_id/trajectory_00.csv",
+    "../../data/experiment_records/design_C.0/20220914/sys_id/trajectory_01.csv",
+    "../../data/experiment_records/design_C.0/20220914/sys_id/trajectory_02.csv",
+    "../../data/experiment_records/design_C.0/20220914/sys_id/trajectory_03.csv",
+    "../../data/experiment_records/design_C.0/20220914/sys_id/trajectory_04.csv",
+    "../../data/experiment_records/design_C.0/20220914/sys_id/trajectory_05.csv",
+    "../../data/experiment_records/design_C.0/20220914/sys_id/trajectory_06.csv",
+    "../../data/experiment_records/design_C.0/20220914/sys_id/trajectory_07.csv",
+    "../../data/experiment_records/design_C.0/20220914/sys_id/trajectory_08.csv",
+    "../../data/experiment_records/design_C.0/20220914/sys_id/trajectory_09.csv",
+    "../../data/experiment_records/design_C.0/20220914/sys_id/trajectory_10.csv",  # exitation traj
+    "../../data/experiment_records/design_C.0/20220914/sys_id/trajectory_11.csv",  # swingup traj
+    "../../data/experiment_records/design_C.0/20220914/sys_id/trajectory_12.csv",
+    "../../data/experiment_records/design_C.0/20220914/sys_id/trajectory_13.csv",
     ]
 
 
@@ -57,17 +57,20 @@ plot_timeseries(T, X, U)
 # fixed model parameters (will not be fitted)
 fixed_mpar = {"g": 9.81,
               "gr": 6,
-              "l1": 0.3,
-              "l2": 0.2,
+              "l1": 0.2,
+              "l2": 0.3,
               "b1": 0.001,
               "b2": 0.001,
-              "cf1": 0.19*2/np.pi,
-              "cf2": 0.12*2/np.pi
+              "cf1": 0.093, # 0.19*2/np.pi,
+              "cf2": 0.078, #0.12*2/np.pi,
+              "Ir": 6.287203962819607e-05,
              }
 
-#variable_mpar = ["m1r1", "I1", "cf1", "b1", "Ir",
-#                 "m2r2", "m2", "I2", "cf2", "b2"]
-variable_mpar = ["m1r1", "I1", "Ir",
+# variable_mpar = ["m1r1", "I1", "cf1", "b1", "Ir",
+#                  "m2r2", "m2", "I2", "cf2", "b2"]
+# variable_mpar = ["m1r1", "I1", "Ir",
+#                  "m2r2", "m2", "I2"]
+variable_mpar = ["m1r1", "I1",
                  "m2r2", "m2", "I2"]
 
 # initial model parameters
@@ -75,14 +78,14 @@ m1 = 0.608
 m2 = 0.654
 I1 = 0.05472
 I2 = 0.10464
-L2 = 0.2
-Lc1 = 0.3
-Lc2 = 0.2
+L2 = 0.3
+Lc1 = 0.2
+Lc2 = 0.3
 Fc1 = 0.19*2/np.pi
 Fv1 = 0.001
 Fc2 = 0.12*2/np.pi
 Fv2 = 0.001
-Ir = 0.000060719
+#Ir = 0.000060719
 
 # m1 = 0.56
 # m2 = 0.46
@@ -98,7 +101,8 @@ Ir = 0.000060719
 # Ir = 1e-4
 
 #mp0 = [Lc1 * m1, I1, Fc1, Fv1, Ir, Lc2 * m2, m2, I2, Fc2, Fv2]
-mp0 = [Lc1 * m1, I1, Ir, Lc2 * m2, m2, I2]
+#mp0 = [Lc1 * m1, I1, Ir, Lc2 * m2, m2, I2]
+mp0 = [Lc1 * m1, I1, Lc2 * m2, m2, I2]
 
 # bounds = [[0.15, 0.0, 0.0, 0.0, 0.0, 0.1, 0.5, 0.0, 0.00, 0.000],
 #           [0.3, 1.0, 0.093, 0.005, 0.003, 0.4, 0.7, 1.0, 0.14, 0.005]]
@@ -107,7 +111,7 @@ bounds = np.array([[0.01, 0.5],      # r1*m1
                    [0.01, 0.2],       # I1
                    #[0.0, 0.5],       # cf1
                    #[0.0, 0.5],       # b1
-                   [0.0, 0.003],     # Ir
+                   #[0.0, 0.003],     # Ir
                    [0.01, 0.5],       # r2*m2
                    [0.01, 1.0],       # m2
                    [0.01, 0.2],       # I2

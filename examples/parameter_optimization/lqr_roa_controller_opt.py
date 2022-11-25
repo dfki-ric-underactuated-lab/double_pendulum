@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-from double_pendulum.controller.lqr.roa_paropt import roa_lqr_opt
+from double_pendulum.controller.lqr.roa.roa_paropt import roa_lqr_opt
 
 
 model_pars = [0.63, 0.3, 0.2]

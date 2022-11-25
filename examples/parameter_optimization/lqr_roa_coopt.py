@@ -4,10 +4,10 @@ from datetime import datetime
 import yaml
 import numpy as np
 
-from roatools.obj_fcts import caprr_coopt_interface
-from roatools.vis import plotEllipse
+from double_pendulum.controller.lqr.roa.coopt_interface import caprr_coopt_interface
+from double_pendulum.controller.lqr.roa.ellipsoid import plotEllipse
 
-from double_pendulum.controller.lqr.roa_paropt import roa_lqrandmodelpar_lossfunc
+from double_pendulum.controller.lqr.roa.roa_paropt import roa_lqrandmodelpar_lossfunc
 from double_pendulum.utils.optimization import (cma_optimization,
                                                 scipy_par_optimization)
 
