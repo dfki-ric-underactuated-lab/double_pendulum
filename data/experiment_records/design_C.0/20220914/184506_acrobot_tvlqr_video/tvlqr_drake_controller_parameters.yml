@@ -1,0 +1,21 @@
+active_motor: 1
+max_t: !!python/object/apply:numpy.core.multiarray.scalar
+- !!python/object/apply:numpy.dtype
+  args:
+  - f8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  y6FFtvP9J0A=
+robot: acrobot
+torque_limit1: 0.0
+torque_limit2: 8

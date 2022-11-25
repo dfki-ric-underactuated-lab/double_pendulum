@@ -1,0 +1,44 @@
+cfric1: 0.0
+cfric2: 0.0
+com1: 0.2
+com2: 0.32126693265850237
+damping1: 0.0
+damping2: 0.0
+gravity: 9.81
+inertia1: 0.026710760905753486
+inertia2: 0.05387812962959988
+length1: 0.2
+length2: 0.3
+mass1: 0.6416936775868083
+mass2: 0.5639360564500752
+torque_limit1: 0.0
+torque_limit2: 4
+xd1: !!python/object/apply:numpy.core.multiarray.scalar
+- &id001 !!python/object/apply:numpy.dtype
+  args:
+  - f8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  GC1EVPshCUA=
+xd2: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  AAAAAAAAAAA=
+xd3: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  AAAAAAAAAAA=
+xd4: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  AAAAAAAAAAA=

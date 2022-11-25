@@ -1,0 +1,19 @@
+coulomb_fric1: 0.09284176227841016
+coulomb_fric2: 0.07708291842936994
+damping1: 0.011078054769767294
+damping2: 0.004396496974140761
+filt: lowpass
+filt_dt: 0.001
+filt_kwargs:
+  lowpass_alpha:
+  - 1.0
+  - 1.0
+  - 0.2
+  - 0.2
+filt_velocity_cut: 0.1
+filt_x0:
+- 3.141592653589793
+- 0.0
+- 0.0
+- 0.0
+gravity_compensation_g: 0.0
