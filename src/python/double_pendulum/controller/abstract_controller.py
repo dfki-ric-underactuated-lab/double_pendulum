@@ -127,6 +127,14 @@ class AbstractController(ABC):
 
         self.init_()
 
+    def reset_(self):
+        """
+        Reset the Controller. Optional
+        Can be overwritten by actual controller.
+        Function to reset parameters inside the controller.
+        """
+        pass
+
     def reset(self):
         """
         Reset the Controller
@@ -134,10 +142,12 @@ class AbstractController(ABC):
             - Filter
             - Friction compensation parameters
             - Gravity Compensation parameters
+            - calls the controller specific reset_() function
         """
         self.set_filter_args()
         self.set_friction_compensation()
         self.set_gravity_compensation()
+        self.reset_()
 
     def set_start(self, x):
         """
@@ -347,7 +357,7 @@ class AbstractController(ABC):
 
     def get_friction_torque(self, x):
         """
-        Get the torque needed to compensate for friction. 
+        Get the torque needed to compensate for friction.
 
         Parameters
         ----------
@@ -382,7 +392,7 @@ class AbstractController(ABC):
 
     def get_gravity_torque(self, x):
         """
-        Get the torque needed to compensate for gravity. 
+        Get the torque needed to compensate for gravity.
 
         Parameters
         ----------

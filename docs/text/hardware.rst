@@ -12,60 +12,14 @@ respective topics.
    :width: 100%
    :align: center
 
-
-Physical Parameters of the Actuator
------------------------------------
-
-The AK80-6 actuator from T-Motor is a quasi direct drive with a gear
-ratio of :math:`\small{6:1}` and a peak torque of
-:math:`\small{12\,Nm}` at the output shaft. The motor is equipped with
-an absolute :math:`\small{12}` bit rotary encoder and an internal PD
-torque control loop. The motor controller is basically the same as the
-one used for MIT Mini-Cheetah, which is described in the documentation
-from Ben Katz. - `Ben Katz: MIT Mini-Cheetah
-Documentation <https://docs.google.com/document/d/1dzNVzblz6mqB3eZVEMyi2MtSngALHdgpTaDJIW_BpS4/edit>`__
-
-.. image:: ../../hardware/images/motor_ak80-6.jpg
-   :width: 100%
-   :align: center
-
--  Voltage = :math:`\small{24\,V}`
--  Current = rated :math:`\small{12\,V}`, peak :math:`\small{24\,V}`
--  Torque = rated :math:`\small{6\,Nm}` , peak
-   :math:`\small{12\,Nm}` (after the transmission)
--  Transmission :math:`\small{N = 6 : 1}`
--  Weight = :math:`\small{485\,g}`
--  Dimensions = :math:`\small{⌀\,\,98\,mm\times\,38.5\,mm}`.
-
--  Max. torque to weight ratio = :math:`\small{24\,\frac{Nm}{Kg}}`
-   (after the transmission)
--  Max. velocity = :math:`\small{38.2\,\frac{rad}{s}}` =
-   :math:`\small{365\,rpm}` (after the transmission)
--  Backlash (accuracy) = :math:`\small{0.15°(degrees)}`
-
-Motor Constants
----------------
-
-(before the transmission)
-
--  Motor constant :math:`\small{k_m = 0.2206 \,\frac{Nm}{\sqrt{W}}}`
--  Electric constant :math:`\small{k_e = 0.009524 \,\frac{V}{rpm}}`
--  Torque constant :math:`\small{k_t = 0.091 \,\frac{Nm}{A}}`
--  Torque = rated :math:`\small{1.092\,Nm}`, peak
-   :math:`\small{2.184\,Nm}`
--  Velocity / back-EMF constant
-   :math:`\small{k_v = 100 \,\frac{rpm}{V}}`
--  Max. velocity at :math:`\small{24\,V}`\ =
-   :math:`\small{251.2 \,\frac{rad}{s}}` =
-   :math:`\small{2400 \,\,rpm}`
--  Motor wiring in :math:`\small{\nabla- configuration}`
--  Number of pole pairs = :math:`\small{21}`
--  Resistance phase to phase = :math:`\small{170\pm5\,m\Omega}`
--  Inductance phase to phase = :math:`\small{57\pm10\,m\mu H}`
--  Rotor inertia :math:`\small{Ir = 0.000060719\,Kg.m^2}`
+Physical Setup
+--------------
 
 Electrical Setup
 ----------------
+
+Wiring
+~~~~~~
 
 **Note:** We do not give any safety warranties on the electrical wiring.
 All experiments and reproductions of our test bed are at your own risk.
@@ -107,7 +61,7 @@ power supply = EA-PS 9032-40, capacitor = 10x 2.7V-400F cells connected
 in series, USB-CAN interfaces = R-LINK module and PCAN-USB adapter.
 
 backEMF
--------
+~~~~~~~
 
 The reverse current resulting from switching motor speeds from high to
 low is called backEMF (Electro Magnetic Force). When the motor speed
@@ -178,25 +132,3 @@ regulators**, e.g. like this one from
 `polulu <https://www.pololu.com/product/3775>`__, but they can't
 dissipate much power and high-power versions also get expensive.
 
-Communication: CAN Bus wiring
------------------------------
-
-Along the CAN bus proper grounding and ideally, isolated ground is
-required for improvement of the signal quality. Therefore, the common
-shared ground for PC and motors is of great importance in CAN connection
-communication. When daisy-chaining multiple actuators, one can use the
-Ground form the R-Link connector of the motor, which is connected to the
-negative power pin. This can share the common ground from the PC side
-and power supply. At the very begining and end of the CAN chain, there
-must be of the termination resistors of :math:`\small{120\,\Omega}`
-between CAN-High and CAN-Low, which will be then connected to the
-corresponding pins between drivers. These resistors aim to absorb the
-signals and prevents the signals from being reflected at the wire ends.
-The CAN protocol is differential, hence no additional ground reference
-is needed. The diagram below displays the wiring of the CAN bus.
-
-.. image:: ../../hardware/images/can_bus.png
-   :width: 100%
-   :align: center
-
-**Fig. 2:** main pc = CPU, CAN transceiver = CAN XCVR, actuator = AC

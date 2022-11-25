@@ -376,8 +376,8 @@ class model_parameters():
         return self.__str__()
 
     def load_model(self, model_design, model_id, robot):
-        if model_design == "A.0":
-            if model_id[0] == "1":
+        if model_design == "design_A.0":
+            if model_id[6] == "1":
                 self.m = [0.608, 0.630]
                 self.l = [0.3, 0.2]
                 self.r = [0.275, 0.166]
@@ -389,7 +389,7 @@ class model_parameters():
                 self.gr = 6
                 self.tl = [10., 10.]
                 self.dof = 2
-            elif model_id[0] == "2":
+            elif model_id[6] == "2":
                 self.m = [0.5476215952387185, 0.5978621372377623]
                 self.l = [0.3, 0.2]
                 self.r = [0.3, 0.2]
@@ -402,8 +402,8 @@ class model_parameters():
                 self.tl = [10., 10.]
                 self.dof = 2
 
-        if model_design == "B.0":
-            if model_id[0] == "1":
+        if model_design == "design_B.0":
+            if model_id[6] == "1":
                 self.m = [0.6870144235621288, 0.6018697747980919]
                 self.l = [0.3, 0.4]
                 self.r = [0.3, 0.4150911636151641]
@@ -415,7 +415,7 @@ class model_parameters():
                 self.gr = 6.0
                 self.tl = [10.0, 10.0]
                 self.dof = 2
-            elif model_id[:2] == "h2":
+            elif model_id[6:8] == "h2":
                 self.m = [0.608, 0.63]
                 self.l = [0.3, 0.4]
                 self.r = [0.3, 0.4]
@@ -427,8 +427,8 @@ class model_parameters():
                 self.gr = 6.0
                 self.tl = [10.0, 10.0]
                 self.dof = 2
-        if model_design == "C.0":
-            if model_id[0] == "3":
+        if model_design == "design_C.0":
+            if model_id[6] == "3":
                 self.m = [0.6416936775868083, 0.5639360564500752]
                 self.l = [0.2, 0.3]
                 self.r = [0.2, 0.32126693265850237]
@@ -440,7 +440,7 @@ class model_parameters():
                 self.gr = 6.0
                 self.tl = [10.0, 10.0]
                 self.dof = 2
-            elif model_id[:2] == "h1":
+            elif model_id[6:8] == "h1":
                 self.m = [0.5476215952387185, 0.5978621372377623]
                 self.l = [0.2, 0.3]
                 self.r = [0.2, 0.275]
@@ -452,8 +452,8 @@ class model_parameters():
                 self.gr = 6.0
                 self.tl = [10.0, 10.0]
                 self.dof = 2
-        if model_design == "hD.0":
-            if model_id[:2] == "h1":
+        if model_design == "design_hD.0":
+            if model_id[6:8] == "h1":
                 self.m = [0.5476215952387185, 0.5978621372377623]
                 self.l = [0.3, 0.3]
                 self.r = [0.3, 0.275]

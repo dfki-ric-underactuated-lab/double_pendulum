@@ -16,8 +16,8 @@ from double_pendulum.simulation.simulation import Simulator
 
 class Test(unittest.TestCase):
 
-    mpar = model_parameters(model_design="C.0",
-                            model_id="3.1")
+    mpar = model_parameters(model_design="design_C.0",
+                            model_id="model_3.1")
 
     goals = [[np.pi, 0., 0., 0.]]
 
@@ -45,8 +45,8 @@ class Test(unittest.TestCase):
                                 "model_3.1",
                                 "acrobot",
                                 "ilqr_2/trajectory.csv")
-        mpar = model_parameters(model_design="C.0",
-                                model_id="3.1",
+        mpar = model_parameters(model_design="design_C.0",
+                                model_id="model_3.1",
                                 robot="acrobot")
 
         controller = TVLQRController(
@@ -73,8 +73,8 @@ class Test(unittest.TestCase):
                                 "model_3.1",
                                 "pendubot",
                                 "ilqr_1/trajectory.csv")
-        mpar = model_parameters(model_design="C.0",
-                                model_id="3.1",
+        mpar = model_parameters(model_design="design_C.0",
+                                model_id="model_3.1",
                                 robot="pendubot")
 
         controller = TVLQRController(

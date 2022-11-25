@@ -18,5 +18,5 @@ doc:
 	make -C $(DOC_ROOT) generate_rst
 	make -C $(DOC_ROOT) html
 
-unittest:
+tests:
 	make -C $(TEST_ROOT)

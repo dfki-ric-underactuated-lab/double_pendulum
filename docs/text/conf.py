@@ -25,6 +25,7 @@ extensions = [
               'numpydoc',
               'sphinx.ext.coverage',
               'sphinx.ext.napoleon',
+              "sphinx.ext.autosectionlabel",
               ]
 numpydoc_show_class_members = False
 
