@@ -1,5 +1,5 @@
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 3
    :titlesonly:
 
     Double Pendulum Dynamics <dynamics.rst>
@@ -9,3 +9,6 @@
     Motors <motors.rst>
     Testbench Setup <hardware.rst>
     Experiments <experiments.rst>
+    System Identification <system_identification.rst>
+    Control Methods <control.rst>
+    Controller Benchmarks <benchmark.rst>

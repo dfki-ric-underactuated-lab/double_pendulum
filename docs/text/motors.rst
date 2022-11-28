@@ -4,7 +4,7 @@ Motors
 The double pendulum testbench can be build either with motors from
 `T-Motor <https://store.tmotor.com/>`__ or from 
 `MJBots <https://mjbots.com/>`__.
-The motor setup and usage is documentated here.
+The motor setup and usage is documented here.
 
 .. toctree::
    :maxdepth: 1
