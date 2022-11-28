@@ -52,7 +52,7 @@ disconnects the actuator from power supply and capacitor, if only the
 power supply gets diconnected the actuator will keep running with the
 energy stored in the capacitor.
 
-.. image:: ../../hardware/images/hardware_setup.png
+.. image:: ../../hardware/images/wiring-diagram.png
    :width: 80%
    :align: center
 
