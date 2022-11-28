@@ -4,9 +4,7 @@
 </div>
 
 <div align="center">
-<img width="300" src="hardware/images/double_pendulum_CAD.png">
-<img width="290" src="docs/figures/double_pendulum_animation.gif" />
-<img width="328" src="docs/figures/chaotic_freefall_long_exposure_shot.jpg">
+<img width="500" src="docs/figures/chaotic_freefall_long_exposure_shot.jpg">
 </div>
 
 ## Introduction #
@@ -24,6 +22,11 @@ results from experiments with the simulator and the real system. This
 repository describes the hardware (CAD, Bill Of Materials (BOM) etc.) required
 to build the physical system and provides the software (URDF models, simulation
 and controller) to control it.
+
+<div align="center">
+<img width="300" src="hardware/images/double_pendulum_CAD.png">
+<img width="290" src="docs/figures/double_pendulum_animation.gif" />
+</div>
 
 <!---
 ## Documentation
@@ -59,6 +62,17 @@ To install this project, clone this repository and do
 
 in the main directory. We recommend using a virtual python environment.
 For more details, we refer to the [documentation]().
+
+## Documentation
+
+The [documentation]() for this project can be found [here]().
+
+The documentation can also be generated locally by doing
+
+    make doc
+
+in the main directory. Afterwards you can open the file
+<mark> docs/build/_build/html/index.html</mark> in your browser.
 
 ## Repository Structure
 
