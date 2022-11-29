@@ -65,8 +65,7 @@ In this case, the estimated RoA can be written as:
   \mathcal{B}_{\text{est}} = \left \{ \vect{x} \vert \vect{x}^{T} \mat{S} \vect{x} \leq \rho \right \}
 
 Where :math:`\rho` is a scalar that can be estimated using either
-probabilistic~\cite{najafi2016} or optimization based
-methods~\cite{parrilo2000}.
+probabilistic [3] or optimization based methods [4].
 
 
 For further reading we refer to these lecture notes [2].

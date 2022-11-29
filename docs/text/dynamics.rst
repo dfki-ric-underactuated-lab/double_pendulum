@@ -1,7 +1,7 @@
 The Double Pendulum System
 ==========================
 
-This page gives an overview over the mathematical desciption of the double
+This page gives an overview over the mathematical description of the double
 pendulum dynamics.
 
 
