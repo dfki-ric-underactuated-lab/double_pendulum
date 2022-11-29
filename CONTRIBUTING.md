@@ -2,17 +2,6 @@
 
 Contributions to this project are very welcome!
 
-Please try to follow the software guidelines from this repository as described
-in the documentation.
-
-If you contribute a controller, please
-
-1. Create a README.md file in your controller directory in which you explain
-   how the controller works and how it can be used.
-2. Create a requirements.txt file where you list required packages that are not
-   listed in the main [requirements](software/python/requirements.txt) file of
-   the project.
-
 If you discover bugs, have feature requests, or want to improve the
 documentation, please open an issue at the issue tracker of the project.
 
@@ -25,3 +14,15 @@ request from your forked branch to the main branch.
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)
 5. Create a new Pull Request
+
+Please try to follow the software guidelines from this repository as described
+in the documentation.
+
+If you contribute a controller, please
+
+1. Create a .rst file in the docs/text folder in which you explain how the
+   controller works. If possible add references.
+2. Write meaningful docstrings for your code (numpy doctring format).
+3. If your controller requires additional libraries, add them to
+   src/python/setup.py (for python libraries) or add them to the installation
+   guide.
