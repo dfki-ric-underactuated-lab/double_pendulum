@@ -481,12 +481,13 @@ class DoublePendulumPlant():
         h1 = self.l[0]*self.m[1]*self.com[1]
 
         Minvx[1, 0, 0] = -2.*self.I[1]*h1**2.*np.sin(x[1])*np.cos(x[1]) / den**2.
-        Minvx[1, 0, 1] = 2*h1**2.*(self.I[1] + h1*np.cos(x[1])**2.*np.sin(x[1])) / den**2. - \
-                h1*np.sin(x[0]) / den
-        Minvx[1, 1, 0] = 2*h1**2.*(self.I[1] + h1*np.cos(x[1])**2.*np.sin(x[1])) / den**2. - \
-                h1*np.sin(x[0]) / den
-        Minvx[1, 1, 1] = 2*h1**2*(-self.I[0]-self.I[1]*self.l[0]**2.*self.m[1]
-                                  -2*h1*np.cos(x[1])**2.*np.sin(x[1])) / den**2.
+        Minvx[1, 0, 1] = 2*h1**2.*(self.I[1] + h1*np.cos(x[1]))*np.cos(x[1])*np.sin(x[1]) / den**2. - \
+                h1*np.sin(x[1]) / den
+        Minvx[1, 1, 0] = 2*h1**2.*(self.I[1] + h1*np.cos(x[1]))*np.cos(x[1])*np.sin(x[1]) / den**2. - \
+                h1*np.sin(x[1]) / den
+        Minvx[1, 1, 1] = 2*h1**2*(-self.I[0]-self.I[1]-self.l[0]**2.*self.m[1]
+                                  -2*h1*np.cos(x[1]))*np.cos(x[1])*np.sin(x[1]) / den**2. + \
+                2*h1*np.sin(x[1])/den
         return Minvx
 
     def get_Cx(self, x, tau):
@@ -590,8 +591,8 @@ class DoublePendulumPlant():
         """
         Fx = np.zeros((self.dof, 2*self.dof))
 
-        Fx[0, 2] = self.b[0] + self.coulomb_fric[0] / (1+(100*x[2])**2)
-        Fx[1, 3] = self.b[1] + self.coulomb_fric[1] / (1+(100*x[3])**2)
+        Fx[0, 2] = self.b[0] + 100*self.coulomb_fric[0] / (1+(100*x[2])**2)
+        Fx[1, 3] = self.b[1] + 100*self.coulomb_fric[1] / (1+(100*x[3])**2)
         return Fx
 
     def get_Alin(self, x, u):
@@ -638,48 +639,9 @@ class DoublePendulumPlant():
         qddx[0, 2] = 1.
         qddx[1, 3] = 1.
 
-        # Diff1 = np.zeros((self.dof, 2*self.dof))
-        # Diff2 = np.zeros((self.dof, 2*self.dof))
-        # tmpCx = np.zeros((self.dof, 2*self.dof))
-
-        # # ToDo: Make simple without loop and tmps
-        # for i in range(2*self.dof):
-        #     tmp = np.dot(Minvx[i], (np.dot(self.B, u) - np.dot(C, x[2:]) + G - F))
-        #     Diff1[0, i] = tmp[0]
-        #     Diff2[1, i] = tmp[1]
-
-        #     tmp2 = np.dot(Cx[i], x[2:])
-        #     tmpCx[0, i] = tmp2[0]
-        #     tmpCx[1, i] = tmp2[1]
-
-        # Diff2 += np.dot(Minv, -tmpCx - np.dot(C, qddx) + Gx - Fx)
-
-        # Alin[2:, : ] = Diff1 + Diff2
-
-        # print(np.shape(Minvx))
-        # print(np.shape(np.dot(self.B, u)))
-        # print(np.shape(np.dot(C, x[2:])))
-        # print(np.shape(G))
-        # print(np.shape(F))
-
-        # print(np.shape(np.dot(Minvx, (np.dot(self.B, u) - np.dot(C, x[2:]) + G - F))))
-
-        # print("------------------")
-
-        # print(np.shape(Minv))
-        # print(np.shape(np.dot(Cx, x[2:]).T))
-        # print(np.shape(np.dot(C, qddx)))
-        # print(np.shape(Gx))
-        # print(np.shape(Fx))
-
-        # print(np.shape(np.dot(Minv, -np.dot(Cx, x[2:]).T - np.dot(C, qddx) + Gx - Fx)))
-
         lower = np.dot(Minvx, (np.dot(self.B, u) - np.dot(C, x[2:]) + G - F)).T + \
                 np.dot(Minv, -np.dot(Cx, x[2:]).T - np.dot(C, qddx) + Gx - Fx)
         Alin[2:, :] = lower
-
-        #print("regular plant Minv", Minv)
-        #print("regular plant Minv*Fx", np.dot(Minv, Fx))
 
         return Alin
 
