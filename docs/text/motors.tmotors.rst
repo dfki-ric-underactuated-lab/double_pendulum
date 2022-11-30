@@ -1,5 +1,11 @@
-T-Motors (AK-80-6)
+T-Motor (AK-80-6)
 ------------------
+
+The T-Motor double pendulum uses the `AK80-6 Motors
+<https://store.tmotor.com/goods.php?id=981>`__ from T-Motor. Here the motors'
+physical parameters, the initial setup as well as the usage with the python
+driver is documented. The AK80-6 manual can be found `here
+<https://store.tmotor.com/images/file/202208/251661393360838805.pdf>`__ .
 
 Physical Parameters of the Actuator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -75,8 +81,11 @@ Tutorials
 -  T-MOTOR: https://www.youtube.com/watch?v=hbqQCgebaF8
 -  Skyentific: https://www.youtube.com/watch?v=HzY9vzgPZkA
 
-UART Connection: R-Link module
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+Instructions: R-Link Config Tool
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+**User manual & configuration tool:**
+`store-en.tmotor.com <https://store-en.tmotor.com/goods.php?id=1085>`__
 
 R-LINK is a USB to serial port module, specially designed for CubeMars A
 Series of dynamical modular motors. It is possible to calibrate the
@@ -84,19 +93,13 @@ encoder in the module, change CAN ID settings, PID settings, as well as
 to control position, torque and speed of the motor within the
 configuration software tool.
 
-.. image:: ../../hardware/images/r-link_module.jpg
-   :width: 100%
-   :align: center
+|pic1| |pic2|
 
-Instructions: R-Link Config Tool
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+.. |pic1| image:: ../../hardware/images/r-link_module.jpg
+   :width: 44%
 
-**User manual & configuration tool:**
-`store-en.tmotor.com <https://store-en.tmotor.com/goods.php?id=1085>`__
-
-.. image:: ../../hardware/images/r-link_wiring.PNG
-   :width: 100%
-   :align: center
+.. |pic2| image:: ../../hardware/images/r-link_wiring.PNG
+   :width: 54%
 
 1. Wire the R-LINK module as shown in the figure below. A USB to micro
    USB cable connects a pc with the R-LINK module and the 5pin cable
@@ -132,17 +135,18 @@ Instructions: R-Link Config Tool
 8. ``Enter M_Mode`` to control the motor. This is indicated by a color
    change of the plot line, from red to green.
 
-9. | In order to push changes in the settings to the motor, press
-     ``Send Once``.
-   | > **WARNING:** This button does not work reliably. Usually it has
-     to be activated several times > before the setting changes
+9. In order to push changes in the settings to the motor, press ``Send Once``.
+
+   .. warning:: This button does not work reliably. Usually it has
+     to be activated several times before the setting changes
      actually apply on the motor.
 
 10. Stop the motor inside the M-Mode by setting the velocity to 0 and
     pressing ``Send Once`` until the changes apply.
 
-11. | ``Exit M_Mode`` to exit the control mode of the motor.
-    | > **WARNING:** The next time you start the motor control with
+11. ``Exit M_Mode`` to exit the control mode of the motor.
+
+    .. warning:: The next time you start the motor control with
       ``Enter M_Mode`` the motor will restart with the exact same
       settings as you left the control mode with ``Exit M_Mode``. This
       is especially dangerous if a weight is attached to the pendulum
@@ -156,8 +160,8 @@ Debugging
 <<<<<<<<<
 
 Error messages that showed up during the configuration procedure, such
-as ``UVLO`` (VM undervoltage lockout) and ``OTW`` (Thermal warning and
-shutdown), could be interpreted with the help of the datasheet for the
+as ``UVLO`` (VM under voltage lockout) and ``OTW`` (Thermal warning and
+shutdown), could be interpreted with the help of the data sheet for the
 DRV8353M 100-V Three-Phase Smart Gate Driver from Texas Instruments:
 
 | **Datasheet:**
@@ -178,7 +182,7 @@ shared ground for PC and motors is of great importance in CAN connection
 communication. When daisy-chaining multiple actuators, one can use the
 Ground form the R-Link connector of the motor, which is connected to the
 negative power pin. This can share the common ground from the PC side
-and power supply. At the very begining and end of the CAN chain, there
+and power supply. At the very beginning and end of the CAN chain, there
 must be of the termination resistors of :math:`\small{120\,\Omega}`
 between CAN-High and CAN-Low, which will be then connected to the
 corresponding pins between drivers. These resistors aim to absorb the
@@ -219,12 +223,12 @@ To setup the CAN connection follow these steps:
 
     sudo ip link set up can0
 
-Note: Alternatively, one could run the shell script
-``setup_caninterface.sh`` which will do the job for you.
+.. note:: Alternatively, one could run the shell script
+   ``setup_caninterface.sh`` which will do the job for you.
 
--  To change motor parameters such as CAN ID or to calibrate the
-   encoder, a serial connection is used. The serial terminal GUI used on
-   linux for this purpose is ``cutecom``
+.. note:: To change motor parameters such as CAN ID or to calibrate the
+   encoder, a serial connection is used. The serial terminal GUI used on Linux
+   for this purpose is ``cutecom``
 
 Testing Motor Connection
 <<<<<<<<<<<<<<<<<<<<<<<<
@@ -239,7 +243,8 @@ script.  The script will print the communication frequencies to the terminal.
 Python Interface
 ~~~~~~~~~~~~~~~~
 
-The Python - Motor communication is done with the `python driver <https://github.com/dfki-ric-underactuated-lab/mini-cheetah-tmotor-python-can>`__.
+The Python - Motor communication is done with the `python driver
+<https://github.com/dfki-ric-underactuated-lab/mini-cheetah-tmotor-python-can>`__.
 The basic python interface is the following:
 
 Example Motor Initialization (for can interface ``can0`` and ``motor_id`` =1):
@@ -248,7 +253,7 @@ Example Motor Initialization (for can interface ``can0`` and ``motor_id`` =1):
 
     motor = CanMotorController(can_socket='can0', motor_id=1, socket_timeout=0.5)
 
-Available Functions:
+Available functions:
 
 .. code:: 
 
@@ -269,7 +274,7 @@ A proportional-derivative controller, which is based on the MIT
 Mini-Cheetah Motor, is implemented on the motor controller board. The
 control block diagram of this closed loop controller is shown below. It
 can bee seen that the control method is flexible, as pure position,
-speed, feedforward torque control or any combination of those is
+speed, feed forward torque control or any combination of those is
 possible.
 
 .. image:: ../../hardware/images/motor_ak80-6_pdcontroller.png
@@ -282,4 +287,4 @@ the::
     send_rad_command(Pdes, Pvel, Kp, Kd, tff)
 
 function lets you set desired position (Pdes), velocity (Pvel), Kp, Kd
-and feedforward torque (tff) values at every time step.
+and feed forward torque (tff) values at every time step.

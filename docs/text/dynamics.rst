@@ -92,6 +92,9 @@ the friction vector
     \end{matrix} \right]
     \label{eq:friction_matrix}
 
+(the :math:`\arctan(100\dot{q}_i)` function is used to approximate the
+discrete step function for the coulomb friction)
+
 and the actuator selection matrix :math:`\mat {D}`
 
 .. math::
