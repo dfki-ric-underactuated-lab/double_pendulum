@@ -8,11 +8,11 @@ Welcome to Double Pendulum's documentation!
 
 |pic1| |pic2|
 
-.. |pic1| image:: ../figures/chaotic_freefall_long_exposure_shot.jpg
+.. |pic1| image:: ../../hardware/images/double_pendulum_CAD.png
    :width: 45%
 
 .. |pic2| image:: ../figures/double_pendulum_animation.gif
-   :width: 45%
+   :width: 54%
 
 This project offers an open-source and low-cost kit to test control algorithms
 for underactuated robots with strongly non-linear dynamics. It implements a
@@ -28,12 +28,10 @@ with the simulator and the real system. This repository describes the hardware
 (CAD, Bill Of Materials (BOM) etc.) required to build the physical system and
 provides the software (URDF models, simulation and controller) to control it.
 
-.. image:: ../figures/Logo_Underactuated_Lab.*
-   :width: 100%
-   :align: center
+Link to repository: `<https://git.hb.dfki.de/underactuated-robotics/release_version/caprr-release-version>`__
 
 .. toctree::
-    :maxdepth: 3
+    :maxdepth: 1
     :caption: Table of Contents
 
     modules
@@ -44,3 +42,11 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+|pic3| |pic4|
+
+.. |pic3| image:: ../figures/Logo_Underactuated_Lab.*
+   :width: 70%
+
+.. |pic4| image:: ../figures/logo.jpg
+   :width: 29%

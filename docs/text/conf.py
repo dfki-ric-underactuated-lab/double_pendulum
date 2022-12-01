@@ -46,7 +46,8 @@ html_theme_options={'titles_only' : True,
 html_static_path = ['_static']
 
 #-----------------------------------------------------------------------------
-html_logo = f'../figures/logo.jpg'
+#html_logo = f'../figures/logo.jpg'
+html_logo = f'../figures/chaotic_freefall_long_exposure_shot.jpg'
 html_theme_options = {
     'logo_only': False,
     'display_version': True,

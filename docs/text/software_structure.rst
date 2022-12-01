@@ -94,7 +94,9 @@ column. The headers used are:
 - K11,K12,K13,K14,K21,K22,K23,K24
 - k1,k2
 
-Note that not all headers/columns have to used.
+.. note:: 
+
+    Not all headers/columns have to used.
 
 .. note::
 
@@ -108,7 +110,7 @@ The easiest way to stay consistent with this format is to use the functions
     load_trajectory(...)
     load_trajectory_full(...)
 
-in double_pendulum.utils.csv_trajectory. These functions used the panda library
+in double_pendulum.utils.csv_trajectory. These functions use the panda library
 to save/load the data. Missing header labels are skipped.
 
 (Abstract) Controller

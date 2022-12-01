@@ -1,5 +1,5 @@
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    :titlesonly:
 
     Double Pendulum Dynamics <dynamics.rst>
