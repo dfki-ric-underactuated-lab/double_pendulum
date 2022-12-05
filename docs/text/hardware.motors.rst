@@ -9,8 +9,8 @@ The motor setup and usage is documented here.
 .. toctree::
    :maxdepth: 1
 
-   motors.tmotors.rst
-   motors.mjbots.rst
+   hardware.motors.tmotors.rst
+   hardware.motors.mjbots.rst
 
 .. note::
 

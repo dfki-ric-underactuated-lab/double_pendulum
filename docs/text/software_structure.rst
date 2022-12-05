@@ -1,5 +1,5 @@
-Software Structure
-==================
+Repository Structure
+====================
 
 Programming Language
 --------------------
