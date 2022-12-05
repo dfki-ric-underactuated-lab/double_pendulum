@@ -162,44 +162,45 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
 
 # saving and plotting
 mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
+controller.save(save_dir)
 
-par_dict = {
-            "dt": dt,
-            "t_final": t_final,
-            "integrator": integrator,
-            "start_pos1": start[0],
-            "start_pos2": start[1],
-            "start_vel1": start[2],
-            "start_vel2": start[3],
-            "goal_pos1": goal[0],
-            "goal_pos2": goal[1],
-            "goal_vel1": goal[2],
-            "goal_vel2": goal[3],
-            "N": N,
-            "N_init": N_init,
-            "max_iter": max_iter,
-            "max_iter_init": max_iter_init,
-            "regu_init": regu_init,
-            "max_regu": max_regu,
-            "min_regu": min_regu,
-            "break_cost_redu": break_cost_redu,
-            "trajectory_stabilization": trajectory_stabilization,
-            "sCu1": sCu[0],
-            "sCu2": sCu[1],
-            "sCp1": sCp[0],
-            "sCp2": sCp[1],
-            "sCv1": sCv[0],
-            "sCv2": sCv[1],
-            "sCen": sCen,
-            "fCp1": fCp[0],
-            "fCp2": fCp[1],
-            "fCv1": fCv[0],
-            "fCv2": fCv[1],
-            "fCen": fCen
-            }
-
-with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
-    yaml.dump(par_dict, f)
+# par_dict = {
+#             "dt": dt,
+#             "t_final": t_final,
+#             "integrator": integrator,
+#             "start_pos1": start[0],
+#             "start_pos2": start[1],
+#             "start_vel1": start[2],
+#             "start_vel2": start[3],
+#             "goal_pos1": goal[0],
+#             "goal_pos2": goal[1],
+#             "goal_vel1": goal[2],
+#             "goal_vel2": goal[3],
+#             "N": N,
+#             "N_init": N_init,
+#             "max_iter": max_iter,
+#             "max_iter_init": max_iter_init,
+#             "regu_init": regu_init,
+#             "max_regu": max_regu,
+#             "min_regu": min_regu,
+#             "break_cost_redu": break_cost_redu,
+#             "trajectory_stabilization": trajectory_stabilization,
+#             "sCu1": sCu[0],
+#             "sCu2": sCu[1],
+#             "sCp1": sCp[0],
+#             "sCp2": sCp[1],
+#             "sCv1": sCv[0],
+#             "sCv2": sCv[1],
+#             "sCen": sCen,
+#             "fCp1": fCp[0],
+#             "fCp2": fCp[1],
+#             "fCv1": fCv[0],
+#             "fCv2": fCv[1],
+#             "fCen": fCen
+#             }
+#
+# with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
+#     yaml.dump(par_dict, f)
 
 save_trajectory(os.path.join(save_dir, "trajectory.csv"), T, X, U)
 

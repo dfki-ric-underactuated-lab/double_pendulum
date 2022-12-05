@@ -10,9 +10,9 @@ from double_pendulum.utils.plotting import plot_timeseries
 
 
 # model parameters
-design = "design_A.0"
-model = "model_2.0"
-robot = "acrobot"
+design = "design_C.0"
+model = "model_3.0"
+robot = "pendubot"
 friction_compensation = True
 
 if robot == "pendubot":
@@ -81,8 +81,10 @@ if robot == "acrobot":
     #Q = np.eye(4)
     #R = np.eye(2)
 
-    Q = np.diag([0.2359135295406382, 0.00012031401460372956, 0.9533318705882882, 0.3144494134868428])
-    R = np.eye(2)*0.7862320379758454
+    #Q = np.diag([0.2359135295406382, 0.00012031401460372956, 0.9533318705882882, 0.3144494134868428])
+    #R = np.eye(2)*0.7862320379758454
+    Q = np.diag([0.64, 0.99, 0.78, 0.64])
+    R = np.eye(2)*0.27
 
 elif robot == "pendubot":
     x0 = [np.pi-0.2, 0.3, 0., 0.]
@@ -91,19 +93,22 @@ elif robot == "pendubot":
     # [0.01251931 6.51187283 6.87772744 9.35785251 0.02354949]
     #Q = np.diag([0.0125, 6.5, 6.88, 9.36])
     #R = np.diag([0.024, 0.024])
-    Q = np.diag([0.00125, 0.65, 0.000688, 0.000936])
-    R = np.diag([25.0, 25.0])
+    #Q = np.diag([0.00125, 0.65, 0.000688, 0.000936])
+    #R = np.diag([25.0, 25.0])
     # [8.74006242e+01 1.12451099e-02 9.59966065e+01 8.99725246e-01 2.37517689e-01]
     #Q = np.diag([87.4, 0.012, 96.0, 0.9])
     #R = np.diag([0.23, 0.23])
     # [1.16402700e+01 7.95782007e+01 7.29021272e-02 3.02202319e-04 1.29619149e-01]
     #Q = np.diag((11.64, 79.58, 0.073, 0.0003))
     #R = np.diag((0.13, 0.13))
+    Q = np.diag([0.0125, 6.5, 6.88, 9.36])
+    #R = np.diag([0.024, 0.024])
+    R = np.diag([2.4, 2.4])
 
 
 
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "lqr", timestamp)
+save_dir = os.path.join("data", design, model, robot, "lqr", timestamp)
 os.makedirs(save_dir)
 
 plant = SymbolicDoublePendulum(model_pars=mpar)
@@ -134,6 +139,8 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    integrator=integrator,
                                    save_video=False,
                                    video_name=os.path.join(save_dir, "simulation"))
+
+controller.save(save_dir)
 
 plot_timeseries(T, X, U, None,
                 plot_energy=False,

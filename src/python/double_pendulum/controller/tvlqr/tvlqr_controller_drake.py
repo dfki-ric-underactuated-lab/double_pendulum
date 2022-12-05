@@ -1,4 +1,5 @@
 import os
+import yaml
 import numpy as np
 from pydrake.systems.controllers import (FiniteHorizonLinearQuadraticRegulatorOptions,
                                          FiniteHorizonLinearQuadraticRegulator)
@@ -7,7 +8,7 @@ from pydrake.multibody.parsing import Parser
 from pydrake.multibody.plant import MultibodyPlant
 
 from double_pendulum.controller.abstract_controller import AbstractController
-from double_pendulum.utils.csv_trajectory import load_trajectory
+from double_pendulum.utils.csv_trajectory import load_trajectory, save_trajectory
 from double_pendulum.utils.urdfs import generate_urdf
 
 #from pydrake.systems.primitives import FirstOrderTaylorApproximation
@@ -246,3 +247,33 @@ class TVLQRController(AbstractController):
         u[0] = np.clip(u[0], -self.torque_limit[0], self.torque_limit[0])
         u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
         return u
+
+    def save_(self, save_dir):
+        """
+        Save the energy trajectory to file.
+
+        Parameters
+        ----------
+        path : string or path object
+            directory where the parameters will be saved
+        """
+
+        par_dict = {
+                "robot" : self.robot,
+                "active_motor" : self.active_motor,
+                "torque_limit1" : self.torque_limit[0],
+                "torque_limit2" : self.torque_limit[1],
+                "max_t" : self.max_t,
+        }
+
+        with open(os.path.join(save_dir, "controller_tvlqr_drake_parameters.yml"), 'w') as f:
+            yaml.dump(par_dict, f)
+
+        np.savetxt(os.path.join(save_dir, "controller_tvlqr_drake_Qmatrix.txt"), self.Q)
+        np.savetxt(os.path.join(save_dir, "controller_tvlqr_drake_Rmatrix.txt"), self.R)
+        np.savetxt(os.path.join(save_dir, "controller_tvlqr_drake_Qfmatrix.txt"), self.Qf)
+
+        T, X, U = self.get_init_trajectory()
+        save_trajectory(os.path.join(save_dir, "initial_tvlqr_drake_traj.csv"), T, X, U)
+
+        os.system(f"cp {self.urdf_path} " + os.path.join(save_dir, self.robot+".urdf"))

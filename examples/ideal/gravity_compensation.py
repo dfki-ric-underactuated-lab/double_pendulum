@@ -33,7 +33,7 @@ x0 = [np.pi/2., np.pi/4., 0., 0.]
 goal = [np.pi, 0., 0., 0.]
 
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "gravity_compensation", timestamp)
+save_dir = os.path.join("data", design, model, robot, "gravity_compensation", timestamp)
 os.makedirs(save_dir)
 
 plant = SymbolicDoublePendulum(model_pars=mpar)
@@ -46,6 +46,7 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    integrator=integrator,
                                    save_video=False,
                                    video_name=os.path.join(save_dir, "simulation"))
+controller.save(save_dir)
 plot_timeseries(T, X, U,
                 pos_y_lines=[0.0, np.pi],
                 tau_y_lines=[-torque_limit[0], torque_limit[0]],

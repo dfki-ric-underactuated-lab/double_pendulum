@@ -30,12 +30,11 @@ mpar.set_torque_limit(torque_limit)
 
 # csv file
 use_feed_forward_torque = True
-csv_path = os.path.join("../../data/trajectories/",
-                        design, traj_model, robot,
-                        "ilqr_1/trajectory.csv")
+csv_path = os.path.join("../../data/trajectories/", design, traj_model, robot, "ilqr_1/trajectory.csv")
 
 T_des, X_des, U_des = load_trajectory(csv_path)
-dt, t_final, x0, _ = trajectory_properties(T_des, X_des)
+dt, _, x0, _ = trajectory_properties(T_des, X_des)
+t_final = 5.5
 goal = [np.pi, 0., 0., 0.]
 integrator = "runge_kutta"
 

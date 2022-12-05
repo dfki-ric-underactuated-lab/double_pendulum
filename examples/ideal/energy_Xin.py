@@ -62,13 +62,16 @@ des_energy = controller.desired_energy
 
 # saving and plotting
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "energy_Xin", timestamp)
+save_dir = os.path.join("data", design, model, robot, "lqr", timestamp)
 os.makedirs(save_dir)
 
 save_trajectory(csv_path=os.path.join(save_dir, "trajectory.csv"),
                 T=T,
                 X=X,
                 U=U)
+
+mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
+controller.save(save_dir)
 
 plot_timeseries(T=T, X=X, U=U, energy=energy,
                 plot_energy=True,
@@ -77,21 +80,19 @@ plot_timeseries(T=T, X=X, U=U, energy=energy,
                 energy_y_lines=[des_energy],
                 save_to=os.path.join(save_dir, "time_series"))
 
-mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
-
-par_dict = {
-            "dt": dt,
-            "t_final": t_final,
-            "integrator": integrator,
-            "start_pos1": x0[0],
-            "start_pos2": x0[1],
-            "start_vel1": x0[2],
-            "start_vel2": x0[3],
-            "goal_pos1": goal[0],
-            "goal_pos2": goal[1],
-            "goal_vel1": goal[2],
-            "goal_vel2": goal[3],
-            }
-
-with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
-    yaml.dump(par_dict, f)
+# par_dict = {
+#             "dt": dt,
+#             "t_final": t_final,
+#             "integrator": integrator,
+#             "start_pos1": x0[0],
+#             "start_pos2": x0[1],
+#             "start_vel1": x0[2],
+#             "start_vel2": x0[3],
+#             "goal_pos1": goal[0],
+#             "goal_pos2": goal[1],
+#             "goal_vel1": goal[2],
+#             "goal_vel2": goal[3],
+#             }
+#
+# with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
+#     yaml.dump(par_dict, f)

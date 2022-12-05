@@ -11,10 +11,10 @@ from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
 ## model parameters
-design = "design_A.0"
-model = "model_2.0"
-traj_model = "model_2.1"
-robot = "pendubot"
+design = "design_C.0"
+model = "model_3.0"
+traj_model = "model_3.1"
+robot = "acrobot"
 
 if robot == "acrobot":
     torque_limit = [0.0, 6.0]
@@ -50,7 +50,7 @@ break_cost_redu = 1e-6
 trajectory_stabilization = True
 shifting = 1
 
-init_csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
+init_csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_2/trajectory.csv")
 
 if robot == "acrobot":
     sCu = [.1, .1]
@@ -155,48 +155,9 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
 
 # saving and plotting
 
-os.system(f"cp {init_csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))
-
 mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
-
-par_dict = {
-            "dt": dt,
-            "t_final": t_final,
-            "integrator": integrator,
-            "start_pos1": start[0],
-            "start_pos2": start[1],
-            "start_vel1": start[2],
-            "start_vel2": start[3],
-            "goal_pos1": goal[0],
-            "goal_pos2": goal[1],
-            "goal_vel1": goal[2],
-            "goal_vel2": goal[3],
-            "N": N,
-            "N_init": N_init,
-            "max_iter": max_iter,
-            "max_iter_init": max_iter_init,
-            "regu_init": regu_init,
-            "max_regu": max_regu,
-            "min_regu": min_regu,
-            "break_cost_redu": break_cost_redu,
-            "trajectory_stabilization": trajectory_stabilization,
-            "sCu1": sCu[0],
-            "sCu2": sCu[1],
-            "sCp1": sCp[0],
-            "sCp2": sCp[1],
-            "sCv1": sCv[0],
-            "sCv2": sCv[1],
-            "sCen": sCen,
-            "fCp1": fCp[0],
-            "fCp2": fCp[1],
-            "fCv1": fCv[0],
-            "fCv2": fCv[1],
-            "fCen": fCen
-            }
-
-with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
-    yaml.dump(par_dict, f)
-
+os.system(f"cp {init_csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))
+controller.save(save_dir)
 save_trajectory(os.path.join(save_dir, "trajectory.csv"), T, X, U)
 
 T_des, X_des, U_des = load_trajectory(init_csv_path)

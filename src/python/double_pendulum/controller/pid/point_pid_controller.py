@@ -1,3 +1,5 @@
+import os
+import yaml
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
@@ -122,3 +124,32 @@ class PointPIDController(AbstractController):
         u2 = np.clip(u2, -self.torque_limit[1], self.torque_limit[1])
         u = np.asarray([u1, u2])
         return u
+
+    def save_(self, save_dir):
+        """
+        Save the energy trajectory to file.
+
+        Parameters
+        ----------
+        path : string or path object
+            directory where the parameters will be saved
+        """
+
+        par_dict = {
+                "dt" : self.dt,
+                "torque_limit1" : self.torque_limit[0],
+                "torque_limit2" : self.torque_limit[1],
+                "Kp" : self.Kp,
+                "Ki" : self.Ki,
+                "Kd" : self.Kd,
+                "goal_x1" : self.goal[0],
+                "goal_x2" : self.goal[1],
+                "goal_x3" : self.goal[2],
+                "goal_x4" : self.goal[3],
+        }
+
+        with open(os.path.join(save_dir, "controller_pid_parameters.yml"), 'w') as f:
+            yaml.dump(par_dict, f)
+
+        np.savetxt(os.path.join(save_dir, "controller_pid_errors.csv"),
+                   [self.errors1, self.errors2])

@@ -10,9 +10,9 @@ from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
-design = "design_A.0"
-model = "model_2.0"
-traj_model = "model_2.1"
+design = "design_C.0"
+model = "model_3.0"
+traj_model = "model_3.1"
 robot = "acrobot"
 
 friction_compensation = True
@@ -43,16 +43,16 @@ goal = [np.pi, 0., 0., 0.]
 # noise
 process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
 meas_noise_sigmas = [0.0, 0.0, 0.05, 0.05]
-delay_mode = "None"
-delay = 0.0
-u_noise_sigmas = [0., 0.]
+delay_mode = "vel"
+delay = 0.01
+u_noise_sigmas = [0.01, 0.01]
 u_responsiveness = 1.0
 perturbation_times = []
 perturbation_taus = []
 
 # filter args
 meas_noise_vfilter = "none"
-meas_noise_cut = 0.
+meas_noise_cut = 0.1
 filter_kwargs = {"lowpass_alpha": [1., 1., 0.3, 0.3],
                  "kalman_xlin": goal,
                  "kalman_ulin": [0., 0.],
@@ -78,7 +78,7 @@ trajectory_stabilization = True
 shifting = 1
 
 # trajectory parameters
-init_csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
+init_csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_2/trajectory.csv")
 
 if robot == "acrobot":
     # u_prefac = 1.
@@ -281,59 +281,60 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
 os.system(f"cp {init_csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))
 
 mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
+controller.save(save_dir)
 
-par_dict = {
-            # "mass1": mass[0],
-            # "mass2": mass[1],
-            # "length1": length[0],
-            # "length2": length[1],
-            # "com1": com[0],
-            # "com2": com[1],
-            # "inertia1": inertia[0],
-            # "inertia2": inertia[1],
-            # "damping1": damping[0],
-            # "damping2": damping[1],
-            # "coulomb_friction1": cfric[0],
-            # "coulomb_friction2": cfric[1],
-            # "gravity": gravity,
-            # "torque_limit1": torque_limit[0],
-            # "torque_limit2": torque_limit[1],
-            "dt": dt,
-            "t_final": t_final,
-            "integrator": integrator,
-            "start_pos1": start[0],
-            "start_pos2": start[1],
-            "start_vel1": start[2],
-            "start_vel2": start[3],
-            "goal_pos1": goal[0],
-            "goal_pos2": goal[1],
-            "goal_vel1": goal[2],
-            "goal_vel2": goal[3],
-            "N": N,
-            "N_init": N_init,
-            "max_iter": max_iter,
-            "max_iter_init": max_iter_init,
-            "regu_init": regu_init,
-            "max_regu": max_regu,
-            "min_regu": min_regu,
-            "break_cost_redu": break_cost_redu,
-            "trajectory_stabilization": trajectory_stabilization,
-            "sCu1": sCu[0],
-            "sCu2": sCu[1],
-            "sCp1": sCp[0],
-            "sCp2": sCp[1],
-            "sCv1": sCv[0],
-            "sCv2": sCv[1],
-            "sCen": sCen,
-            "fCp1": fCp[0],
-            "fCp2": fCp[1],
-            "fCv1": fCv[0],
-            "fCv2": fCv[1],
-            "fCen": fCen
-            }
+# par_dict = {
+#             # "mass1": mass[0],
+#             # "mass2": mass[1],
+#             # "length1": length[0],
+#             # "length2": length[1],
+#             # "com1": com[0],
+#             # "com2": com[1],
+#             # "inertia1": inertia[0],
+#             # "inertia2": inertia[1],
+#             # "damping1": damping[0],
+#             # "damping2": damping[1],
+#             # "coulomb_friction1": cfric[0],
+#             # "coulomb_friction2": cfric[1],
+#             # "gravity": gravity,
+#             # "torque_limit1": torque_limit[0],
+#             # "torque_limit2": torque_limit[1],
+#             "dt": dt,
+#             "t_final": t_final,
+#             "integrator": integrator,
+#             "start_pos1": start[0],
+#             "start_pos2": start[1],
+#             "start_vel1": start[2],
+#             "start_vel2": start[3],
+#             "goal_pos1": goal[0],
+#             "goal_pos2": goal[1],
+#             "goal_vel1": goal[2],
+#             "goal_vel2": goal[3],
+#             "N": N,
+#             "N_init": N_init,
+#             "max_iter": max_iter,
+#             "max_iter_init": max_iter_init,
+#             "regu_init": regu_init,
+#             "max_regu": max_regu,
+#             "min_regu": min_regu,
+#             "break_cost_redu": break_cost_redu,
+#             "trajectory_stabilization": trajectory_stabilization,
+#             "sCu1": sCu[0],
+#             "sCu2": sCu[1],
+#             "sCp1": sCp[0],
+#             "sCp2": sCp[1],
+#             "sCv1": sCv[0],
+#             "sCv2": sCv[1],
+#             "sCen": sCen,
+#             "fCp1": fCp[0],
+#             "fCp2": fCp[1],
+#             "fCv1": fCv[0],
+#             "fCv2": fCv[1],
+#             "fCen": fCen
+#             }
 
-with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
-    yaml.dump(par_dict, f)
+# with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
+#     yaml.dump(par_dict, f)
 
 save_trajectory(os.path.join(save_dir, "trajectory.csv"), T, X, U)
 

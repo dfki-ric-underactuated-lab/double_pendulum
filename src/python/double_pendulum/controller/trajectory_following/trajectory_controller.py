@@ -1,3 +1,5 @@
+import os
+import yaml
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
@@ -248,3 +250,24 @@ class TrajectoryInterpController(AbstractController):
             units=[Nm]
         """
         return self.T, self.X, self.U
+
+    def save_(self, save_dir):
+        """
+        Save controller parameters
+
+        Parameters
+        ----------
+        save_dir : string or path object
+            directory where the parameters will be saved
+        """
+
+        par_dict = {
+                "torque_limit1" : self.torque_limit[0],
+                "torque_limit2" : self.torque_limit[1],
+                "kK_stabilization" : self.kK_stabilization,
+                "dt" : self.dt,
+                "max_t" : self.max_t,
+        }
+
+        with open(os.path.join(save_dir, "controller_trajfollowing_parameters.yml"), 'w') as f:
+            yaml.dump(par_dict, f)

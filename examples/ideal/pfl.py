@@ -15,7 +15,7 @@ from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl impo
 # model parameters
 design = "design_A.0"
 model = "model_2.0"
-robot = "pendubot"
+robot = "acrobot"
 
 pfl_method = "collocated"
 with_lqr = True
@@ -37,7 +37,7 @@ mpar.set_torque_limit(torque_limit)
 # simulation parameters
 integrator = "runge_kutta"
 goal = [np.pi, 0., 0., 0.]
-dt = 0.002
+dt = 0.01
 x0 = [0.1, 0.0, 0.0, 0.0]
 t_final = 10.0
 
@@ -62,6 +62,7 @@ elif robot == "pendubot":
     if pfl_method == "collocated":
         #par = [8.0722899, 4.92133648, 3.53211381]
         par = [8.8295605, 6.78718988, 4.42965278]
+        #par = [5.23776024, 4.87113077, 3.0001595]
     elif pfl_method == "noncollocated":
         #par = [26.34039456, 99.99876263, 11.89097532]
         par = [8.0722899, 4.92133648, 3.53211381]
@@ -112,7 +113,6 @@ T, X, U = sim.simulate_and_animate(t0=0.0,
                                    phase_plot=False,
                                    save_video=False)
 
-# controller.save(path)
 energy = controller.en
 des_energy = controller.desired_energy
 
@@ -125,25 +125,8 @@ save_trajectory(csv_path=os.path.join(save_dir, "trajectory.csv"),
                 T=T,
                 X=X,
                 U=U)
-
 mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
-
-par_dict = {
-            "dt": dt,
-            "t_final": t_final,
-            "integrator": integrator,
-            "start_pos1": x0[0],
-            "start_pos2": x0[1],
-            "start_vel1": x0[2],
-            "start_vel2": x0[3],
-            "goal_pos1": goal[0],
-            "goal_pos2": goal[1],
-            "goal_vel1": goal[2],
-            "goal_vel2": goal[3],
-            }
-
-with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
-    yaml.dump(par_dict, f)
+controller.save(save_dir)
 
 plot_timeseries(T=T, X=X, U=U, energy=energy,
                 plot_energy=True,

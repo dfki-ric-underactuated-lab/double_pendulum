@@ -10,9 +10,9 @@ from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
 ## model parameters
-design = "design_A.0"
-model = "model_2.0"
-traj_model = "model_2.1"
+design = "design_C.0"
+model = "model_3.0"
+traj_model = "model_3.1"
 robot = "acrobot"
 
 if robot == "pendubot":
@@ -25,18 +25,18 @@ elif robot == "acrobot":
 model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_motor_inertia(0.)
-mpar.set_damping([0., 0.])
+#mpar.set_damping([0., 0.])
 mpar.set_cfric([0., 0.])
 mpar.set_torque_limit(torque_limit)
 
 ## trajectory parameters
-csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
+csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_2/trajectory.csv")
 
 ## load reference trajectory
 T_des, X_des, U_des = load_trajectory(csv_path)
 #dt = T_des[1] - T_des[0]
 t_final = T_des[-1]
-dt = 0.002
+dt = 0.001
 #t_final = 10.
 goal = [np.pi, 0., 0., 0.]
 
@@ -48,13 +48,16 @@ integrator = "runge_kutta"
 if robot == "acrobot":
     #Q = np.diag([0.64, 0.56, 0.13, 0.067])
     Q = np.diag([0.64, 0.56, 0.13, 0.037])
-    R = 0.001*np.eye(2)*0.82
+    #R = 0.001*np.eye(2)*0.82
+    R = np.eye(2)*0.82
 elif robot == "pendubot":
     #Q = np.diag([0.64, 0.64, 0.4, 0.2])
     #R = np.eye(2)*0.82
     Q = 20.*np.diag([0.64, 0.64, 0.1, 0.1])
     R = np.eye(2)*0.82
-Qf = np.copy(Q)
+#Qf = np.copy(Q)
+Qf = 100*np.diag([0.64, 0.56, 0.13, 0.037])
+
 horizon = 1
 
 ## init plant, simulator and controller
@@ -83,6 +86,7 @@ os.makedirs(save_dir)
 
 os.system(f"cp {csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))
 save_trajectory(os.path.join(save_dir, "trajectory.csv"), T, X, U)
+controller.save(save_dir)
 
 plot_timeseries(T, X, U,
                 T_des=T_des,

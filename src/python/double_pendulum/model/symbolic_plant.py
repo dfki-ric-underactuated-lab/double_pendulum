@@ -377,6 +377,7 @@ class SymbolicDoublePendulum():
         Blin = diff_to_matrix(smp.diff(self.f, self.u)).T
         Blin = sub_symbols(Blin, self.x, self.x0)
         Blin = sub_symbols(Blin, self.u, self.u0)
+
         return Alin, Blin.T
 
     def mass_matrix(self, x):

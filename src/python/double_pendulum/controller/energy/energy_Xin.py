@@ -1,3 +1,5 @@
+import os
+import yaml
 import numpy as np
 from scipy.optimize import minimize
 
@@ -236,16 +238,48 @@ class EnergyController(AbstractController):
 
         return u
 
-    def save(self, path="log_energy.csv"):
+    def save_(self, save_dir):
         """
-        Save the energy trajectory to file.
+        Save controller parameters
 
         Parameters
         ----------
-        path : string or path object
-            path where the energy will be save in a txt file
+        save_dir : string or path object
+            directory where the parameters will be saved
         """
-        np.savetxt(path, self.en)
+
+        np.savetxt(os.path.join(save_dir, "energy_log.txt"), self.en)
+
+        par_dict = {
+                "mass1" : self.mass[0],
+                "mass2" : self.mass[1],
+                "length1" : self.length[0],
+                "length2" : self.length[1],
+                "com1" : self.com[0],
+                "com2" : self.com[1],
+                "damping1" : self.damping[0],
+                "damping2" : self.damping[1],
+                "cfric1" : self.cfric[0],
+                "cfric2" : self.cfric[1],
+                "gravity" : self.gravity,
+                "inertia1" : self.inertia[0],
+                "inertia2" : self.inertia[1],
+                "Ir" : self.Ir,
+                "gr" : self.gr,
+                "torque_limit1" : self.torque_limit[0],
+                "torque_limit2" : self.torque_limit[1],
+                "kp" : self.kp,
+                "kd" : self.kd,
+                "kv" : self.kv,
+                "desired_x1" : self.desired_x[0],
+                "desired_x2" : self.desired_x[1],
+                "desired_x3" : self.desired_x[2],
+                "desired_x4" : self.desired_x[3],
+                "desired_energy" : float(self.desired_energy),
+        }
+
+        with open(os.path.join(save_dir, "controller_energy_Xin_parameters.yml"), 'w') as f:
+            yaml.dump(par_dict, f)
 
 
 def kd_func(q2, a1, a2, a3, b1, b2, Er):

@@ -31,7 +31,7 @@ integrator = "runge_kutta"
 x0 = [np.pi/2., 0., 0., 0.]
 
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "friction_compensation", timestamp)
+save_dir = os.path.join("data", design, model, robot, "friction_compensation", timestamp)
 os.makedirs(save_dir)
 
 plant = SymbolicDoublePendulum(model_pars=mpar)
@@ -47,6 +47,8 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
 X_meas = sim.meas_x_values
 X_filt = sim.filt_x_values
 U_con = sim.con_u_values
+
+controller.save(save_dir)
 
 plot_timeseries(T, X, U, None,
                 plot_energy=False,

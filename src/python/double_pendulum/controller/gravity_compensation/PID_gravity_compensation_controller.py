@@ -159,3 +159,16 @@ class PIDGravityCompensationController(AbstractController):
         u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
 
         return u
+
+    def save_(self, save_dir):
+        """
+        Save controller parameters
+
+        Parameters
+        ----------
+        save_dir : string or path object
+            directory where the parameters will be saved
+        """
+
+        self.grav_con.save_(save_dir)
+        self.pid_con.save_(save_dir)

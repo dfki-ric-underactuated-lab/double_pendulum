@@ -1,9 +1,11 @@
+import os
+import yaml
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
 from double_pendulum.controller.lqr.lqr import lqr, solve_differential_ricatti
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
-from double_pendulum.utils.csv_trajectory import load_trajectory
+from double_pendulum.utils.csv_trajectory import load_trajectory, save_trajectory
 from double_pendulum.utils.wrap_angles import wrap_angles_diff
 from double_pendulum.utils.pcw_polynomial import InterpolateVector, InterpolateMatrix
 
@@ -281,3 +283,50 @@ class TVLQRController(AbstractController):
             units=[Nm]
         """
         return self.T, self.X, self.U
+
+    def save_(self, save_dir):
+        """
+        Save the energy trajectory to file.
+
+        Parameters
+        ----------
+        path : string or path object
+            directory where the parameters will be saved
+        """
+
+        par_dict = {
+                "mass1" : self.mass[0],
+                "mass2" : self.mass[1],
+                "length1" : self.length[0],
+                "length2" : self.length[1],
+                "com1" : self.com[0],
+                "com2" : self.com[1],
+                "damping1" : self.damping[0],
+                "damping2" : self.damping[1],
+                "cfric1" : self.cfric[0],
+                "cfric2" : self.cfric[1],
+                "gravity" : self.gravity,
+                "inertia1" : self.inertia[0],
+                "inertia2" : self.inertia[1],
+                #"Ir" : self.Ir,
+                #"gr" : self.gr,
+                "torque_limit1" : self.torque_limit[0],
+                "torque_limit2" : self.torque_limit[1],
+                "num_break" : self.num_break,
+                "horizon" : self.horizon,
+                "goal1" : float(self.goal[0]),
+                "goal2" : float(self.goal[1]),
+                "goal3" : float(self.goal[2]),
+                "goal4" : float(self.goal[3]),
+                "dt" : float(self.dt),
+                "max_t" : float(self.max_t),
+        }
+
+        with open(os.path.join(save_dir, "controller_tvlqr_parameters.yml"), 'w') as f:
+            yaml.dump(par_dict, f)
+
+        np.savetxt(os.path.join(save_dir, "controller_tvlqr_Qmatrix.txt"), self.Q)
+        np.savetxt(os.path.join(save_dir, "controller_tvlqr_Rmatrix.txt"), self.R)
+        np.savetxt(os.path.join(save_dir, "controller_tvlqr_Qfmatrix.txt"), self.Qf)
+
+        save_trajectory(os.path.join(save_dir, "controller_tvlqr_initial_traj.csv"), self.T, self.X, self.U)

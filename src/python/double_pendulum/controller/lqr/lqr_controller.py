@@ -1,3 +1,5 @@
+import os
+import yaml
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
@@ -328,6 +330,47 @@ class LQRController(AbstractController):
         #print(x, u)
         return u
 
+    def save_(self, save_dir):
+        """
+        Save controller parameters
+
+        Parameters
+        ----------
+        save_dir : string or path object
+            directory where the parameters will be saved
+        """
+
+        par_dict = {
+                "mass1" : self.mass[0],
+                "mass2" : self.mass[1],
+                "length1" : self.length[0],
+                "length2" : self.length[1],
+                "com1" : self.com[0],
+                "com2" : self.com[1],
+                "damping1" : self.damping[0],
+                "damping2" : self.damping[1],
+                "cfric1" : self.cfric[0],
+                "cfric2" : self.cfric[1],
+                "gravity" : self.gravity,
+                "inertia1" : self.inertia[0],
+                "inertia2" : self.inertia[1],
+                #"Ir" : self.Ir,
+                #"gr" : self.gr,
+                "torque_limit1" : self.torque_limit[0],
+                "torque_limit2" : self.torque_limit[1],
+                "xd1" : self.xd[0],
+                "xd2" : self.xd[1],
+                "xd3" : self.xd[2],
+                "xd4" : self.xd[3],
+        }
+
+        with open(os.path.join(save_dir, "controller_lqr_parameters.yml"), 'w') as f:
+            yaml.dump(par_dict, f)
+
+        np.savetxt(os.path.join(save_dir, "controller_lqr_Qmatrix.txt"), self.Q)
+        np.savetxt(os.path.join(save_dir, "controller_lqr_Rmatrix.txt"), self.R)
+        np.savetxt(os.path.join(save_dir, "controller_lqr_Kmatrix.txt"), self.K)
+        np.savetxt(os.path.join(save_dir, "controller_lqr_Smatrix.txt"), self.S)
 
 class LQRController_nonsymbolic(AbstractController):
     """
@@ -647,3 +690,45 @@ class LQRController_nonsymbolic(AbstractController):
         u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
 
         return u
+
+    def save_(self, save_dir):
+        """
+        Save the energy trajectory to file.
+
+        Parameters
+        ----------
+        path : string or path object
+            directory where the parameters will be saved
+        """
+
+        par_dict = {
+                "mass1" : self.mass[0],
+                "mass2" : self.mass[1],
+                "length1" : self.length[0],
+                "length2" : self.length[1],
+                "com1" : self.com[0],
+                "com2" : self.com[1],
+                "damping1" : self.damping[0],
+                "damping2" : self.damping[1],
+                "cfric1" : self.cfric[0],
+                "cfric2" : self.cfric[1],
+                "gravity" : self.gravity,
+                "inertia1" : self.inertia[0],
+                "inertia2" : self.inertia[1],
+                #"Ir" : self.Ir,
+                #"gr" : self.gr,
+                "torque_limit1" : self.torque_limit[0],
+                "torque_limit2" : self.torque_limit[1],
+                "xd1" : float(self.xd[0]),
+                "xd2" : float(self.xd[1]),
+                "xd3" : float(self.xd[2]),
+                "xd4" : float(self.xd[3]),
+        }
+
+        with open(os.path.join(save_dir, "lqr_controller_parameters.yml"), 'w') as f:
+            yaml.dump(par_dict, f)
+
+        np.savetxt(os.path.join(save_dir, "lqr_controller_Qmatrix.txt"), self.Q)
+        np.savetxt(os.path.join(save_dir, "lqr_controller_Rmatrix.txt"), self.R)
+        np.savetxt(os.path.join(save_dir, "lqr_controller_Kmatrix.txt"), self.K)
+        np.savetxt(os.path.join(save_dir, "lqr_controller_Smatrix.txt"), self.S)

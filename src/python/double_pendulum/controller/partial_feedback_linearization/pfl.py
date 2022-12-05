@@ -1,3 +1,5 @@
+import os
+import yaml
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
@@ -203,16 +205,47 @@ class EnergyShapingPFLController(AbstractController):
 
         return u
 
-    def save(self, path="log_energy.csv"):
+    def save_(self, save_dir):
         """
-        Save the energy trajectory to file.
+        Save controller parameters
 
         Parameters
         ----------
-        path : string or path object
-            path where the energy will be save in a txt file
+        save_dir : string or path object
+            directory where the parameters will be saved
         """
-        np.savetxt(path, self.en)
+        np.savetxt(os.path.join(save_dir, "energy_log.csv"), self.en)
+
+        par_dict = {
+                "mass1" : self.plant.m[0],
+                "mass2" : self.plant.m[1],
+                "length1" : self.plant.l[0],
+                "length2" : self.plant.l[1],
+                "com1" : self.plant.com[0],
+                "com2" : self.plant.com[1],
+                "damping1" : self.damping[0],
+                "damping2" : self.damping[1],
+                "cfric1" : self.plant.coulomb_fric[0],
+                "cfric2" : self.plant.coulomb_fric[1],
+                "gravity" : self.plant.g,
+                "inertia1" : self.plant.I[0],
+                "inertia2" : self.plant.I[1],
+                "Ir" : self.plant.Ir,
+                "gr" : self.plant.gr,
+                "torque_limit1" : self.torque_limit[0],
+                "torque_limit2" : self.torque_limit[1],
+                "k1" : self.k1,
+                "k2" : self.k2,
+                "k3" : self.k3,
+                "desired_x1" : self.desired_x[0],
+                "desired_x2" : self.desired_x[1],
+                "desired_x3" : self.desired_x[2],
+                "desired_x4" : self.desired_x[3],
+                "desired_energy" : float(self.desired_energy),
+        }
+
+        with open(os.path.join(save_dir, "controller_pfl_parameters.yml"), 'w') as f:
+            yaml.dump(par_dict, f)
 
 
 class EnergyShapingPFLAndLQRController(AbstractController):

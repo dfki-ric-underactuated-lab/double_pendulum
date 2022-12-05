@@ -4,9 +4,9 @@ from double_pendulum.controller.abstract_controller import AbstractController
 
 
 class CombinedController(AbstractController):
-    """ 
+    """
     Controller to combine two controllers and switch between them on conditions
-    
+
     Parameters
     ----------
     controller1 : Controller object
@@ -40,7 +40,7 @@ class CombinedController(AbstractController):
         self.compute_both = compute_both
 
     def init_(self):
-        """ 
+        """
         initialize both controllers
         """
         self.controllers[0].init_()
@@ -86,6 +86,25 @@ class CombinedController(AbstractController):
         self.controllers[0].set_goal(x)
         self.controllers[1].set_goal(x)
 
+    def save_(self, save_dir):
+        """
+        Save controllers' parameters.
+
+        Parameters
+        ----------
+        save_dir : string or path object
+            directory where the parameters will be saved
+        """
+        self.controllers[0].save_(save_dir)
+        self.controllers[1].save_(save_dir)
+
+    def reset_(self):
+        """
+        Reset controllers.
+        """
+        self.controllers[0].reset_()
+        self.controllers[1].reset_()
+
     def get_control_output_(self, x, t):
         """
         The function to compute the control input for the double pendulum's
@@ -101,7 +120,7 @@ class CombinedController(AbstractController):
             units=[rad, rad, rad/s, rad/s]
         t : float, optional
             time, unit=[s]
-            
+
         Returns
         -------
         array_like
@@ -137,7 +156,7 @@ class CombinedController(AbstractController):
 
 
 class SimultaneousControllers(AbstractController):
-    """ 
+    """
     Controller to combine multiple controllers and add all their outputs torques.
 
     Parameters
@@ -158,7 +177,7 @@ class SimultaneousControllers(AbstractController):
         self.fc_ind = forecast_con
 
     def init_(self):
-        """ 
+        """
         Initialize all controllers.
         """
         for c in self.controllers:
@@ -217,7 +236,7 @@ class SimultaneousControllers(AbstractController):
             units=[rad, rad, rad/s, rad/s]
         t : float, optional
             time, unit=[s]
-            
+
         Returns
         -------
         array_like

@@ -100,7 +100,7 @@ column. The headers used are:
 
 .. note::
 
-   There should be not space after the separating comma.
+   There should be no space after the separating comma.
 
 The easiest way to stay consistent with this format is to use the functions
 

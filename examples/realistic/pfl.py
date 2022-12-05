@@ -13,6 +13,8 @@ from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl impo
                                                                                     SymbolicPFLAndLQRController)
 
 # model parameters
+design = "design_A.0"
+model = "model_2.0"
 robot = "acrobot"
 with_cfric = False
 
@@ -29,8 +31,7 @@ if robot == "pendubot":
     torque_limit = [5.0, 0.0]
     active_act = 0
 
-model_par_path = "../data/system_identification/identified_parameters/tmotors_v1.0/model_parameters.yml"
-#model_par_path = "../data/system_identification/identified_parameters/tmotors_v2.0/model_parameters_est.yml"
+model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(motor_inertia)
@@ -134,16 +135,16 @@ T, X, U = sim.simulate_and_animate(t0=0.0,
                                    phase_plot=False,
                                    save_video=False)
 
-# controller.save(path)
 energy = controller.en
 des_energy = controller.desired_energy
 
 # saving and plotting
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "pfl", pfl_method, timestamp)
+save_dir = os.path.join("data", design, model, robot, "pfl", pfl_method, timestamp)
 os.makedirs(save_dir)
 
-print(len(T), len(X), len(U))
+# controller.save(save_dir)
+
 save_trajectory(csv_path=os.path.join(save_dir, "trajectory.csv"),
                 T=T,
                 X=X,
@@ -157,20 +158,4 @@ plot_timeseries(T=T, X=X, U=U, energy=energy,
                 save_to=os.path.join(save_dir, "time_series"))
 
 mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
-
-par_dict = {
-            "dt": dt,
-            "t_final": t_final,
-            "integrator": integrator,
-            "start_pos1": x0[0],
-            "start_pos2": x0[1],
-            "start_vel1": x0[2],
-            "start_vel2": x0[3],
-            "goal_pos1": goal[0],
-            "goal_pos2": goal[1],
-            "goal_vel1": goal[2],
-            "goal_vel2": goal[3],
-            }
-
-with open(os.path.join(save_dir, "parameters.yml"), 'w') as f:
-    yaml.dump(par_dict, f)
+controller.save(save_dir)

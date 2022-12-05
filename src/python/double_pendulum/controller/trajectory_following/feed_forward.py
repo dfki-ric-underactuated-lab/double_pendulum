@@ -1,3 +1,5 @@
+import os
+import yaml
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
@@ -78,3 +80,22 @@ class FeedForwardController(AbstractController):
 
         u = np.asarray([u1, u2])
         return u
+
+    def save_(self, save_dir):
+        """
+        Save controller parameters
+
+        Parameters
+        ----------
+        save_dir : string or path object
+            directory where the parameters will be saved
+        """
+
+        par_dict = {
+                "torque_limit1" : self.torque_limit[0],
+                "torque_limit2" : self.torque_limit[1],
+                "num_break" : self.num_break,
+        }
+
+        with open(os.path.join(save_dir, "controller_feedforward_parameters.yml"), 'w') as f:
+            yaml.dump(par_dict, f)

@@ -13,7 +13,7 @@ from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajector
 design = "design_A.0"
 model = "model_2.0"
 traj_model = "model_2.1"
-robot = "pendubot"
+robot = "acrobot"
 
 urdf_path = "../../data/urdfs/design_A.0/model_1.0/"+robot+".urdf"
 
@@ -32,7 +32,8 @@ mpar.set_cfric([0., 0.])
 mpar.set_torque_limit(torque_limit)
 
 # trajectory parameters
-init_csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
+csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
+#csv_path = os.path.join("../../data/trajectories", design, traj_model, robot, "dircol_1/trajectory.csv")
 
 # load reference trajectory
 T_des, X_des, U_des = load_trajectory(csv_path)
@@ -82,6 +83,7 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
 # saving and plotting
 os.system(f"cp {csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))
 save_trajectory(os.path.join(save_dir, "trajectory.csv"), T, X, U)
+controller.save(save_dir)
 
 plot_timeseries(T, X, U,
                 T_des=T_des,

@@ -1,3 +1,5 @@
+import os
+import yaml
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
@@ -96,6 +98,13 @@ class ILQRMPCCPPController(AbstractController):
             self.active_act = 0
         elif self.torque_limit[1] > 0.0:
             self.active_act = 1
+
+        # set default parameters
+        self.set_start()
+        self.set_goal()
+        self.set_parameters()
+        self.set_cost_parameters()
+        self.set_final_cost_parameters()
 
     def set_start(self, x=[0., 0., 0., 0.]):
         """set_start
@@ -622,3 +631,62 @@ class ILQRMPCCPPController(AbstractController):
         U = np.asarray([u1_traj, u2_traj]).T
 
         return T, X, U
+
+    def save_(self, save_dir):
+        """
+        Save controller parameters
+
+        Parameters
+        ----------
+        save_dir : string or path object
+            directory where the parameters will be saved
+        """
+
+        par_dict = {
+                "mass1" : self.mass[0],
+                "mass2" : self.mass[1],
+                "length1" : self.length[0],
+                "length2" : self.length[1],
+                "com1" : self.com[0],
+                "com2" : self.com[1],
+                "damping1" : self.damping[0],
+                "damping2" : self.damping[1],
+                "gravity" : self.gravity,
+                "inertia1" : self.inertia[0],
+                "inertia2" : self.inertia[1],
+                "torque_limit1" : self.torque_limit[0],
+                "torque_limit2" : self.torque_limit[1],
+                "dt": self.dt,
+                "integrator_int": self.integrator_int,
+                "start_pos1": float(self.start[0]),
+                "start_pos2": float(self.start[1]),
+                "start_vel1": float(self.start[2]),
+                "start_vel2": float(self.start[3]),
+                "goal_pos1": float(self.goal[0]),
+                "goal_pos2": float(self.goal[1]),
+                "goal_vel1": float(self.goal[2]),
+                "goal_vel2": float(self.goal[3]),
+                "N": self.N,
+                "N_init": self.N_init,
+                "max_iter": self.max_iter,
+                "regu_init": self.regu_init,
+                "max_regu": self.max_regu,
+                "min_regu": self.min_regu,
+                "break_cost_redu": self.break_cost_redu,
+                "trajectory_stabilization": self.traj_stab,
+                "sCu1": self.sCu[0],
+                "sCu2": self.sCu[1],
+                "sCp1": self.sCp[0],
+                "sCp2": self.sCp[1],
+                "sCv1": self.sCv[0],
+                "sCv2": self.sCv[1],
+                "sCen": self.sCen,
+                "fCp1": self.fCp[0],
+                "fCp2": self.fCp[1],
+                "fCv1": self.fCv[0],
+                "fCv2": self.fCv[1],
+                "fCen": self.fCen
+        }
+
+        with open(os.path.join(save_dir, "controller_ilqr_mpc_parameters.yml"), 'w') as f:
+            yaml.dump(par_dict, f)

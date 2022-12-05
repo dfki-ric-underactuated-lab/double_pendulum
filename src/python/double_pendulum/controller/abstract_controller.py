@@ -1,5 +1,7 @@
 # here, the abstract controller class is defined, to which all controller
 # classes have to adhere
+import os
+import yaml
 from abc import ABC, abstractmethod
 import numpy as np
 
@@ -149,6 +151,49 @@ class AbstractController(ABC):
         self.set_gravity_compensation()
         self.reset_()
 
+    def save(self, save_dir):
+        """
+        Save controller parameters
+
+        Parameters
+        ----------
+        save_dir : string or path object
+            directory where the parameters will be saved
+        """
+        self.save_(save_dir)
+
+        if self.grav_plant is not None:
+            g = self.grav_plant.g
+        else:
+            g = 0.
+
+        par_dict = {
+                "filt" : self.filt,
+                "filt_x0" : self.filt_x0,
+                "filt_dt" : self.filt_dt,
+                "filt_velocity_cut" : self.filt_velocity_cut,
+                "filt_kwargs" : self.filt_kwargs,
+                "coulomb_fric1" : float(self.friction_terms[0]),
+                "coulomb_fric2" : float(self.friction_terms[2]),
+                "damping1" : float(self.friction_terms[1]),
+                "damping2" : float(self.friction_terms[3]),
+                "gravity_compensation_g" : g,
+        }
+        with open(os.path.join(save_dir, "controller_abstract_parameters.yml"), 'w') as f:
+            yaml.dump(par_dict, f)
+
+    def save_(self, save_dir):
+        """
+        Save controller parameters. Optional
+        Can be overwritten by actual controller.
+
+        Parameters
+        ----------
+        save_dir : string or path object
+            directory where the parameters will be saved
+        """
+        pass
+
     def set_start(self, x):
         """
         Set the start state for the controller. Optional.
@@ -222,7 +267,7 @@ class AbstractController(ABC):
             "lowpass": lowpass filter
             "kalman": kalman filter
             "unscented_kalman": unscented kalman filter
-            (Default value = "None")
+            (Default value = None)
         x0 : array_like, shape=(4,), dtype=float,
             reference state if a linearization is needed (Kalman filter),
             order=[angle1, angle2, velocity1, velocity2],

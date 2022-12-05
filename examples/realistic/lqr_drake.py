@@ -133,6 +133,7 @@ T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
                                    save_video=False,
                                    video_name=os.path.join(save_dir, "simulation"))
 
+controller.save(save_dir)
 plot_timeseries(T, X, U, None,
                 plot_energy=False,
                 X_filt=controller.x_filt_hist,
