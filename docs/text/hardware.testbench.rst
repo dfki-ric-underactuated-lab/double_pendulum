@@ -4,16 +4,53 @@ Hardware & Testbench Description
 The ``/hardware`` directory contains all information about the hardware
 that is used to built the double pednulum test bench, including a bill
 of materials, step files of the CAD model along with wiring diagrams for
-the complete set up as well as the CAN bus. Further specifications are
-noted below or can be found within the documentation under the
-respective topics.
+the complete set up as well as the CAN bus.
+The documentation here covers assembly instructions and and instructions
+for the electrical setup.
 
 .. image:: ../../hardware/images/double_pendulum_CAD.png
    :width: 100%
    :align: center
 
-Physical Setup
---------------
+Testbench Description
+---------------------
+
+The mechanical design consists of a shoulder motor mounting bracket built with
+folded aluminum, and two light-weight links which are built with laser cut 1 mm
+thick sandwich aluminum plates with a laminate of 15 mm PVC rigid foam board
+(Airex) in between. By using sandwich materials, the weight of the pendulum
+arms can be kept very low in relation to the drives and the end effector
+weight. The end of the first link contains the elbow motor housing and the end
+of second link mounts the weight.  Since, the used motors do not provide a
+hollow shaft, the first link is mechanically extended in the opposite direction
+to prevent windup of cables.
+
+
+Assembly Instructions
+---------------------
+
+1. For the physical assembly of the double pendulum start by mounting the motor
+   mount on a robust horizontal surface (e.g a table). If suffices to fix the
+   motor mount with one or two screw clamps. Make sure that the swinging plane
+   of the double pendulum is free.
+2. Mount the first motor to the motor mount.
+3. Mount the second motor to the end of the first link.
+4. Attach the first link to the mounted motor (to the motor shaft).
+5. Attach the weight fixation to the weight.
+6. Attach the weight to the end of the second link.
+7. Mount the second link to the second motor shaft.
+
+.. note::
+
+   Since the motors do not offer a hollow shaft, the cables (power and can) to
+   the second motor need to come from the front.
+
+.. note::
+
+   If the second link is longer than the first link, the first link needs to be
+   extended in the opposite direction with a U-shaped aluminium piece to
+   prevent windup of cables. The U-shape is attached between the first motor
+   and the first link.
 
 Electrical Setup
 ----------------
@@ -102,15 +139,15 @@ angular velocities of the joints. The voltage across the capacitor increases as
 energy flows into it, so the capacitor should be sized accordingly to
 the specific application requirements. Nevertheless tuning a capacitor
 to the acceptable min. capacity is tricky, because it depends on many
-factors including: 
+factors including:
 
-- External load 
-- Capacitance of the power supply to source current 
-- Motor braking method, output short brake or current polarity reversing brake. 
+- External load
+- Capacitance of the power supply to source current
+- Motor braking method, output short brake or current polarity reversing brake.
 - Amount of parasitic inductance between power supply and motor system, which
   limits the current change rate from the power supply. The larger the input
   capacitance, the more stable the motor voltage and higher current can be
-  quickly supplied. 
+  quickly supplied.
 - The maximum supply voltage limit and acceptable voltage ripples
 
 If the used capacitor is too small for your specific apllication it
