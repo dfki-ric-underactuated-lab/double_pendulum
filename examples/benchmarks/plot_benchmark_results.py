@@ -19,4 +19,4 @@ base_dir = os.path.join(data_dir, design, model, robot, "ilqr", "mpc_benchmark")
 latest_dir = sorted(os.listdir(base_dir))[-1]
 results_dir = os.path.join(base_dir, latest_dir)
 
-plot_benchmark_results(results_dir, costlim=[0, 5], show=True)
+plot_benchmark_results(results_dir, costlim=[0, 5], show=True, save=False)

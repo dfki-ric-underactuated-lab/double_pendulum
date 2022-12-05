@@ -4,8 +4,8 @@ import matplotlib as mpl
 
 from double_pendulum.analysis.benchmark_scores import get_scores
 
-design = "design_A.0"
-model = "model_2.1"
+design = "design_C.0"
+model = "model_h1.1"
 
 # data_dir = "data"
 data_dir = "../../data/benchmarks"
@@ -139,6 +139,6 @@ ax[1][0].legend(handles=bars, labels=crits, loc='upper left',
      bbox_to_anchor=(0.6, -0.002), fancybox=False, shadow=False, ncol=len(crits))
 
 
-plt.savefig(os.path.join(data_dir, design, model, "benchmark_scores.pdf"), bbox_inches="tight")
+#plt.savefig(os.path.join(data_dir, design, model, "benchmark_scores.pdf"), bbox_inches="tight")
 plt.tight_layout()
 plt.show()

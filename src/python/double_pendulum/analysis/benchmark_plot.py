@@ -8,7 +8,8 @@ import matplotlib.pyplot as plt
 from double_pendulum.model.model_parameters import model_parameters
 
 
-def plot_benchmark_results(results_dir, costlim=[0, 1e6], show=False):
+def plot_benchmark_results(results_dir, costlim=[0, 1e6],
+                           show=False, save=True):
 
     SMALL_SIZE = 16
     MEDIUM_SIZE = 20
@@ -108,8 +109,9 @@ def plot_benchmark_results(results_dir, costlim=[0, 1e6], show=False):
             ax_mr[j][k].set_ylim(ymin, ymax)
             ax_mr[j][k].set_ylabel("rel. cost")
             ax_mr[j][k].set_xlabel(mp)
-        plt.savefig(os.path.join(results_dir, "model_robustness.pdf"),
-                    bbox_inches="tight")
+        if save:
+            plt.savefig(os.path.join(results_dir, "model_robustness.pdf"),
+                        bbox_inches="tight")
         plt.subplots_adjust(left=0.1,
                             bottom=0.1,
                             right=0.9,
@@ -163,7 +165,8 @@ def plot_benchmark_results(results_dir, costlim=[0, 1e6], show=False):
             ax_nr[i].set_ylim(ymin, ymax)
             ax_nr[i].set_ylabel("rel. cost")
         ax_nr[-1].set_xlabel("Noise Variance")
-        plt.savefig(os.path.join(results_dir, "meas_noise_robustness.pdf"))
+        if save:
+            plt.savefig(os.path.join(results_dir, "meas_noise_robustness.pdf"))
         fig_counter += 1
 
     # unoise robustness
@@ -207,7 +210,8 @@ def plot_benchmark_results(results_dir, costlim=[0, 1e6], show=False):
         ax_unr.set_ylim(ymin, ymax)
         ax_unr.set_xlabel("Noise Variance")
         ax_unr.set_ylabel("rel. cost")
-        plt.savefig(os.path.join(results_dir, "u_noise_robustness.pdf"))
+        if save:
+            plt.savefig(os.path.join(results_dir, "u_noise_robustness.pdf"))
         fig_counter += 1
 
     # u responsiveness robustness
@@ -250,7 +254,8 @@ def plot_benchmark_results(results_dir, costlim=[0, 1e6], show=False):
         ax_urr.set_ylim(ymin, ymax)
         ax_urr.set_xlabel("Responsiveness Factor Amplitude")
         ax_urr.set_ylabel("rel. cost")
-        plt.savefig(os.path.join(results_dir, "u_responsivenesses.pdf"))
+        if save:
+            plt.savefig(os.path.join(results_dir, "u_responsivenesses.pdf"))
         fig_counter += 1
 
     # delay robustness
@@ -293,7 +298,8 @@ def plot_benchmark_results(results_dir, costlim=[0, 1e6], show=False):
         ax_dr.set_ylim(ymin, ymax)
         ax_dr.set_xlabel("Time Delay [s]")
         ax_dr.set_ylabel("rel. cost")
-        plt.savefig(os.path.join(results_dir, "delay_robustness.pdf"))
+        if save:
+            plt.savefig(os.path.join(results_dir, "delay_robustness.pdf"))
         fig_counter += 1
 
     if show:

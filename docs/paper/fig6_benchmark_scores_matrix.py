@@ -17,10 +17,10 @@ model_titles = []
 # data_dir = "data"
 data_dir = "../../data/benchmarks"
 
-model_str1 = "A.0 2.1"
-model_str2 = "C.0 1.1"
-#model_str1 = r"$\mathbb{M}_1$"
-#model_str2 = r"$\mathbb{M}_2$"
+#model_str1 = "A.0 2.1"
+#model_str2 = "C.0 1.1"
+model_str1 = r"$\mathbb{M}_1$"
+model_str2 = r"$\mathbb{M}_2$"
 
 # tvlqr
 base_dir = os.path.join(data_dir, design1, model1, "acrobot", "tvlqr_drake", "benchmark")
@@ -241,6 +241,6 @@ ax[0][4].text(-0.2, 1.2, titles[8], fontsize=MEDIUM_SIZE)
 ax[0][6].text(1., 1.2, titles[12], fontsize=MEDIUM_SIZE)
 ax[0][8].text(3.5, 1.2, titles[16], fontsize=MEDIUM_SIZE)
 
-plt.savefig(os.path.join(data_dir, "benchmark_scores_matrix.pdf"), bbox_inches="tight")
+plt.savefig(os.path.join("figures", "fig6_benchmark_scores_matrix.pdf"), bbox_inches="tight")
 plt.tight_layout()
 plt.show()
