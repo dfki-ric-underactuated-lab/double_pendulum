@@ -14,7 +14,7 @@ model = "model_2.0"
 traj_model = "model_2.1"
 robot = "pendubot"
 
-friction_compensation = False
+friction_compensation = True
 
 if robot == "acrobot":
     torque_limit = [0.0, 6.0]

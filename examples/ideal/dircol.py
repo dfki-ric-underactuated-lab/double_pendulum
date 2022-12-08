@@ -14,7 +14,7 @@ from double_pendulum.controller.trajectory_following.trajectory_controller impor
 
 # model parameters
 design = "design_A.0"
-model = "model_2.0"
+model = "model_1.0"
 robot = "acrobot"
 
 urdf_path = "../../data/urdfs/design_A.0/model_1.0/"+robot+".urdf"
@@ -51,7 +51,7 @@ maximum_timestep = 0.2
 
 # costs
 R = 0.001
-time_panalization = 0.
+time_penalization = 0.
 
 # saving
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
@@ -73,7 +73,7 @@ dc.compute_trajectory(
     theta_limit=theta_limit,
     speed_limit=speed_limit,
     R=R,
-    time_panalization=time_panalization,
+    time_penalization=time_penalization,
     init_traj_time_interval=init_traj_time_interval,
     minimum_timestep=minimum_timestep,
     maximum_timestep=maximum_timestep)
@@ -92,29 +92,29 @@ plot_timeseries(T, X, U, None,
                 tau_y_lines=[-torque_limit_active, torque_limit_active],
                 save_to=os.path.join(save_dir, "timeseries"))
 
-# animate
-# animation with meshcat in browser window
+# # animate
+# # animation with meshcat in browser window
 # dc.animate_trajectory()
-
-# simulate in python plant
-dt = T[1] - T[0]
-t_final = T[-1]
-x0 = X[0]
-
-plant = SymbolicDoublePendulum(model_pars=mpar)
-sim = Simulator(plant=plant)
-
-controller = TrajectoryController(csv_path=traj_file,
-                                  torque_limit=torque_limit,
-                                  kK_stabilization=False)
-controller.init()
-
-T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
-                                   tf=t_final, dt=dt, controller=controller,
-                                   integrator="runge_kutta",
-                                   plot_inittraj=True)
-
-plot_timeseries(T, X, U, None,
-                plot_energy=False,
-                pos_y_lines=[0.0, np.pi],
-                tau_y_lines=[-torque_limit_active, torque_limit_active])
+# 
+# # simulate in python plant
+# dt = T[1] - T[0]
+# t_final = T[-1]
+# x0 = X[0]
+# 
+# plant = SymbolicDoublePendulum(model_pars=mpar)
+# sim = Simulator(plant=plant)
+# 
+# controller = TrajectoryController(csv_path=traj_file,
+#                                   torque_limit=torque_limit,
+#                                   kK_stabilization=False)
+# controller.init()
+# 
+# T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
+#                                    tf=t_final, dt=dt, controller=controller,
+#                                    integrator="runge_kutta",
+#                                    plot_inittraj=True)
+# 
+# plot_timeseries(T, X, U, None,
+#                 plot_energy=False,
+#                 pos_y_lines=[0.0, np.pi],
+#                 tau_y_lines=[-torque_limit_active, torque_limit_active])

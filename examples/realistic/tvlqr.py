@@ -58,7 +58,7 @@ integrator = "runge_kutta"
 
 ## noise
 process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
-meas_noise_sigmas = [0.0, 0.0, 0.05, 0.05]
+meas_noise_sigmas = [0.0, 0.0, 0.5, 0.5]
 delay_mode = "None"
 delay = 0.0
 u_noise_sigmas = [0., 0.]

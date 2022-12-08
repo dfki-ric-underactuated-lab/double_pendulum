@@ -35,7 +35,7 @@ mpar_con.set_torque_limit(torque_limit)
 
 # simulation parameter
 dt = 0.005
-t_final = 10.0  # 4.985
+t_final = 5.0  # 4.985
 integrator = "runge_kutta"
 start = [0., 0., 0., 0.]
 goal = [np.pi, 0., 0., 0.]

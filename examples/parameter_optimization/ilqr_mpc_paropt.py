@@ -4,12 +4,14 @@ from datetime import datetime
 import yaml
 import numpy as np
 
+from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.controller.ilqr.paropt import ilqrmpc_swingup_loss
 from double_pendulum.utils.optimization import (cma_optimization,
                                                 scipy_par_optimization)
 
 design = "design_A.0"
 model = "model_2.0"
+traj_model = "model_2.1"
 robot = "acrobot"
 
 # model parameter
@@ -56,7 +58,7 @@ init_pars = [0.1, 0., 0., 0., 0., 100., 100., 10., 10.]
 # swingup parameters
 start = [0.0, 0.0, 0.0, 0.0]
 goal = [np.pi, 0, 0, 0]
-init_csv_path = os.path,join("../../data/trajectories/", design, traj_model, robot, "ilqr_1/trajectory.csv")
+init_csv_path = os.path.join("../../data/trajectories/", design, traj_model, robot, "ilqr_1/trajectory.csv")
 
 # optimization parameters
 optimization_method = "cma"  # "Nelder-Mead"

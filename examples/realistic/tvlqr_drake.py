@@ -15,10 +15,10 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
 # model parameters
-design = "design_A.0"
-model = "model_2.0"
-traj_model = "model_2.1"
-robot = "acrobot"
+design = "design_C.0"
+model = "model_3.0"
+traj_model = "model_3.1"
+robot = "pendubot"
 urdf_path = "../../data/urdfs/design_A.0/model_1.0/"+robot+".urdf"
 
 friction_compensation = True
@@ -56,7 +56,7 @@ integrator = "runge_kutta"
 
 # noise
 process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
-meas_noise_sigmas = [0.0, 0.0, 0.05, 0.05]
+meas_noise_sigmas = [0.0, 0.0, 0.5, 0.5]
 delay_mode = "None"
 delay = 0.0
 u_noise_sigmas = [0., 0.]

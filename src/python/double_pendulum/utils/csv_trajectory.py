@@ -154,7 +154,7 @@ def save_trajectory(csv_path,
                delimiter=',',
                header=header,
                comments="")
-    print(f"CSV file saved to {csv_path}")
+    #print(f"CSV file saved to {csv_path}")
 
 
 def load_trajectory_full(csv_path):

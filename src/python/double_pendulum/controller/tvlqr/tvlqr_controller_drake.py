@@ -276,4 +276,5 @@ class TVLQRController(AbstractController):
         T, X, U = self.get_init_trajectory()
         save_trajectory(os.path.join(save_dir, "initial_tvlqr_drake_traj.csv"), T, X, U)
 
-        os.system(f"cp {self.urdf_path} " + os.path.join(save_dir, self.robot+".urdf"))
+        if not os.path.exists(os.path.join(save_dir, self.robot+".urdf")):
+            os.system(f"cp {self.urdf_path} " + os.path.join(save_dir, self.robot+".urdf"))

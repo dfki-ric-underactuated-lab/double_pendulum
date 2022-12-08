@@ -34,7 +34,7 @@ integrator = "euler"
 goal = [np.pi, 0., 0., 0.]
 dt = 0.0045
 x0 = [np.pi/2.-1.4, 0.0, 0.0, 0.0]
-t_final = 30.0
+t_final = 15.0
 
 # controller parameters
 kp = 61.2  # > 61.141

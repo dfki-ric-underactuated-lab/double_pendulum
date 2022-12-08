@@ -4,7 +4,8 @@ from meshcat.servers.zmqserver import start_zmq_server_as_subprocess
 from pydrake.systems.framework import DiagramBuilder
 from pydrake.systems.rendering import MultibodyPositionToGeometryPose
 from pydrake.systems.primitives import TrajectorySource
-from pydrake.systems.meshcat_visualizer import ConnectMeshcatVisualizer
+#from pydrake.systems.meshcat_visualizer import ConnectMeshcatVisualizer
+from pydrake.geometry import StartMeshcat, MeshcatVisualizer
 from pydrake.systems.analysis import Simulator
 from pydrake.multibody.plant import MultibodyPlant
 from pydrake.geometry import SceneGraph
@@ -120,18 +121,29 @@ def animation(plant, scene_graph, x_trajectory):
                     pos_to_pose.get_input_port())
     builder.Connect(pos_to_pose.get_output_port(),
                     scene_graph.get_source_pose_port(plant.get_source_id()))
-    meshcat = ConnectMeshcatVisualizer(builder,
-                                       scene_graph,
-                                       zmq_url=zmq_url,
-                                       delete_prefix_on_load=True,
-                                       open_browser=True)
-    meshcat.load()
+    meshcat = StartMeshcat()
+    visualizer = MeshcatVisualizer.AddToBuilder(builder, scene_graph, meshcat)
     diagram = builder.Build()
     simulator = Simulator(diagram)
     simulator.set_target_realtime_rate(1.0)
     simulator.Initialize()
     duration = x_trajectory.end_time()
-    meshcat.start_recording()
+    visualizer.StartRecording()
     simulator.AdvanceTo(duration)
-    meshcat.stop_recording()
-    meshcat.publish_recording()
+    visualizer.PublishRecording()
+
+    # meshcat = ConnectMeshcatVisualizer(builder,
+    #                                    scene_graph,
+    #                                    zmq_url=zmq_url,
+    #                                    delete_prefix_on_load=True,
+    #                                    open_browser=True)
+    # meshcat.load()
+    # diagram = builder.Build()
+    # simulator = Simulator(diagram)
+    # simulator.set_target_realtime_rate(1.0)
+    # simulator.Initialize()
+    # duration = x_trajectory.end_time()
+    # meshcat.start_recording()
+    # simulator.AdvanceTo(duration)
+    # meshcat.stop_recording()
+    # meshcat.publish_recording()
