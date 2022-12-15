@@ -62,13 +62,13 @@ if fix_friction:
                   "b2": 0.001,
                   "cf1": 0.093,  # 0.19*2/np.pi,
                   "cf2": 0.078,
-                  "Ir": 6.287203962819607e-05,
                  }
-    variable_mpar = ["m1r1", "I1",
+    variable_mpar = ["m1r1", "I1", "Ir",
                      "m2r2", "m2", "I2"]
-    mp0 = [Lc1 * m1, I1, Lc2 * m2, m2, I2]
+    mp0 = [Lc1 * m1, I1, Ir, Lc2 * m2, m2, I2]
     bounds = np.array([[0.01, 0.3],      # r1*m1
                        [0.01, 0.2],       # I1
+                       [1e-6, 1e-3],      # Ir
                        [0.05, 1.0],       # r2*m2
                        [0.01, 5.0],       # m2
                        [0.01, 0.2],       # I2

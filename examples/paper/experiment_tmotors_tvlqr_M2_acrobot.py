@@ -10,9 +10,9 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties
 
 # model parameters
-design = "design_A.0"
-model = "model_2.0"
-traj_model = "model_2.1"
+design = "design_C.0"
+model = "model_3.0"
+traj_model = "model_3.1"
 robot = "acrobot"
 urdf_path = "../data/urdfs/"+robot+".urdf"
 
@@ -23,11 +23,13 @@ torque_limit_pid = [6.0, 6.0]
 
 model_par_path = "../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
-#mpar.set_motor_inertia(0.)
+
+mpar_con = model_parameters(filepath=model_par_path)
+#mpar_con.set_motor_inertia(0.)
 if friction_compensation:
-    mpar.set_damping([0., 0.])
-    mpar.set_cfric([0., 0.])
-mpar.set_torque_limit(torque_limit)
+    mpar_con.set_damping([0., 0.])
+    mpar_con.set_cfric([0., 0.])
+mpar_con.set_torque_limit(torque_limit)
 
 # trajectory parameters
 csv_path = os.path.join("../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv")
@@ -78,7 +80,7 @@ controller1 = TVLQRController(
         robot=robot)
 controller1.set_cost_parameters(Q=Q, R=R, Qf=Qf)
 
-controller2 = LQRController(model_pars=mpar)
+controller2 = LQRController(model_pars=mpar_con)
 controller2.set_goal(goal)
 controller2.set_cost_matrices(Q=Q_lqr, R=R_lqr)
 controller2.set_parameters(failure_value=0.0,
@@ -94,7 +96,7 @@ controller.set_filter_args(filt=meas_noise_vfilter,
          filter_kwargs=filter_kwargs)
 
 # friction compensation
-controller.set_friction_compensation(damping=[0., 0.001], coulomb_fric=[0., 0.078])
+controller.set_friction_compensation(damping=mpar.b, coulomb_fric=mpar.cf)
 
 controller.init()
 

@@ -10,9 +10,9 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.csv_trajectory import load_trajectory, trajectory_properties
 
 # model parameters
-design = "design_C.0"
-model = "model_3.0"
-traj_model = "model_3.1"
+design = "design_A.0"
+model = "model_2.0"
+traj_model = "model_2.1"
 robot = "pendubot"
 urdf_path = "../data/urdfs/"+robot+".urdf"
 

@@ -6,8 +6,8 @@ from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.experiments.hardware_control_loop_tmotors import run_experiment
 
 
-design = "design_A.0"
-model = "model_2.0"
+design = "design_C.0"
+model = "model_3.0"
 robot = "acrobot"
 
 torque_limit = [5.0, 5.0]

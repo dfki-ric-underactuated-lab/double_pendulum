@@ -11,6 +11,7 @@ examples/analysis/data/*
 examples/benchmarks/data/*
 examples/parameter_optimization/data/*
 examples/reimplemented_papers/data/*
+examples/paper/data/*
 experiments/data/*
 docs/build/*
 docs/text/generated/*
