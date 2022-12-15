@@ -52,15 +52,21 @@ repository on a real system. The instructions for testing the code can be found
 
 ## Installation
 
+We recommend using a virtual python environment with version >=3.8.10.
+
 Install dependencies:
 
-    sudo apt-get install libyaml-cpp-dev
+    sudo apt-get install libyaml-cpp-dev python3-sphinx python3-numpydoc python3-sphinx-rtd-theme
+
+Update pip:
+
+    pip install -U pip
 
 To install this project, clone this repository and do
 
     make install
 
-in the main directory. We recommend using a virtual python environment.
+in the main directory.
 For more details, we refer to the [documentation]().
 
 ## Documentation
