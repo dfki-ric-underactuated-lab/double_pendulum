@@ -14,7 +14,11 @@ We recommend using a virtual python environment.
 
 1. Install dependencies (only neccessary for C++ code, used for iLQR optimization)::
 
-    sudo apt-get install libyaml-cpp-dev
+    # ubuntu20
+    sudo apt-get install libyaml-cpp-dev libeigen3-dev libpython3.8 libx11-6 libsm6 libxt6 libglib2.0-0 python3-sphinx python3-numpydoc python3-sphinx-rtd-theme
+
+    # ubuntu22
+    sudo apt-get install libyaml-cpp-dev libeigen3-dev libx11-6 libsm6 libglib2.0-0 python3-sphinx python3-numpydoc python3-sphinx-rtd-theme
 
 
 2. Clone the repository::

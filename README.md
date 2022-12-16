@@ -1,6 +1,6 @@
 <div align="center">
 
-# Dual Purpose Acrobot & Pendubot Platform 
+# Dual Purpose Acrobot & Pendubot Platform
 </div>
 
 <div align="center">
@@ -56,7 +56,11 @@ We recommend using a virtual python environment with version >=3.8.10.
 
 Install dependencies:
 
-    sudo apt-get install libyaml-cpp-dev python3-sphinx python3-numpydoc python3-sphinx-rtd-theme
+    # ubuntu20
+    sudo apt-get install libyaml-cpp-dev libeigen3-dev libpython3.8 libx11-6 libsm6 libxt6 libglib2.0-0 python3-sphinx python3-numpydoc python3-sphinx-rtd-theme
+
+    # ubuntu22
+    sudo apt-get install libyaml-cpp-dev libeigen3-dev libx11-6 libsm6 libglib2.0-0 python3-sphinx python3-numpydoc python3-sphinx-rtd-theme
 
 Update pip:
 
@@ -78,7 +82,10 @@ The documentation can also be generated locally by doing
     make doc
 
 in the main directory. Afterwards you can open the file
-<mark> docs/build/_build/html/index.html</mark> in your browser.
+<mark>
+    docs/build/_build/html/index.html
+</mark>
+in your browser.
 
 ## Repository Structure
 
@@ -88,6 +95,44 @@ visualized in the figure below:
 <div align="center">
 <img width="800" src="docs/figures/repository_structure.png">
 </div>
+
+A minimal example showcasing the interfaces between the plant, a controller and
+the simulator is:
+
+    from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
+    from double_pendulum.simulation.simulation import Simulator
+    from double_pendulum.controller.pid.point_pid_controller import PointPIDController
+    from double_pendulum.utils.plotting import plot_timeseries
+
+    plant = SymbolicDoublePendulum(mass=[0.6, 0.5],
+                                   length=[0.3, 0.2])
+
+    sim = Simulator(plant=plant)
+
+    controller = PointPIDController(torque_limit=[5.0, 5.0])
+    controller.set_parameters(Kp=10, Ki=1, Kd=1)
+    controller.init()
+    T, X, U = sim.simulate_and_animate(t0=0.0, x0=[2.8, 1.2, 0., 0.],
+                                       tf=5., dt=0.01, controller=controller)
+    plot_timeseries(T, X, U)
+
+This code snippet uses a plant which is parsed to the simulator. The simulator
+is then used to simulate and animate the double pendulum motion by calling the
+
+    plant.rhs(t, x, tau)
+
+with a time t = float, state x = [float, float, float, float] and torque
+tau = [float, float] and receiving the change in x in form of its derivative.
+
+The simulation is performed for 5 seconds under the influence of a PID
+controller by at every time step calling the
+
+    controller.get_control_output(x, t)
+
+method of the controller with a state x = [float, float, float, float] and a
+time t = float and receiving a torque tau.
+
+More examples can be found in the [examples](examples) folder.
 
 ## Benchmark Results
 
@@ -113,7 +158,7 @@ fraction of successful swing-up motions under varying conditions.
 * [Shivesh Kumar](https://robotik.dfki-bremen.de/en/about-us/staff/shku02.html) (Project Supervisor)
 * [Felix Wiebe](https://robotik.dfki-bremen.de/en/about-us/staff/fewi01.html) (Software Maintainer)
 * [Mahdi Javadi](https://robotik.dfki-bremen.de/en/about-us/staff/maja04/) (Hardware Maintainer)
-* [Jonathan Babel](https://robotik.dfki-bremen.de/en/about-us/staff/joba02.html) 
+* [Jonathan Babel](https://robotik.dfki-bremen.de/en/about-us/staff/joba02.html)
 * [Lasse Maywald](https://robotik.dfki-bremen.de/en/about-us/staff/lama02/)
 * [Heiner Peters](https://robotik.dfki-bremen.de/en/about-us/staff/hepe02.html)
 * [Shubham Vyas](https://robotik.dfki-bremen.de/en/about-us/staff/shvy01/)
@@ -157,5 +202,5 @@ of use are specified in the LICENSE file within this repository. Note that we
 do not publish third-party software, hence software packages from other
 developers are released under their very own terms and conditions. If you
 install third-party software packages along with this repo ensure  that you
-follow each individual license agreement.   
+follow each individual license agreement.
 
