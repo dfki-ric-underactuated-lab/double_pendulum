@@ -1,0 +1,40 @@
+<package>
+  <description brief="Torque Limited Simple Pendulum">
+    This project offers an open-source and low-cost kit to test control algorithms
+    for underactuated robots with strongly non-linear dynamics. It implements a
+    **double pendulum** platform built using two quasi-direct drive actuators
+    (QDDs). Due to low friction and high mechanical transparency offered by QDDs,
+    one of the actuators can be kept passive and be used as an encoder. When the
+    shoulder motor is passive and elbow motor is active, the system serves as an
+    **acrobot** and when the shoulder is active and elbow is passive, the system
+    serves as a **pendubot** setup. This project describes the _offline_ and
+    _online_ control methods which can be studied using this dual purpose kit,
+    lists its components, discusses best practices for implementation, presents
+    results from experiments with the simulator and the real system. This
+    repository describes the hardware (CAD, Bill Of Materials (BOM) etc.) required
+    to build the physical system and provides the software (URDF models, simulation
+    and controller) to control it.
+  </description>
+  <author>Underactuated Robotics Lab/shivesh.kumar@dfki.de</author>
+  <maintainer>Felix Wiebe/felix.wiebe@dfki.de</maintainer>
+  <maintainer>Mahdi Javadi/mahdi.jahvadi@dfki.de</maintainer>
+  <license>BSD</license>
+  <url>https://git.hb.dfki.de/underactuated-robotics/release_version/caprr-release-version</url>
+  <logo>https://git.hb.dfki.de/underactuated-robotics/release_version/caprr-release-version/-/blob/main/docs/figures/chaotic_freefall_long_exposure_shot.jpg</logo>
+  <keywords>
+    <keyword>optimal control</keyword>
+    <keyword>underactuation</keyword>
+    <keyword>dynamics</keyword>
+    <keyword>double pendulum</keyword>
+    <keyword>acrobot</keyword>
+    <keyword>pendubot</keyword>
+  </keywords>
+<stage>0</stage>
+<use>single project</use>
+<activity>active</activity>
+<classifiers>
+    <classifier>c++</classifier>
+    <classifier>python</classifier>
+    <classifier>ubuntu</classifier>
+  </classifiers>
+</package>
