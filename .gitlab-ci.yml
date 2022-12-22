@@ -1,3 +1,0 @@
-include:
-   - project: 'build_server/gitlab_ci_includes'
-     file: 'software_catalogue.yml'

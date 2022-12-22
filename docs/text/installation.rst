@@ -53,3 +53,16 @@ often, or if errors appear during the installation call in 3.
 
     cd src/cpp/python
     make
+
+Potential Issues
+----------------
+
+If you have the issue that the eigen library is not correctly installed you can
+install the header only library with::
+
+    wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
+    unzip Eigen.zip
+    cp -r eigen-3.4.0/Eigen /usr/local/include
+
+For more information visit `eigen
+<https://eigen.tuxfamily.org/index.php?title=Main_Page>`__ .
