@@ -56,31 +56,29 @@ jobs:
         make install
     - name: Install HTML math dependencies
       run: |
-        sudo apt-get install dvipng
-        sudo apt-get install texlive-latex-extra
+        sudo apt-get install dvipng -y
+        sudo apt-get install texlive-latex-extra -y
     - name: Generate
       run:  |
         make doc
       id: generate
     - name: Stow
       run: |
-        cd ..
-        mkdir docs
-        mv -v ${{ github.event.repository.name }}/docs/build/_build/html/* docs
+        mkdir tmp
+        mv -v docs/build/_build/html/* tmp/
+        ls tmp/
     - name: Switch
       uses: actions/checkout@v3
       with:
-        ref: ${{ steps.config.outputs.branch }}
+        ref: docs
     - name: Clean
       run: |
         mkdir -p docs
-        cd docs
-        rm -rf *
+        rm -rf docs/*
     - name: Ready up
       run: |
-        mv -v ../docs/* docs
-        cd docs
-        touch .nojekyll
+        mv -v tmp/* docs/
+        touch docs/.nojekyll
     - name: Push
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
