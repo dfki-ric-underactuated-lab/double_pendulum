@@ -13,8 +13,8 @@ from double_pendulum.utils.csv_trajectory import save_trajectory
 from double_pendulum.controller.trajectory_following.trajectory_controller import TrajectoryController
 
 ## model parameters
-design = "design_A.0"
-model = "model_2.0"
+design = "design_C.0"
+model = "model_3.0"
 robot = "pendubot"
 
 if robot == "acrobot":

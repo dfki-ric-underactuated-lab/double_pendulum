@@ -8,7 +8,8 @@ def plot_torques(time,
                  elbow_meas_tau,
                  shoulder_fit_tau,
                  elbow_fit_tau,
-                 save_to=None):
+                 save_to=None,
+                 show=True):
 
     fig, ax = plt.subplots(2, 2,
                            figsize=(18, 6),
@@ -55,6 +56,7 @@ def plot_torques(time,
 
     if not (save_to is None):
         plt.savefig(save_to, bbox_inches="tight")
-    plt.show()
+    if show:
+        plt.show()
 
 
