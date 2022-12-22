@@ -16,7 +16,7 @@ jobs:
       run:
         shell: bash
     # Only run if unit tests have been passed
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    #if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
     - name: Set up Git repository
@@ -68,10 +68,15 @@ jobs:
         mkdir tmp
         mv -v docs/build/_build/html/* tmp/
         ls tmp/
+        #    - name: Switch
+        #      uses: actions/checkout@v3
+        #      with:
+        #        ref: docs
     - name: Switch
-      uses: actions/checkout@v3
-      with:
-        ref: docs
+      run: |
+        cd docs
+        git checkout docs
+        cd ..
     - name: Clean
       run: |
         mkdir -p docs
