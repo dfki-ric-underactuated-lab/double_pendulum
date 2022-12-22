@@ -60,14 +60,13 @@ jobs:
         sudo apt-get install texlive-latex-extra
     - name: Generate
       run:  |
-        cd docs
-        make html
+        make doc
       id: generate
     - name: Stow
       run: |
         cd ..
         mkdir docs
-        mv -v ${{ github.event.repository.name }}/docs/build/html/* docs
+        mv -v ${{ github.event.repository.name }}/docs/build/_build/html/* docs
     - name: Switch
       uses: actions/checkout@v3
       with:
