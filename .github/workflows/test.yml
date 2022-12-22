@@ -95,7 +95,7 @@ jobs:
         fetch-depth: 0
     # Setup ======================================================
     - name: Set up Python 3.10
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: 3.10
     - name: Install pytest
@@ -118,13 +118,13 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install libyaml-cpp-dev
-        sudo apt-get install libeigen3-dev
-        sudo apt-get install libx11-6
-        sudo apt-get install libsm6
-        sudo apt-get install libglib2.0-0
-        sudo apt-get install python3-sphinx
-        sudo apt-get install python3-numpydoc
-        sudo apt-get install python3-sphinx-rtd-theme
+        sudo apt-get libeigen3-dev
+        sudo apt-get libx11-6
+        sudo apt-get libsm6
+        sudo apt-get libglib2.0-0
+        sudo apt-get python3-sphinx
+        sudo apt-get python3-numpydoc
+        sudo apt-get python3-sphinx-rtd-theme
     - name: Install Eigen # apt install of libeigen3-dev not working (paths?)
       run: |
         sudo wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
