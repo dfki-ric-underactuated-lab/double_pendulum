@@ -1,0 +1,16 @@
+double\_pendulum.trajectory\_optimization
+=================================================
+
+.. automodule:: double_pendulum.trajectory_optimization
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   double_pendulum.trajectory_optimization.direct_collocation
+   double_pendulum.trajectory_optimization.ilqr

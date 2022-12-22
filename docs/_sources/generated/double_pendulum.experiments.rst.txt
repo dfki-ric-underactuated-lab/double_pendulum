@@ -1,0 +1,50 @@
+double\_pendulum.experiments
+====================================
+
+.. automodule:: double_pendulum.experiments
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.experiments.experimental\_utils
+-------------------------------------------------------
+
+.. automodule:: double_pendulum.experiments.experimental_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.experiments.hardware\_control\_loop\_mjbots
+-------------------------------------------------------------------
+
+.. automodule:: double_pendulum.experiments.hardware_control_loop_mjbots
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.experiments.hardware\_control\_loop\_tmotors
+--------------------------------------------------------------------
+
+.. automodule:: double_pendulum.experiments.hardware_control_loop_tmotors
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.experiments.hardware\_control\_loop\_tmotors\_old
+-------------------------------------------------------------------------
+
+.. automodule:: double_pendulum.experiments.hardware_control_loop_tmotors_old
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.experiments.performance\_profiler
+---------------------------------------------------------
+
+.. automodule:: double_pendulum.experiments.performance_profiler
+   :members:
+   :undoc-members:
+   :show-inheritance:

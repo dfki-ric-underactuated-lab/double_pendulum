@@ -1,0 +1,26 @@
+double\_pendulum.controller.gamepad
+===========================================
+
+.. automodule:: double_pendulum.controller.gamepad
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.gamepad.gamepad
+--------------------------------------------------
+
+.. automodule:: double_pendulum.controller.gamepad.gamepad
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.gamepad.gamepad\_controller
+--------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.gamepad.gamepad_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:

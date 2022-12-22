@@ -1,0 +1,42 @@
+double\_pendulum.controller.lqr
+=======================================
+
+.. automodule:: double_pendulum.controller.lqr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   double_pendulum.controller.lqr.roa
+
+Submodules
+----------
+
+double\_pendulum.controller.lqr.lqr
+------------------------------------------
+
+.. automodule:: double_pendulum.controller.lqr.lqr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.lqr.lqr\_controller
+------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.lqr.lqr_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.lqr.lqr\_controller\_drake
+-------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.lqr.lqr_controller_drake
+   :members:
+   :undoc-members:
+   :show-inheritance:

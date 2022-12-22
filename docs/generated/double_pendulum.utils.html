@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>double_pendulum.utils &mdash; Double Pendulum 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="double_pendulum.utils.filters" href="double_pendulum.utils.filters.html" />
+    <link rel="prev" title="double_pendulum.trajectory_optimization.ilqr" href="double_pendulum.trajectory_optimization.ilqr.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Double Pendulum
+            <img src="../_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../dynamics.html"> Double Pendulum Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html"> Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="double_pendulum.html"> Software Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="double_pendulum.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.analysis.html">double_pendulum.analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.controller.html">double_pendulum.controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.experiments.html">double_pendulum.experiments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.model.html">double_pendulum.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.simulation.html">double_pendulum.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.system_identification.html">double_pendulum.system_identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.trajectory_optimization.html">double_pendulum.trajectory_optimization</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">double_pendulum.utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.utils.cmaes_controller_par_optimizer">double_pendulum.utils.cmaes_controller_par_optimizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.utils.csv_trajectory">double_pendulum.utils.csv_trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.utils.optimization">double_pendulum.utils.optimization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.utils.pcw_polynomial">double_pendulum.utils.pcw_polynomial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.utils.plotting">double_pendulum.utils.plotting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.utils.urdfs">double_pendulum.utils.urdfs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.utils.wrap_angles">double_pendulum.utils.wrap_angles</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../software_structure.html"> Repository Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware.html"> Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../control.html"> Control Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../benchmark.html"> Controller Benchmarks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Double Pendulum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">&lt;no title&gt;</a></li>
+          <li class="breadcrumb-item"><a href="double_pendulum.html">double_pendulum</a></li>
+      <li class="breadcrumb-item active">double_pendulum.utils</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/double_pendulum.utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-double_pendulum.utils">
+<span id="double-pendulum-utils"></span><h1>double_pendulum.utils<a class="headerlink" href="#module-double_pendulum.utils" title="Permalink to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="double_pendulum.utils.filters.html">double_pendulum.utils.filters</a></li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-double_pendulum.utils.cmaes_controller_par_optimizer">
+<span id="double-pendulum-utils-cmaes-controller-par-optimizer"></span><h2>double_pendulum.utils.cmaes_controller_par_optimizer<a class="headerlink" href="#module-double_pendulum.utils.cmaes_controller_par_optimizer" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.utils.cmaes_controller_par_optimizer.swingup_loss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.cmaes_controller_par_optimizer.</span></span><span class="sig-name descname"><span class="pre">swingup_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_final</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integrator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_accuracy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.cmaes_controller_par_optimizer.swingup_loss" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.utils.cmaes_controller_par_optimizer.swingup_loss.rescale_pars">
+<span class="sig-name descname"><span class="pre">rescale_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.cmaes_controller_par_optimizer.swingup_loss.rescale_pars" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.utils.cmaes_controller_par_optimizer.swingup_loss.unscale_pars">
+<span class="sig-name descname"><span class="pre">unscale_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.cmaes_controller_par_optimizer.swingup_loss.unscale_pars" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.utils.cmaes_controller_par_optimizer.traj_opt_loss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.cmaes_controller_par_optimizer.</span></span><span class="sig-name descname"><span class="pre">traj_opt_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traj_opt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.cmaes_controller_par_optimizer.traj_opt_loss" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.utils.cmaes_controller_par_optimizer.traj_opt_loss.rescale_pars">
+<span class="sig-name descname"><span class="pre">rescale_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.cmaes_controller_par_optimizer.traj_opt_loss.rescale_pars" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.utils.cmaes_controller_par_optimizer.traj_opt_loss.unscale_pars">
+<span class="sig-name descname"><span class="pre">unscale_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.cmaes_controller_par_optimizer.traj_opt_loss.unscale_pars" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-double_pendulum.utils.csv_trajectory">
+<span id="double-pendulum-utils-csv-trajectory"></span><h2>double_pendulum.utils.csv_trajectory<a class="headerlink" href="#module-double_pendulum.utils.csv_trajectory" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.csv_trajectory.concatenate_trajectories">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.csv_trajectory.</span></span><span class="sig-name descname"><span class="pre">concatenate_trajectories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.csv_trajectory.concatenate_trajectories" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.csv_trajectory.load_Kk_values">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.csv_trajectory.</span></span><span class="sig-name descname"><span class="pre">load_Kk_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.csv_trajectory.load_Kk_values" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.csv_trajectory.load_trajectory">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.csv_trajectory.</span></span><span class="sig-name descname"><span class="pre">load_trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.csv_trajectory.load_trajectory" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.csv_trajectory.load_trajectory_full">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.csv_trajectory.</span></span><span class="sig-name descname"><span class="pre">load_trajectory_full</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.csv_trajectory.load_trajectory_full" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.csv_trajectory.save_trajectory">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.csv_trajectory.</span></span><span class="sig-name descname"><span class="pre">save_trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ACC</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_meas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_filt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_des</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_con</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_fric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_meas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_des</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.csv_trajectory.save_trajectory" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.csv_trajectory.trajectory_properties">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.csv_trajectory.</span></span><span class="sig-name descname"><span class="pre">trajectory_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.csv_trajectory.trajectory_properties" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-double_pendulum.utils.optimization">
+<span id="double-pendulum-utils-optimization"></span><h2>double_pendulum.utils.optimization<a class="headerlink" href="#module-double_pendulum.utils.optimization" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.optimization.cma_optimization">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.optimization.</span></span><span class="sig-name descname"><span class="pre">cma_optimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loss_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'outcmaes/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popsize_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxfevals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolfun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-11</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-11</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolstagnation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_proc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.optimization.cma_optimization" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.optimization.scipy_par_optimization">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.optimization.</span></span><span class="sig-name descname"><span class="pre">scipy_par_optimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loss_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Nelder-Mead'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxfevals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.optimization.scipy_par_optimization" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.optimization.solve_least_squares">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.optimization.</span></span><span class="sig-name descname"><span class="pre">solve_least_squares</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loss_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xb0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxfevals</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.optimization.solve_least_squares" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-double_pendulum.utils.pcw_polynomial">
+<span id="double-pendulum-utils-pcw-polynomial"></span><h2>double_pendulum.utils.pcw_polynomial<a class="headerlink" href="#module-double_pendulum.utils.pcw_polynomial" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.pcw_polynomial.</span></span><span class="sig-name descname"><span class="pre">FitPiecewisePolynomial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_break</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Gets data and number of break points and
+fit cubic segment polynomials to each section of data.
+data_x: a numpy array x data, usually time, that we want to fit polynomial to it
+data_y: y data that we want to fit polynomial to it</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial.create_section_poly">
+<span class="sig-name descname"><span class="pre">create_section_poly</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial.create_section_poly" title="Permalink to this definition"></a></dt>
+<dd><p>This function takes the splitted data(x, y) and return 2 lists
+- list of the x-data to be fitted to the setion data
+- list of the fitted value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial.determin_poly">
+<span class="sig-name descname"><span class="pre">determin_poly</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial.determin_poly" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial.end_time">
+<span class="sig-name descname"><span class="pre">end_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial.end_time" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial.get_value">
+<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial.get_value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial.split_data">
+<span class="sig-name descname"><span class="pre">split_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial.split_data" title="Permalink to this definition"></a></dt>
+<dd><p>Takes the original data and return a list of splitted arrays</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial.start_time">
+<span class="sig-name descname"><span class="pre">start_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial.start_time" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.InterpolateMatrix">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.pcw_polynomial.</span></span><span class="sig-name descname"><span class="pre">InterpolateMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_break</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.InterpolateMatrix" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.InterpolateMatrix.get_value">
+<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.InterpolateMatrix.get_value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.InterpolateVector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.pcw_polynomial.</span></span><span class="sig-name descname"><span class="pre">InterpolateVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_break</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.InterpolateVector" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.InterpolateVector.get_value">
+<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.InterpolateVector.get_value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.ResampleTrajectory">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.pcw_polynomial.</span></span><span class="sig-name descname"><span class="pre">ResampleTrajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_break</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.ResampleTrajectory" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.poly1">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.pcw_polynomial.</span></span><span class="sig-name descname"><span class="pre">poly1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.poly1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.poly2">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.pcw_polynomial.</span></span><span class="sig-name descname"><span class="pre">poly2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.poly2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.pcw_polynomial.poly3">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.pcw_polynomial.</span></span><span class="sig-name descname"><span class="pre">poly3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.pcw_polynomial.poly3" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-double_pendulum.utils.plotting">
+<span id="double-pendulum-utils-plotting"></span><h2>double_pendulum.utils.plotting<a class="headerlink" href="#module-double_pendulum.utils.plotting" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.plotting.plot_figures">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_figures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoulder_meas_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoulder_meas_vel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoulder_meas_tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elbow_meas_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elbow_meas_vel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elbow_meas_tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoulder_tau_controller</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elbow_tau_controller</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoulder_filtered_vel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elbow_filtered_vel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoulder_des_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoulder_des_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoulder_des_vel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoulder_des_tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elbow_des_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elbow_des_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elbow_des_vel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elbow_des_tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoulder_fric_tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elbow_fric_tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.plotting.plot_figures" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.plotting.plot_timeseries">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ACC</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">energy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_vel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_acc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_energy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_x_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_y_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_x_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_y_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acc_x_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acc_y_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_x_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_y_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">energy_x_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">energy_y_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_des</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_des</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_des</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_meas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_filt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_con</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_friccomp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ACC_des</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_to</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.plotting.plot_timeseries" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-double_pendulum.utils.urdfs">
+<span id="double-pendulum-utils-urdfs"></span><h2>double_pendulum.utils.urdfs<a class="headerlink" href="#module-double_pendulum.utils.urdfs" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.urdfs.generate_urdf">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.urdfs.</span></span><span class="sig-name descname"><span class="pre">generate_urdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">urdf_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">urdf_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.6]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.3,</span> <span class="pre">0.2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.3,</span> <span class="pre">0.2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">0.1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coulomb_fric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.054,</span> <span class="pre">0.025]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[6.0,</span> <span class="pre">6.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_pars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.urdfs.generate_urdf" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.urdfs.remove_namespaces">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.urdfs.</span></span><span class="sig-name descname"><span class="pre">remove_namespaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.urdfs.remove_namespaces" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-double_pendulum.utils.wrap_angles">
+<span id="double-pendulum-utils-wrap-angles"></span><h2>double_pendulum.utils.wrap_angles<a class="headerlink" href="#module-double_pendulum.utils.wrap_angles" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.wrap_angles.wrap_angles">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.wrap_angles.</span></span><span class="sig-name descname"><span class="pre">wrap_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.wrap_angles.wrap_angles" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.wrap_angles.wrap_angles_diff">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.wrap_angles.</span></span><span class="sig-name descname"><span class="pre">wrap_angles_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.wrap_angles.wrap_angles_diff" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.utils.wrap_angles.wrap_angles_top">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.wrap_angles.</span></span><span class="sig-name descname"><span class="pre">wrap_angles_top</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.wrap_angles.wrap_angles_top" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="double_pendulum.trajectory_optimization.ilqr.html" class="btn btn-neutral float-left" title="double_pendulum.trajectory_optimization.ilqr" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="double_pendulum.utils.filters.html" class="btn btn-neutral float-right" title="double_pendulum.utils.filters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Underactuated Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

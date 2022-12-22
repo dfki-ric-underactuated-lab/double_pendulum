@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Repository Structure &mdash; Double Pendulum 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Hardware" href="hardware.html" />
+    <link rel="prev" title="double_pendulum.utils.filters" href="generated/double_pendulum.utils.filters.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Double Pendulum
+            <img src="_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dynamics.html"> Double Pendulum Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"> Repository Structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#programming-language">Programming Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#repository-overview">Repository Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#model-parameters">Model Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trajectory-data">Trajectory data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#abstract-controller">(Abstract) Controller</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html"> Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="control.html"> Control Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html"> Controller Benchmarks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Double Pendulum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
+      <li class="breadcrumb-item active">Repository Structure</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/software_structure.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="repository-structure">
+<h1>Repository Structure<a class="headerlink" href="#repository-structure" title="Permalink to this heading"></a></h1>
+<section id="programming-language">
+<h2>Programming Language<a class="headerlink" href="#programming-language" title="Permalink to this heading"></a></h2>
+<p>The main programming language of this library is python, but other languages
+are also welcome. Besides python, there is a plant and a simulator as well as
+an iLQR solver written in C++. The iLQR solver has python bindings so that
+it can be used with the other components.</p>
+<p>If you want to contribute something please use/create the folder in the <code class="docutils literal notranslate"><span class="pre">src</span></code>
+directory with the name of the used programming language.</p>
+</section>
+<section id="repository-overview">
+<h2>Repository Overview<a class="headerlink" href="#repository-overview" title="Permalink to this heading"></a></h2>
+<p>The following overview covers the python code and the code which has python
+bindings to be used in the same ecosystem. The repository is organized in
+modules. The interplay of the modules is visualized in the figure below:</p>
+<a class="reference internal image-reference" href="_images/repository_structure.png"><img alt="_images/repository_structure.png" class="align-center" src="_images/repository_structure.png" style="width: 100%;" /></a>
+<p>There are standardized interfaces and file formats for the communication
+between the modules which are explained in the following.</p>
+<section id="model-parameters">
+<h3>Model Parameters<a class="headerlink" href="#model-parameters" title="Permalink to this heading"></a></h3>
+<p>The model parameters are the masses, lengths, … of the double pendulum.
+In this repository model parameters are stored in yml files. The keys of the
+yml files are</p>
+<ul class="simple">
+<li><p>m1, m2, l1, l2, r1, r2, g, b1, b2, cf1, cf2, I1, I2, Ir, gr, tl1, tl2</p></li>
+</ul>
+<p>While most classes and functions allow to directly set the model parameters in
+the initialization/function calls most of the time it is more convenient to use
+the model_parameters class. An object of that class stores all model
+parameters, reads/writes yml files in the correct format and can be parsed to
+most functions/classes in this library.</p>
+<p>Some parameter sets are used so frequently (e.g. those that have been
+identified for the real hardware) that they have been given names.
+More precisely the name consists of a <code class="docutils literal notranslate"><span class="pre">design</span></code> and a <code class="docutils literal notranslate"><span class="pre">model_id</span></code>.
+The design refers to a hardware design where specific materials have be used.
+The model_id refers to a set of model parameters which have been identified (or
+estimated) for that design.
+The naming convention for the design follows</p>
+<ul class="simple">
+<li><p>design_A.0, design_B.0, design_C.0, design_hD.0, …</p></li>
+</ul>
+<p>i.e. <code class="docutils literal notranslate"><span class="pre">design_</span></code> followed by a capital letter and a number. The number can
+potentially used for minor changes in the design (such as different motor
+units) in the future.  The h in front of the capital letter indicates that the
+design is only hypothetical at the moment, i.e. it has not been realized with
+real hardware.</p>
+<p>The model_id format is</p>
+<ul class="simple">
+<li><p>model_1.0, model_1.1, model_2.0, model_3.0, …</p></li>
+</ul>
+<p>i.e. <code class="docutils literal notranslate"><span class="pre">model_</span></code> folowed by two integers. The first integer is the id which
+identifies the model parameter set. The second integer can be used to simplify
+the model.</p>
+<ul class="simple">
+<li><p>0 refers to the full model</p></li>
+<li><p>1 refers to the model where friction and motor inertia are set to 0</p></li>
+</ul>
+<p>more simplified models may be used in the future.</p>
+</section>
+<section id="trajectory-data">
+<h3>Trajectory data<a class="headerlink" href="#trajectory-data" title="Permalink to this heading"></a></h3>
+<p>Trajectories can be computed with trajectory optimization methods such as
+direct collocation and iterative LQR. For the execution zhe trajectories can
+later be loaded by a stabilizing controller such as time varying LQR of a model
+predictive controller.
+The computed trajectories are stored in a csv file. The first line of the csv
+file is reserved for the header defining the data type in the corresponding
+column. The headers used are:</p>
+<ul class="simple">
+<li><p>time</p></li>
+<li><p>pos1,pos2,vel1,vel2,</p></li>
+<li><p>acc1,acc2</p></li>
+<li><p>pos_meas1,pos_meas2,vel_meas1,vel_meas2</p></li>
+<li><p>pos_filt1,pos_filt2,vel_filt1,vel_filt2</p></li>
+<li><p>pos_des1,pos_des2,vel_des1,vel_des2</p></li>
+<li><p>tau_con1,tau_con2</p></li>
+<li><p>tau_fric1,tau_fric2</p></li>
+<li><p>tau_meas1,tau_meas2</p></li>
+<li><p>tau_des1,tau_des2</p></li>
+<li><p>K11,K12,K13,K14,K21,K22,K23,K24</p></li>
+<li><p>k1,k2</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Not all headers/columns have to used.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There should be no space after the separating comma.</p>
+</div>
+<p>The easiest way to stay consistent with this format is to use the functions</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">save_trajectory</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">load_trajectory</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">load_trajectory_full</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>in double_pendulum.utils.csv_trajectory. These functions use the panda library
+to save/load the data. Missing header labels are skipped.</p>
+</section>
+<section id="abstract-controller">
+<h3>(Abstract) Controller<a class="headerlink" href="#abstract-controller" title="Permalink to this heading"></a></h3>
+<p>The controller class is central the this library as it has connections to
+many other components. To ensure compatibility with all components, controllers
+should always inherit from the abstract_controller class.
+The abstract controller class can optionally do logging, state filtering,
+friction compensation and gravity compensation.
+Every specific controller, inheriting from the abstract controller class has
+to implement a</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">controller</span><span class="o">.</span><span class="n">get_control_output_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>method, which should return an array-like object with shape=(2,) representing
+the torques to be sent to the motors. The <code class="docutils literal notranslate"><span class="pre">get_control_output_</span></code> or more
+precisely the <code class="docutils literal notranslate"><span class="pre">get_control_output</span></code> (without underscore) of the abstract
+controller will be called by the simulator and the hardware control loop during
+hardware experiments.
+In addition to this function controllers can also have the methods</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">controller</span><span class="o">.</span><span class="n">init_</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">reset_</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>the <code class="docutils literal notranslate"><span class="pre">init_()</span></code> method will be called before the execution and <code class="docutils literal notranslate"><span class="pre">reset_()</span></code> can
+be used to reset parameters inside the controller.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="generated/double_pendulum.utils.filters.html" class="btn btn-neutral float-left" title="double_pendulum.utils.filters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hardware.html" class="btn btn-neutral float-right" title="Hardware" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Underactuated Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

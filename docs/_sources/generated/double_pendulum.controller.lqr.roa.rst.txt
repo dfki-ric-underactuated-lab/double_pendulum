@@ -1,0 +1,58 @@
+double\_pendulum.controller.lqr.roa
+===========================================
+
+.. automodule:: double_pendulum.controller.lqr.roa
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.lqr.roa.check
+------------------------------------------------
+
+.. automodule:: double_pendulum.controller.lqr.roa.check
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.lqr.roa.coopt\_interface
+-----------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.lqr.roa.coopt_interface
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.lqr.roa.ellipsoid
+----------------------------------------------------
+
+.. automodule:: double_pendulum.controller.lqr.roa.ellipsoid
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.lqr.roa.prob\_roa
+----------------------------------------------------
+
+.. automodule:: double_pendulum.controller.lqr.roa.prob_roa
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.lqr.roa.roa\_estimation
+----------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.lqr.roa.roa_estimation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.lqr.roa.roa\_paropt
+------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.lqr.roa.roa_paropt
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,42 @@
+double\_pendulum.analysis
+=================================
+
+.. automodule:: double_pendulum.analysis
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.analysis.benchmark
+------------------------------------------
+
+.. automodule:: double_pendulum.analysis.benchmark
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.analysis.benchmark\_plot
+------------------------------------------------
+
+.. automodule:: double_pendulum.analysis.benchmark_plot
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.analysis.benchmark\_scores
+--------------------------------------------------
+
+.. automodule:: double_pendulum.analysis.benchmark_scores
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.analysis.utils
+--------------------------------------
+
+.. automodule:: double_pendulum.analysis.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

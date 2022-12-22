@@ -1,0 +1,26 @@
+double\_pendulum.controller.ilqr
+========================================
+
+.. automodule:: double_pendulum.controller.ilqr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.ilqr.ilqr\_mpc\_cpp
+------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.ilqr.ilqr_mpc_cpp
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.ilqr.paropt
+----------------------------------------------
+
+.. automodule:: double_pendulum.controller.ilqr.paropt
+   :members:
+   :undoc-members:
+   :show-inheritance:

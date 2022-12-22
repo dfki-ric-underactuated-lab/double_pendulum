@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Time Varying Linear Quadrativ Regulator (TVLQR) &mdash; Double Pendulum 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Riccati Gains Stabilization" href="control.trajstab.riccati.html" />
+    <link rel="prev" title="Trajectory Stabilization" href="control.trajstab.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Double Pendulum
+            <img src="_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dynamics.html"> Double Pendulum Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software_structure.html"> Repository Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html"> Hardware</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="control.html"> Control Methods</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="control.trajopt.html">Trajectory Optimization</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="control.trajstab.html">Trajectory Stabilization</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Time Varying Linear Quadrativ Regulator (TVLQR)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="control.trajstab.riccati.html">Riccati Gains Stabilization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="control.policy.html">Policy-based Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.mpc.html">Model Predictive Control (MPC)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html"> Controller Benchmarks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Double Pendulum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
+          <li class="breadcrumb-item"><a href="control.html">Control Methods</a></li>
+          <li class="breadcrumb-item"><a href="control.trajstab.html">Trajectory Stabilization</a></li>
+      <li class="breadcrumb-item active">Time Varying Linear Quadrativ Regulator (TVLQR)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/control.trajstab.tvlqr.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="time-varying-linear-quadrativ-regulator-tvlqr">
+<h1>Time Varying Linear Quadrativ Regulator (TVLQR)<a class="headerlink" href="#time-varying-linear-quadrativ-regulator-tvlqr" title="Permalink to this heading"></a></h1>
+<div class="math notranslate nohighlight">
+\[\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\dvect}[1]{\dot{\boldsymbol{#1}}}
+\newcommand{\ddvect}[1]{\ddot{\boldsymbol{#1}}}
+\newcommand{\mat}[1]{\boldsymbol{#1}}\]</div>
+<p>Time-Varying LQR (TVLQR) is another extension to the regular LQR algorithm and
+can be used to stabilize a nominal trajectory (<span class="math notranslate nohighlight">\(\vect{x}^{d}(t),
+\vect{u}^{d}(t)\)</span>). For this, the LQR formalization is used for time-varying
+linear dynamics</p>
+<div class="math notranslate nohighlight">
+\[\dvect{x} = \mat{A}(t) (\vect{x} - \vect{x}^{d}(t)) + \mat{B}(t) (\vect{u} - \vect{u}^{d}(t))\]</div>
+<p>which requires to linearise~(ref{eq:dyn}) at all steps around (<span class="math notranslate nohighlight">\(\vect{x}^{d}(t),
+\vect{u}^{d}(t)\)</span>). This results in the optimal policy at time <span class="math notranslate nohighlight">\(t\)</span></p>
+<div class="math notranslate nohighlight">
+\[\vect{u}(\vect{x}, t) = \vect{u}^{d} - \mat{K}(t) (\vect{x} - \vect{x}^{d}(t)).\]</div>
+<p>For further reading we refer to these lecture notes [1].</p>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>[1] R. Tedrake, Underactuated Robotics, 2022. (Online)
+url: <a class="reference external" href="http://underactuated.mit.edu">http://underactuated.mit.edu</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="control.trajstab.html" class="btn btn-neutral float-left" title="Trajectory Stabilization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="control.trajstab.riccati.html" class="btn btn-neutral float-right" title="Riccati Gains Stabilization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Underactuated Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

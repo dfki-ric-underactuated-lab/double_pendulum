@@ -1,0 +1,26 @@
+double\_pendulum.controller.inverse\_dynamics
+=====================================================
+
+.. automodule:: double_pendulum.controller.inverse_dynamics
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.inverse\_dynamics.computed\_torque\_controller
+---------------------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.inverse_dynamics.computed_torque_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.inverse\_dynamics.inverse\_dynamics\_ff\_controller
+--------------------------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.inverse_dynamics.inverse_dynamics_ff_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:

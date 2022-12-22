@@ -1,0 +1,26 @@
+double\_pendulum.controller.trajectory\_following
+=========================================================
+
+.. automodule:: double_pendulum.controller.trajectory_following
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.trajectory\_following.feed\_forward
+----------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.trajectory_following.feed_forward
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.trajectory\_following.trajectory\_controller
+-------------------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.trajectory_following.trajectory_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,14 @@
+Metadata-Version: 1.1
+Name: DoublePendulum
+Version: 1.0.0
+Summary: UNKNOWN
+Home-page: https://github.com/dfki-ric-underactuated-lab
+Author: Underactuated Lab DFKI Robotics Innovation Center Bremen
+Author-email: UNKNOWN
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Stable
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Academic Usage
+Classifier: Programming Language :: Python

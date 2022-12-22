@@ -1,0 +1,26 @@
+double\_pendulum.controller.pid
+=======================================
+
+.. automodule:: double_pendulum.controller.pid
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.pid.point\_pid\_controller
+-------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.pid.point_pid_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.pid.trajectory\_pid\_controller
+------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.pid.trajectory_pid_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:

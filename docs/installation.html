@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation &mdash; Double Pendulum 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="double_pendulum" href="generated/double_pendulum.html" />
+    <link rel="prev" title="The Double Pendulum System" href="dynamics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Double Pendulum
+            <img src="_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dynamics.html"> Double Pendulum Dynamics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"> Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#potential-issues">Potential Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software_structure.html"> Repository Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html"> Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="control.html"> Control Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html"> Controller Benchmarks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Double Pendulum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
+      <li class="breadcrumb-item active">Installation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p>The code was tested for Python &gt;=3.8 and this is what we recommend.</p>
+<p>Note: If you want to work with a version Python&lt;3.8, that is mostly possible at
+the moment. Only the moteus python package needs to be commented in the
+setup.py and it will not be possible to operate mjbots hardware.</p>
+<p>We recommend using a virtual python environment.</p>
+<ol class="arabic">
+<li><p>Install dependencies (only neccessary for C++ code, used for iLQR optimization):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># ubuntu20</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libyaml</span><span class="o">-</span><span class="n">cpp</span><span class="o">-</span><span class="n">dev</span> <span class="n">libeigen3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libpython3</span><span class="mf">.8</span> <span class="n">libx11</span><span class="o">-</span><span class="mi">6</span> <span class="n">libsm6</span> <span class="n">libxt6</span> <span class="n">libglib2</span><span class="mf">.0</span><span class="o">-</span><span class="mi">0</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span> <span class="n">python3</span><span class="o">-</span><span class="n">numpydoc</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span><span class="o">-</span><span class="n">rtd</span><span class="o">-</span><span class="n">theme</span>
+
+<span class="c1"># ubuntu22</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libyaml</span><span class="o">-</span><span class="n">cpp</span><span class="o">-</span><span class="n">dev</span> <span class="n">libeigen3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libx11</span><span class="o">-</span><span class="mi">6</span> <span class="n">libsm6</span> <span class="n">libglib2</span><span class="mf">.0</span><span class="o">-</span><span class="mi">0</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span> <span class="n">python3</span><span class="o">-</span><span class="n">numpydoc</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span><span class="o">-</span><span class="n">rtd</span><span class="o">-</span><span class="n">theme</span>
+</pre></div>
+</div>
+</li>
+<li><p>Clone the repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@git</span><span class="o">.</span><span class="n">hb</span><span class="o">.</span><span class="n">dfki</span><span class="o">.</span><span class="n">de</span><span class="p">:</span><span class="n">underactuated</span><span class="o">-</span><span class="n">robotics</span><span class="o">/</span><span class="n">release_version</span><span class="o">/</span><span class="n">caprr</span><span class="o">-</span><span class="n">release</span><span class="o">-</span><span class="n">version</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+</li>
+<li><p>Install the double pendulum package:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">caprr</span><span class="o">-</span><span class="n">release</span><span class="o">-</span><span class="n">version</span>
+<span class="n">make</span> <span class="n">install</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>With this you are done. The following two bullet points may be useful when only
+the C++/Python code is needed, if you work on the code and need to recompile
+often, or if errors appear during the installation call in 3.</p>
+<ol class="arabic" start="4">
+<li><p>If you want to install only the Python package, you can do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">python</span>
+
+<span class="c1"># or</span>
+
+<span class="n">cd</span> <span class="n">src</span><span class="o">/</span><span class="n">python</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>
+</pre></div>
+</div>
+</li>
+<li><p>If you want to build C++ code and install python bindings:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">cpp</span>
+
+<span class="c1"># or</span>
+
+<span class="n">cd</span> <span class="n">src</span><span class="o">/</span><span class="n">cpp</span><span class="o">/</span><span class="n">python</span>
+<span class="n">make</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<section id="potential-issues">
+<h2>Potential Issues<a class="headerlink" href="#potential-issues" title="Permalink to this heading"></a></h2>
+<p>If you have the issue that the eigen library is not correctly installed you can
+install the header only library with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="o">-</span><span class="n">O</span> <span class="n">Eigen</span><span class="o">.</span><span class="n">zip</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">gitlab</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">libeigen</span><span class="o">/</span><span class="n">eigen</span><span class="o">/-/</span><span class="n">archive</span><span class="o">/</span><span class="mf">3.4.0</span><span class="o">/</span><span class="n">eigen</span><span class="o">-</span><span class="mf">3.4.0</span><span class="o">.</span><span class="n">zip</span>
+<span class="n">unzip</span> <span class="n">Eigen</span><span class="o">.</span><span class="n">zip</span>
+<span class="n">cp</span> <span class="o">-</span><span class="n">r</span> <span class="n">eigen</span><span class="o">-</span><span class="mf">3.4.0</span><span class="o">/</span><span class="n">Eigen</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">include</span>
+</pre></div>
+</div>
+<p>For more information visit <a class="reference external" href="https://eigen.tuxfamily.org/index.php?title=Main_Page">eigen</a> .</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dynamics.html" class="btn btn-neutral float-left" title="The Double Pendulum System" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="generated/double_pendulum.html" class="btn btn-neutral float-right" title="double_pendulum" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Underactuated Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

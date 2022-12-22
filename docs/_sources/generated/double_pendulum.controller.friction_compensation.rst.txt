@@ -1,0 +1,18 @@
+double\_pendulum.controller.friction\_compensation
+==========================================================
+
+.. automodule:: double_pendulum.controller.friction_compensation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.friction\_compensation.friction\_compensation\_controller
+--------------------------------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.friction_compensation.friction_compensation_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:

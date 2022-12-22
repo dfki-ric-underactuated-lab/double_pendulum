@@ -1,0 +1,26 @@
+double\_pendulum.trajectory\_optimization.ilqr
+======================================================
+
+.. automodule:: double_pendulum.trajectory_optimization.ilqr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.trajectory\_optimization.ilqr.ilqr\_cpp
+---------------------------------------------------------------
+
+.. automodule:: double_pendulum.trajectory_optimization.ilqr.ilqr_cpp
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.trajectory\_optimization.ilqr.paropt
+------------------------------------------------------------
+
+.. automodule:: double_pendulum.trajectory_optimization.ilqr.paropt
+   :members:
+   :undoc-members:
+   :show-inheritance:

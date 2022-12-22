@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>T-Motor (AK-80-6) &mdash; Double Pendulum 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="MJBots" href="hardware.motors.mjbots.html" />
+    <link rel="prev" title="Motors" href="hardware.motors.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Double Pendulum
+            <img src="_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dynamics.html"> Double Pendulum Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software_structure.html"> Repository Structure</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="hardware.html"> Hardware</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="hardware.motors.html">Motors</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">T-Motor (AK-80-6)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#physical-parameters-of-the-actuator">Physical Parameters of the Actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#initial-motor-setup">Initial Motor Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#communication">Communication</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#python-interface">Python Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#internal-pd-controller">Internal PD-Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hardware.motors.mjbots.html">MJBots</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.testbench.html">Hardware &amp; Testbench Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.experiments.html">Hardware Experiment Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="control.html"> Control Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html"> Controller Benchmarks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Double Pendulum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
+          <li class="breadcrumb-item"><a href="hardware.html">Hardware</a></li>
+          <li class="breadcrumb-item"><a href="hardware.motors.html">Motors</a></li>
+      <li class="breadcrumb-item active">T-Motor (AK-80-6)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/hardware.motors.tmotors.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="t-motor-ak-80-6">
+<h1>T-Motor (AK-80-6)<a class="headerlink" href="#t-motor-ak-80-6" title="Permalink to this heading"></a></h1>
+<p>The T-Motor double pendulum uses the <a class="reference external" href="https://store.tmotor.com/goods.php?id=981">AK80-6 Motors</a> from T-Motor. Here the motors’
+physical parameters, the initial setup as well as the usage with the python
+driver is documented. The AK80-6 manual can be found <a class="reference external" href="https://store.tmotor.com/images/file/202208/251661393360838805.pdf">here</a> .</p>
+<section id="physical-parameters-of-the-actuator">
+<h2>Physical Parameters of the Actuator<a class="headerlink" href="#physical-parameters-of-the-actuator" title="Permalink to this heading"></a></h2>
+<p>The AK80-6 actuator from T-Motor is a quasi direct drive with a gear
+ratio of <span class="math notranslate nohighlight">\(\small{6:1}\)</span> and a peak torque of
+<span class="math notranslate nohighlight">\(\small{12\,Nm}\)</span> at the output shaft. The motor is equipped with
+an absolute <span class="math notranslate nohighlight">\(\small{12}\)</span> bit rotary encoder and an internal PD
+torque control loop. The motor controller is basically the same as the
+one used for MIT Mini-Cheetah, which is described in the documentation
+from Ben Katz. - <a class="reference external" href="https://docs.google.com/document/d/1dzNVzblz6mqB3eZVEMyi2MtSngALHdgpTaDJIW_BpS4/edit">Ben Katz: MIT Mini-Cheetah
+Documentation</a></p>
+<a class="reference internal image-reference" href="_images/motor_ak80-6.jpg"><img alt="_images/motor_ak80-6.jpg" class="align-center" src="_images/motor_ak80-6.jpg" style="width: 100%;" /></a>
+<ul class="simple">
+<li><p>Voltage = <span class="math notranslate nohighlight">\(\small{24\,V}\)</span></p></li>
+<li><p>Current = rated <span class="math notranslate nohighlight">\(\small{12\,V}\)</span>, peak <span class="math notranslate nohighlight">\(\small{24\,V}\)</span></p></li>
+<li><p>Torque = rated <span class="math notranslate nohighlight">\(\small{6\,Nm}\)</span> , peak
+<span class="math notranslate nohighlight">\(\small{12\,Nm}\)</span> (after the transmission)</p></li>
+<li><p>Transmission <span class="math notranslate nohighlight">\(\small{N = 6 : 1}\)</span></p></li>
+<li><p>Weight = <span class="math notranslate nohighlight">\(\small{485\,g}\)</span></p></li>
+<li><p>Dimensions = <span class="math notranslate nohighlight">\(\small{⌀\,\,98\,mm\times\,38.5\,mm}\)</span>.</p></li>
+<li><p>Max. torque to weight ratio = <span class="math notranslate nohighlight">\(\small{24\,\frac{Nm}{Kg}}\)</span>
+(after the transmission)</p></li>
+<li><p>Max. velocity = <span class="math notranslate nohighlight">\(\small{38.2\,\frac{rad}{s}}\)</span> =
+<span class="math notranslate nohighlight">\(\small{365\,rpm}\)</span> (after the transmission)</p></li>
+<li><p>Backlash (accuracy) = <span class="math notranslate nohighlight">\(\small{0.15°(degrees)}\)</span></p></li>
+</ul>
+<p>The T-Motor Ak-80-6 has the following motor constants
+(before the transmission):</p>
+<ul class="simple">
+<li><p>Motor constant <span class="math notranslate nohighlight">\(\small{k_m = 0.2206 \,\frac{Nm}{\sqrt{W}}}\)</span></p></li>
+<li><p>Electric constant <span class="math notranslate nohighlight">\(\small{k_e = 0.009524 \,\frac{V}{rpm}}\)</span></p></li>
+<li><p>Torque constant <span class="math notranslate nohighlight">\(\small{k_t = 0.091 \,\frac{Nm}{A}}\)</span></p></li>
+<li><p>Torque = rated <span class="math notranslate nohighlight">\(\small{1.092\,Nm}\)</span>, peak
+<span class="math notranslate nohighlight">\(\small{2.184\,Nm}\)</span></p></li>
+<li><p>Velocity / back-EMF constant
+<span class="math notranslate nohighlight">\(\small{k_v = 100 \,\frac{rpm}{V}}\)</span></p></li>
+<li><p>Max. velocity at <span class="math notranslate nohighlight">\(\small{24\,V}\)</span>=
+<span class="math notranslate nohighlight">\(\small{251.2 \,\frac{rad}{s}}\)</span> =
+<span class="math notranslate nohighlight">\(\small{2400 \,\,rpm}\)</span></p></li>
+<li><p>Motor wiring in <span class="math notranslate nohighlight">\(\small{\nabla- configuration}\)</span></p></li>
+<li><p>Number of pole pairs = <span class="math notranslate nohighlight">\(\small{21}\)</span></p></li>
+<li><p>Resistance phase to phase = <span class="math notranslate nohighlight">\(\small{170\pm5\,m\Omega}\)</span></p></li>
+<li><p>Inductance phase to phase = <span class="math notranslate nohighlight">\(\small{57\pm10\,m\mu H}\)</span></p></li>
+<li><p>Rotor inertia <span class="math notranslate nohighlight">\(\small{Ir = 0.000060719\,Kg.m^2}\)</span></p></li>
+</ul>
+</section>
+<section id="initial-motor-setup">
+<h2>Initial Motor Setup<a class="headerlink" href="#initial-motor-setup" title="Permalink to this heading"></a></h2>
+<p>The R-LINK Configuration Tool is used to configure the AK80-6 from
+T-Motors. Before starting to use the R-Link device make sure you have
+downloaded the <code class="docutils literal notranslate"><span class="pre">CP210x</span> <span class="pre">Universal</span> <span class="pre">Windows</span> <span class="pre">Driver</span></code> from silabs. If this
+isn’t working properly follow the instructions at sparkfun on how to
+install ch340 drivers. You have to download the <code class="docutils literal notranslate"><span class="pre">CH</span> <span class="pre">341SER</span> <span class="pre">(EXE)</span></code> file
+from the sparkfun webpage. Notice that you first have to select
+uninstall in the CH341 driver menu to uninstall old drivers before you
+are able to install the new driver. The configuration tool software for
+the R-LINK module can be downloaded on the T-Motors website.</p>
+<ul class="simple">
+<li><p><strong>Silabs:</strong> <a class="reference external" href="https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers">CP210x Universal Windows
+Driver</a></p></li>
+<li><p><strong>CH341:</strong> <a class="reference external" href="https://learn.sparkfun.com/tutorials/how-to-install-ch340-drivers/all">Sparkfun - How to install CH340
+drivers</a></p></li>
+</ul>
+<section id="tutorials">
+<h3>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>T-MOTOR: <a class="reference external" href="https://www.youtube.com/watch?v=hbqQCgebaF8">https://www.youtube.com/watch?v=hbqQCgebaF8</a></p></li>
+<li><p>Skyentific: <a class="reference external" href="https://www.youtube.com/watch?v=HzY9vzgPZkA">https://www.youtube.com/watch?v=HzY9vzgPZkA</a></p></li>
+</ul>
+</section>
+<section id="instructions-r-link-config-tool">
+<h3>Instructions: R-Link Config Tool<a class="headerlink" href="#instructions-r-link-config-tool" title="Permalink to this heading"></a></h3>
+<p><strong>User manual &amp; configuration tool:</strong>
+<a class="reference external" href="https://store-en.tmotor.com/goods.php?id=1085">store-en.tmotor.com</a></p>
+<p>R-LINK is a USB to serial port module, specially designed for CubeMars A
+Series of dynamical modular motors. It is possible to calibrate the
+encoder in the module, change CAN ID settings, PID settings, as well as
+to control position, torque and speed of the motor within the
+configuration software tool.</p>
+<p><a class="reference internal" href="_images/r-link_module.jpg"><img alt="pic1" src="_images/r-link_module.jpg" style="width: 44%;" /></a> <a class="reference internal" href="_images/r-link_wiring.PNG"><img alt="pic2" src="_images/r-link_wiring.PNG" style="width: 54%;" /></a></p>
+<ol class="arabic">
+<li><p>Wire the R-LINK module as shown in the figure below. A USB to micro
+USB cable connects a pc with the R-LINK module and the 5pin cable
+goes between the R-LINK module and the Motor.</p></li>
+<li><p>Connect the AK80-6 motor to a power supply (24V, 12A) and do not cut
+off the power before the setting is completed.</p></li>
+<li><p>Start the R-Link Config Tool application (only runs on Windows).</p></li>
+<li><p>Select serial port: USB-Serial_CH340,wch,cp along with an
+appropriate baud rate (both 921600 and 115200 Bd should work). If
+the serial port option USB-Serial_CH340,wch,cp does not show up,
+your pc can’t establish a connection to the R-LINK module due to
+remaining driver issues.</p></li>
+<li><p>Choose the desired motor settings on the left side of the config
+tool GUI. Enter the correct CAN ID of the motor under
+<code class="docutils literal notranslate"><span class="pre">MotorSelectEnter</span></code>. A label on the motor shows the ID.</p>
+<ul class="simple">
+<li><p>Velocity: 5 rad/s is a relatively slow speed of revolution, hence
+it offers a good starting point.</p></li>
+<li><p>Torque: be careful setting a fixed torque, because the friction
+inside the motor decreases with the speed of revolution.
+Therefore a fixed torque commonly leads to either no movement at
+all or accelerates the motor continuously.</p></li>
+</ul>
+</li>
+<li><p>Start the plotting by ticking the boxes of position, velocity,
+torque and select <code class="docutils literal notranslate"><span class="pre">Display</span></code></p></li>
+<li><p>Press <code class="docutils literal notranslate"><span class="pre">Run</span></code> to start recording the plots.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Enter</span> <span class="pre">M_Mode</span></code> to control the motor. This is indicated by a color
+change of the plot line, from red to green.</p></li>
+<li><p>In order to push changes in the settings to the motor, press <code class="docutils literal notranslate"><span class="pre">Send</span> <span class="pre">Once</span></code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This button does not work reliably. Usually it has
+to be activated several times before the setting changes
+actually apply on the motor.</p>
+</div>
+</li>
+<li><p>Stop the motor inside the M-Mode by setting the velocity to 0 and
+pressing <code class="docutils literal notranslate"><span class="pre">Send</span> <span class="pre">Once</span></code> until the changes apply.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Exit</span> <span class="pre">M_Mode</span></code> to exit the control mode of the motor.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The next time you start the motor control with
+<code class="docutils literal notranslate"><span class="pre">Enter</span> <span class="pre">M_Mode</span></code> the motor will restart with the exact same
+settings as you left the control mode with <code class="docutils literal notranslate"><span class="pre">Exit</span> <span class="pre">M_Mode</span></code>. This
+is especially dangerous if a weight is attached to the pendulum
+and the motor control was left with high velocity or torque
+settings.</p>
+</div>
+</li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">Stop</span></code> to deactivate the plotting.</p></li>
+</ol>
+</section>
+<section id="debugging">
+<h3>Debugging<a class="headerlink" href="#debugging" title="Permalink to this heading"></a></h3>
+<p>Error messages that showed up during the configuration procedure, such
+as <code class="docutils literal notranslate"><span class="pre">UVLO</span></code> (VM under voltage lockout) and <code class="docutils literal notranslate"><span class="pre">OTW</span></code> (Thermal warning and
+shutdown), could be interpreted with the help of the data sheet for the
+DRV8353M 100-V Three-Phase Smart Gate Driver from Texas Instruments:</p>
+<div class="line-block">
+<div class="line"><strong>Datasheet:</strong>
+<a class="reference external" href="https://www.ti.com/lit/ds/symlink/drv8353m.pdf">DRV8353M</a> (on the
+first Page under: 1. Features)</div>
+<div class="line"><br /></div>
+</div>
+</section>
+</section>
+<section id="communication">
+<h2>Communication<a class="headerlink" href="#communication" title="Permalink to this heading"></a></h2>
+<section id="can-bus-wiring">
+<h3>CAN Bus wiring<a class="headerlink" href="#can-bus-wiring" title="Permalink to this heading"></a></h3>
+<p>Along the CAN bus proper grounding and ideally, isolated ground is
+required for improvement of the signal quality. Therefore, the common
+shared ground for PC and motors is of great importance in CAN connection
+communication. When daisy-chaining multiple actuators, one can use the
+Ground form the R-Link connector of the motor, which is connected to the
+negative power pin. This can share the common ground from the PC side
+and power supply. At the very beginning and end of the CAN chain, there
+must be of the termination resistors of <span class="math notranslate nohighlight">\(\small{120\,\Omega}\)</span>
+between CAN-High and CAN-Low, which will be then connected to the
+corresponding pins between drivers. These resistors aim to absorb the
+signals and prevents the signals from being reflected at the wire ends.
+The CAN protocol is differential, hence no additional ground reference
+is needed. The diagram below displays the wiring of the CAN bus.</p>
+<a class="reference internal image-reference" href="_images/can_bus.png"><img alt="_images/can_bus.png" class="align-center" src="_images/can_bus.png" style="width: 100%;" /></a>
+<p><strong>Fig. 2:</strong> main pc = CPU, CAN transceiver = CAN XCVR, actuator = AC</p>
+</section>
+<section id="setting-up-the-can-interface">
+<h3>Setting up the CAN interface<a class="headerlink" href="#setting-up-the-can-interface" title="Permalink to this heading"></a></h3>
+<p>During regular operation the motors are commanded via CAN interface.
+To setup the CAN connection follow these steps:</p>
+<ul class="simple">
+<li><p>Run this command in the terminal to make sure that <code class="docutils literal notranslate"><span class="pre">can0</span></code>
+(or any other can interface depending on the system)
+shows up as an interface after connecting the USB cable to your PC:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ip</span> <span class="n">link</span> <span class="n">show</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Configure the <code class="docutils literal notranslate"><span class="pre">can0</span></code> interface to have a 1 Mbaud communication
+frequency:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">ip</span> <span class="n">link</span> <span class="nb">set</span> <span class="n">can0</span> <span class="nb">type</span> <span class="n">can</span> <span class="n">bitrate</span> <span class="mi">1000000</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>To bring up the <code class="docutils literal notranslate"><span class="pre">can0</span></code> interface, run:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">ip</span> <span class="n">link</span> <span class="nb">set</span> <span class="n">up</span> <span class="n">can0</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Alternatively, one could run the shell script
+<code class="docutils literal notranslate"><span class="pre">setup_caninterface.sh</span></code> which will do the job for you.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To change motor parameters such as CAN ID or to calibrate the
+encoder, a serial connection is used. The serial terminal GUI used on Linux
+for this purpose is <code class="docutils literal notranslate"><span class="pre">cutecom</span></code></p>
+</div>
+</section>
+<section id="testing-motor-connection">
+<h3>Testing Motor Connection<a class="headerlink" href="#testing-motor-connection" title="Permalink to this heading"></a></h3>
+<p>To test the connection to the motors, you can use the performance profiling
+script.  The script will print the communication frequencies to the terminal.</p>
+<div class="line-block">
+<div class="line"><strong>Performance Profiler:</strong> Sends and received 1000 zero commands to
+measure the communication frequency with 1/2 motors.</div>
+<div class="line"><br /></div>
+</div>
+</section>
+</section>
+<section id="python-interface">
+<h2>Python Interface<a class="headerlink" href="#python-interface" title="Permalink to this heading"></a></h2>
+<p>The Python - Motor communication is done with the <a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/mini-cheetah-tmotor-python-can">python driver</a>.
+The basic python interface is the following:</p>
+<p>Example Motor Initialization (for can interface <code class="docutils literal notranslate"><span class="pre">can0</span></code> and <code class="docutils literal notranslate"><span class="pre">motor_id</span></code> =1):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">motor</span> <span class="o">=</span> <span class="n">CanMotorController</span><span class="p">(</span><span class="n">can_socket</span><span class="o">=</span><span class="s1">&#39;can0&#39;</span><span class="p">,</span> <span class="n">motor_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">socket_timeout</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Available functions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pos</span><span class="p">,</span> <span class="n">vel</span><span class="p">,</span> <span class="n">tau</span> <span class="o">=</span> <span class="n">motor</span><span class="o">.</span><span class="n">enable_motor</span><span class="p">()</span>
+<span class="n">pos</span><span class="p">,</span> <span class="n">vel</span><span class="p">,</span> <span class="n">tau</span> <span class="o">=</span> <span class="n">motor</span><span class="o">.</span><span class="n">disable_motor</span><span class="p">()</span>
+<span class="n">pos</span><span class="p">,</span> <span class="n">vel</span><span class="p">,</span> <span class="n">tau</span> <span class="o">=</span> <span class="n">motor</span><span class="o">.</span><span class="n">set_zero_position</span><span class="p">()</span>
+<span class="n">pos</span><span class="p">,</span> <span class="n">vel</span><span class="p">,</span> <span class="n">tau</span> <span class="o">=</span> <span class="n">motor</span><span class="o">.</span><span class="n">send_deg_command</span><span class="p">(</span><span class="n">position_in_degrees</span><span class="p">,</span> <span class="n">velocity_in_degrees</span><span class="p">,</span> <span class="n">Kp</span><span class="p">,</span> <span class="n">Kd</span><span class="p">,</span> <span class="n">tau_ff</span><span class="p">)</span>
+<span class="n">pos</span><span class="p">,</span> <span class="n">vel</span><span class="p">,</span> <span class="n">tau</span> <span class="o">=</span> <span class="n">motor</span><span class="o">.</span><span class="n">send_rad_command</span><span class="p">(</span><span class="n">position_in_radians</span><span class="p">,</span> <span class="n">velocity_in_radians</span><span class="p">,</span> <span class="n">Kp</span><span class="p">,</span> <span class="n">Kd</span><span class="p">,</span> <span class="n">tau_ff</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>All functions return current position, velocity, torque in SI units
+except for <code class="docutils literal notranslate"><span class="pre">send_deg_command</span></code>, which returns degrees instead of radians.</p>
+</section>
+<section id="internal-pd-controller">
+<h2>Internal PD-Controller<a class="headerlink" href="#internal-pd-controller" title="Permalink to this heading"></a></h2>
+<p>A proportional-derivative controller, which is based on the MIT
+Mini-Cheetah Motor, is implemented on the motor controller board. The
+control block diagram of this closed loop controller is shown below. It
+can bee seen that the control method is flexible, as pure position,
+speed, feed forward torque control or any combination of those is
+possible.</p>
+<a class="reference internal image-reference" href="_images/motor_ak80-6_pdcontroller.png"><img alt="_images/motor_ak80-6_pdcontroller.png" class="align-center" src="_images/motor_ak80-6_pdcontroller.png" style="width: 80%;" /></a>
+<p>In the <a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/mini-cheetah-tmotor-python-can">python driver</a> ,
+the:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">send_rad_command</span><span class="p">(</span><span class="n">Pdes</span><span class="p">,</span> <span class="n">Pvel</span><span class="p">,</span> <span class="n">Kp</span><span class="p">,</span> <span class="n">Kd</span><span class="p">,</span> <span class="n">tff</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>function lets you set desired position (Pdes), velocity (Pvel), Kp, Kd
+and feed forward torque (tff) values at every time step.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="hardware.motors.html" class="btn btn-neutral float-left" title="Motors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hardware.motors.mjbots.html" class="btn btn-neutral float-right" title="MJBots" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Underactuated Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

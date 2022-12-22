@@ -1,0 +1,18 @@
+double\_pendulum.controller.energy
+==========================================
+
+.. automodule:: double_pendulum.controller.energy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.energy.energy\_Xin
+-----------------------------------------------------
+
+.. automodule:: double_pendulum.controller.energy.energy_Xin
+   :members:
+   :undoc-members:
+   :show-inheritance:

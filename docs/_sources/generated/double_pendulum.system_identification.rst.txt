@@ -1,0 +1,50 @@
+double\_pendulum.system\_identification
+===============================================
+
+.. automodule:: double_pendulum.system_identification
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.system\_identification.data\_prep
+---------------------------------------------------------
+
+.. automodule:: double_pendulum.system_identification.data_prep
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.system\_identification.dynamics
+-------------------------------------------------------
+
+.. automodule:: double_pendulum.system_identification.dynamics
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.system\_identification.loss
+---------------------------------------------------
+
+.. automodule:: double_pendulum.system_identification.loss
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.system\_identification.plotting
+-------------------------------------------------------
+
+.. automodule:: double_pendulum.system_identification.plotting
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.system\_identification.sys\_id
+------------------------------------------------------
+
+.. automodule:: double_pendulum.system_identification.sys_id
+   :members:
+   :undoc-members:
+   :show-inheritance:

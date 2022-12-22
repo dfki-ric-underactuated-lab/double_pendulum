@@ -1,0 +1,42 @@
+double\_pendulum.model
+==============================
+
+.. automodule:: double_pendulum.model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.model.friction\_matrix
+----------------------------------------------
+
+.. automodule:: double_pendulum.model.friction_matrix
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.model.model\_parameters
+-----------------------------------------------
+
+.. automodule:: double_pendulum.model.model_parameters
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.model.plant
+-----------------------------------
+
+.. automodule:: double_pendulum.model.plant
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.model.symbolic\_plant
+---------------------------------------------
+
+.. automodule:: double_pendulum.model.symbolic_plant
+   :members:
+   :undoc-members:
+   :show-inheritance:

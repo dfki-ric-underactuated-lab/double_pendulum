@@ -1,0 +1,44 @@
+double\_pendulum.controller
+===================================
+
+.. automodule:: double_pendulum.controller
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   double_pendulum.controller.energy
+   double_pendulum.controller.friction_compensation
+   double_pendulum.controller.gamepad
+   double_pendulum.controller.gravity_compensation
+   double_pendulum.controller.ilqr
+   double_pendulum.controller.inverse_dynamics
+   double_pendulum.controller.lqr
+   double_pendulum.controller.partial_feedback_linearization
+   double_pendulum.controller.pid
+   double_pendulum.controller.trajectory_following
+   double_pendulum.controller.tvlqr
+
+Submodules
+----------
+
+double\_pendulum.controller.abstract\_controller
+-------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.abstract_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.combined\_controller
+-------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.combined_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,22 @@
+double\_pendulum
+========================
+
+.. automodule:: double_pendulum
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   double_pendulum.analysis
+   double_pendulum.controller
+   double_pendulum.experiments
+   double_pendulum.model
+   double_pendulum.simulation
+   double_pendulum.system_identification
+   double_pendulum.trajectory_optimization
+   double_pendulum.utils

@@ -1,0 +1,74 @@
+double\_pendulum.utils
+==============================
+
+.. automodule:: double_pendulum.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   double_pendulum.utils.filters
+
+Submodules
+----------
+
+double\_pendulum.utils.cmaes\_controller\_par\_optimizer
+---------------------------------------------------------------
+
+.. automodule:: double_pendulum.utils.cmaes_controller_par_optimizer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.utils.csv\_trajectory
+---------------------------------------------
+
+.. automodule:: double_pendulum.utils.csv_trajectory
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.utils.optimization
+------------------------------------------
+
+.. automodule:: double_pendulum.utils.optimization
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.utils.pcw\_polynomial
+---------------------------------------------
+
+.. automodule:: double_pendulum.utils.pcw_polynomial
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.utils.plotting
+--------------------------------------
+
+.. automodule:: double_pendulum.utils.plotting
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.utils.urdfs
+-----------------------------------
+
+.. automodule:: double_pendulum.utils.urdfs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.utils.wrap\_angles
+------------------------------------------
+
+.. automodule:: double_pendulum.utils.wrap_angles
+   :members:
+   :undoc-members:
+   :show-inheritance:

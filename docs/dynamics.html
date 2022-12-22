@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Double Pendulum System &mdash; Double Pendulum 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Double Pendulum
+            <img src="_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"> Double Pendulum Dynamics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#equation-of-motion">Equation of Motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#energy">Energy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#system-identification">System Identification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software_structure.html"> Repository Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html"> Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="control.html"> Control Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html"> Controller Benchmarks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Double Pendulum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
+      <li class="breadcrumb-item active">The Double Pendulum System</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/dynamics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="the-double-pendulum-system">
+<h1>The Double Pendulum System<a class="headerlink" href="#the-double-pendulum-system" title="Permalink to this heading"></a></h1>
+<p>This page gives an overview over the mathematical description of the double
+pendulum dynamics.</p>
+<section id="equation-of-motion">
+<h2>Equation of Motion<a class="headerlink" href="#equation-of-motion" title="Permalink to this heading"></a></h2>
+<a class="reference internal image-reference" href="_images/schematic.png"><img alt="_images/schematic.png" class="align-center" src="_images/schematic.png" style="width: 50%;" /></a>
+<div class="math notranslate nohighlight">
+\[\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\dvect}[1]{\dot{\boldsymbol{#1}}}
+\newcommand{\ddvect}[1]{\ddot{\boldsymbol{#1}}}
+\newcommand{\mat}[1]{\boldsymbol{#1}}\]</div>
+<p>We model the dynamics  of the double pendulum with 15 parameters which include
+8 link parameters namely masses <span class="math notranslate nohighlight">\((m_1, m_2)\)</span>, lengths <span class="math notranslate nohighlight">\((l_1, l_2)\)</span>, center of
+masses <span class="math notranslate nohighlight">\((r_1, r_2)\)</span>, inertias <span class="math notranslate nohighlight">\((I_1, I_2)\)</span> for the two links, and 6 actuator
+parameters namely motor inertia <span class="math notranslate nohighlight">\(I_r\)</span>, gear ratio <span class="math notranslate nohighlight">\(g_r\)</span>, coulomb friction
+<span class="math notranslate nohighlight">\((c_{f1}, c_{f2})\)</span>, viscous friction <span class="math notranslate nohighlight">\((b_1, b_2)\)</span> for the two
+joints and gravity <span class="math notranslate nohighlight">\(g\)</span>.</p>
+<p>The generalized coordinates <span class="math notranslate nohighlight">\(\vect{q} = (q_1, q_2)^T\)</span> are the joint angles
+measured from the free hanging position.
+The state vector of the system contains the coordinates and their time
+derivatives: <span class="math notranslate nohighlight">\(\vect{x} = (\vect{q}, \dvect{q})^T\)</span>. The torques applied by the
+actuators are <span class="math notranslate nohighlight">\(\vect{u} = (u_1, u_2)\)</span>.  The equations of motion for the
+dynamics of a dynamical system can be written as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}    \dvect{x} &amp;= \vect{f}(\vect{x}, \vect{u}) \label{eq:dyn}\\
+    % \left[ \begin{matrix}
+    %     \dvect{q} \\
+    %     \ddvect{q}
+    % \end{matrix} \right]
+    &amp;=
+    \left[ \begin{matrix}
+        \dvect{q} \\
+        \mat{M}^{-1}(\mat{D} \vect{u} - \mat{C}(\vect{q}, \dot{\vect{q}}) \dot{\vect{q}} +
+\mat{G}(\vect{q}) - \mat{F}(\dot{\vect{q}})) \label{eq:dyn2}
+    \end{matrix} \right]\end{split}\]</div>
+<p>The equation in the bottom half of the vector is also known as manipulator equation.
+For the double pendulum, the entities in the manipulator
+equation are the mass matrix
+(with <span class="math notranslate nohighlight">\(s_1 = \sin(q_1), c_1 = \cos(q_1), \ldots\)</span>)</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mat{M} =
+\left[ {\begin{array}{cc}
+I_1 + I_2 + l_1^2m_2 + 2l_1m_2r_2c_2 + g_r^2I_r + I_r  &amp;   I_2 + l_1m_2r_2c_2 - g_rI_r  \\
+I_2 + l_1m_2r_2c_2 - g_rI_r                    &amp; I_2 + g_r^2I_r                       \\
+\end{array}} \right],\end{split}\]</div>
+<p>the Coriolis matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mat{C} =
+\left[\begin{matrix}
+- 2 \dot{q}_2 l_{1} m_{2} r_{2} s_2 &amp; - \dot{q}_2 l_{1} m_{2} r_{2} s_2\\
+\dot{q}_1 l_{1} m_{2} r_{2} s_2 &amp;   0
+\end{matrix}\right],
+\label{eq:coriolis_matrix}\end{split}\]</div>
+<p>the gravity vector</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mat{G} =
+\left[\begin{matrix}
+- g m_{1} r_{1} s_1 - g m_{2} \left(l_{1}
+s_1 + r_{2} s_{1+2} \right)\\
+    - g m_{2} r_{2} s_{1+2}
+    \end{matrix}\right],
+    \label{eq:gravity_matrix}\end{split}\]</div>
+<p>the friction vector</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mat{F} =
+\left[\begin{matrix}
+    %b_1 \dot{q_1} + c_{f1} \text{sign}(\dot{q_1}) \\
+    %b_2 \dot{q_2} + c_{f2} \text{sign}(\dot{q_2})
+    b_1 \dot{q_1} + c_{f1} \arctan(100\,\dot{q_1}) \\
+    b_2 \dot{q_2} + c_{f2} \arctan(100\,\dot{q_2})
+\end{matrix} \right]
+\label{eq:friction_matrix}\end{split}\]</div>
+<p>(the <span class="math notranslate nohighlight">\(\arctan(100\dot{q}_i)\)</span> function is used to approximate the
+discrete step function for the coulomb friction)</p>
+<p>and the actuator selection matrix <span class="math notranslate nohighlight">\(\mat {D}\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mat{D}_{full} =
+\left[\begin{matrix}
+1 &amp; 0 \\ 0 &amp; 1
+\end{matrix} \right],
+ \quad
+\mat{D}_{pendu} =
+\left[\begin{matrix}
+1 &amp; 0 \\ 0 &amp; 0
+\end{matrix} \right],
+ \quad
+\mat{D}_{acro} =
+\left[\begin{matrix}
+0 &amp; 0 \\ 0 &amp; 1
+\end{matrix} \right]\end{split}\]</div>
+<p>for the fully actuated system, the pendubot or the acrobot.</p>
+</section>
+<section id="energy">
+<h2>Energy<a class="headerlink" href="#energy" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Kinetic Energy</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[E_{kin} = \dot{\vect{q}}^T \mat{M} \dot{\vect{q}}\]</div>
+<ul class="simple">
+<li><p>Potential Energy</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[E_{pot} = - m_1 g r_1 c_1 - m_2 g (l_1 c_1 + r_2 c_{1+2}).\]</div>
+<ul class="simple">
+<li><p>Total Energy</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[E = E_{kin} + E_{pot}\]</div>
+</section>
+<section id="system-identification">
+<h2>System Identification<a class="headerlink" href="#system-identification" title="Permalink to this heading"></a></h2>
+<div class="math notranslate nohighlight">
+\[\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\dvect}[1]{\dot{\boldsymbol{#1}}}
+\newcommand{\ddvect}[1]{\ddot{\boldsymbol{#1}}}
+\newcommand{\mat}[1]{\boldsymbol{#1}}\]</div>
+<p>For the identification of the 15 model parameters, we fix the natural, provided
+and easily measurable parameters <span class="math notranslate nohighlight">\(g, g_r, l_1\)</span> and <span class="math notranslate nohighlight">\(l_2\)</span> and
+consider the independent model parameters</p>
+<div class="math notranslate nohighlight">
+\[m_1 r_1,\, m_2 r_2,\, m_2,\, I_1,\, I_2,\, I_r,\, b_1,\, b_2,\, c_{f1},\,
+c_{f2}.\]</div>
+<p>The goal is to identify the parmaters of the dynamic matrices in the
+manipulator equation</p>
+<div class="math notranslate nohighlight">
+\[\mat{M} \ddot{\vect{q}} + \mat{C}(\vect{q}, \dot{\vect{q}}) \dot{\vect{q}} -
+\mat{G}(\vect{q}) + \mat{F}(\dot{\vect{q}}) - \mat{D} \vect{u} = 0\]</div>
+<p>By executing excitation trajectories on the real hardware, data tuples of the
+form <span class="math notranslate nohighlight">\((\vect{q}, \dot{\vect{q}}, \ddot{\vect{q}}, \vect{u})\)</span> can be
+recorded.  For finding the best system parameters, one can make use of the fact
+that the dynamics matrices <span class="math notranslate nohighlight">\(\mat{M}, \mat{C}, \mat{G}\)</span> and
+<span class="math notranslate nohighlight">\(\mat{F}\)</span> are linear in the independent model parameters and perform a
+least squares optimization for the dynamics equation on the recorded data.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Underactuated Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
