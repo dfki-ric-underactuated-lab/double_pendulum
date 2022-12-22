@@ -63,9 +63,9 @@ jobs:
         sudo apt-get install python3-sphinx-rtd-theme -y
     - name: Install Eigen # apt install of libeigen3-dev not working (paths?)
       run: |
-        wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
-        unzip Eigen.zip
-        cp -r eigen-3.4.0/Eigen /usr/local/include
+        sudo wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
+        sudo unzip Eigen.zip
+        sudo cp -r eigen-3.4.0/Eigen /usr/local/include
     - name: Install project dependencies
       run: |
         make install
@@ -137,9 +137,9 @@ jobs:
         sudo apt-get install python3-sphinx-rtd-theme
     - name: Install Eigen # apt install of libeigen3-dev not working (paths?)
       run: |
-        wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
-        unzip Eigen.zip
-        cp -r eigen-3.4.0/Eigen /usr/local/include
+        sudo wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
+        sudo unzip Eigen.zip
+        sudo cp -r eigen-3.4.0/Eigen /usr/local/include
     - name: Install project dependencies
       if: env.run_tests == 'true'
       run: |
