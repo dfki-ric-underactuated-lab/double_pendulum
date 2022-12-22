@@ -16,7 +16,7 @@ jobs:
       run:
         shell: bash
     # Only run if unit tests have been passed
-    #if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
     - name: Set up Git repository
@@ -52,6 +52,7 @@ jobs:
         sudo unzip Eigen.zip
         sudo mv eigen-3.4.0/Eigen /usr/local/include
         sudo rm -rf eigen-3.4.0
+        sudo rm -rf Eigen.zip
     - name: Install project dependencies
       run: |
         make install
@@ -68,10 +69,6 @@ jobs:
         mkdir tmp
         mv -v docs/build/_build/html/* tmp/
         ls tmp/
-        #    - name: Switch
-        #      uses: actions/checkout@v3
-        #      with:
-        #        ref: docs
     - name: Switch
       run: |
         cd docs

@@ -71,11 +71,15 @@ To install this project, clone this repository and do
     make install
 
 in the main directory.
-For more details, we refer to the [documentation]().
+For more details, we refer to the
+[documentation](https://dfki-ric-underactuated-lab.github.io/double_pendulum/index.html).
 
 ## Documentation
 
-The [documentation]() for this project can be found [here]().
+The
+[documentation](https://dfki-ric-underactuated-lab.github.io/double_pendulum/index.html)
+for this project can be found
+[here](https://dfki-ric-underactuated-lab.github.io/double_pendulum/index.html).
 
 The documentation can also be generated locally by doing
 
