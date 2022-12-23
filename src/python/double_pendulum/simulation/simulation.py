@@ -711,13 +711,10 @@ class Simulator:
 
         self.init_filter(x0, dt, integrator)
 
-        print("t", self.t)
         N = 0
         while (self.t < tf):
             _ = self.controller_step(dt, controller, integrator)
             N += 1
-        print("sim N", N)
-        print("t", self.t)
 
         return self.t_values, self.x_values, self.tau_values
 
