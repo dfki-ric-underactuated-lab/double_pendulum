@@ -1,0 +1,2 @@
+
+text.latex.preamble: \usepackage{amsmath}\usepackage{amssymb}\usepackage{siunitx}[=v2]
