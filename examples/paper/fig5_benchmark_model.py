@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 import pickle
 import numpy as np
@@ -13,14 +15,11 @@ design = "design_A.0"
 model = "model_2.1"
 
 #base_dir = os.path.join("data", robot, version, "ilqr", "mpc_benchmark")
-base_dir = os.path.join("../../data/benchmarks", design, model, "acrobot", "ilqr", "mpc_benchmark")
+results_dir = os.path.join("../../results/benchmarks", design, model, robot, "ilqr_stab")
 # base_dir = os.path.join("data", robot, version, "ilqr", "Kstab_benchmark")
 # base_dir = os.path.join("data", robot, version, "ilqr", "mpc_benchmark_free")
 # base_dir = os.path.join("data", robot, version, "tvlqr_drake", "benchmark")
 # base_dir = os.path.join("data", robot, version, "pfl", "benchmark_collocated")
-
-latest_dir = sorted(os.listdir(base_dir))[-1]
-results_dir = os.path.join(base_dir, latest_dir)
 
 costlim = [0., 2.]
 
@@ -167,6 +166,6 @@ if "model_robustness" in res_dict.keys():
                         top=0.9,
                         wspace=0.2,
                         hspace=0.5)
-    plt.savefig(os.path.join("figures", "fig5_benchmark_model_robustness.pdf"),
+    plt.savefig(os.path.join("../../results", "fig5_benchmark_model_robustness.pdf"),
                 bbox_inches="tight")
-    plt.show()
+    #plt.show()

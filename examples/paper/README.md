@@ -4,9 +4,16 @@
 This folder contains all scripts that were used to produce the results that can
 be found in the paper.
 
-Note: The scripts, which rely on data from other scripts (e.g. the plotting
-scripts) use the data stored in the /data folder of this repository by default.
-So all scripts can be run independently.
+The scripts rely on data from the other scripts (e.g. the plotting
+scripts rely on the data being computed first, etc).
+Data and results are stored in a folder called "results" on the top level of
+the repository ("../../results" from here).
+
+To run all scripts in correct order you can use the "run" script via
+
+    . ./run
+
+Note: A complete run can take >30h (of course depending on the computer).
 
 Note: The scripts with names starting with 'experiment_' are the scripts used
-in the hardware experiments.
+in the hardware experiments. They are not included in the "run" script.

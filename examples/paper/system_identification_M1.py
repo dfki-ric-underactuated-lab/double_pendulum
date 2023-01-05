@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 from datetime import datetime
 import numpy as np
@@ -10,8 +12,7 @@ from double_pendulum.utils.csv_trajectory import save_trajectory, concatenate_tr
 fix_friction = True
 
 # saving
-timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", "design_A.0", "system_identification", timestamp)
+save_dir = os.path.join("../../results", "system_identification", "identified_parameters", "design_A.0", "model_2.0")
 os.makedirs(save_dir)
 
 # recorded data from robot
@@ -36,7 +37,7 @@ T, X, U = concatenate_trajectories(measured_data_csv,
                                    with_tau=True)
 full_csv_path = os.path.join(save_dir, "full_trajectory.csv")
 save_trajectory(full_csv_path, T, X, U)
-plot_timeseries(T, X, U)
+#plot_timeseries(T, X, U)
 
 # initial model parameters
 m1 = 0.5
@@ -104,7 +105,8 @@ mpar_opt, mpar = run_system_identification(
         num_proc=32,
         rescale=True,
         maxfevals=100000,
-        filt="butterworth")
+        filt="butterworth",
+        show_plot=False)
 
 print(mpar)
 

@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 from datetime import datetime
 import numpy as np
@@ -14,7 +16,7 @@ from double_pendulum.analysis.utils import get_par_list
 # model parameters
 design = "design_C.0"
 model = "model_3.1"
-robot = "acrobot"
+robot = "pendubot"
 
 pfl_method = "collocated"
 with_lqr = True
@@ -26,7 +28,7 @@ if robot == "pendubot":
     torque_limit = [5.0, 0.0]
     active_act = 0
 
-model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model[:-1]+"0"+"/model_parameters.yml"
+model_par_path = "../../results/system_identification/identified_parameters/"+design+"/"+model[:-1]+"0"+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_motor_inertia(0.)
 mpar.set_damping([0., 0.])
@@ -36,9 +38,9 @@ mpar.set_torque_limit(torque_limit)
 # simulation parameters
 integrator = "runge_kutta"
 goal = [np.pi, 0., 0., 0.]
-dt = 0.01
+dt = 0.002
 start = [0.1, 0.0, 0.0, 0.0]
-t_final = 10.0
+t_final = 20.0
 
 # controller parameters
 if robot == "acrobot":
@@ -140,8 +142,7 @@ delay_mode = "posvel"
 delays = np.linspace(0.0, 0.04, N_var)  # [0.0, dt, 2*dt, 5*dt, 10*dt]
 
 # create save directory
-timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", design, model, robot, "ilqr", "benchmark_"+pfl_method, timestamp)
+save_dir = os.path.join("../../results/benchmarks", design, model, robot, "pfl_"+pfl_method)
 os.makedirs(save_dir)
 
 # construct simulation objects
@@ -160,6 +161,9 @@ if with_lqr:
                                                   u1u1_cost=R[0, 0],
                                                   u2u2_cost=R[1, 1],
                                                   u1u2_cost=0.)
+    controller.lqr_controller.set_parameters(failure_value=np.nan,
+                                             cost_to_go_cut=15.)
+
 else:  # without lqr
     controller = SymbolicPFLController(model_pars=mpar,
                                        robot=robot,

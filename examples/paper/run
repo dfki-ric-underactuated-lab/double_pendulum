@@ -1,0 +1,44 @@
+#!bin/bash
+#set -ex
+
+# This is the master script for the capsule. When you click "Reproducible Run", the code in this file will execute.
+
+python -u roa_heatmap_acrobot.py "$@"
+python -u roa_heatmap_pendubot.py "$@"
+
+python -u system_identification_M1.py "$@"
+python -u system_identification_M2.py "$@"
+
+python -u ilqr_trajopt_M1_acrobot.py "$@"
+python -u ilqr_trajopt_M1_pendubot.py "$@"
+python -u ilqr_trajopt_M2_acrobot.py "$@"
+python -u ilqr_trajopt_M2_pendubot.py "$@"
+
+python -u benchmark_tvlqr_M1_acrobot.py "$@"
+python -u benchmark_tvlqr_M1_pendubot.py "$@"
+python -u benchmark_tvlqr_M2_acrobot.py "$@"
+python -u benchmark_tvlqr_M2_pendubot.py "$@"
+python -u benchmark_ilqr_free_M1_acrobot.py "$@"
+python -u benchmark_ilqr_free_M1_pendubot.py "$@"
+python -u benchmark_ilqr_free_M2_acrobot.py "$@"
+python -u benchmark_ilqr_free_M2_pendubot.py "$@"
+python -u benchmark_ilqr_riccati_M1_acrobot.py "$@"
+python -u benchmark_ilqr_riccati_M1_pendubot.py "$@"
+python -u benchmark_ilqr_riccati_M2_acrobot.py "$@"
+python -u benchmark_ilqr_riccati_M2_pendubot.py "$@"
+python -u benchmark_ilqr_stab_M1_acrobot.py "$@"
+python -u benchmark_ilqr_stab_M1_pendubot.py "$@"
+python -u benchmark_ilqr_stab_M2_acrobot.py "$@"
+python -u benchmark_ilqr_stab_M2_pendubot.py "$@"
+python -u benchmark_pfl_M1_acrobot.py "$@"
+python -u benchmark_pfl_M1_pendubot.py "$@"
+python -u benchmark_pfl_M2_acrobot.py "$@"
+python -u benchmark_pfl_M2_pendubot.py "$@"
+
+python -u fig3a_roa_heatmap_acrobot.py "$@"
+python -u fig3b_roa_ellipse_acrobot.py "$@"
+python -u fig3c_roa_heatmap_pendubot.py "$@"
+python -u fig3d_roa_ellipse_pendubot.py "$@"
+python -u fig4_swingup_trajectory.py "$@"
+python -u fig5_benchmark_model.py "$@"
+python -u fig6_benchmark_scores_matrix.py "$@"

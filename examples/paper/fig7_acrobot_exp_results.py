@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 import numpy as np
 import matplotlib as mpl
@@ -207,5 +209,6 @@ plot_timeseries(traj["T"][:end], traj["X_meas"][:end], traj["U_meas"][:end],
               T_des=T_des, X_des=X_des, U_des=U_des,
               #U_con=traj["U_con"][:end],
               U_friccomp=traj["U_fric"][:end],
-              save_to="figures/fig7_real_acrobot_swingup.pdf")
+              save_to="../../results/fig7_real_acrobot_swingup.pdf",
+              show=False)
 

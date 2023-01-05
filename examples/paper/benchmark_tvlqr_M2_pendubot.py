@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 from datetime import datetime
 import numpy as np
@@ -9,6 +11,7 @@ from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.controller.tvlqr.tvlqr_controller_drake import TVLQRController
 from double_pendulum.analysis.benchmark import benchmarker
 from double_pendulum.analysis.utils import get_par_list
+from double_pendulum.utils.csv_trajectory import load_trajectory
 
 
 # model parameters
@@ -23,20 +26,23 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [6.0, 0.0]
 
-model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model[:-1]+"0"+"/model_parameters.yml"
+model_par_path = "../../results/system_identification/identified_parameters/"+design+"/"+model[:-1]+"0"+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_motor_inertia(0.)
 mpar.set_damping([0., 0.])
 mpar.set_cfric([0., 0.])
 mpar.set_torque_limit(torque_limit)
 
-# simulation parameter
-dt = 0.005
-t_final = 6.0  # 4.985
-integrator = "runge_kutta"
-
 # init trajectory
-init_csv_path = os.path.join("../../data/trajectories", design, model, robot, "ilqr_1/trajectory.csv")
+init_csv_path = os.path.join("../../results/trajectories", design, model, robot, "ilqr/trajectory.csv")
+
+# simulation parameter
+T_des, X_des, U_des = load_trajectory(init_csv_path)
+dt = T_des[1] - T_des[0]
+t_final = T_des[-1]
+#dt = 0.005
+#t_final = 6.0  # 4.985
+integrator = "runge_kutta"
 
 # swingup parameters
 start = [0., 0., 0., 0.]
@@ -98,8 +104,7 @@ delay_mode = "posvel"
 delays = np.linspace(0.0, 0.04, N_var)  # [0.0, dt, 2*dt, 5*dt, 10*dt]
 
 # create save directory
-timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", design, model, robot, "tvlqr_drake", "benchmark", timestamp)
+save_dir = os.path.join("../../results/benchmarks", design, model, robot, "tvlqr_drake")
 os.makedirs(save_dir)
 
 # construct simulation objects

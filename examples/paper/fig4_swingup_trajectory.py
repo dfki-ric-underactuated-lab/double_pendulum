@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 import numpy as np
 
@@ -21,7 +23,7 @@ if robot == "pendubot":
 if robot == "double_pendulum":
     torque_limit = [6.0, 6.0]
 
-model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
+model_par_path = "../../results/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_motor_inertia(0.0)
 mpar.set_damping([0., 0.])
@@ -30,11 +32,14 @@ mpar.set_torque_limit(torque_limit)
 
 # csv file
 use_feed_forward_torque = True
-csv_path = os.path.join("../../data/trajectories/", design, traj_model, robot, "ilqr_1/trajectory.csv")
+csv_path = os.path.join("../../results/trajectories/", design, traj_model, robot, "ilqr/trajectory.csv")
+
+# save dir
+save_dir = os.path.join("../../results")
 
 T_des, X_des, U_des = load_trajectory(csv_path)
 dt, _, x0, _ = trajectory_properties(T_des, X_des)
-t_final = 5.5
+t_final = 6.
 goal = [np.pi, 0., 0., 0.]
 integrator = "runge_kutta"
 
@@ -56,12 +61,12 @@ controller = TrajectoryController(csv_path=csv_path,
 
 controller.init()
 
-T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
-                                   tf=t_final, dt=dt, controller=controller,
-                                   integrator=integrator, phase_plot=False,
-                                   plot_inittraj=True, plot_forecast=False,
-                                   save_video=False, video_name="acrobot_swingup")
+T, X, U = sim.simulate(t0=0.0, x0=x0,
+                       tf=t_final, dt=dt, controller=controller,
+                       integrator=integrator,)
 plot_timeseries(T, X, U, None,
                 plot_energy=False,
                 pos_y_lines=[0.0, np.pi],
-                T_des=T_des, X_des=X_des, U_des=U_des)
+                T_des=T_des, X_des=X_des, U_des=U_des,
+                save_to=os.path.join(save_dir, "timeseries_belonging_to_Fig4"),
+                show=False)

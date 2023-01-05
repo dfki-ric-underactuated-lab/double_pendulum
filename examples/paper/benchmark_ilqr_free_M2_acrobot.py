@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 from datetime import datetime
 import numpy as np
@@ -20,7 +22,7 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [6.0, 0.0]
 
-model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model[:-1]+"0"+"/model_parameters.yml"
+model_par_path = "../../results/system_identification/identified_parameters/"+design+"/"+model[:-1]+"0"+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_motor_inertia(0.)
 mpar.set_damping([0., 0.])
@@ -125,8 +127,7 @@ delay_mode = "posvel"
 delays = np.linspace(0.0, 0.04, N_var)  # [0.0, dt, 2*dt, 5*dt, 10*dt]
 
 # create save directory
-timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", design, model, robot, "ilqr", "benchmark_free", timestamp)
+save_dir = os.path.join("../../results/benchmarks", design, model, robot, "ilqr_free")
 os.makedirs(save_dir)
 
 # construct simulation objects

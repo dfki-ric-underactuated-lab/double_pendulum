@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import time
 from datetime import datetime
 import os
@@ -15,6 +17,7 @@ from double_pendulum.controller.trajectory_following.trajectory_controller impor
 ## model parameters
 design = "design_A.0"
 model = "model_2.0"
+traj_model = "model_2.1"
 robot = "acrobot"
 
 if robot == "acrobot":
@@ -22,7 +25,7 @@ if robot == "acrobot":
 if robot == "pendubot":
     torque_limit = [5.0, 0.0]
 
-model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
+model_par_path = "../../results/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_motor_inertia(0.)
@@ -90,8 +93,7 @@ T, X, U = il.compute_trajectory()
 print("Computing time: ", time.time() - t0, "s")
 
 # saving and plotting
-timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", design, model, robot, "ilqr", "trajopt", timestamp)
+save_dir = os.path.join("../../results", "trajectories", design, traj_model, robot, "ilqr")
 os.makedirs(save_dir)
 
 traj_file = os.path.join(save_dir, "trajectory.csv")
@@ -144,20 +146,21 @@ plot_timeseries(T, X, U, None,
                 plot_energy=False,
                 pos_y_lines=[0.0, np.pi],
                 tau_y_lines=[-torque_limit[1], torque_limit[1]],
-                save_to=os.path.join(save_dir, "timeseries"))
+                save_to=os.path.join(save_dir, "timeseries"),
+                show=False)
 
 # simulation
-plant = SymbolicDoublePendulum(model_pars=mpar)
-sim = Simulator(plant=plant)
-
-controller = TrajectoryController(csv_path=traj_file,
-                                  torque_limit=torque_limit,
-                                  kK_stabilization=True)
-controller.init()
-
-T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
-                                   tf=t_final, dt=dt, controller=controller,
-                                   integrator=integrator, phase_plot=False,
-                                   save_video=False,
-                                   video_name=os.path.join(save_dir, "simulation"),
-                                   plot_inittraj=True)
+#plant = SymbolicDoublePendulum(model_pars=mpar)
+#sim = Simulator(plant=plant)
+#
+#controller = TrajectoryController(csv_path=traj_file,
+#                                  torque_limit=torque_limit,
+#                                  kK_stabilization=True)
+#controller.init()
+#
+#T, X, U = sim.simulate_and_animate(t0=0.0, x0=start,
+#                                   tf=t_final, dt=dt, controller=controller,
+#                                   integrator=integrator, phase_plot=False,
+#                                   save_video=False,
+#                                   video_name=os.path.join(save_dir, "simulation"),
+#                                   plot_inittraj=True)
