@@ -1,37 +1,73 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>Repository Structure &mdash; Double Pendulum 1.0.0 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
-    <script src="_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Hardware" href="hardware.html" />
     <link rel="prev" title="double_pendulum.utils.filters" href="generated/double_pendulum.utils.filters.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="index.html" class="icon icon-home"> Double Pendulum
-            <img src="_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+          
+
+          
           </a>
+
+          
+            
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -39,7 +75,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="dynamics.html"> Double Pendulum Dynamics</a></li>
@@ -60,35 +107,77 @@
 <li class="toctree-l1"><a class="reference internal" href="benchmark.html"> Controller Benchmarks</a></li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">Double Pendulum</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
-      <li class="breadcrumb-item active">Repository Structure</li>
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">&lt;no title&gt;</a> &raquo;</li>
+        
+      <li>Repository Structure</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+          
             <a href="_sources/software_structure.rst.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <section id="repository-structure">
-<h1>Repository Structure<a class="headerlink" href="#repository-structure" title="Permalink to this heading"></a></h1>
+<h1>Repository Structure<a class="headerlink" href="#repository-structure" title="Permalink to this heading">¶</a></h1>
 <section id="programming-language">
-<h2>Programming Language<a class="headerlink" href="#programming-language" title="Permalink to this heading"></a></h2>
+<h2>Programming Language<a class="headerlink" href="#programming-language" title="Permalink to this heading">¶</a></h2>
 <p>The main programming language of this library is python, but other languages
 are also welcome. Besides python, there is a plant and a simulator as well as
 an iLQR solver written in C++. The iLQR solver has python bindings so that
@@ -97,7 +186,7 @@ it can be used with the other components.</p>
 directory with the name of the used programming language.</p>
 </section>
 <section id="repository-overview">
-<h2>Repository Overview<a class="headerlink" href="#repository-overview" title="Permalink to this heading"></a></h2>
+<h2>Repository Overview<a class="headerlink" href="#repository-overview" title="Permalink to this heading">¶</a></h2>
 <p>The following overview covers the python code and the code which has python
 bindings to be used in the same ecosystem. The repository is organized in
 modules. The interplay of the modules is visualized in the figure below:</p>
@@ -105,7 +194,7 @@ modules. The interplay of the modules is visualized in the figure below:</p>
 <p>There are standardized interfaces and file formats for the communication
 between the modules which are explained in the following.</p>
 <section id="model-parameters">
-<h3>Model Parameters<a class="headerlink" href="#model-parameters" title="Permalink to this heading"></a></h3>
+<h3>Model Parameters<a class="headerlink" href="#model-parameters" title="Permalink to this heading">¶</a></h3>
 <p>The model parameters are the masses, lengths, … of the double pendulum.
 In this repository model parameters are stored in yml files. The keys of the
 yml files are</p>
@@ -146,7 +235,7 @@ the model.</p>
 <p>more simplified models may be used in the future.</p>
 </section>
 <section id="trajectory-data">
-<h3>Trajectory data<a class="headerlink" href="#trajectory-data" title="Permalink to this heading"></a></h3>
+<h3>Trajectory data<a class="headerlink" href="#trajectory-data" title="Permalink to this heading">¶</a></h3>
 <p>Trajectories can be computed with trajectory optimization methods such as
 direct collocation and iterative LQR. For the execution zhe trajectories can
 later be loaded by a stabilizing controller such as time varying LQR of a model
@@ -186,7 +275,7 @@ column. The headers used are:</p>
 to save/load the data. Missing header labels are skipped.</p>
 </section>
 <section id="abstract-controller">
-<h3>(Abstract) Controller<a class="headerlink" href="#abstract-controller" title="Permalink to this heading"></a></h3>
+<h3>(Abstract) Controller<a class="headerlink" href="#abstract-controller" title="Permalink to this heading">¶</a></h3>
 <p>The controller class is central the this library as it has connections to
 many other components. To ensure compatibility with all components, controllers
 should always inherit from the abstract_controller class.
@@ -215,33 +304,50 @@ be used to reset parameters inside the controller.</p>
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="generated/double_pendulum.utils.filters.html" class="btn btn-neutral float-left" title="double_pendulum.utils.filters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="hardware.html" class="btn btn-neutral float-right" title="Hardware" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="generated/double_pendulum.utils.filters.html" class="btn btn-neutral float-left" title="double_pendulum.utils.filters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Underactuated Lab.</p>
-  </div>
+    <p>
+        &#169; Copyright 2022, Underactuated Lab.
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
