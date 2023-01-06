@@ -13,6 +13,9 @@ To run all scripts in correct order you can use the "run" script via
 
     . ./run
 
+The results of the computation can also be found in the "data" folder of this
+repository. The figures from the paper are stored at "docs/figures/paper".
+
 Note: A complete run can take >30h (of course depending on the computer).
 
 Note: The scripts with names starting with 'experiment_' are the scripts used

@@ -1,6 +1,6 @@
 N: 6000
 break_cost_redu: 1.0e-06
-dt: 0.002
+dt: 0.001
 fCen: 0.0
 fCp1: 382.623819
 fCp2: 7053.1559
@@ -18,12 +18,12 @@ regu_init: 100.0
 sCen: 0.0
 sCp1: 20.6969312
 sCp2: 76.9967729
-sCu1: 0.41
-sCu2: 0.41
+sCu1: 99.7938814
+sCu2: 99.7938814
 sCv1: 0.155726136
 sCv2: 5.42226523
 start_pos1: 0.0
 start_pos2: 0.0
 start_vel1: 0.0
 start_vel2: 0.0
-t_final: 12.0
+t_final: 6.0

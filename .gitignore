@@ -15,3 +15,4 @@ examples/paper/data/*
 experiments/data/*
 docs/build/*
 docs/text/generated/*
+results*
