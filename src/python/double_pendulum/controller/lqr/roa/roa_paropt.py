@@ -12,12 +12,14 @@ class roa_lqrpar_lossfunc():
                  par_prefactors=[100, 100, 100, 100, 10],
                  bounds=[[0, 1], [0, 1], [0, 1], [0, 1], [0, 1]],
                  roa_backend="sos",
-                 najafi_evals=100000):
+                 najafi_evals=100000,
+                 robot="acrobot"):
 
         self.par_prefactors = np.asarray(par_prefactors)
         self.roa_backend = roa_backend
         self.bounds = np.asarray(bounds)
         self.najafi_evals = najafi_evals
+        self.robot = robot
 
     def set_model_parameters(self,
                              mass=[0.608, 0.630],
@@ -47,7 +49,8 @@ class roa_lqrpar_lossfunc():
 
         roa_calc = caprr_coopt_interface(self.design_params, Q, R,
                                          backend=self.roa_backend,
-                                         najafi_evals=self.najafi_evals)
+                                         najafi_evals=self.najafi_evals,
+                                         robot=self.robot)
         loss = roa_calc.lqr_param_opt_obj(Q, R)
         return loss
 
@@ -69,12 +72,14 @@ class roa_modelpar_lossfunc():
                  par_prefactors=[1., 1., 1.],
                  bounds=[[0.1, 1.0], [0.3, 1.0], [0.1, 1.0]],
                  roa_backend="sos",
-                 najafi_evals=100000):
+                 najafi_evals=100000,
+                 robot="acrobot"):
 
         self.par_prefactors = np.asarray(par_prefactors)
         self.roa_backend = roa_backend
         self.bounds = np.asarray(bounds)
         self.najafi_evals = najafi_evals
+        self.robot = robot
 
     def set_model_parameters(self,
                              mass=[0.608, 0.630],
@@ -130,7 +135,8 @@ class roa_modelpar_lossfunc():
 
         roa_calc = caprr_coopt_interface(self.design_params, self.Q, self.R,
                                          backend=self.roa_backend,
-                                         najafi_evals=self.najafi_evals)
+                                         najafi_evals=self.najafi_evals,
+                                         robot=self.robot)
         loss = roa_calc.design_opt_obj(model_par)
         return loss
 
@@ -156,12 +162,14 @@ class roa_lqrandmodelpar_lossfunc():
                  bounds=[[0., 1.], [0., 1.], [0., 1.], [0., 1.], [0., 1.],
                          [0.1, 1.0], [0.3, 1.0], [0.1, 1.0]],
                  roa_backend="sos",
-                najafi_evals=1000):
+                 najafi_evals=1000,
+                 robot="acrobot"):
 
         self.par_prefactors = np.asarray(par_prefactors)
         self.roa_backend = roa_backend
         self.bounds = np.asarray(bounds)
         self.najafi_evals = najafi_evals
+        self.robot = robot
 
     def set_model_parameters(self,
                              mass=[0.608, 0.630],
@@ -197,7 +205,8 @@ class roa_lqrandmodelpar_lossfunc():
 
         roa_calc = caprr_coopt_interface(self.design_params, Q, R,
                                          backend=self.roa_backend,
-                                         najafi_evals=self.najafi_evals)
+                                         najafi_evals=self.najafi_evals,
+                                         robot=self.robot)
         loss = roa_calc.design_and_lqr_opt_obj(Q, R, model_par)
         return loss
 
@@ -259,7 +268,8 @@ def calc_roa(c_par=[1., 1., 1., 1., 1.],
                                      Q=Q,
                                      R=R,
                                      backend=roa_backend,
-                                     najafi_evals=najafi_evals)
+                                     najafi_evals=najafi_evals,
+                                     robot=robot)
     roa_calc._update_lqr(Q=Q, R=R)
     vol, rho_f, S = roa_calc._estimate()
 
@@ -347,7 +357,8 @@ def roa_lqr_opt(model_pars=[0.63, 0.3, 0.2],
     loss_func = roa_lqrpar_lossfunc(par_prefactors=par_prefactors,
                                     bounds=bounds,
                                     roa_backend=roa_backend,
-                                    najafi_evals=najafi_evals)
+                                    najafi_evals=najafi_evals,
+                                    robot=robot)
     loss_func.set_model_parameters(mass=mass,
                                    length=length,
                                    com=com,
@@ -431,7 +442,8 @@ def roa_lqr_opt(model_pars=[0.63, 0.3, 0.2],
     roa_calc = caprr_coopt_interface(design_params=design_params,
                                      Q=best_Q,
                                      R=best_R,
-                                     backend=roa_backend)
+                                     backend=roa_backend,
+                                     robot=robot)
     roa_calc._update_lqr(Q=best_Q, R=best_R)
     vol, rho_f, S = roa_calc._estimate()
 
@@ -491,7 +503,8 @@ def roa_design_opt(lqr_pars=[1., 1., 1., 1., 1.],
     loss_func = roa_modelpar_lossfunc(par_prefactors=par_prefactors,
                                       roa_backend=roa_backend,
                                       najafi_evals=najafi_evals,
-                                      bounds=bounds)
+                                      bounds=bounds,
+                                      robot=robot)
     loss_func.set_model_parameters(mass=mass,
                                    length=length,
                                    com=com,
@@ -588,7 +601,8 @@ def roa_design_opt(lqr_pars=[1., 1., 1., 1., 1.],
     roa_calc = caprr_coopt_interface(design_params=design_params,
                                      Q=Q,
                                      R=R,
-                                     backend=roa_backend)
+                                     backend=roa_backend,
+                                     robot=robot)
     roa_calc._update_lqr(Q=Q, R=R)
     vol, rho_f, S = roa_calc._estimate()
 

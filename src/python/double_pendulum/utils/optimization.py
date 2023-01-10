@@ -39,6 +39,7 @@ def cma_optimization(loss_func, init_pars, bounds,
         opts.set("tolfun", tolfun)
         opts.set("tolx", tolx)
         opts.set("tolstagnation", tolstagnation)
+        opts.set("maxfevals", maxfevals)
         es = cma.CMAEvolutionStrategy(init_pars,
                                       sigma0,
                                       opts)

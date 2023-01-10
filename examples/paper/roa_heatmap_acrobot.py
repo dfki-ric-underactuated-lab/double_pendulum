@@ -9,15 +9,17 @@ from double_pendulum.controller.lqr.roa.coopt_interface import caprr_coopt_inter
 robot = "acrobot"
 filename = "heatmap_l1l2_"+robot+".pickle"
 
-N_PROC = int(min(multiprocessing.cpu_count() - 1, 32))
+N_PROC = int(min(multiprocessing.cpu_count() - 1, 50))
 evals = 100000
-n = 32
+n = 50
 
-torque_limit = 5.0
+pars = np.loadtxt("../../results/design_optimization/acrobot/lqr/roa_designopt/model_par.csv")
+
+torque_limit = 6.0
 m1 = 0.6
 m2 = 0.6
-l1 = 0.3
-l2 = 0.2
+l1 = pars[1]
+l2 = pars[2]
 R_init = np.diag((1., 1.))
 Q_init = np.diag((1., 1., 1., 1.))
 
@@ -53,8 +55,8 @@ def roa(roa_interface, m2, l1, l2, idx1, idx2, array_size, array):
     array[idx1*array_size[1]+idx2] = vol
 
 
-l1Vals = np.linspace(0.2, 0.4, n)
-l2Vals = np.linspace(0.2, 0.4, n)
+l1Vals = np.linspace(0.1, 0.4, n)
+l2Vals = np.linspace(0.1, 0.4, n)
 
 comp_list = []
 for idx1, l1 in enumerate(l1Vals):

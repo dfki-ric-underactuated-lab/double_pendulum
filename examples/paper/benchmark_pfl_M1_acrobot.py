@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import os
-from datetime import datetime
 import numpy as np
 import yaml
 import pickle
@@ -21,12 +20,8 @@ robot = "acrobot"
 pfl_method = "collocated"
 with_lqr = True
 
-if robot == "acrobot":
-    torque_limit = [0.0, 5.0]
-    active_act = 1
-if robot == "pendubot":
-    torque_limit = [5.0, 0.0]
-    active_act = 0
+torque_limit = [0.0, 5.0]
+active_act = 1
 
 model_par_path = "../../results/system_identification/identified_parameters/"+design+"/"+model[:-1]+"0"+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
@@ -43,42 +38,17 @@ start = [0.1, 0.0, 0.0, 0.0]
 t_final = 20.0
 
 # controller parameters
-if robot == "acrobot":
-    # lqr parameters
-    Q = np.diag((0.97, 0.93, 0.39, 0.26))
-    R = np.diag((0.11, 0.11))
-    if pfl_method == "collocated":
-        #par = [6.78389278, 5.66430937, 9.98022384]  # oldpar
-        par = [0.0093613, 0.99787652, 0.9778557]
-    elif pfl_method == "noncollocated":
-        par = [9.19534629, 2.24529733, 5.90567362]  # good
-elif robot == "pendubot":
-    # lqr parameters
-    Q = np.diag([0.00125, 0.65, 0.000688, 0.000936])
-    R = np.diag([25.0, 25.0])
-    if pfl_method == "collocated":
-        par = [8.0722899, 4.92133648, 3.53211381]  # good
-    elif pfl_method == "noncollocated":
-        par = [26.34039456, 99.99876263, 11.89097532]
+Q = np.diag((0.97, 0.93, 0.39, 0.26))
+R = np.diag((0.11, 0.11))
+par = [0.0093613, 0.99787652, 0.9778557]
 
-if robot == "acrobot":
-    sCu = [.1, .1]
-    sCp = [.1, .1]
-    sCv = [0.01, 0.1]
-    sCen = 0.0
-    fCp = [100., 10.]
-    fCv = [10., 1.]
-    fCen = 0.0
-
-if robot == "pendubot":
-
-    sCu = [0.001, 0.001]
-    sCp = [0.01, 0.01]
-    sCv = [0.01, 0.01]
-    sCen = 0.
-    fCp = [100., 100.]
-    fCv = [1., 1.]
-    fCen = 0.
+sCu = [.1, .1]
+sCp = [.1, .1]
+sCv = [0.01, 0.1]
+sCen = 0.0
+fCp = [100., 10.]
+fCv = [10., 1.]
+fCen = 0.0
 
 Q_cost = np.array([[sCp[0], 0., 0., 0.],
               [0., sCp[1], 0., 0.],
