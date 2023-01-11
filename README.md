@@ -4,10 +4,7 @@
 </div>
 
 <div align="center">
-<img width="300" src="docs/figures/chaotic_freefall_long_exposure_shot.jpg">
-<video preload="none" autoplay loop muted playsinline width="112.5">
-    <source src="docs/figures/experiment_swingup_pendubot_tvlqr.m4v" type="video/mp4">
-</video>
+<img width="500" src="docs/figures/chaotic_freefall_long_exposure_shot.jpg">
 </div>
 
 
