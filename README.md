@@ -4,8 +4,13 @@
 </div>
 
 <div align="center">
-<img width="500" src="docs/figures/chaotic_freefall_long_exposure_shot.jpg">
+<img width="300" src="docs/figures/chaotic_freefall_long_exposure_shot.jpg">
+<video preload="none" autoplay loop muted playsinline width="112.5">
+    <source src="docs/figures/experiment_swingup_pendubot_tvlqr.m4v" type="video/mp4">
+</video>
 </div>
+
+
 
 ## Introduction #
 This project offers an open-source and low-cost kit to test control algorithms
@@ -90,6 +95,12 @@ in the main directory. Afterwards you can open the file
     docs/build/_build/html/index.html
 </mark>
 in your browser.
+
+## Getting Started
+
+For getting started check out the scripts in the [examples/ideal](examples/ideal) folder
+which simulate and control the double pendulum, acrobot and pendubot under ideal
+conditions.
 
 ## Repository Structure
 
