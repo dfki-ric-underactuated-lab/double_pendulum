@@ -4,8 +4,8 @@ import matplotlib as mpl
 
 from double_pendulum.analysis.benchmark_scores import get_scores
 
-design = "design_A.0"
-model = "model_2.1"
+design = "design_C.0"
+model = "model_3.1"
 robot = "acrobot"
 
 scores = []
@@ -15,41 +15,31 @@ titles = []
 data_dir = "../../data/benchmarks"
 
 # tvlqr
-base_dir = os.path.join(data_dir, design, model, robot, "tvlqr_drake", "benchmark")
-latest_dir = sorted(os.listdir(base_dir))[-1]
-results_dir = os.path.join(base_dir, latest_dir)
+results_dir = os.path.join(data_dir, design, model, robot, "tvlqr_drake")
 tvlqr_scores = get_scores(results_dir)
 scores.append(tvlqr_scores)
 titles.append("TVLQR")
 
 # ilqr mpc
-base_dir = os.path.join(data_dir, design, model, robot, "ilqr", "mpc_benchmark")
-latest_dir = sorted(os.listdir(base_dir))[-1]
-results_dir = os.path.join(base_dir, latest_dir)
+results_dir = os.path.join(data_dir, design, model, robot, "ilqr_stab")
 ilqr_mpc_scores = get_scores(results_dir)
 scores.append(ilqr_mpc_scores)
 titles.append("iLQR MPC (stab)")
 
 # ilqr K stab
-base_dir = os.path.join(data_dir, design, model, robot, "ilqr", "Kstab_benchmark")
-latest_dir = sorted(os.listdir(base_dir))[-1]
-results_dir = os.path.join(base_dir, latest_dir)
+results_dir = os.path.join(data_dir, design, model, robot, "ilqr_riccati")
 ilqr_Kstab_scores = get_scores(results_dir)
 scores.append(ilqr_Kstab_scores)
 titles.append("iLQR MPC (Riccati)")
 
 # ilqr mpc free
-base_dir = os.path.join(data_dir, design, model, robot, "ilqr", "mpc_benchmark_free")
-latest_dir = sorted(os.listdir(base_dir))[-1]
-results_dir = os.path.join(base_dir, latest_dir)
+results_dir = os.path.join(data_dir, design, model, robot, "ilqr_free")
 ilqr_free_scores = get_scores(results_dir)
 scores.append(ilqr_free_scores)
 titles.append("iLQR MPC (free)")
 
 # pfl col
-base_dir = os.path.join(data_dir, design, model, robot, "pfl", "benchmark_collocated")
-latest_dir = sorted(os.listdir(base_dir))[-1]
-results_dir = os.path.join(base_dir, latest_dir)
+results_dir = os.path.join(data_dir, design, model, robot, "pfl_collocated")
 pfl_col_scores = get_scores(results_dir)
 scores.append(pfl_col_scores)
 titles.append("PFL (col.)")

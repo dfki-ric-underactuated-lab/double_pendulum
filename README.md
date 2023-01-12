@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/571126240.svg)](https://zenodo.org/badge/latestdoi/571126240)
+
 <div align="center">
 
 # Dual Purpose Acrobot & Pendubot Platform
@@ -162,7 +164,7 @@ The controllers achieve a score between 0 and 1 in each category which is the
 fraction of successful swing-up motions under varying conditions.
 
 <div align="center">
-<img width="800" src="docs/figures/benchmark_scores_C.0.h1.1.png">
+<img width="800" src="docs/figures/benchmark_scores_C.0.3.1.png">
 </div>
 
 ## Authors #
