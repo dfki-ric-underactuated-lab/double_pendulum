@@ -1,5 +1,6 @@
 import numpy as np
-from pydrake.solvers.mathematicalprogram import MathematicalProgram, Solve
+from pydrake.solvers.mathematicalprogram import MathematicalProgram#, Solve
+from pydrake.solvers.csdp import CsdpSolver
 from pydrake.symbolic import Variables
 import pydrake.symbolic as sym
 
@@ -261,8 +262,11 @@ def verify_double_pendulum_rho(rho, params, S, K, robot, taylor_deg=3,
         prog.AddSosConstraint(-Vdot_plus + lambda_c*(V - rho) + lambda_4*pos - epsilon*x_bar.dot(x_bar))
 
     # Problem solution
-    result = Solve(prog)
+    #result = Solve(prog)
+    solver = CsdpSolver()
+    result = solver.Solve(prog)
     # print(prog) # usefull for debugging
+    # print(result.get_solver_details())
 
     if verbose:
         env = {x_bar_1: x_bar_eval[0],
@@ -406,8 +410,11 @@ def rho_equalityConstrained(params, S, K, robot, taylor_deg=3,
     prog.AddSosConstraint(((x_bar.T).dot(x_bar)**2)*(V - rho) + lambda_b*(Vdot))
 
     # Problem solution
-    result = Solve(prog)
+    #result = Solve(prog)
+    solver = CsdpSolver()
+    result = solver.Solve(prog)
     # print(prog) # usefull for debugging
+    # print(result)
 
     if verbose:
         env = {x_bar_1: x_bar_eval[0],
