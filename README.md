@@ -6,7 +6,8 @@
 </div>
 
 <div align="center">
-<img width="500" src="docs/figures/chaotic_freefall_long_exposure_shot.jpg">
+<img width="354" src="docs/figures/chaotic_freefall_long_exposure_shot.jpg">
+<img width="236" src="docs/figures/experiment_swingup_pendubot_tvlqr.gif">
 </div>
 
 
