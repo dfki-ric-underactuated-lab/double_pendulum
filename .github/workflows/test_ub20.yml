@@ -1,4 +1,4 @@
-name: Unit tests
+name: Ubuntu20 Py3.8
 
 on:                       # Run action when changes are pushed or pull requests are accepted
   push:
@@ -57,70 +57,6 @@ jobs:
         sudo apt-get install libx11-6 -y
         sudo apt-get install libsm6 -y
         sudo apt-get install libxt6 -y
-        sudo apt-get install libglib2.0-0 -y
-        sudo apt-get install python3-sphinx -y
-        sudo apt-get install python3-numpydoc -y
-        sudo apt-get install python3-sphinx-rtd-theme -y
-    - name: Install Eigen # apt install of libeigen3-dev not working (paths?)
-      run: |
-        sudo wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
-        sudo unzip Eigen.zip
-        sudo cp -r eigen-3.4.0/Eigen /usr/local/include
-    - name: Install project dependencies
-      run: |
-        make install
-    # Run unit tests =============================================
-    - name: Run tests
-      id: tests
-      run: |
-        # Run tests
-        cd test
-        coverage run -m pytest
-      continue-on-error: true
-   # ===========================
-   #
-   #         Ubuntu 22
-   #
-   # ===========================
-  ub22:
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        shell: bash
-
-    steps:
-    - name: Set up Git repository
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    # Setup ======================================================
-    - name: Set up Python "3.10"
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.10"
-    - name: Install pytest
-      run: |
-        python -m pip install --upgrade pip
-        pip install pytest
-    - name: Install coverage and emblem
-      run: |
-        pip install coverage
-        pip install emblem
-    - name: Install Python dev headers
-      run: |
-        sudo apt-get update
-        sudo apt-get install python3-dev -y
-        sudo apt install libpython3.10-dev -y
-    - name: Install curl
-      run: |
-        sudo apt-get install curl -y
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install libyaml-cpp-dev -y
-        sudo apt-get install libeigen3-dev -y
-        sudo apt-get install libx11-6 -y
-        sudo apt-get install libsm6 -y
         sudo apt-get install libglib2.0-0 -y
         sudo apt-get install python3-sphinx -y
         sudo apt-get install python3-numpydoc -y
