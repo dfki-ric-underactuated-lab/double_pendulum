@@ -2,7 +2,7 @@ name: Documentation
 
 on:                       # Run action after unit test workflow is complete
   workflow_run:
-    workflows: ['Ubuntu20 Py3.8', 'Ubuntu22 Py3.10']
+    workflows: ['Ubuntu20 Py3.8']
     types: [completed]
 
 concurrency: 
