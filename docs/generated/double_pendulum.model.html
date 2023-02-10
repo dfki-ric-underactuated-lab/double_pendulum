@@ -1,92 +1,47 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>double_pendulum.model &mdash; Double Pendulum 1.0.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="double_pendulum.simulation" href="double_pendulum.simulation.html" />
     <link rel="prev" title="double_pendulum.experiments" href="double_pendulum.experiments.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../index.html" class="icon icon-home"> Double Pendulum
           
-
-          
+          <a href="../index.html" class="icon icon-home">
+            Double Pendulum
+              <img src="../_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../dynamics.html"> Double Pendulum Dynamics</a></li>
@@ -118,85 +73,42 @@
 <li class="toctree-l1"><a class="reference internal" href="../benchmark.html"> Controller Benchmarks</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">Double Pendulum</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../modules.html">&lt;no title&gt;</a> &raquo;</li>
-        
-          <li><a href="double_pendulum.html">double_pendulum</a> &raquo;</li>
-        
-      <li>double_pendulum.model</li>
-    
-    
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">&lt;no title&gt;</a></li>
+          <li class="breadcrumb-item"><a href="double_pendulum.html">double_pendulum</a></li>
+      <li class="breadcrumb-item active">double_pendulum.model</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/generated/double_pendulum.model.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <section id="module-double_pendulum.model">
-<span id="double-pendulum-model"></span><h1>double_pendulum.model<a class="headerlink" href="#module-double_pendulum.model" title="Permalink to this heading">¶</a></h1>
+<span id="double-pendulum-model"></span><h1>double_pendulum.model<a class="headerlink" href="#module-double_pendulum.model" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-double_pendulum.model.friction_matrix">
-<span id="double-pendulum-model-friction-matrix"></span><h2>double_pendulum.model.friction_matrix<a class="headerlink" href="#module-double_pendulum.model.friction_matrix" title="Permalink to this heading">¶</a></h2>
+<span id="double-pendulum-model-friction-matrix"></span><h2>double_pendulum.model.friction_matrix<a class="headerlink" href="#module-double_pendulum.model.friction_matrix" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="double_pendulum.model.friction_matrix.yb_friction_matrix">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.model.friction_matrix.</span></span><span class="sig-name descname"><span class="pre">yb_friction_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dq_vec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.friction_matrix.yb_friction_matrix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.model.friction_matrix.</span></span><span class="sig-name descname"><span class="pre">yb_friction_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dq_vec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.friction_matrix.yb_friction_matrix" title="Permalink to this definition"></a></dt>
 <dd><p>matrix to be multiplied with damping/friction coefficients
 resulting in equation of motion contribution</p>
 <dl class="field-list simple">
@@ -221,10 +133,10 @@ friction matrix</p>
 
 </section>
 <section id="module-double_pendulum.model.model_parameters">
-<span id="double-pendulum-model-model-parameters"></span><h2>double_pendulum.model.model_parameters<a class="headerlink" href="#module-double_pendulum.model.model_parameters" title="Permalink to this heading">¶</a></h2>
+<span id="double-pendulum-model-model-parameters"></span><h2>double_pendulum.model.model_parameters<a class="headerlink" href="#module-double_pendulum.model.model_parameters" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.model.model_parameters.</span></span><span class="sig-name descname"><span class="pre">model_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.608,</span> <span class="pre">0.63]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.3,</span> <span class="pre">0.4]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.275,</span> <span class="pre">0.415]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.005,</span> <span class="pre">0.005]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.093,</span> <span class="pre">0.14]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9.81</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0475,</span> <span class="pre">0.0798]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gear_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10.0,</span> <span class="pre">10.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'double_pendulum'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.model.model_parameters.</span></span><span class="sig-name descname"><span class="pre">model_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.608,</span> <span class="pre">0.63]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.3,</span> <span class="pre">0.4]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.275,</span> <span class="pre">0.415]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.005,</span> <span class="pre">0.005]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.093,</span> <span class="pre">0.14]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9.81</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0475,</span> <span class="pre">0.0798]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gear_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10.0,</span> <span class="pre">10.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'double_pendulum'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Double pendulum plant parameters</p>
 <dl class="field-list">
@@ -320,13 +232,13 @@ using model_design and model_id. Options:</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.get_dict">
-<span class="sig-name descname"><span class="pre">get_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.get_dict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.get_dict" title="Permalink to this definition"></a></dt>
 <dd><p>get dictionary with all parameters</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.load_dict">
-<span class="sig-name descname"><span class="pre">load_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mpar_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.load_dict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">load_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mpar_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.load_dict" title="Permalink to this definition"></a></dt>
 <dd><p>load parameters from a dictionary</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -355,12 +267,12 @@ keys which are looked for are:</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.load_model">
-<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.load_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.load_model" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.load_yaml">
-<span class="sig-name descname"><span class="pre">load_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.load_yaml" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">load_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.load_yaml" title="Permalink to this definition"></a></dt>
 <dd><p>load parameters from a yaml file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -376,7 +288,7 @@ the other specified parameters</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.save_dict">
-<span class="sig-name descname"><span class="pre">save_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.save_dict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">save_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.save_dict" title="Permalink to this definition"></a></dt>
 <dd><p>save all parameters in a yaml file
 keys used are:</p>
 <blockquote>
@@ -405,7 +317,7 @@ keys used are:</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.set_cfric">
-<span class="sig-name descname"><span class="pre">set_cfric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfric</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_cfric" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_cfric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfric</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_cfric" title="Permalink to this definition"></a></dt>
 <dd><p>setter function for coulomb friction</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -421,7 +333,7 @@ coulomb friction coefficients for the double pendulum actuators
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.set_com">
-<span class="sig-name descname"><span class="pre">set_com</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">com</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_com" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_com</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">com</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_com" title="Permalink to this definition"></a></dt>
 <dd><p>setter function for com</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -437,7 +349,7 @@ center of mass lengths of the double pendulum links
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.set_damping">
-<span class="sig-name descname"><span class="pre">set_damping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">damping</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_damping" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_damping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">damping</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_damping" title="Permalink to this definition"></a></dt>
 <dd><p>setter function for damping</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -453,7 +365,7 @@ damping coefficients of the double pendulum actuators
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.set_dof">
-<span class="sig-name descname"><span class="pre">set_dof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dof</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_dof" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_dof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dof</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_dof" title="Permalink to this definition"></a></dt>
 <dd><p>setter function for degrees of freedom</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -468,7 +380,7 @@ does not make sense to change</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.set_gear_ratio">
-<span class="sig-name descname"><span class="pre">set_gear_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gear_ratio</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_gear_ratio" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_gear_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gear_ratio</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_gear_ratio" title="Permalink to this definition"></a></dt>
 <dd><p>setter function for gear ratio</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -482,7 +394,7 @@ does not make sense to change</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.set_gravity">
-<span class="sig-name descname"><span class="pre">set_gravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gravity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_gravity" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_gravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gravity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_gravity" title="Permalink to this definition"></a></dt>
 <dd><p>setter function for gravity</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -498,7 +410,7 @@ units=[m/s²]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.set_inertia">
-<span class="sig-name descname"><span class="pre">set_inertia</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inertia</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_inertia" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_inertia</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inertia</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_inertia" title="Permalink to this definition"></a></dt>
 <dd><p>setter function for inertia</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -515,7 +427,7 @@ if entry is None defaults to point mass m*l² inertia for the entry</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.set_length">
-<span class="sig-name descname"><span class="pre">set_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_length" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_length" title="Permalink to this definition"></a></dt>
 <dd><p>setter function for length</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -531,7 +443,7 @@ link lengths of the double pendulum,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.set_mass">
-<span class="sig-name descname"><span class="pre">set_mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_mass" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_mass" title="Permalink to this definition"></a></dt>
 <dd><p>setter function for mass</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -547,7 +459,7 @@ masses of the double pendulum,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.set_motor_inertia">
-<span class="sig-name descname"><span class="pre">set_motor_inertia</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor_inertia</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_motor_inertia" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_motor_inertia</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor_inertia</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_motor_inertia" title="Permalink to this definition"></a></dt>
 <dd><p>setter function for motor inertia</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -563,7 +475,7 @@ inertia of the actuators/motors
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.model_parameters.model_parameters.set_torque_limit">
-<span class="sig-name descname"><span class="pre">set_torque_limit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_torque_limit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_torque_limit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.model_parameters.model_parameters.set_torque_limit" title="Permalink to this definition"></a></dt>
 <dd><p>setter function for torque limit</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -581,10 +493,10 @@ torque limit of the motors
 
 </section>
 <section id="module-double_pendulum.model.plant">
-<span id="double-pendulum-model-plant"></span><h2>double_pendulum.model.plant<a class="headerlink" href="#module-double_pendulum.model.plant" title="Permalink to this heading">¶</a></h2>
+<span id="double-pendulum-model-plant"></span><h2>double_pendulum.model.plant<a class="headerlink" href="#module-double_pendulum.model.plant" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.model.plant.</span></span><span class="sig-name descname"><span class="pre">DoublePendulumPlant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0,</span> <span class="pre">1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">0.1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9.81</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coulomb_fric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gear_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[inf,</span> <span class="pre">inf]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_pars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.model.plant.</span></span><span class="sig-name descname"><span class="pre">DoublePendulumPlant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0,</span> <span class="pre">1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">0.1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9.81</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coulomb_fric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gear_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[inf,</span> <span class="pre">inf]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_pars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Double pendulum plant
 The double pendulum plant class calculates:</p>
@@ -650,7 +562,7 @@ the other provided parameters</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.coriolis_matrix">
-<span class="sig-name descname"><span class="pre">coriolis_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.coriolis_matrix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">coriolis_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.coriolis_matrix" title="Permalink to this definition"></a></dt>
 <dd><p>coriolis matrix from the equations of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -672,7 +584,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.coulomb_vector">
-<span class="sig-name descname"><span class="pre">coulomb_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.coulomb_vector" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">coulomb_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.coulomb_vector" title="Permalink to this definition"></a></dt>
 <dd><p>coulomb vector from the equations of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -694,7 +606,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.forward_dynamics">
-<span class="sig-name descname"><span class="pre">forward_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.forward_dynamics" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">forward_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.forward_dynamics" title="Permalink to this definition"></a></dt>
 <dd><p>forward dynamics of the double pendulum</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -720,7 +632,7 @@ units=[Nm]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.forward_kinematics">
-<span class="sig-name descname"><span class="pre">forward_kinematics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.forward_kinematics" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">forward_kinematics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.forward_kinematics" title="Permalink to this definition"></a></dt>
 <dd><p>forward kinematics, origin at fixed point</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -743,7 +655,7 @@ units=[m]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.get_Alin">
-<span class="sig-name descname"><span class="pre">get_Alin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.get_Alin" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_Alin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.get_Alin" title="Permalink to this definition"></a></dt>
 <dd><p>A-matrix of the linearized dynamics (xd = Ax+Bu)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -770,7 +682,7 @@ A-matrix</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.get_Blin">
-<span class="sig-name descname"><span class="pre">get_Blin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.get_Blin" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_Blin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.get_Blin" title="Permalink to this definition"></a></dt>
 <dd><p>B-matrix of the linearized dynamics (xd = Ax+Bu)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -797,7 +709,7 @@ B-matrix</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.get_Cx">
-<span class="sig-name descname"><span class="pre">get_Cx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.get_Cx" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_Cx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.get_Cx" title="Permalink to this definition"></a></dt>
 <dd><p>state derivative of coriolis matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -826,7 +738,7 @@ Cx[i]=del(C)/del(x_i)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.get_Fx">
-<span class="sig-name descname"><span class="pre">get_Fx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.get_Fx" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_Fx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.get_Fx" title="Permalink to this definition"></a></dt>
 <dd><p>state derivative of coulomb vector</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -855,7 +767,7 @@ Fx[:, i]=del(F)/del(x_i)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.get_Gx">
-<span class="sig-name descname"><span class="pre">get_Gx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.get_Gx" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_Gx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.get_Gx" title="Permalink to this definition"></a></dt>
 <dd><p>state derivative of gravity vector</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -884,7 +796,7 @@ Gx[:, i]=del(G)/del(x_i)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.get_Minvx">
-<span class="sig-name descname"><span class="pre">get_Minvx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.get_Minvx" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_Minvx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.get_Minvx" title="Permalink to this definition"></a></dt>
 <dd><p>state derivative of inverse mass matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -913,7 +825,7 @@ Minvx[i]=del(Minv)/del(x_i)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.get_Mx">
-<span class="sig-name descname"><span class="pre">get_Mx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.get_Mx" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_Mx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.get_Mx" title="Permalink to this definition"></a></dt>
 <dd><p>state derivative of mass matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -942,7 +854,7 @@ Mx[i]=del(M)/del(x_i)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.gravity_vector">
-<span class="sig-name descname"><span class="pre">gravity_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.gravity_vector" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gravity_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.gravity_vector" title="Permalink to this definition"></a></dt>
 <dd><p>gravity vector from the equations of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -964,7 +876,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.kinetic_energy">
-<span class="sig-name descname"><span class="pre">kinetic_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.kinetic_energy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">kinetic_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.kinetic_energy" title="Permalink to this definition"></a></dt>
 <dd><p>kinetic energy of the double pendulum</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -986,7 +898,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.linear_matrices">
-<span class="sig-name descname"><span class="pre">linear_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.linear_matrices" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">linear_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.linear_matrices" title="Permalink to this definition"></a></dt>
 <dd><p>get A- and B-matrix of the linearized dynamics (xd = Ax+Bu)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1016,7 +928,7 @@ B-matrix</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.mass_matrix">
-<span class="sig-name descname"><span class="pre">mass_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.mass_matrix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">mass_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.mass_matrix" title="Permalink to this definition"></a></dt>
 <dd><p>mass matrix from the equations of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1038,7 +950,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.potential_energy">
-<span class="sig-name descname"><span class="pre">potential_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.potential_energy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">potential_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.potential_energy" title="Permalink to this definition"></a></dt>
 <dd><p>potential energy of the double pendulum</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1060,7 +972,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.rhs">
-<span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.rhs" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.rhs" title="Permalink to this definition"></a></dt>
 <dd><p>integrand of the equations of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1089,7 +1001,7 @@ integrand, [vel1, vel2, acc1, acc2]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.plant.DoublePendulumPlant.total_energy">
-<span class="sig-name descname"><span class="pre">total_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.total_energy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">total_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.plant.DoublePendulumPlant.total_energy" title="Permalink to this definition"></a></dt>
 <dd><p>total energy of the double pendulum</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1113,10 +1025,10 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 </section>
 <section id="module-double_pendulum.model.symbolic_plant">
-<span id="double-pendulum-model-symbolic-plant"></span><h2>double_pendulum.model.symbolic_plant<a class="headerlink" href="#module-double_pendulum.model.symbolic_plant" title="Permalink to this heading">¶</a></h2>
+<span id="double-pendulum-model-symbolic-plant"></span><h2>double_pendulum.model.symbolic_plant<a class="headerlink" href="#module-double_pendulum.model.symbolic_plant" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.model.symbolic_plant.</span></span><span class="sig-name descname"><span class="pre">SymbolicDoublePendulum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0,</span> <span class="pre">1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">0.1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9.81</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coulomb_fric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gear_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[inf,</span> <span class="pre">inf]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_pars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.model.symbolic_plant.</span></span><span class="sig-name descname"><span class="pre">SymbolicDoublePendulum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0,</span> <span class="pre">1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">0.1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9.81</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coulomb_fric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gear_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[inf,</span> <span class="pre">inf]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_pars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Symbolic double pendulum plant
 The double pendulum plant class calculates:</p>
@@ -1182,22 +1094,22 @@ the other provided parameters</p>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.I1">
-<span class="sig-name descname"><span class="pre">I1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">I1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.I1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">I1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">I1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.I1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.I2">
-<span class="sig-name descname"><span class="pre">I2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">I2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.I2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">I2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">I2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.I2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.Ir_sym">
-<span class="sig-name descname"><span class="pre">Ir_sym</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Ir</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.Ir_sym" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">Ir_sym</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Ir</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.Ir_sym" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.angular_momentum_base">
-<span class="sig-name descname"><span class="pre">angular_momentum_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.angular_momentum_base" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">angular_momentum_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.angular_momentum_base" title="Permalink to this definition"></a></dt>
 <dd><p>angular momentum at the base</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1219,7 +1131,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.angular_momentum_ddot_base">
-<span class="sig-name descname"><span class="pre">angular_momentum_ddot_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.angular_momentum_ddot_base" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">angular_momentum_ddot_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.angular_momentum_ddot_base" title="Permalink to this definition"></a></dt>
 <dd><p>second time derivative of the angular momentum at the base</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1241,7 +1153,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.angular_momentum_dot_base">
-<span class="sig-name descname"><span class="pre">angular_momentum_dot_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.angular_momentum_dot_base" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">angular_momentum_dot_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.angular_momentum_dot_base" title="Permalink to this definition"></a></dt>
 <dd><p>first time derivative of the angular momentum at the base</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1263,22 +1175,22 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.b1">
-<span class="sig-name descname"><span class="pre">b1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">b1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.b1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">b1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">b1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.b1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.b2">
-<span class="sig-name descname"><span class="pre">b2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">b2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.b2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">b2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">b2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.b2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.base">
-<span class="sig-name descname"><span class="pre">base</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0,</span> <span class="pre">0]</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.base" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">base</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0,</span> <span class="pre">0]</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.base" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.center_of_mass">
-<span class="sig-name descname"><span class="pre">center_of_mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.center_of_mass" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">center_of_mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.center_of_mass" title="Permalink to this definition"></a></dt>
 <dd><p>calculate the center of mass of the whole system</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1301,17 +1213,17 @@ cartesian coordinates of the center of mass, units=[m]</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.cf1">
-<span class="sig-name descname"><span class="pre">cf1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">cf1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.cf1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">cf1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">cf1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.cf1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.cf2">
-<span class="sig-name descname"><span class="pre">cf2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">cf2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.cf2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">cf2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">cf2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.cf2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.com_dot">
-<span class="sig-name descname"><span class="pre">com_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.com_dot" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">com_dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.com_dot" title="Permalink to this definition"></a></dt>
 <dd><p>calculate the time derivative of the center of mass
 of the whole system</p>
 <dl class="field-list simple">
@@ -1335,7 +1247,7 @@ center of mass time derivative, units=[m/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.coriolis_matrix">
-<span class="sig-name descname"><span class="pre">coriolis_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.coriolis_matrix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">coriolis_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.coriolis_matrix" title="Permalink to this definition"></a></dt>
 <dd><p>coriolis matrix from the equations of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1357,7 +1269,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.coulomb_vector">
-<span class="sig-name descname"><span class="pre">coulomb_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.coulomb_vector" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">coulomb_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.coulomb_vector" title="Permalink to this definition"></a></dt>
 <dd><p>coulomb vector from the equations of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1379,12 +1291,12 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.dof">
-<span class="sig-name descname"><span class="pre">dof</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.dof" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">dof</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.dof" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.equation_of_motion">
-<span class="sig-name descname"><span class="pre">equation_of_motion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2nd'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.equation_of_motion" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">equation_of_motion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2nd'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.equation_of_motion" title="Permalink to this definition"></a></dt>
 <dd><p>symbolic equation of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1410,7 +1322,7 @@ default=”2nd”</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.forward_dynamics">
-<span class="sig-name descname"><span class="pre">forward_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.forward_dynamics" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">forward_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.forward_dynamics" title="Permalink to this definition"></a></dt>
 <dd><p>forward dynamics of the double pendulum</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1436,7 +1348,7 @@ units=[Nm]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.forward_kinematics">
-<span class="sig-name descname"><span class="pre">forward_kinematics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.forward_kinematics" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">forward_kinematics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.forward_kinematics" title="Permalink to this definition"></a></dt>
 <dd><p>forward kinematics, origin at fixed point</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1459,17 +1371,17 @@ units=[m]</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.g_sym">
-<span class="sig-name descname"><span class="pre">g_sym</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">g</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.g_sym" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">g_sym</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">g</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.g_sym" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.gr_sym">
-<span class="sig-name descname"><span class="pre">gr_sym</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">gr</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.gr_sym" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gr_sym</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">gr</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.gr_sym" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.gravity_vector">
-<span class="sig-name descname"><span class="pre">gravity_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.gravity_vector" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gravity_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.gravity_vector" title="Permalink to this definition"></a></dt>
 <dd><p>gravity vector from the equations of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1491,7 +1403,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.inverse_dynamics">
-<span class="sig-name descname"><span class="pre">inverse_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.inverse_dynamics" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">inverse_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.inverse_dynamics" title="Permalink to this definition"></a></dt>
 <dd><p>inverse dynamics of the double pendulum</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1519,7 +1431,7 @@ units=[Nm]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.kinetic_energy">
-<span class="sig-name descname"><span class="pre">kinetic_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.kinetic_energy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">kinetic_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.kinetic_energy" title="Permalink to this definition"></a></dt>
 <dd><p>kinetic energy of the double pendulum</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1541,24 +1453,24 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.l1">
-<span class="sig-name descname"><span class="pre">l1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">l1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.l1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">l1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">l1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.l1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.l2">
-<span class="sig-name descname"><span class="pre">l2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">l2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.l2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">l2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">l2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.l2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.lambdify_matrices">
-<span class="sig-name descname"><span class="pre">lambdify_matrices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.lambdify_matrices" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">lambdify_matrices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.lambdify_matrices" title="Permalink to this definition"></a></dt>
 <dd><p>function to lambdify the symbolic matrices of this plant to make them
 functions of state x and actuation u</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.linear_matrices">
-<span class="sig-name descname"><span class="pre">linear_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.linear_matrices" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">linear_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.linear_matrices" title="Permalink to this definition"></a></dt>
 <dd><p>get A- and B-matrix of the linearized dynamics (xd = Ax+Bu)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1588,17 +1500,17 @@ B-matrix</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.m1">
-<span class="sig-name descname"><span class="pre">m1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">m1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.m1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">m1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">m1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.m1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.m2">
-<span class="sig-name descname"><span class="pre">m2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">m2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.m2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">m2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">m2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.m2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.mass_matrix">
-<span class="sig-name descname"><span class="pre">mass_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.mass_matrix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">mass_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.mass_matrix" title="Permalink to this definition"></a></dt>
 <dd><p>mass matrix from the equations of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1620,17 +1532,17 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.n_actuators">
-<span class="sig-name descname"><span class="pre">n_actuators</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.n_actuators" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">n_actuators</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.n_actuators" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.n_links">
-<span class="sig-name descname"><span class="pre">n_links</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.n_links" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">n_links</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.n_links" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.potential_energy">
-<span class="sig-name descname"><span class="pre">potential_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.potential_energy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">potential_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.potential_energy" title="Permalink to this definition"></a></dt>
 <dd><p>potential energy of the double pendulum</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1652,82 +1564,82 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q">
-<span class="sig-name descname"><span class="pre">q</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[q1],</span> <span class="pre">[q2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">q</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[q1],</span> <span class="pre">[q2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q01">
-<span class="sig-name descname"><span class="pre">q01</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\hat{q}_1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q01" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">q01</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\hat{q}_1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q01" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q02">
-<span class="sig-name descname"><span class="pre">q02</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\hat{q}_2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q02" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">q02</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\hat{q}_2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q02" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q0d1">
-<span class="sig-name descname"><span class="pre">q0d1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\hat{\dot{q}}_1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q0d1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">q0d1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\hat{\dot{q}}_1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q0d1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q0d2">
-<span class="sig-name descname"><span class="pre">q0d2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\hat{\dot{q}}_2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q0d2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">q0d2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\hat{\dot{q}}_2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q0d2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q1">
-<span class="sig-name descname"><span class="pre">q1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">q1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">q1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">q1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q2">
-<span class="sig-name descname"><span class="pre">q2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">q2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">q2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">q2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.q2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qd">
-<span class="sig-name descname"><span class="pre">qd</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[\dot{q}_1],</span> <span class="pre">[\dot{q}_2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qd" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">qd</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[\dot{q}_1],</span> <span class="pre">[\dot{q}_2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qd" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qd1">
-<span class="sig-name descname"><span class="pre">qd1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\dot{q}_1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qd1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">qd1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\dot{q}_1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qd1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qd2">
-<span class="sig-name descname"><span class="pre">qd2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\dot{q}_2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qd2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">qd2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\dot{q}_2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qd2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qdd">
-<span class="sig-name descname"><span class="pre">qdd</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[\ddot{q}_1],</span> <span class="pre">[\ddot{q}_2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qdd" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">qdd</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[\ddot{q}_1],</span> <span class="pre">[\ddot{q}_2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qdd" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qdd1">
-<span class="sig-name descname"><span class="pre">qdd1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\ddot{q}_1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qdd1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">qdd1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\ddot{q}_1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qdd1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qdd2">
-<span class="sig-name descname"><span class="pre">qdd2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\ddot{q}_2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qdd2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">qdd2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\ddot{q}_2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.qdd2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.r1">
-<span class="sig-name descname"><span class="pre">r1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">r1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.r1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">r1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">r1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.r1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.r2">
-<span class="sig-name descname"><span class="pre">r2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">r2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.r2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">r2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">r2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.r2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.replace_parameters">
-<span class="sig-name descname"><span class="pre">replace_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.replace_parameters" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">replace_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.replace_parameters" title="Permalink to this definition"></a></dt>
 <dd><p>function to replace the symbolic system parameters in the input matrix
 with the actual values of this plant</p>
 <dl class="field-list simple">
@@ -1748,7 +1660,7 @@ with the actual values of this plant</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.rhs">
-<span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.rhs" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.rhs" title="Permalink to this definition"></a></dt>
 <dd><p>integrand of the equations of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1777,7 +1689,7 @@ integrand, [vel1, vel2, acc1, acc2]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_coriolis_matrix">
-<span class="sig-name descname"><span class="pre">symbolic_coriolis_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_coriolis_matrix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">symbolic_coriolis_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_coriolis_matrix" title="Permalink to this definition"></a></dt>
 <dd><p>symbolic coriolis matrix from the equations of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1792,7 +1704,7 @@ coriolis matrix</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_coulomb_vector">
-<span class="sig-name descname"><span class="pre">symbolic_coulomb_vector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_coulomb_vector" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">symbolic_coulomb_vector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_coulomb_vector" title="Permalink to this definition"></a></dt>
 <dd><p>symbolic coulomb vector from the equations of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1807,7 +1719,7 @@ coulomb vector</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_gravity_vector">
-<span class="sig-name descname"><span class="pre">symbolic_gravity_vector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_gravity_vector" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">symbolic_gravity_vector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_gravity_vector" title="Permalink to this definition"></a></dt>
 <dd><p>symbolic gravity vector from the equations of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1822,19 +1734,19 @@ gravity vector</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_kinetic_energy">
-<span class="sig-name descname"><span class="pre">symbolic_kinetic_energy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_kinetic_energy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">symbolic_kinetic_energy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_kinetic_energy" title="Permalink to this definition"></a></dt>
 <dd><p>symbolic kinetic energy of the double pendulum</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_linear_matrices">
-<span class="sig-name descname"><span class="pre">symbolic_linear_matrices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_linear_matrices" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">symbolic_linear_matrices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_linear_matrices" title="Permalink to this definition"></a></dt>
 <dd><p>symbolic A- and B-matrix of the linearized dynamics (xd = Ax+Bu)</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_mass_matrix">
-<span class="sig-name descname"><span class="pre">symbolic_mass_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_mass_matrix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">symbolic_mass_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_mass_matrix" title="Permalink to this definition"></a></dt>
 <dd><p>symbolic mass matrix from the equations of motion</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1849,29 +1761,29 @@ mass matrix</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_potential_energy">
-<span class="sig-name descname"><span class="pre">symbolic_potential_energy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_potential_energy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">symbolic_potential_energy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_potential_energy" title="Permalink to this definition"></a></dt>
 <dd><p>symbolic potential energy of the double pendulum</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_total_energy">
-<span class="sig-name descname"><span class="pre">symbolic_total_energy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_total_energy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">symbolic_total_energy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.symbolic_total_energy" title="Permalink to this definition"></a></dt>
 <dd><p>symbolic total energy of the double pendulum</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.tl1">
-<span class="sig-name descname"><span class="pre">tl1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">tl1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.tl1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">tl1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">tl1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.tl1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.tl2">
-<span class="sig-name descname"><span class="pre">tl2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">tl2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.tl2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">tl2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">tl2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.tl2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.total_energy">
-<span class="sig-name descname"><span class="pre">total_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.total_energy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">total_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.total_energy" title="Permalink to this definition"></a></dt>
 <dd><p>total energy of the double pendulum</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1893,54 +1805,54 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u">
-<span class="sig-name descname"><span class="pre">u</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[u1],</span> <span class="pre">[u2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">u</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[u1],</span> <span class="pre">[u2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u0">
-<span class="sig-name descname"><span class="pre">u0</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[\hat{u}_1],</span> <span class="pre">[\hat{u}_2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u0" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">u0</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[\hat{u}_1],</span> <span class="pre">[\hat{u}_2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u0" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u01">
-<span class="sig-name descname"><span class="pre">u01</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\hat{u}_1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u01" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">u01</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\hat{u}_1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u01" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u02">
-<span class="sig-name descname"><span class="pre">u02</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\hat{u}_2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u02" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">u02</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">\hat{u}_2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u02" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u1">
-<span class="sig-name descname"><span class="pre">u1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">u1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">u1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">u1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u2">
-<span class="sig-name descname"><span class="pre">u2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">u2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">u2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">u2</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.u2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.x">
-<span class="sig-name descname"><span class="pre">x</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[</span>&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">q1],</span> <span class="pre">[</span>&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">q2],</span> <span class="pre">[\dot{q}_1],</span> <span class="pre">[\dot{q}_2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.x" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">x</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[</span>&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">q1],</span> <span class="pre">[</span>&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">q2],</span> <span class="pre">[\dot{q}_1],</span> <span class="pre">[\dot{q}_2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.x" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.x0">
-<span class="sig-name descname"><span class="pre">x0</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">\hat{q}_1],</span> <span class="pre">[</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">\hat{q}_2],</span> <span class="pre">[\hat{\dot{q}}_1],</span> <span class="pre">[\hat{\dot{q}}_2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.x0" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">x0</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">\hat{q}_1],</span> <span class="pre">[</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">\hat{q}_2],</span> <span class="pre">[\hat{\dot{q}}_1],</span> <span class="pre">[\hat{\dot{q}}_2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.x0" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.xd">
-<span class="sig-name descname"><span class="pre">xd</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[</span> <span class="pre">\dot{q}_1],</span> <span class="pre">[</span> <span class="pre">\dot{q}_2],</span> <span class="pre">[\ddot{q}_1],</span> <span class="pre">[\ddot{q}_2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.xd" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">xd</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Matrix([</span> <span class="pre">[</span> <span class="pre">\dot{q}_1],</span> <span class="pre">[</span> <span class="pre">\dot{q}_2],</span> <span class="pre">[\ddot{q}_1],</span> <span class="pre">[\ddot{q}_2]])</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.xd" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.diff_to_matrix">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.model.symbolic_plant.</span></span><span class="sig-name descname"><span class="pre">diff_to_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diff</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.diff_to_matrix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.model.symbolic_plant.</span></span><span class="sig-name descname"><span class="pre">diff_to_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diff</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.diff_to_matrix" title="Permalink to this definition"></a></dt>
 <dd><p>function to convert a sympy derivative to a sympy matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1958,7 +1870,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.sub_symbols">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.model.symbolic_plant.</span></span><span class="sig-name descname"><span class="pre">sub_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_symbols</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.sub_symbols" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.model.symbolic_plant.</span></span><span class="sig-name descname"><span class="pre">sub_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_symbols</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.sub_symbols" title="Permalink to this definition"></a></dt>
 <dd><p>substitute symbols with new symbols/values in mat</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1982,7 +1894,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.vector_mult">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.model.symbolic_plant.</span></span><span class="sig-name descname"><span class="pre">vector_mult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vec2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.vector_mult" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.model.symbolic_plant.</span></span><span class="sig-name descname"><span class="pre">vector_mult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vec2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.vector_mult" title="Permalink to this definition"></a></dt>
 <dd><p>scalar product of sympy vectors</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2005,50 +1917,33 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="double_pendulum.simulation.html" class="btn btn-neutral float-right" title="double_pendulum.simulation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="double_pendulum.experiments.html" class="btn btn-neutral float-left" title="double_pendulum.experiments" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="double_pendulum.simulation.html" class="btn btn-neutral float-right" title="double_pendulum.simulation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2022, Underactuated Lab.
-
-    </p>
+    <p>&#169; Copyright 2022, Underactuated Lab.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

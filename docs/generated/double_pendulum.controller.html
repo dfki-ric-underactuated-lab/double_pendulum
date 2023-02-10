@@ -1,92 +1,47 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>double_pendulum.controller &mdash; Double Pendulum 1.0.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="double_pendulum.controller.energy" href="double_pendulum.controller.energy.html" />
     <link rel="prev" title="double_pendulum.analysis" href="double_pendulum.analysis.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../index.html" class="icon icon-home"> Double Pendulum
           
-
-          
+          <a href="../index.html" class="icon icon-home">
+            Double Pendulum
+              <img src="../_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../dynamics.html"> Double Pendulum Dynamics</a></li>
@@ -117,79 +72,36 @@
 <li class="toctree-l1"><a class="reference internal" href="../benchmark.html"> Controller Benchmarks</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">Double Pendulum</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../modules.html">&lt;no title&gt;</a> &raquo;</li>
-        
-          <li><a href="double_pendulum.html">double_pendulum</a> &raquo;</li>
-        
-      <li>double_pendulum.controller</li>
-    
-    
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">&lt;no title&gt;</a></li>
+          <li class="breadcrumb-item"><a href="double_pendulum.html">double_pendulum</a></li>
+      <li class="breadcrumb-item active">double_pendulum.controller</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/generated/double_pendulum.controller.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <section id="module-double_pendulum.controller">
-<span id="double-pendulum-controller"></span><h1>double_pendulum.controller<a class="headerlink" href="#module-double_pendulum.controller" title="Permalink to this heading">¶</a></h1>
+<span id="double-pendulum-controller"></span><h1>double_pendulum.controller<a class="headerlink" href="#module-double_pendulum.controller" title="Permalink to this heading"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.energy.html">double_pendulum.controller.energy</a></li>
@@ -207,19 +119,19 @@
 </div>
 </section>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-double_pendulum.controller.abstract_controller">
-<span id="double-pendulum-controller-abstract-controller"></span><h2>double_pendulum.controller.abstract_controller<a class="headerlink" href="#module-double_pendulum.controller.abstract_controller" title="Permalink to this heading">¶</a></h2>
+<span id="double-pendulum-controller-abstract-controller"></span><h2>double_pendulum.controller.abstract_controller<a class="headerlink" href="#module-double_pendulum.controller.abstract_controller" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.abstract_controller.</span></span><span class="sig-name descname"><span class="pre">AbstractController</span></span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.abstract_controller.</span></span><span class="sig-name descname"><span class="pre">AbstractController</span></span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Abstract controller class. All controller should inherit from
 this abstract class.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.filter_measurement">
-<span class="sig-name descname"><span class="pre">filter_measurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.filter_measurement" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">filter_measurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.filter_measurement" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -247,7 +159,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.get_control_output">
-<span class="sig-name descname"><span class="pre">get_control_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.get_control_output" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_control_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.get_control_output" title="Permalink to this definition"></a></dt>
 <dd><p>The method which is called in the Simulator and real experiment loop
 to get the control signal from the controller.
 This method does:</p>
@@ -284,7 +196,7 @@ units=[Nm]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.get_control_output_">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.get_control_output_" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.get_control_output_" title="Permalink to this definition"></a></dt>
 <dd><p>The function to compute the control input for the double pendulum’s
 actuator(s).
 Supposed to be overwritten by actual controllers. The API of this
@@ -315,7 +227,7 @@ units=[Nm]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.get_forecast">
-<span class="sig-name descname"><span class="pre">get_forecast</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.get_forecast" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_forecast</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.get_forecast" title="Permalink to this definition"></a></dt>
 <dd><p>Get a forecast trajectory as planned by the controller. Optional.
 Can be overwritten by actual controller.</p>
 <dl class="field-list simple">
@@ -334,7 +246,7 @@ Can be overwritten by actual controller.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.get_friction_torque">
-<span class="sig-name descname"><span class="pre">get_friction_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.get_friction_torque" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_friction_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.get_friction_torque" title="Permalink to this definition"></a></dt>
 <dd><p>Get the torque needed to compensate for friction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -359,7 +271,7 @@ units=[Nm]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.get_gravity_torque">
-<span class="sig-name descname"><span class="pre">get_gravity_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.get_gravity_torque" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_gravity_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.get_gravity_torque" title="Permalink to this definition"></a></dt>
 <dd><p>Get the torque needed to compensate for gravity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -384,7 +296,7 @@ units=[Nm]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.get_init_trajectory">
-<span class="sig-name descname"><span class="pre">get_init_trajectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.get_init_trajectory" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_init_trajectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.get_init_trajectory" title="Permalink to this definition"></a></dt>
 <dd><p>Get an initial (reference) trajectory used by the controller. Optional.
 Can be overwritten by actual controller.</p>
 <dl class="field-list simple">
@@ -403,7 +315,7 @@ Can be overwritten by actual controller.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.init">
-<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.init" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.init" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize function which will always be called before using the
 controller.
 In addition to the controller specific <a href="#id3"><span class="problematic" id="id4">init_</span></a> method this method
@@ -412,7 +324,7 @@ initialized the filter and internal logs.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.init_">
-<span class="sig-name descname"><span class="pre">init_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.init_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">init_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.init_" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize the controller. Optional.
 Can be overwritten by actual controller.
 Initialize function which will always be called before using the
@@ -421,13 +333,13 @@ controller.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.init_filter">
-<span class="sig-name descname"><span class="pre">init_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.init_filter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">init_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.init_filter" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize the measurement filter</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.reset" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Reset the Controller
 Resets:</p>
 <blockquote>
@@ -442,7 +354,7 @@ Resets:</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.reset_">
-<span class="sig-name descname"><span class="pre">reset_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.reset_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">reset_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.reset_" title="Permalink to this definition"></a></dt>
 <dd><p>Reset the Controller. Optional
 Can be overwritten by actual controller.
 Function to reset parameters inside the controller.</p>
@@ -450,7 +362,7 @@ Function to reset parameters inside the controller.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.save" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.save" title="Permalink to this definition"></a></dt>
 <dd><p>Save controller parameters</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -464,7 +376,7 @@ Function to reset parameters inside the controller.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.save_">
-<span class="sig-name descname"><span class="pre">save_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.save_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">save_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.save_" title="Permalink to this definition"></a></dt>
 <dd><p>Save controller parameters. Optional
 Can be overwritten by actual controller.</p>
 <dl class="field-list simple">
@@ -479,7 +391,7 @@ Can be overwritten by actual controller.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.set_filter_args">
-<span class="sig-name descname"><span class="pre">set_filter_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[3.141592653589793,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity_cut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.set_filter_args" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_filter_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[3.141592653589793,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity_cut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.set_filter_args" title="Permalink to this definition"></a></dt>
 <dd><p>Set filter arguments for the measurement filter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -521,7 +433,7 @@ For meas_noise_cut&lt;=0.0, the measurement is not cut
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.set_friction_compensation">
-<span class="sig-name descname"><span class="pre">set_friction_compensation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coulomb_fric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.set_friction_compensation" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_friction_compensation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coulomb_fric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.set_friction_compensation" title="Permalink to this definition"></a></dt>
 <dd><p>Set friction terms used for the friction compensation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -541,7 +453,7 @@ coulomb friction coefficients for the double pendulum actuators
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.set_goal">
-<span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.set_goal" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.set_goal" title="Permalink to this definition"></a></dt>
 <dd><p>Set the desired state for the controller. Optional.
 Can be overwritten by actual controller.</p>
 <dl class="field-list simple">
@@ -558,7 +470,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.set_gravity_compensation">
-<span class="sig-name descname"><span class="pre">set_gravity_compensation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.set_gravity_compensation" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_gravity_compensation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.set_gravity_compensation" title="Permalink to this definition"></a></dt>
 <dd><p>Provide plant for gravity compensation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -573,14 +485,14 @@ double pendulum</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.set_parameters">
-<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.set_parameters" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.set_parameters" title="Permalink to this definition"></a></dt>
 <dd><p>Set controller parameters. Optional.
 Can be overwritten by actual controller.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.abstract_controller.AbstractController.set_start">
-<span class="sig-name descname"><span class="pre">set_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.set_start" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.abstract_controller.AbstractController.set_start" title="Permalink to this definition"></a></dt>
 <dd><p>Set the start state for the controller. Optional.
 Can be overwritten by actual controller.</p>
 <dl class="field-list simple">
@@ -599,10 +511,10 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 </section>
 <section id="module-double_pendulum.controller.combined_controller">
-<span id="double-pendulum-controller-combined-controller"></span><h2>double_pendulum.controller.combined_controller<a class="headerlink" href="#module-double_pendulum.controller.combined_controller" title="Permalink to this heading">¶</a></h2>
+<span id="double-pendulum-controller-combined-controller"></span><h2>double_pendulum.controller.combined_controller<a class="headerlink" href="#module-double_pendulum.controller.combined_controller" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.CombinedController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.combined_controller.</span></span><span class="sig-name descname"><span class="pre">CombinedController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_both</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.combined_controller.</span></span><span class="sig-name descname"><span class="pre">CombinedController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_both</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#double_pendulum.controller.abstract_controller.AbstractController" title="double_pendulum.controller.abstract_controller.AbstractController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractController</span></code></a></p>
 <p>Controller to combine two controllers and switch between them on conditions</p>
 <dl class="field-list simple">
@@ -626,7 +538,7 @@ timestep or only for the active one</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.CombinedController.get_control_output_">
-<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.get_control_output_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.get_control_output_" title="Permalink to this definition"></a></dt>
 <dd><p>The function to compute the control input for the double pendulum’s
 actuator(s).
 Will check the switch condition, potetntiolly switch the active
@@ -656,33 +568,33 @@ units=[Nm]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.CombinedController.get_forecast">
-<span class="sig-name descname"><span class="pre">get_forecast</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.get_forecast" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_forecast</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.get_forecast" title="Permalink to this definition"></a></dt>
 <dd><p>Get a forecast trajectory as planned by the controller.
 Uses active controller</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.CombinedController.get_init_trajectory">
-<span class="sig-name descname"><span class="pre">get_init_trajectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.get_init_trajectory" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_init_trajectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.get_init_trajectory" title="Permalink to this definition"></a></dt>
 <dd><p>Get the initial (reference) trajectory as planned by the controller.
 Uses active controller</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.CombinedController.init_">
-<span class="sig-name descname"><span class="pre">init_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.init_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">init_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.init_" title="Permalink to this definition"></a></dt>
 <dd><p>initialize both controllers</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.CombinedController.reset_">
-<span class="sig-name descname"><span class="pre">reset_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.reset_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">reset_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.reset_" title="Permalink to this definition"></a></dt>
 <dd><p>Reset controllers.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.CombinedController.save_">
-<span class="sig-name descname"><span class="pre">save_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.save_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">save_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.save_" title="Permalink to this definition"></a></dt>
 <dd><p>Save controllers’ parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -696,7 +608,7 @@ Uses active controller</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.CombinedController.set_goal">
-<span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.set_goal" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.set_goal" title="Permalink to this definition"></a></dt>
 <dd><p>Set the desired state for the controllers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -710,7 +622,7 @@ Uses active controller</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.CombinedController.set_parameters">
-<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller1_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller2_pars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.set_parameters" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller1_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller2_pars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.set_parameters" title="Permalink to this definition"></a></dt>
 <dd><p>Set parametrers for both controllers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -726,7 +638,7 @@ Uses active controller</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.CombinedController.set_start">
-<span class="sig-name descname"><span class="pre">set_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.set_start" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.CombinedController.set_start" title="Permalink to this definition"></a></dt>
 <dd><p>Set start state for the controller.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -744,7 +656,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.SimultaneousControllers">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.combined_controller.</span></span><span class="sig-name descname"><span class="pre">SimultaneousControllers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controllers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forecast_con</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.combined_controller.</span></span><span class="sig-name descname"><span class="pre">SimultaneousControllers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controllers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forecast_con</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#double_pendulum.controller.abstract_controller.AbstractController" title="double_pendulum.controller.abstract_controller.AbstractController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractController</span></code></a></p>
 <p>Controller to combine multiple controllers and add all their outputs torques.</p>
 <dl class="field-list simple">
@@ -760,7 +672,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.SimultaneousControllers.get_control_output_">
-<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers.get_control_output_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers.get_control_output_" title="Permalink to this definition"></a></dt>
 <dd><p>The function to compute the control input for the double pendulum’s
 actuator(s).
 Will sum the torques of all controller.</p>
@@ -789,27 +701,27 @@ units=[Nm]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.SimultaneousControllers.get_forecast">
-<span class="sig-name descname"><span class="pre">get_forecast</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers.get_forecast" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_forecast</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers.get_forecast" title="Permalink to this definition"></a></dt>
 <dd><p>Get a forecast trajectory as planned by the controller.
 Uses controller indicated by self.fc_ind.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.SimultaneousControllers.get_init_trajectory">
-<span class="sig-name descname"><span class="pre">get_init_trajectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers.get_init_trajectory" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_init_trajectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers.get_init_trajectory" title="Permalink to this definition"></a></dt>
 <dd><p>Get the intital (reference) trajectory as planned by the controller.
 Uses controller indicated by self.fc_ind.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.SimultaneousControllers.init_">
-<span class="sig-name descname"><span class="pre">init_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers.init_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">init_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers.init_" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize all controllers.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.SimultaneousControllers.set_goal">
-<span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers.set_goal" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers.set_goal" title="Permalink to this definition"></a></dt>
 <dd><p>Set the desired state for the controllers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -823,7 +735,7 @@ Uses controller indicated by self.fc_ind.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.SimultaneousControllers.set_parameters">
-<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller_pars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers.set_parameters" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller_pars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers.set_parameters" title="Permalink to this definition"></a></dt>
 <dd><p>Set parameters for all controllers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -838,7 +750,7 @@ parsed to set_parameters</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.combined_controller.SimultaneousControllers.set_start">
-<span class="sig-name descname"><span class="pre">set_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers.set_start" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.combined_controller.SimultaneousControllers.set_start" title="Permalink to this definition"></a></dt>
 <dd><p>Set start state for the controllers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -859,50 +771,33 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="double_pendulum.controller.energy.html" class="btn btn-neutral float-right" title="double_pendulum.controller.energy" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="double_pendulum.analysis.html" class="btn btn-neutral float-left" title="double_pendulum.analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="double_pendulum.controller.energy.html" class="btn btn-neutral float-right" title="double_pendulum.controller.energy" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2022, Underactuated Lab.
-
-    </p>
+    <p>&#169; Copyright 2022, Underactuated Lab.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
