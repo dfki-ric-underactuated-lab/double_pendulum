@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   site:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     defaults:
       run:
         shell: bash
@@ -26,7 +26,8 @@ jobs:
     - name: Report host(s)
       run: |
         echo "Host: ${{ github.event.repository.name }}.docs"
-        echo ::set-output name=branch::docs
+        # echo ::set-output name=branch::docs
+        echo "{branch}={docs}" >> $GITHUB_OUTPUT
       id: config
     # Generate documentation =====================================
     - name: Set up Python 3.8
