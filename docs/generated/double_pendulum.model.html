@@ -1498,6 +1498,36 @@ B-matrix</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.linear_matrices_discrete">
+<span class="sig-name descname"><span class="pre">linear_matrices_discrete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.linear_matrices_discrete" title="Permalink to this definition"></a></dt>
+<dd><p>get discrete A- and B-matrix of the linearized dynamics (xd = Ax+Bu)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x0</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+<dt><strong>u0</strong><span class="classifier">array_like, shape=(2,), dtype=float</span></dt><dd><p>actuation input/motor torque,
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>array_like</dt><dd><p>shape=(4,4),
+A-matrix</p>
+</dd>
+<dt>array_like</dt><dd><p>shape=(4,2),
+B-matrix</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.m1">
 <span class="sig-name descname"><span class="pre">m1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">m1</span></em><a class="headerlink" href="#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.m1" title="Permalink to this definition"></a></dt>

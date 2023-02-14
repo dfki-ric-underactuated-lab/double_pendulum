@@ -123,10 +123,59 @@ cost = sum x[k].T*Q*x[k] + u[k].T*R*u[k]</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr.iterative_ricatti">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.lqr.lqr.</span></span><span class="sig-name descname"><span class="pre">iterative_ricatti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr.iterative_ricatti" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr.iterative_riccati">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.lqr.lqr.</span></span><span class="sig-name descname"><span class="pre">iterative_riccati</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plant</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Qf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_traj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_traj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr.iterative_riccati" title="Permalink to this definition"></a></dt>
 <dd><p>iteratively solve the dynamic ricatti equation.
-intended for finite horizon lqr</p>
+intended for finite horizon lqr/tvlqr</p>
+<dl class="simple">
+<dt>For more Information see for example:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="https://github.com/Optimal-Control-16-745/lecture-notebooks-2022/tree/main/Lecture%207">https://github.com/Optimal-Control-16-745/lecture-notebooks-2022/tree/main/Lecture%207</a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>plant</strong><span class="classifier">SymbolicDoublePendulum or DoublePendulumPlant object</span></dt><dd><p>A plant object containing the kinematics and dynamics of the
+double pendulum
+Q : numpy_array</p>
+<blockquote>
+<div><p>shape=(4,4)
+Q-matrix describing quadratic state cost</p>
+</div></blockquote>
+<dl class="simple">
+<dt>R<span class="classifier">numpy_array</span></dt><dd><p>shape=(2,2)
+R-matrix describing quadratic control cost</p>
+</dd>
+<dt>Qf<span class="classifier">numpy_array</span></dt><dd><p>shape=(4,4)
+Q-matrix describing quadratic state cost
+for the final point stabilization</p>
+</dd>
+<dt>dt<span class="classifier">float</span></dt><dd><p>timestep, unit=[s]</p>
+</dd>
+<dt>x_traj<span class="classifier">numpy_array</span></dt><dd><p>shape=(N, 4)
+states, units=[rad, rad, rad/s, rad/s]
+order=[angle1, angle2, velocity1, velocity2]</p>
+</dd>
+<dt>u_traj<span class="classifier">numpy_array</span></dt><dd><p>shape=(N, 2)
+actuations/motor torques
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Returns</strong></dt><dd></dd>
+<dt><strong>——-</strong></dt><dd></dd>
+<dt><strong>numpy_array</strong></dt><dd><p>Array of feedback matrices (K Matrices)
+shape=(N, 4, 4)</p>
+</dd>
+<dt><strong>numpy_array</strong></dt><dd><p>Array of feedback matrices of the Lagrange multipliers from dynamics
+constraint
+shape=(N, 4, 4)</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -135,22 +184,6 @@ intended for finite horizon lqr</p>
 <dd><p>Solve the continuous time lqr controller.
 dx/dt = A x + B u
 cost = integral x.T*Q*x + u.T*R*u</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr.solve_differential_ricatti">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.lqr.lqr.</span></span><span class="sig-name descname"><span class="pre">solve_differential_ricatti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr.solve_differential_ricatti" title="Permalink to this definition"></a></dt>
-<dd><p>Implementation based on
-‘The numerical solution of the matrix Riccati differential equation’
-E.Davison, E.Maki
-<a class="reference external" href="https://ieeexplore.ieee.org/document/1100210?arnumber=1100210">https://ieeexplore.ieee.org/document/1100210?arnumber=1100210</a></p>
-<p>note:
-paper       here    usually
-mathcal{a} al
-C           C
-K           S
-exp(at)     Ct
-R^-1 B^T p  K</p>
 </dd></dl>
 
 </section>
