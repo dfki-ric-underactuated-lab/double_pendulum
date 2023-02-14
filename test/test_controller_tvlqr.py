@@ -51,8 +51,7 @@ class Test(unittest.TestCase):
 
         controller = TVLQRController(
                 model_pars=mpar,
-                csv_path=csv_path,
-                horizon=1)
+                csv_path=csv_path)
         for g in self.goals:
             for Q in self.Qs:
                 for R in self.Rs:
@@ -79,8 +78,7 @@ class Test(unittest.TestCase):
 
         controller = TVLQRController(
                 model_pars=mpar,
-                csv_path=csv_path,
-                horizon=1)
+                csv_path=csv_path)
         for g in self.goals:
             for Q in self.Qs:
                 for R in self.Rs:

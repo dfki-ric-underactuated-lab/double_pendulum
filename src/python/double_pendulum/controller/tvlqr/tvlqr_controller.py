@@ -3,7 +3,7 @@ import yaml
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
-from double_pendulum.controller.lqr.lqr import lqr, solve_differential_ricatti
+from double_pendulum.controller.lqr.lqr import lqr, iterative_riccati
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.utils.csv_trajectory import load_trajectory, save_trajectory
 from double_pendulum.utils.wrap_angles import wrap_angles_diff
@@ -63,8 +63,6 @@ class TVLQRController(AbstractController):
     num_break : int
         number of break points used for interpolation
         (Default value = 40)
-    horizon : int
-        horizon for the finite horizon Riccati equation
         (Default value=100)
     """
     def __init__(self,
@@ -79,7 +77,6 @@ class TVLQRController(AbstractController):
                  model_pars=None,
                  csv_path="",
                  num_break=40,
-                 horizon=100,
                  ):
 
         super().__init__()
@@ -117,7 +114,6 @@ class TVLQRController(AbstractController):
                 torque_limit=self.torque_limit)
 
         self.num_break = num_break
-        self.horizon = horizon
 
         # load trajectory
         self.T, self.X, self.U = load_trajectory(csv_path=csv_path,
@@ -197,28 +193,15 @@ class TVLQRController(AbstractController):
         """
         Initalize the controller.
         """
-        self.K = []
-        # self.k = []
-        # for i in range(len(self.T[:-1])):
-        for i in range(len(self.T)):
-            A, B = self.splant.linear_matrices(x0=self.X[i], u0=self.U[i])
-            # K, S, _ = lqr(A, B, self.Q, self.R)
-            K, S = solve_differential_ricatti(A, B, self.Q, self.R, self.horizon, self.dt)
-            K = K[0]
-            S = S[0]
-            # print(np.shape(K))
-            self.K.append(K)
 
-        A, B = self.splant.linear_matrices(x0=self.X[-1], u0=self.U[-1])
-        self.K_final, _, _ = lqr(A, B, self.Qf, self.R)
-        # self.K.append(K)
-        self.K = np.asarray(self.K)
+        self.K, _ = iterative_riccati(
+            self.splant, self.Q, self.R, self.Qf, self.dt, self.X, self.U)
 
         self.K_interp = InterpolateMatrix(
-                T=self.T,
-                X=self.K,
-                num_break=self.num_break,
-                poly_degree=3)
+            T=self.T,
+            X=self.K,
+            num_break=self.num_break,
+            poly_degree=3)
 
     def get_control_output_(self, x, t):
         """
@@ -244,20 +227,11 @@ class TVLQRController(AbstractController):
             units=[Nm]
         """
 
-        if t <= self.max_t:
-            tt = min(t, self.max_t)
+        tt = min(t, self.max_t)
+        x_error = wrap_angles_diff(np.asarray(x) - self.X_interp.get_value(tt))
 
-            x_error = wrap_angles_diff(np.asarray(x) - self.X_interp.get_value(tt))
-
-            tau = self.U_interp.get_value(tt) - np.dot(self.K_interp.get_value(tt), x_error)
-            u = [tau[0], tau[1]]
-        else:
-            x_error = wrap_angles_diff(np.asarray(x) - self.goal)
-
-            u = - np.asarray(self.K_final.dot(x_error))[0]
-            # u = [tau[1], tau[1]]
-
-        #print(t, x_error, self.U_interp.get_value(tt), self.K_interp.get_value(tt)[1], u)
+        tau = self.U_interp.get_value(tt) - np.dot(self.K_interp.get_value(tt), x_error)
+        u = [tau[0], tau[1]]
 
         u[0] = np.clip(u[0], -self.torque_limit[0], self.torque_limit[0])
         u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
@@ -313,7 +287,6 @@ class TVLQRController(AbstractController):
                 "torque_limit1" : self.torque_limit[0],
                 "torque_limit2" : self.torque_limit[1],
                 "num_break" : self.num_break,
-                "horizon" : self.horizon,
                 "goal1" : float(self.goal[0]),
                 "goal2" : float(self.goal[1]),
                 "goal3" : float(self.goal[2]),

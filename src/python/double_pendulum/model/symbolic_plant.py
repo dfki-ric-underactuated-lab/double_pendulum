@@ -575,6 +575,36 @@ class SymbolicDoublePendulum():
 
         return np.asarray(Alin, dtype=float), np.asarray(Blin, dtype=float)
 
+    def linear_matrices_discrete(self, x0, u0, dt):
+        """
+        get discrete A- and B-matrix of the linearized dynamics (xd = Ax+Bu)
+
+        Parameters
+        ----------
+        x0 : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        u0 : array_like, shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+
+        Returns
+        -------
+        array_like
+            shape=(4,4),
+            A-matrix
+        array_like
+            shape=(4,2),
+            B-matrix
+        """
+        Alin, Blin = self.linear_matrices(x0, u0)
+        Alin_disc = np.identity(np.shape(Alin)[0]) + dt*Alin
+        Blin_disc = Blin*dt
+
+        return np.asarray(Alin_disc, dtype=float), np.asarray(Blin_disc, dtype=float)
+
     def replace_parameters(self, mat):
         """
 

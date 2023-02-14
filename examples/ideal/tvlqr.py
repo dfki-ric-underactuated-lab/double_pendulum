@@ -58,8 +58,6 @@ elif robot == "pendubot":
 #Qf = np.copy(Q)
 Qf = 100*np.diag([0.64, 0.56, 0.13, 0.037])
 
-horizon = 1
-
 ## init plant, simulator and controller
 plant = SymbolicDoublePendulum(model_pars=mpar)
 sim = Simulator(plant=plant)
@@ -67,8 +65,7 @@ sim = Simulator(plant=plant)
 controller = TVLQRController(
         model_pars=mpar,
         csv_path=csv_path,
-        torque_limit=torque_limit,
-        horizon=horizon)
+        torque_limit=torque_limit)
 
 controller.set_cost_parameters(Q=Q, R=R, Qf=Qf)
 

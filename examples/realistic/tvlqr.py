@@ -15,10 +15,10 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
 ## model parameters
-design = "design_A.0"
-model = "model_2.0"
-traj_model = "model_2.1"
-robot = "acrobot"
+design = "design_C.0"
+model = "model_3.0"
+traj_model = "model_3.1"
+robot = "pendubot"
 
 friction_compensation = True
 stabilization = "lqr"
@@ -88,7 +88,6 @@ elif robot == "pendubot":
     Q = 3.*np.diag([0.64, 0.64, 0.1, 0.1])
     R = np.eye(2)*0.82
 Qf = np.copy(Q)
-horizon = 100
 
 ## PID controller
 Kp = 10.
@@ -160,8 +159,7 @@ sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
 controller1 = TVLQRController(
         model_pars=mpar_con,
         csv_path=csv_path,
-        torque_limit=torque_limit,
-        horizon=horizon)
+        torque_limit=torque_limit)
 
 controller1.set_cost_parameters(Q=Q, R=R, Qf=Qf)
 
