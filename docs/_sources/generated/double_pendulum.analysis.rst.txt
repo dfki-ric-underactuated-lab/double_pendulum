@@ -33,6 +33,14 @@ double\_pendulum.analysis.benchmark\_scores
    :undoc-members:
    :show-inheritance:
 
+double\_pendulum.analysis.leaderboard
+--------------------------------------------
+
+.. automodule:: double_pendulum.analysis.leaderboard
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 double\_pendulum.analysis.utils
 --------------------------------------
 

@@ -11,7 +11,6 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
@@ -53,6 +52,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.analysis.benchmark">double_pendulum.analysis.benchmark</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.analysis.benchmark_plot">double_pendulum.analysis.benchmark_plot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.analysis.benchmark_scores">double_pendulum.analysis.benchmark_scores</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.analysis.leaderboard">double_pendulum.analysis.leaderboard</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.analysis.utils">double_pendulum.analysis.utils</a></li>
 </ul>
 </li>
@@ -232,6 +232,230 @@
 <dt class="sig sig-object py" id="double_pendulum.analysis.benchmark_scores.get_uresponsiveness_score">
 <span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.benchmark_scores.</span></span><span class="sig-name descname"><span class="pre">get_uresponsiveness_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark_scores.get_uresponsiveness_score" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
+
+</section>
+<section id="module-double_pendulum.analysis.leaderboard">
+<span id="double-pendulum-analysis-leaderboard"></span><h2>double_pendulum.analysis.leaderboard<a class="headerlink" href="#module-double_pendulum.analysis.leaderboard" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_energy">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_energy" title="Permalink to this definition"></a></dt>
+<dd><p>get_energy.</p>
+<p>Get the mechanical energy used during the swingup.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 4)
+states, units=[rad, rad, rad/s, rad/s]
+order=[angle1, angle2, velocity1, velocity2]</p>
+</dd>
+<dt><strong>U</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 2)
+actuations/motor torques
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>energy</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_integrated_torque">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_integrated_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_integrated_torque" title="Permalink to this definition"></a></dt>
+<dd><p>get_integrated_torque.</p>
+<p>Get the (discrete) time integral over the torque.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>T</strong><span class="classifier">array-like</span></dt><dd><p>time points, unit=[s]
+shape=(N,)</p>
+</dd>
+<dt><strong>U</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 2)
+actuations/motor torques
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>integrated torque</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_max_tau">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_max_tau</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_max_tau" title="Permalink to this definition"></a></dt>
+<dd><p>get_max_tau.</p>
+<p>Get the maximum torque used in the trajectory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>U</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 2)
+actuations/motor torques
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>maximum torque</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_swingup_time">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_swingup_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.01,</span> <span class="pre">0.01,</span> <span class="pre">0.01,</span> <span class="pre">0.01]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_to_stay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_swingup_time" title="Permalink to this definition"></a></dt>
+<dd><p>get_swingup_time.
+get the swingup time from a data_dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>T</strong><span class="classifier">array-like</span></dt><dd><p>time points, unit=[s]
+shape=(N,)</p>
+</dd>
+<dt><strong>X</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 4)
+states, units=[rad, rad, rad/s, rad/s]
+order=[angle1, angle2, velocity1, velocity2]</p>
+</dd>
+<dt><strong>U</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 2)
+actuations/motor torques
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+<dt><strong>eps</strong><span class="classifier">list</span></dt><dd><p>list with len(eps) = 4. The thresholds for the swingup to be
+successfull ([position, velocity])
+default = [1e-2, 1e-2, 1e-2, 1e-2]</p>
+</dd>
+<dt><strong>has_to_stay</strong><span class="classifier">bool</span></dt><dd><p>whether the pendulum has to stay upright until the end of the trajectory
+default=True</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>swingup time</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_tau_smoothness">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_tau_smoothness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_tau_smoothness" title="Permalink to this definition"></a></dt>
+<dd><p>get_tau_smoothness.</p>
+<p>Get the standard deviation of the changes in the torque signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>U</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 2)
+actuations/motor torques
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>torque smoothness (std of changes)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_torque_cost">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_torque_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[1.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">1.]])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_torque_cost" title="Permalink to this definition"></a></dt>
+<dd><p>get_torque_cost.</p>
+<p>Get the running cost torque with cost parameter R.
+The cost is normalized with the timestep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>U</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 2)
+actuations/motor torques
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+<dt><strong>R</strong><span class="classifier">numpy array</span></dt><dd><p>running cost weight matrix (2x2)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>torque cost</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.leaderboard_scores">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">leaderboard_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'energy':</span> <span class="pre">0.0,</span> <span class="pre">'integ_tau':</span> <span class="pre">0.1,</span> <span class="pre">'max_tau':</span> <span class="pre">0.1,</span> <span class="pre">'swingup_time':</span> <span class="pre">0.2,</span> <span class="pre">'tau_cost':</span> <span class="pre">0.0,</span> <span class="pre">'tau_smoothness':</span> <span class="pre">0.6}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'energy':</span> <span class="pre">1.0,</span> <span class="pre">'integ_tau':</span> <span class="pre">10.0,</span> <span class="pre">'max_tau':</span> <span class="pre">1.0,</span> <span class="pre">'swingup_time':</span> <span class="pre">10.0,</span> <span class="pre">'tau_cost':</span> <span class="pre">10.0,</span> <span class="pre">'tau_smoothness':</span> <span class="pre">1.0}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.leaderboard_scores" title="Permalink to this definition"></a></dt>
+<dd><p>leaderboard_scores.
+Compute leaderboard scores from data_dictionaries which will be loaded from
+data_paths.  Data can be either from simulation or experiments (but for
+comparability it should only be one).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>data_paths</strong><span class="classifier">dict</span></dt><dd><p>contains the names and paths to the trajectory data in the form:
+{controller1_name: {“csv_path”: data_path1, “name”: controller1_name, “username”: username1},</p>
+<blockquote>
+<div><p>controller2_name: {“csv_path”: data_path2, “name”: controller2_name, “username”: username2},
+…}</p>
+</div></blockquote>
+</dd>
+<dt><strong>save_to</strong><span class="classifier">string</span></dt><dd><p>path where the result will be saved as a csv file</p>
+</dd>
+<dt><strong>weights</strong><span class="classifier">dict</span></dt><dd><p>dictionary containing the weights for the different criteria in the
+form:
+{“swingup_time”: weight1,</p>
+<blockquote>
+<div><p>“max_tau”: weight2,
+“energy”: weight3,
+“integ_tau”: weight4,
+“tau_cost”: weight5,
+“tau_smoothness”: weight6}
+The weights should sum up to 1 for the final score to be in the range
+[0, 1].</p>
+</div></blockquote>
+</dd>
+<dt><strong>normalize</strong><span class="classifier">dict</span></dt><dd><p>dictionary containing normalization constants for the different
+criteria in the form:
+{“swingup_time”: norm1,</p>
+<blockquote>
+<div><p>“max_tau”: norm2,
+“energy”: norm3,
+“integ_tau”: norm4,
+“tau_cost”: norm5,
+“tau_smoothness”: norm6}
+The normalization constants should be the maximum values that can be
+achieved by the criteria so that after dividing by the norm the result
+is in the range [0, 1].</p>
+</div></blockquote>
+</dd>
+<dt><strong>simulation</strong><span class="classifier">bool</span></dt><dd><p>whether to load the simulaition trajectory data</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-double_pendulum.analysis.utils">
