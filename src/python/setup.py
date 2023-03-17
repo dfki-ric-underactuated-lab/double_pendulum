@@ -22,6 +22,7 @@ setup(
         'mini-cheetah-motor-driver-socketcan',
         'moteus',
         'inputs',
+        'tabulate',
 
         # c++ python bindings
         'cython',
