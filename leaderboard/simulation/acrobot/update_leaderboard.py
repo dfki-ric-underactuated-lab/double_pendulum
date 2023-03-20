@@ -14,7 +14,11 @@ from sim_parameters import mpar, dt, t_final, t0, x0, goal, integrator
 
 recompute_leaderboard = True
 
-existing_list = os.listdir("data")
+data_dir = "data"
+if not os.path.exists(data_dir):
+    os.makedirs(data_dir)
+
+existing_list = os.listdir(data_dir)
 for con in existing_list:
     if not os.path.exists(os.path.join("data", con, "sim_swingup.csv")):
         existing_list.remove(con)

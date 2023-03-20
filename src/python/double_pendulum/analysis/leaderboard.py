@@ -146,8 +146,6 @@ def get_swingup_time(T, X, eps=[1e-2, 1e-2, 1e-2, 1e-2], has_to_stay=True):
     float
         swingup time
     """
-    print("X", np.shape(X))
-    print("X.T[0]", np.shape(X.T[0]))
     goal = np.array([np.pi, 0.0, 0.0, 0.0])
 
     dist_x0 = np.abs(np.mod(X.T[0], 2 * np.pi) - goal[0])
