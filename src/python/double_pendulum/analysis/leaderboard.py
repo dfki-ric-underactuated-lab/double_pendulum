@@ -148,11 +148,11 @@ def get_swingup_time(T, X, eps=[1e-2, 1e-2, 1e-2, 1e-2], has_to_stay=True):
     """
     goal = np.array([np.pi, 0.0, 0.0, 0.0])
 
-    dist_x0 = np.abs(np.mod(X.T[0], 2 * np.pi) - goal[0])
+    dist_x0 = np.abs(np.mod(X.T[0] - goal[0] + np.pi, 2 * np.pi) - np.pi)
     ddist_x0 = np.where(dist_x0 < eps[0], 0.0, dist_x0)
     n_x0 = np.argwhere(ddist_x0 == 0.0)
 
-    dist_x1 = np.abs(np.mod(X.T[1], 2 * np.pi) - goal[1])
+    dist_x1 = np.abs(np.mod(X.T[1] - goal[1] + np.pi, 2 * np.pi) - np.pi)
     ddist_x1 = np.where(dist_x1 < eps[1], 0.0, dist_x1)
     n_x1 = np.argwhere(ddist_x1 == 0.0)
 

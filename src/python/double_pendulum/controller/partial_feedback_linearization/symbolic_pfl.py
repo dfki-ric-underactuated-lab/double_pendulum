@@ -76,20 +76,22 @@ class SymbolicPFLController(AbstractController):
             - "q1"
         (Default value="energy")
     """
-    def __init__(self,
-                 mass=[1.0, 1.0],
-                 length=[0.5, 0.5],
-                 com=[0.5, 0.5],
-                 damping=[0.1, 0.1],
-                 gravity=9.81,
-                 coulomb_fric=[0.0, 0.0],
-                 inertia=[None, None],
-                 torque_limit=[np.inf, np.inf],
-                 model_pars=None,
-                 robot="acrobot",
-                 pfl_method="collocated",
-                 reference="energy"):
 
+    def __init__(
+        self,
+        mass=[1.0, 1.0],
+        length=[0.5, 0.5],
+        com=[0.5, 0.5],
+        damping=[0.1, 0.1],
+        gravity=9.81,
+        coulomb_fric=[0.0, 0.0],
+        inertia=[None, None],
+        torque_limit=[np.inf, np.inf],
+        model_pars=None,
+        robot="acrobot",
+        pfl_method="collocated",
+        reference="energy",
+    ):
         super().__init__()
 
         self.mass = mass
@@ -136,14 +138,16 @@ class SymbolicPFLController(AbstractController):
                 self.eliminate_ind = 0
                 self.desired_ind = 1
 
-        self.plant = SymbolicDoublePendulum(mass=self.mass,
-                                            length=self.length,
-                                            com=self.com,
-                                            damping=self.damping,
-                                            gravity=self.gravity,
-                                            coulomb_fric=self.coulomb_fric,
-                                            inertia=self.inertia,
-                                            torque_limit=self.torque_limit)
+        self.plant = SymbolicDoublePendulum(
+            mass=self.mass,
+            length=self.length,
+            com=self.com,
+            damping=self.damping,
+            gravity=self.gravity,
+            coulomb_fric=self.coulomb_fric,
+            inertia=self.inertia,
+            torque_limit=self.torque_limit,
+        )
 
         M11, M12, M21, M22 = smp.symbols("M11 M12 M21 M22")
         C11, C12, C21, C22 = smp.symbols("C11 C12 C21 C22")
@@ -155,17 +159,17 @@ class SymbolicPFLController(AbstractController):
         G = smp.Matrix([G1, G2])
         F = smp.Matrix([F1, F2])
 
-        eom = M*self.plant.qdd + C*self.plant.qd - G - F - self.plant.u
-        eom = eom.subs(self.plant.u[self.passive_motor_ind], 0.)
-        qdd_el = smp.solve(eom[self.passive_motor_ind],
-                           self.plant.xd[2+self.eliminate_ind])[0]
+        eom = M * self.plant.qdd + C * self.plant.qd - G - F - self.plant.u
+        eom = eom.subs(self.plant.u[self.passive_motor_ind], 0.0)
+        qdd_el = smp.solve(
+            eom[self.passive_motor_ind], self.plant.xd[2 + self.eliminate_ind]
+        )[0]
         u_eq = eom[self.active_motor_ind].subs(
-            self.plant.xd[2+self.eliminate_ind],
-            qdd_el)
+            self.plant.xd[2 + self.eliminate_ind], qdd_el
+        )
         self.u_out = smp.solve(u_eq, self.plant.u[self.active_motor_ind])[0]
 
-        self.g1, self.g2, self.gd1, self.gd2 = smp.symbols(
-            "g1 g2 \dot{g}_1 \dot{g}_2")
+        self.g1, self.g2, self.gd1, self.gd2 = smp.symbols("g1 g2 \dot{g}_1 \dot{g}_2")
         self.goal = smp.Matrix([self.g1, self.g2, self.gd1, self.gd2])
         energy = self.plant.symbolic_total_energy()
 
@@ -175,25 +179,31 @@ class SymbolicPFLController(AbstractController):
         desired_energy = desired_energy.subs(self.plant.x[3], self.goal[3])
 
         if reference == "energy":
-            ubar = self.plant.x[2+self.eliminate_ind]*(energy - desired_energy)  # todo check index for non-collocated
-            #ubar = self.plant.x[2]*(energy - desired_energy)  # todo check index for non-collocated
+            ubar = self.plant.x[2 + self.eliminate_ind] * (
+                energy - desired_energy
+            )  # todo check index for non-collocated
+            # ubar = self.plant.x[2]*(energy - desired_energy)  # todo check index for non-collocated
         elif reference == "energysat":
-            ubar = smp.functions.elementary.hyperbolic.tanh(self.plant.x[2+self.eliminate_ind]*(energy - desired_energy))
+            ubar = smp.functions.elementary.hyperbolic.tanh(
+                self.plant.x[2 + self.eliminate_ind] * (energy - desired_energy)
+            )
         elif reference == "q1sat":
-            ubar = smp.functions.elementary.hyperbolic.tanh(self.plant.x[2+self.eliminate_ind])
+            ubar = smp.functions.elementary.hyperbolic.tanh(
+                self.plant.x[2 + self.eliminate_ind]
+            )
         elif reference == "q1":
             ubar = self.plant.x[self.eliminate_ind] - self.goal[self.eliminate_ind]
 
         self.k1s, self.k2s, self.k3s = smp.symbols("k1 k2 k3")
 
-        qdd_des = (-self.k1s*(self.plant.x[self.desired_ind] -
-                              self.goal[self.desired_ind])
-                   - self.k2s*(self.plant.x[2+self.desired_ind] -
-                               self.goal[2+self.desired_ind])
-                   + self.k3s*ubar)  # + F[1] + F[0]
+        qdd_des = (
+            -self.k1s * (self.plant.x[self.desired_ind] - self.goal[self.desired_ind])
+            - self.k2s
+            * (self.plant.x[2 + self.desired_ind] - self.goal[2 + self.desired_ind])
+            + self.k3s * ubar
+        )  # + F[1] + F[0]
 
-        self.u_out = self.u_out.subs(self.plant.xd[2+self.desired_ind],
-                                     qdd_des)
+        self.u_out = self.u_out.subs(self.plant.xd[2 + self.desired_ind], qdd_des)
 
         M_plant = self.plant.symbolic_mass_matrix()
         C_plant = self.plant.symbolic_coriolis_matrix()
@@ -258,7 +268,7 @@ class SymbolicPFLController(AbstractController):
         self.k2 = pars[1]
         self.k3 = pars[2]
 
-    def set_goal(self, x=[np.pi, 0., 0., 0.]):
+    def set_goal(self, x=[np.pi, 0.0, 0.0, 0.0]):
         """set_goal.
         Set goal for the controller.
 
@@ -314,16 +324,21 @@ class SymbolicPFLController(AbstractController):
         pos = np.copy(x[:2])
         vel = np.copy(x[2:])
 
-        pos[1] = (pos[1] + np.pi) % (2*np.pi) - np.pi
-        pos[0] = pos[0] % (2*np.pi)
+        pos[1] = (pos[1] + np.pi) % (2 * np.pi) - np.pi
+        pos[0] = pos[0] % (2 * np.pi)
 
-        u_out = self.u_out_la(pos[0], pos[1], vel[0], vel[1])
+        if np.abs(pos[0]) < 0.01 and pos[1] < 0.01 and vel[0] < 0.01 and vel[1] < 0.01:
+            u_out = self.torque_limit[self.active_motor_ind]
+        else:
+            u_out = self.u_out_la(pos[0], pos[1], vel[0], vel[1])
 
         # print(u_out, self.active_motor_ind)
-        u_out = np.clip(u_out,
-                        -self.torque_limit[self.active_motor_ind],
-                        self.torque_limit[self.active_motor_ind])
-        u = [0., 0.]
+        u_out = np.clip(
+            u_out,
+            -self.torque_limit[self.active_motor_ind],
+            self.torque_limit[self.active_motor_ind],
+        )
+        u = [0.0, 0.0]
         u[self.active_motor_ind] = u_out
         # print(x, u)
 
@@ -345,39 +360,40 @@ class SymbolicPFLController(AbstractController):
         np.savetxt(os.path.join(save_dir, "energy_log.csv"), self.en)
 
         par_dict = {
-                "mass1" : self.plant.m[0],
-                "mass2" : self.plant.m[1],
-                "length1" : self.plant.l[0],
-                "length2" : self.plant.l[1],
-                "com1" : self.plant.com[0],
-                "com2" : self.plant.com[1],
-                "damping1" : self.damping[0],
-                "damping2" : self.damping[1],
-                "cfric1" : self.plant.coulomb_fric[0],
-                "cfric2" : self.plant.coulomb_fric[1],
-                "gravity" : self.plant.g,
-                "inertia1" : self.plant.I[0],
-                "inertia2" : self.plant.I[1],
-                "Ir" : self.plant.Ir,
-                "gr" : self.plant.gr,
-                "torque_limit1" : self.torque_limit[0],
-                "torque_limit2" : self.torque_limit[1],
-                "k1" : self.k1,
-                "k2" : self.k2,
-                "k3" : self.k3,
-                "desired_x1" : self.desired_x[0],
-                "desired_x2" : self.desired_x[1],
-                "desired_x3" : self.desired_x[2],
-                "desired_x4" : self.desired_x[3],
-                "desired_energy" : float(self.desired_energy),
-                "robot" : self.robot,
-                "pfl_method" : self.pfl_method,
-                "reference" : self.reference,
+            "mass1": self.plant.m[0],
+            "mass2": self.plant.m[1],
+            "length1": self.plant.l[0],
+            "length2": self.plant.l[1],
+            "com1": self.plant.com[0],
+            "com2": self.plant.com[1],
+            "damping1": self.damping[0],
+            "damping2": self.damping[1],
+            "cfric1": self.plant.coulomb_fric[0],
+            "cfric2": self.plant.coulomb_fric[1],
+            "gravity": self.plant.g,
+            "inertia1": self.plant.I[0],
+            "inertia2": self.plant.I[1],
+            "Ir": self.plant.Ir,
+            "gr": self.plant.gr,
+            "torque_limit1": self.torque_limit[0],
+            "torque_limit2": self.torque_limit[1],
+            "k1": self.k1,
+            "k2": self.k2,
+            "k3": self.k3,
+            "desired_x1": self.desired_x[0],
+            "desired_x2": self.desired_x[1],
+            "desired_x3": self.desired_x[2],
+            "desired_x4": self.desired_x[3],
+            "desired_energy": float(self.desired_energy),
+            "robot": self.robot,
+            "pfl_method": self.pfl_method,
+            "reference": self.reference,
         }
 
-        with open(os.path.join(save_dir, "controller_pfl_symbolic_parameters.yml"), 'w') as f:
+        with open(
+            os.path.join(save_dir, "controller_pfl_symbolic_parameters.yml"), "w"
+        ) as f:
             yaml.dump(par_dict, f)
-
 
 
 class SymbolicPFLAndLQRController(AbstractController):
@@ -445,20 +461,22 @@ class SymbolicPFLAndLQRController(AbstractController):
             - "q1"
         (Default value="energy")
     """
-    def __init__(self,
-                 mass=[1.0, 1.0],
-                 length=[0.5, 0.5],
-                 com=[0.5, 0.5],
-                 damping=[0.1, 0.1],
-                 gravity=9.81,
-                 coulomb_fric=[0.0, 0.0],
-                 inertia=[None, None],
-                 torque_limit=[np.inf, np.inf],
-                 model_pars=None,
-                 robot="acrobot",
-                 pfl_method="collocated",
-                 reference="energy"):
 
+    def __init__(
+        self,
+        mass=[1.0, 1.0],
+        length=[0.5, 0.5],
+        com=[0.5, 0.5],
+        damping=[0.1, 0.1],
+        gravity=9.81,
+        coulomb_fric=[0.0, 0.0],
+        inertia=[None, None],
+        torque_limit=[np.inf, np.inf],
+        model_pars=None,
+        robot="acrobot",
+        pfl_method="collocated",
+        reference="energy",
+    ):
         super().__init__()
 
         self.mass = mass
@@ -493,16 +511,19 @@ class SymbolicPFLAndLQRController(AbstractController):
             torque_limit=self.torque_limit,
             robot=robot,
             pfl_method=pfl_method,
-            reference=reference)
+            reference=reference,
+        )
 
-        self.lqr_controller = LQRController(mass=self.mass,
-                                            length=self.length,
-                                            com=self.com,
-                                            damping=self.damping,
-                                            gravity=self.gravity,
-                                            coulomb_fric=self.coulomb_fric,
-                                            inertia=self.inertia,
-                                            torque_limit=self.torque_limit)
+        self.lqr_controller = LQRController(
+            mass=self.mass,
+            length=self.length,
+            com=self.com,
+            damping=self.damping,
+            gravity=self.gravity,
+            coulomb_fric=self.coulomb_fric,
+            inertia=self.inertia,
+            torque_limit=self.torque_limit,
+        )
 
         self.active_controller = "energy"
         self.en = []

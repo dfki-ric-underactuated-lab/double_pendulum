@@ -26,7 +26,7 @@ for con in existing_list:
 for file in os.listdir("."):
     if file[:4] == "con_":
         if file[4:-3] in existing_list:
-            print(f"Controller {file} already registered in leaderboad")
+            print(f"Simulation data for {file} found.")
         else:
             print(f"Simulating new controller {file}")
 
