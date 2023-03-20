@@ -19,8 +19,8 @@
   <maintainer>Felix Wiebe/felix.wiebe@dfki.de</maintainer>
   <maintainer>Mahdi Javadi/mahdi.jahvadi@dfki.de</maintainer>
   <license>BSD</license>
-  <url>https://git.hb.dfki.de/underactuated-robotics/release_version/caprr-release-version</url>
-  <logo>https://git.hb.dfki.de/underactuated-robotics/release_version/caprr-release-version/-/blob/main/docs/figures/chaotic_freefall_long_exposure_shot.jpg</logo>
+  <url>https://github.com/dfki-ric-underactuated-lab/double_pendulum</url>
+  <logo>https://github.com/dfki-ric-underactuated-lab/double_pendulum/blob/main/docs/figures/chaotic_freefall_long_exposure_shot.jpg</logo>
   <keywords>
     <keyword>optimal control</keyword>
     <keyword>underactuation</keyword>
