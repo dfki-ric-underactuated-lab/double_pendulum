@@ -12,7 +12,7 @@ from double_pendulum.analysis.leaderboard import leaderboard_scores
 from sim_parameters import mpar, dt, t_final, t0, x0, goal, integrator
 
 
-recompute_leaderboard = True
+recompute_leaderboard = False
 
 data_dir = "data"
 if not os.path.exists(data_dir):
