@@ -94,13 +94,13 @@ def leaderboard_scores(
         leaderboard_data.append(
             [
                 d["name"],
-                str(swingup_time),
-                str(energy),
-                str(max_tau),
-                str(integ_tau),
-                str(tau_cost),
-                str(tau_smoothness),
-                str(score),
+                str(round(swingup_time, 2)),
+                str(round(energy, 2)),
+                str(round(max_tau, 2)),
+                str(round(integ_tau, 2)),
+                str(round(tau_cost, 2)),
+                str(round(tau_smoothness, 3)),
+                str(round(score, 3)),
                 d["username"],
             ]
         )
