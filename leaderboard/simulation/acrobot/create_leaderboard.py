@@ -24,11 +24,12 @@ parser.add_argument(
     required=False,
 )
 parser.add_argument(
-    "--force-recoumpute",
+    "--force-recompute",
     dest="recompute",
     help="Whether to force the recomputation of the leaderboard even without new data.",
     default=False,
     required=False,
+    type=bool,
 )
 
 data_dir = parser.parse_args().data_dir
@@ -100,11 +101,17 @@ if recompute_leaderboard:
         if f[:4] == "con_":
             mod = importlib.import_module(f[:-3])
             if hasattr(mod, "leaderboard_config"):
-                if os.path.exists(mod.leaderboard_config["csv_path"]):
+                if os.path.exists(
+                    os.path.join(data_dir, mod.leaderboard_config["csv_path"])
+                ):
                     print(
                         f"Found leaderboard_config and data for {mod.leaderboard_config['name']}"
                     )
-                    data_paths[mod.leaderboard_config["name"]] = os.path.join(data_dir, mod.leaderboard_config["csv_path"])
+                    conf = mod.leaderboard_config
+                    conf["csv_path"] = os.path.join(
+                        data_dir, mod.leaderboard_config["csv_path"]
+                    )
+                    data_paths[mod.leaderboard_config["name"]] = conf
 
     leaderboard_scores(
         data_paths,
