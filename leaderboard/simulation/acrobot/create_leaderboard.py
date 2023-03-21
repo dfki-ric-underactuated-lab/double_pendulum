@@ -1,5 +1,6 @@
 import os
 import importlib
+import argparse
 import pandas
 import numpy as np
 
@@ -14,16 +15,25 @@ from double_pendulum.analysis.leaderboard import leaderboard_scores
 
 from sim_parameters import mpar, dt, t_final, t0, x0, goal, integrator
 
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--data-dir",
+    dest="data_dir",
+    help="Directory for saving data. Existing data will be kept.",
+    default="data",
+    required=False,
+)
 
 recompute_leaderboard = False
 
-data_dir = "data"
+data_dir = parser.parse_args().data_dir
+
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
 
 existing_list = os.listdir(data_dir)
 for con in existing_list:
-    if not os.path.exists(os.path.join("data", con, "sim_swingup.csv")):
+    if not os.path.exists(os.path.join(data_dir, con, "sim_swingup.csv")):
         existing_list.remove(con)
 
 for file in os.listdir("."):
@@ -36,7 +46,7 @@ for file in os.listdir("."):
             controller_arg = file[:-3]
             controller_name = controller_arg[4:]
 
-            save_dir = f"data/{controller_name}"
+            save_dir = os.path.join(data_dir, f"{controller_name}")
             if not os.path.exists(save_dir):
                 os.makedirs(save_dir)
 
@@ -77,7 +87,7 @@ for file in os.listdir("."):
 
 if recompute_leaderboard:
     src_dir = "."
-    save_to = "data/leaderboard.csv"
+    save_to = os.path.join(data_dir, "leaderboard.csv")
     data_paths = {}
 
     for f in os.listdir(src_dir):
