@@ -1,18 +1,21 @@
 import os
 import importlib
 import pandas
+import numpy as np
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.utils.csv_trajectory import save_trajectory
-#from double_pendulum.analysis.leaderboard_utils import compute_leaderboard
+from double_pendulum.utils.plotting import plot_timeseries
+
+# from double_pendulum.analysis.leaderboard_utils import compute_leaderboard
 from double_pendulum.analysis.leaderboard import leaderboard_scores
 
 from sim_parameters import mpar, dt, t_final, t0, x0, goal, integrator
 
 
-recompute_leaderboard = True
+recompute_leaderboard = False
 
 data_dir = "data"
 if not os.path.exists(data_dir):
@@ -34,26 +37,47 @@ for file in os.listdir("."):
             controller_name = controller_arg[4:]
 
             save_dir = f"data/{controller_name}"
+            if not os.path.exists(save_dir):
+                os.makedirs(save_dir)
 
             imp = importlib.import_module(controller_arg)
 
             controller = imp.controller
-
             plant = SymbolicDoublePendulum(model_pars=mpar)
-
             sim = Simulator(plant=plant)
 
-            T, X, U = sim.simulate(t0=t0, x0=x0, tf=t_final, dt=dt, controller=controller, integrator=integrator)
+            T, X, U = sim.simulate_and_animate(
+                t0=t0,
+                x0=x0,
+                tf=t_final,
+                dt=dt,
+                controller=controller,
+                integrator=integrator,
+                save_video=True,
+                video_name=os.path.join(save_dir, "sim_video"),
+            )
 
-            if not os.path.exists(save_dir):
-                os.makedirs(save_dir)
-            save_trajectory(os.path.join(save_dir, "sim_swingup.csv"), T=T, X_meas=X, U_con=U)
+            save_trajectory(
+                os.path.join(save_dir, "sim_swingup.csv"), T=T, X_meas=X, U_con=U
+            )
+
+            plot_timeseries(
+                T,
+                X,
+                U,
+                X_meas=sim.meas_x_values,
+                pos_y_lines=[-np.pi, 0.0, np.pi],
+                vel_y_lines=[0.0],
+                tau_y_lines=[-mpar.tl[1], 0.0, mpar.tl[1]],
+                save_to=os.path.join(save_dir, "timeseries"),
+                show=False,
+            )
 
             recompute_leaderboard = True
 
 if recompute_leaderboard:
-    src_dir="."
-    save_to="data/leaderboard.csv"
+    src_dir = "."
+    save_to = "data/leaderboard.csv"
     data_paths = {}
 
     for f in os.listdir(src_dir):
@@ -61,7 +85,9 @@ if recompute_leaderboard:
             mod = importlib.import_module(f[:-3])
             if hasattr(mod, "leaderboard_config"):
                 if os.path.exists(mod.leaderboard_config["csv_path"]):
-                    print(f"Found leaderboard_config and data for {mod.leaderboard_config['name']}")
+                    print(
+                        f"Found leaderboard_config and data for {mod.leaderboard_config['name']}"
+                    )
                     data_paths[mod.leaderboard_config["name"]] = mod.leaderboard_config
 
     leaderboard_scores(
@@ -86,4 +112,8 @@ if recompute_leaderboard:
         },
     )
 
-    print(pandas.read_csv(save_to).sort_values(by=["Real AI Score"], ascending=False).to_markdown(index=False))
+    print(
+        pandas.read_csv(save_to)
+        .sort_values(by=["Real AI Score"], ascending=False)
+        .to_markdown(index=False)
+    )
