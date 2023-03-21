@@ -12,7 +12,7 @@ from sim_parameters import mpar, goal, design, robot
 
 name = "ilqr_riccati_lqr"
 leaderboard_config = {
-    "csv_path": "data/" + name + "/sim_swingup.csv",
+    "csv_path": name + "/sim_swingup.csv",
     "name": name,
     "username": "fwiebe",
 }

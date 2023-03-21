@@ -12,7 +12,7 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from sim_parameters import mpar, dt, t_final, t0, x0, goal, integrator, design, model, robot
 
 name = "ilqr_ilqrmpc_lqr"
-leaderboard_config = {"csv_path": "data/" + name + "/sim_swingup.csv",
+leaderboard_config = {"csv_path": name + "/sim_swingup.csv",
                       "name": name,
                       "username": "fwiebe"}
 

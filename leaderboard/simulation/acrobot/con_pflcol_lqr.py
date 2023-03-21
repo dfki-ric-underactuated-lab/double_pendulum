@@ -7,7 +7,7 @@ from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl impo
 from sim_parameters import mpar, dt, t_final, t0, x0, goal, integrator, design, model, robot
 
 name = "pflcol_lqr"
-leaderboard_config = {"csv_path": "data/" + name + "/sim_swingup.csv",
+leaderboard_config = {"csv_path": name + "/sim_swingup.csv",
                       "name": name,
                       "username": "fwiebe"}
 

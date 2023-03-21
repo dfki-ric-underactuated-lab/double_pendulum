@@ -7,7 +7,7 @@ from double_pendulum.controller.tvlqr.tvlqr_controller import TVLQRController
 from sim_parameters import mpar, dt, t_final, t0, x0, goal, integrator, design, model, robot
 
 name = "ilqr_tvlqr"
-leaderboard_config = {"csv_path": "data/" + name + "/sim_swingup.csv",
+leaderboard_config = {"csv_path": name + "/sim_swingup.csv",
                       "name": name,
                       "username": "fwiebe"}
 
