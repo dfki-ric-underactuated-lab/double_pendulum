@@ -317,7 +317,7 @@ units=[Nm]</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_swingup_time">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_swingup_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.01,</span> <span class="pre">0.01,</span> <span class="pre">0.01,</span> <span class="pre">0.01]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_to_stay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_swingup_time" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_swingup_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.01,</span> <span class="pre">0.01,</span> <span class="pre">0.01,</span> <span class="pre">0.01]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_to_stay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'height'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_swingup_time" title="Permalink to this definition"></a></dt>
 <dd><p>get_swingup_time.
 get the swingup time from a data_dict.</p>
 <dl class="field-list simple">
@@ -386,6 +386,9 @@ The cost is normalized with the timestep.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
+<dt><strong>T</strong><span class="classifier">array-like</span></dt><dd><p>time points, unit=[s]
+shape=(N,)</p>
+</dd>
 <dt><strong>U</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 2)
 actuations/motor torques
 order=[u1, u2],
@@ -405,8 +408,37 @@ units=[Nm]</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_velocity_cost">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_velocity_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[1.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">1.]])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_velocity_cost" title="Permalink to this definition"></a></dt>
+<dd><p>get_torque_cost.</p>
+<p>Get the running velocity cost with cost matrix Q.
+The cost is normalized with the timestep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>T</strong><span class="classifier">array-like</span></dt><dd><p>time points, unit=[s]
+shape=(N,)</p>
+</dd>
+<dt><strong>X</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 4)
+states, units=[rad, rad, rad/s, rad/s]
+order=[angle1, angle2, velocity1, velocity2]</p>
+</dd>
+<dt><strong>Q</strong><span class="classifier">numpy array</span></dt><dd><p>running cost weight matrix (2x2)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>torque cost</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.leaderboard_scores">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">leaderboard_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'energy':</span> <span class="pre">0.0,</span> <span class="pre">'integ_tau':</span> <span class="pre">0.1,</span> <span class="pre">'max_tau':</span> <span class="pre">0.1,</span> <span class="pre">'swingup_time':</span> <span class="pre">0.2,</span> <span class="pre">'tau_cost':</span> <span class="pre">0.0,</span> <span class="pre">'tau_smoothness':</span> <span class="pre">0.6}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'energy':</span> <span class="pre">1.0,</span> <span class="pre">'integ_tau':</span> <span class="pre">10.0,</span> <span class="pre">'max_tau':</span> <span class="pre">1.0,</span> <span class="pre">'swingup_time':</span> <span class="pre">10.0,</span> <span class="pre">'tau_cost':</span> <span class="pre">10.0,</span> <span class="pre">'tau_smoothness':</span> <span class="pre">1.0}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.leaderboard_scores" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">leaderboard_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'energy':</span> <span class="pre">0.0,</span> <span class="pre">'integ_tau':</span> <span class="pre">0.1,</span> <span class="pre">'max_tau':</span> <span class="pre">0.1,</span> <span class="pre">'swingup_time':</span> <span class="pre">0.2,</span> <span class="pre">'tau_cost':</span> <span class="pre">0.0,</span> <span class="pre">'tau_smoothness':</span> <span class="pre">0.6}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'energy':</span> <span class="pre">1.0,</span> <span class="pre">'integ_tau':</span> <span class="pre">10.0,</span> <span class="pre">'max_tau':</span> <span class="pre">1.0,</span> <span class="pre">'swingup_time':</span> <span class="pre">10.0,</span> <span class="pre">'tau_cost':</span> <span class="pre">10.0,</span> <span class="pre">'tau_smoothness':</span> <span class="pre">1.0}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.leaderboard_scores" title="Permalink to this definition"></a></dt>
 <dd><p>leaderboard_scores.
 Compute leaderboard scores from data_dictionaries which will be loaded from
 data_paths.  Data can be either from simulation or experiments (but for
@@ -431,7 +463,8 @@ form:
 “energy”: weight3,
 “integ_tau”: weight4,
 “tau_cost”: weight5,
-“tau_smoothness”: weight6}
+“tau_smoothness”: weight6,
+“velocity_cost” : weight7}
 The weights should sum up to 1 for the final score to be in the range
 [0, 1].</p>
 </div></blockquote>
@@ -444,13 +477,16 @@ criteria in the form:
 “energy”: norm3,
 “integ_tau”: norm4,
 “tau_cost”: norm5,
-“tau_smoothness”: norm6}
+“tau_smoothness”: norm6,
+“velocity_cost”: norm7}
 The normalization constants should be the maximum values that can be
 achieved by the criteria so that after dividing by the norm the result
 is in the range [0, 1].</p>
 </div></blockquote>
 </dd>
 <dt><strong>simulation</strong><span class="classifier">bool</span></dt><dd><p>whether to load the simulaition trajectory data</p>
+</dd>
+<dt><strong>link_base</strong><span class="classifier">string</span></dt><dd><p>base-link for hosting data. Not needed for local execution</p>
 </dd>
 </dl>
 </dd>
