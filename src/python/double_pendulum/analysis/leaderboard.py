@@ -1,11 +1,13 @@
 import numpy as np
 
 from double_pendulum.utils.csv_trajectory import load_trajectory_full
+from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 
 
 def leaderboard_scores(
     data_paths,
     save_to,
+    mpar,
     weights={
         "swingup_time": 0.2,
         "max_tau": 0.1,
@@ -22,6 +24,7 @@ def leaderboard_scores(
         "tau_cost": 10.0,
         "tau_smoothness": 1.0,
     },
+    link_base="",
 ):
     """leaderboard_scores.
     Compute leaderboard scores from data_dictionaries which will be loaded from
@@ -45,7 +48,8 @@ def leaderboard_scores(
          "energy": weight3,
          "integ_tau": weight4,
          "tau_cost": weight5,
-         "tau_smoothness": weight6}
+         "tau_smoothness": weight6,
+         "velocity_cost" : weight7}
          The weights should sum up to 1 for the final score to be in the range
          [0, 1].
     normalize : dict
@@ -56,12 +60,15 @@ def leaderboard_scores(
          "energy": norm3,
          "integ_tau": norm4,
          "tau_cost": norm5,
-         "tau_smoothness": norm6}
+         "tau_smoothness": norm6,
+         "velocity_cost": norm7}
          The normalization constants should be the maximum values that can be
          achieved by the criteria so that after dividing by the norm the result
          is in the range [0, 1].
     simulation : bool
         whether to load the simulaition trajectory data
+    link_base : string
+        base-link for hosting data. Not needed for local execution
     """
 
     leaderboard_data = []
@@ -73,49 +80,67 @@ def leaderboard_scores(
         X = data_dict["X_meas"]
         U = data_dict["U_con"]
 
-        swingup_time = get_swingup_time(T, X)
+        swingup_time = get_swingup_time(T=T, X=X, has_to_stay=True, mpar=mpar, method="height", height=0.9)
         max_tau = get_max_tau(U)
         energy = get_energy(X, U)
         integ_tau = get_integrated_torque(T, U)
         tau_cost = get_torque_cost(T, U)
         tau_smoothness = get_tau_smoothness(U)
+        velocity_cost = get_velocity_cost(T, X)
 
-        score = (
+        success = int(swingup_time < T[-1])
+
+        score = success * (
             weights["swingup_time"] * swingup_time / normalize["swingup_time"]
             + weights["max_tau"] * max_tau / normalize["max_tau"]
             + weights["energy"] * energy / normalize["energy"]
             + weights["integ_tau"] * integ_tau / normalize["integ_tau"]
             + weights["tau_cost"] * tau_cost / normalize["tau_cost"]
             + weights["tau_smoothness"] * tau_smoothness / normalize["tau_smoothness"]
+            + weights["velocity_cost"] * velocity_cost / normalize["velocity_cost"]
         )
 
         score = 1 - score
 
-        leaderboard_data.append(
-            [
-                d["name"],
-                str(round(swingup_time, 2)),
-                str(round(energy, 2)),
-                str(round(max_tau, 2)),
-                str(round(integ_tau, 2)),
-                str(round(tau_cost, 2)),
-                str(round(tau_smoothness, 3)),
-                str(round(score, 3)),
-                d["username"],
-            ]
-        )
+        append_data = [
+            d["name"],
+            str(bool(success)),
+            str(round(swingup_time, 2)),
+            str(round(energy, 2)),
+            str(round(max_tau, 2)),
+            str(round(integ_tau, 2)),
+            str(round(tau_cost, 2)),
+            str(round(tau_smoothness, 3)),
+            str(round(velocity_cost, 2)),
+            str(round(score, 3)),
+            d["username"],
+        ]
+
+        if link_base != "":
+            controller_link = link_base + d["name"]
+
+            data_link = "[data](" + controller_link + "/sim_swingup.csv)"
+            plot_link = "[plot](" + controller_link + "/timeseries.png)"
+            video_link = "[video](" + controller_link + "/sim_video.gif)"
+            append_data.append(data_link + " " + plot_link + " " + video_link)
+
+        leaderboard_data.append(append_data)
+
+    header = "Controller,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Real AI Score,Username"
+    if link_base != "":
+        header += ",Data"
 
     np.savetxt(
         save_to,
         leaderboard_data,
-        header="Controller,Swingup Time,Energy,Max. Torque,Integrated Torque,Torque Cost,Torque Smoothness,Real AI Score,Username",
+        header=header,
         delimiter=",",
         fmt="%s",
         comments="",
     )
 
 
-def get_swingup_time(T, X, eps=[1e-2, 1e-2, 1e-2, 1e-2], has_to_stay=True):
+def get_swingup_time(T, X, eps=[1e-2, 1e-2, 1e-2, 1e-2], has_to_stay=True, mpar=None, method="height", height=0.9):
     """get_swingup_time.
     get the swingup time from a data_dict.
 
@@ -146,40 +171,64 @@ def get_swingup_time(T, X, eps=[1e-2, 1e-2, 1e-2, 1e-2], has_to_stay=True):
     float
         swingup time
     """
-    goal = np.array([np.pi, 0.0, 0.0, 0.0])
+    if method == "epsilon":
+        goal = np.array([np.pi, 0.0, 0.0, 0.0])
 
-    dist_x0 = np.abs(np.mod(X.T[0] - goal[0] + np.pi, 2 * np.pi) - np.pi)
-    ddist_x0 = np.where(dist_x0 < eps[0], 0.0, dist_x0)
-    n_x0 = np.argwhere(ddist_x0 == 0.0)
+        dist_x0 = np.abs(np.mod(X.T[0] - goal[0] + np.pi, 2 * np.pi) - np.pi)
+        ddist_x0 = np.where(dist_x0 < eps[0], 0.0, dist_x0)
+        n_x0 = np.argwhere(ddist_x0 == 0.0)
 
-    dist_x1 = np.abs(np.mod(X.T[1] - goal[1] + np.pi, 2 * np.pi) - np.pi)
-    ddist_x1 = np.where(dist_x1 < eps[1], 0.0, dist_x1)
-    n_x1 = np.argwhere(ddist_x1 == 0.0)
+        dist_x1 = np.abs(np.mod(X.T[1] - goal[1] + np.pi, 2 * np.pi) - np.pi)
+        ddist_x1 = np.where(dist_x1 < eps[1], 0.0, dist_x1)
+        n_x1 = np.argwhere(ddist_x1 == 0.0)
 
-    dist_x2 = np.abs(X.T[2] - goal[2])
-    ddist_x2 = np.where(dist_x2 < eps[2], 0.0, dist_x2)
-    n_x2 = np.argwhere(ddist_x2 == 0.0)
+        dist_x2 = np.abs(X.T[2] - goal[2])
+        ddist_x2 = np.where(dist_x2 < eps[2], 0.0, dist_x2)
+        n_x2 = np.argwhere(ddist_x2 == 0.0)
 
-    dist_x3 = np.abs(X.T[3] - goal[3])
-    ddist_x3 = np.where(dist_x3 < eps[3], 0.0, dist_x3)
-    n_x3 = np.argwhere(ddist_x3 == 0.0)
+        dist_x3 = np.abs(X.T[3] - goal[3])
+        ddist_x3 = np.where(dist_x3 < eps[3], 0.0, dist_x3)
+        n_x3 = np.argwhere(ddist_x3 == 0.0)
 
-    n = np.intersect1d(n_x0, n_x1)
-    n = np.intersect1d(n, n_x2)
-    n = np.intersect1d(n, n_x3)
+        n = np.intersect1d(n_x0, n_x1)
+        n = np.intersect1d(n, n_x2)
+        n = np.intersect1d(n, n_x3)
 
-    time_index = len(T) - 1
-    if has_to_stay:
-        if len(n) > 0:
-            for i in range(len(n) - 2, 0, -1):
-                if n[i] + 1 == n[i + 1]:
-                    time_index = n[i]
+        time_index = len(T) - 1
+        if has_to_stay:
+            if len(n) > 0:
+                for i in range(len(n) - 2, 0, -1):
+                    if n[i] + 1 == n[i + 1]:
+                        time_index = n[i]
+                    else:
+                        break
+        else:
+            if len(n) > 0:
+                time_index = n[0]
+        time = T[time_index]
+    elif method == "height":
+        plant = SymbolicDoublePendulum(model_pars=mpar)
+        fk = plant.forward_kinematics(X.T[:2])
+        ee_pos_y = fk[1][1]
+
+        goal_height = height * (mpar.l[0] + mpar.l[1])
+
+        up = np.where(ee_pos_y > goal_height, True, False)
+
+        time_index = len(T) - 1
+        if has_to_stay:
+            for i in range(len(up) - 2, 0, -1):
+                if up[i]:
+                    time_index = i
                 else:
                     break
+
+        else:
+            time_index = np.argwhere(up)[0][0]
+        time = T[time_index]
+
     else:
-        if len(n) > 0:
-            time_index = n[0]
-    time = T[time_index]
+        time = np.inf
 
     return time
 
@@ -283,6 +332,9 @@ def get_torque_cost(T, U, R=np.diag([1.0, 1.0])):
 
     Parameters
     ----------
+    T : array-like
+        time points, unit=[s]
+        shape=(N,)
     U : array-like
         shape=(N, 2)
         actuations/motor torques
@@ -328,3 +380,32 @@ def get_tau_smoothness(U):
     std = std0 + std1
 
     return std
+
+
+def get_velocity_cost(T, X, Q=np.diag([1.0, 1.0])):
+    """get_torque_cost.
+
+    Get the running velocity cost with cost matrix Q.
+    The cost is normalized with the timestep.
+
+    Parameters
+    ----------
+    T : array-like
+        time points, unit=[s]
+        shape=(N,)
+    X : array-like
+        shape=(N, 4)
+        states, units=[rad, rad, rad/s, rad/s]
+        order=[angle1, angle2, velocity1, velocity2]
+    Q : numpy array
+        running cost weight matrix (2x2)
+
+    Returns
+    -------
+    float
+        torque cost
+    """
+    delta_t = np.diff(T)
+    V = X.T[2:].T
+    cost = np.einsum("ij, i, jk, ik", V[:-1], delta_t, Q, V[:-1])
+    return cost

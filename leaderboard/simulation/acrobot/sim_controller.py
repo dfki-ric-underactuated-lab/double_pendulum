@@ -12,38 +12,58 @@ from double_pendulum.utils.plotting import plot_timeseries
 
 from sim_parameters import mpar, dt, t_final, t0, x0, goal, integrator
 
-parser = argparse.ArgumentParser()
-parser.add_argument("controller", help="name of the controller to simulate")
-controller_arg = parser.parse_args().controller
-if controller_arg[-3:] == ".py":
-    controller_arg = controller_arg[:-3]
 
-controller_name = controller_arg[4:]
-print(f"Simulating controller {controller_name}")
+def simulate_controller(controller, save_dir):
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
 
-save_dir = f"data/{controller_name}"
+    plant = SymbolicDoublePendulum(model_pars=mpar)
+    sim = Simulator(plant=plant)
 
-imp = importlib.import_module(controller_arg)
+    T, X, U = sim.simulate_and_animate(
+        t0=t0,
+        x0=x0,
+        tf=t_final,
+        dt=dt,
+        controller=controller,
+        integrator=integrator,
+        save_video=True,
+        video_name=os.path.join(save_dir, "sim_video.gif"),
+        plot_horizontal_line=True,
+        horizontal_line_height=0.9 * (mpar.l[0] + mpar.l[1]),
+    )
 
-controller = imp.controller
+    save_trajectory(os.path.join(save_dir, "sim_swingup.csv"), T=T, X_meas=X, U_con=U)
 
-plant = SymbolicDoublePendulum(model_pars=mpar)
+    plot_timeseries(
+        T,
+        X,
+        U,
+        X_meas=sim.meas_x_values,
+        pos_y_lines=[-np.pi, 0.0, np.pi],
+        vel_y_lines=[0.0],
+        tau_y_lines=[-mpar.tl[1], 0.0, mpar.tl[1]],
+        save_to=os.path.join(save_dir, "timeseries"),
+        show=False,
+    )
 
-sim = Simulator(plant=plant)
 
-T, X, U = sim.simulate(t0=t0, x0=x0, tf=t_final, dt=dt, controller=controller, integrator=integrator)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("controller", help="name of the controller to simulate")
+    controller_arg = parser.parse_args().controller
+    if controller_arg[-3:] == ".py":
+        controller_arg = controller_arg[:-3]
 
-if not os.path.exists(save_dir):
-    os.makedirs(save_dir)
-save_trajectory(os.path.join(save_dir, "sim_swingup.csv"), T=T, X_meas=X, U_con=U)
+    controller_name = controller_arg[4:]
+    print(f"Simulating controller {controller_name}")
 
-plot_timeseries(
-    T,
-    X,
-    U,
-    X_meas=sim.meas_x_values,
-    pos_y_lines=[-np.pi, 0.0, np.pi],
-    vel_y_lines=[0.0],
-    tau_y_lines=[-mpar.tl[1], 0.0, mpar.tl[1]],
-    save_to=os.path.join(save_dir, "timeseries"),
-)
+    if not os.path.exists("data"):
+        os.makedirs("data")
+    save_dir = f"data/{controller_name}"
+
+    imp = importlib.import_module(controller_arg)
+
+    controller = imp.controller
+
+    simulate_controller(controller, save_dir)
