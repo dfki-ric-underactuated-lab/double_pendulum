@@ -23,13 +23,10 @@ class CombinedController(AbstractController):
         Flag whether to compute the control output for both controllers at each
         timestep or only for the active one
     """
-    def __init__(self,
-                 controller1,
-                 controller2,
-                 condition1,
-                 condition2,
-                 compute_both=False):
 
+    def __init__(
+        self, controller1, controller2, condition1, condition2, compute_both=False
+    ):
         super().__init__()
 
         self.controllers = [controller1, controller2]
@@ -45,6 +42,7 @@ class CombinedController(AbstractController):
         """
         self.controllers[0].init_()
         self.controllers[1].init_()
+        self.active = 0
 
     def set_parameters(self, controller1_pars, controller2_pars):
         """
@@ -167,10 +165,8 @@ class SimultaneousControllers(AbstractController):
         integer indicating which controller will be used for the forecast
         (Default value=0)
     """
-    def __init__(self,
-                 controllers,
-                 forecast_con=0):
 
+    def __init__(self, controllers, forecast_con=0):
         super().__init__()
 
         self.controllers = controllers
@@ -265,4 +261,3 @@ class SimultaneousControllers(AbstractController):
         Uses controller indicated by self.fc_ind.
         """
         return self.controllers[self.fc_ind].get_init_trajectory()
-
