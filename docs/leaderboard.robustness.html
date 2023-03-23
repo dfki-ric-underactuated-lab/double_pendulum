@@ -16,7 +16,9 @@
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Controller Robustness" href="leaderboard.robustness.criteria.html" />
+    <link rel="prev" title="Simulation Leaderboard" href="leaderboard.simulation.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,15 +42,25 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="dynamics.html"> Double Pendulum Dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="software_structure.html"> Repository Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hardware.html"> Hardware</a></li>
 <li class="toctree-l1"><a class="reference internal" href="control.html"> Control Methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="benchmark.html"> Controller Benchmarks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="leaderboard.html"> Leaderboards</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="leaderboard.html"> Leaderboards</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="leaderboard.simulation.html">Simulation Leaderboard</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Robustness Leaderboard</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="leaderboard.robustness.criteria.html">Controller Robustness</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-the-leaderboard">Creating the Leaderboard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#leaderboard-parameters">Leaderboard Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#evaluating-your-own-controller">Evaluating your own controller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="leaderboard.hardware.html">Hardware Leaderboard</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -65,6 +77,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
+          <li class="breadcrumb-item"><a href="leaderboard.html">Leaderboards</a></li>
       <li class="breadcrumb-item active">Robustness Leaderboard</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/leaderboard.robustness.rst.txt" rel="nofollow"> View page source</a>
@@ -78,8 +92,14 @@
   <section id="robustness-leaderboard">
 <h1>Robustness Leaderboard<a class="headerlink" href="#robustness-leaderboard" title="Permalink to this heading"></a></h1>
 <p>The robustness leaderboard compares the performance of different control
-methods by perturbing the simulation.
+methods by perturbing the simulation e.g. with noise or delay.
 The task for the controller is to swingup and balance the acrobot/pendubot.</p>
+<p>The criteria can be found in</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="leaderboard.robustness.criteria.html">Controller Robustness</a></li>
+</ul>
+</div>
 <p>The scripts for the leaderboard calculation can be found in
 leaderboard/robustness/acrobot (pendubot is coming soon).</p>
 <section id="creating-the-leaderboard">
@@ -132,14 +152,18 @@ control of your controlled and save all relevant data in <cite>data/controllerna
 <p>Depending on the speed of your controller and your PC this may take a while (1h-6h).</p>
 </div>
 <p>If you create a pull request and your controller and the <cite>con_controllername.py</cite>
-is added to the main repository your controller will appear on the official leaderboard.</p>
+is added to the main repository your controller will appear on the
+<a class="reference external" href="https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/">official leaderboards</a> .</p>
 </section>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="leaderboard.simulation.html" class="btn btn-neutral float-left" title="Simulation Leaderboard" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="leaderboard.robustness.criteria.html" class="btn btn-neutral float-right" title="Controller Robustness" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

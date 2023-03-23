@@ -2,8 +2,16 @@ Robustness Leaderboard
 ======================
 
 The robustness leaderboard compares the performance of different control
-methods by perturbing the simulation.
+methods by perturbing the simulation e.g. with noise or delay.
 The task for the controller is to swingup and balance the acrobot/pendubot.
+
+The criteria can be found in
+
+.. toctree::
+   :maxdepth: 1
+
+   leaderboard.robustness.criteria.rst
+
 
 The scripts for the leaderboard calculation can be found in
 leaderboard/robustness/acrobot (pendubot is coming soon).
@@ -61,4 +69,5 @@ control of your controlled and save all relevant data in `data/controllername`.
   Depending on the speed of your controller and your PC this may take a while (1h-6h). 
 
 If you create a pull request and your controller and the `con_controllername.py` 
-is added to the main repository your controller will appear on the official leaderboard.
+is added to the main repository your controller will appear on the 
+`official leaderboards <https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/>`__ .
