@@ -11,11 +11,11 @@ def get_scores(results_dir, filename="results.pkl"):
     f.close()
 
     scores = {}
-    scores["model"] = get_model_score(res_dict)
-    scores["measurement_noise"] = get_measurement_noise_score(res_dict)
-    scores["u_noise"] = get_unoise_score(res_dict)
-    scores["u_responsiveness"] = get_uresponsiveness_score(res_dict)
-    scores["delay"] = get_delay_score(res_dict)
+    scores["model"] = float(get_model_score(res_dict))
+    scores["measurement_noise"] = float(get_measurement_noise_score(res_dict))
+    scores["u_noise"] = float(get_unoise_score(res_dict))
+    scores["u_responsiveness"] = float(get_uresponsiveness_score(res_dict))
+    scores["delay"] = float(get_delay_score(res_dict))
 
     return scores
 

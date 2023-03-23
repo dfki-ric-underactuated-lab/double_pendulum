@@ -10,7 +10,7 @@ from double_pendulum.analysis.benchmark_scores import get_scores
 
 
 def plot_benchmark_results(
-    results_dir, filename="results.pkl", costlim=[0, 1e6], show=False, save=True
+    results_dir, filename="results.pkl", costlim=[0, 1e6], show=False, save=True, file_format="pdf"
 ):
     SMALL_SIZE = 16
     MEDIUM_SIZE = 20
@@ -36,9 +36,7 @@ def plot_benchmark_results(
     # ToDo: solve better
     if "meas_noise_robustness" in res_dict.keys():
         if "free_costs" in res_dict["meas_noise_robustness"]["None"].keys():
-            y1 = np.median(
-                res_dict["meas_noise_robustness"]["None"]["free_costs"], axis=1
-            )
+            y1 = np.median(res_dict["meas_noise_robustness"]["None"]["free_costs"], axis=1)
             norm_cost_free = y1[0]
         # if "following_costs" in res_dict["meas_noise_robustness"]["None"].keys():
         #     y2 = np.median(res_dict["meas_noise_robustness"]["None"]["following_costs"], axis=1)
@@ -64,10 +62,7 @@ def plot_benchmark_results(
 
             x = res_dict["model_robustness"][mp]["values"]
             if "free_costs" in res_dict["model_robustness"][mp].keys():
-                y1 = (
-                    np.asarray(res_dict["model_robustness"][mp]["free_costs"])
-                    / norm_cost_free
-                )
+                y1 = np.asarray(res_dict["model_robustness"][mp]["free_costs"]) / norm_cost_free
                 ax_mr[j][k].plot(x, y1, "o")
                 ymax = np.max([ymax, np.max(y1)])
             # if "following_costs" in res_dict["model_robustness"][mp].keys():
@@ -119,33 +114,22 @@ def plot_benchmark_results(
             ax_mr[j][k].set_ylabel("rel. cost")
             ax_mr[j][k].set_xlabel(mp)
         if save:
-            plt.savefig(
-                os.path.join(results_dir, "model_robustness.pdf"), bbox_inches="tight"
-            )
-        plt.subplots_adjust(
-            left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.3, hspace=0.8
-        )
+            plt.savefig(os.path.join(results_dir, "model_robustness." + file_format), bbox_inches="tight")
+        plt.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.3, hspace=0.8)
         fig_counter += 1
 
     # noise robustness
     if "meas_noise_robustness" in res_dict.keys():
         n_subplots = len(res_dict["meas_noise_robustness"].keys())
-        fig_nr, ax_nr = plt.subplots(
-            n_subplots, 1, figsize=(18, 12), sharex="all", num=fig_counter
-        )
+        fig_nr, ax_nr = plt.subplots(n_subplots, 1, figsize=(18, 12), sharex="all", num=fig_counter, squeeze=False)
         fig_nr.suptitle("State Noise Robustness")
         for i, nf in enumerate(res_dict["meas_noise_robustness"].keys()):
             ymax = 0.0
-            ax_nr[i].set_title(f"{nf}")
+            ax_nr[i][0].set_title(f"{nf}")
             x = res_dict["meas_noise_robustness"][nf]["noise_sigma_list"]
             if "free_costs" in res_dict["meas_noise_robustness"][nf].keys():
-                y1 = (
-                    np.median(
-                        res_dict["meas_noise_robustness"][nf]["free_costs"], axis=1
-                    )
-                    / norm_cost_free
-                )
-                ax_nr[i].plot(x, y1, "o-")
+                y1 = np.median(res_dict["meas_noise_robustness"][nf]["free_costs"], axis=1) / norm_cost_free
+                ax_nr[i][0].plot(x, y1, "o-")
                 ymax = np.max([ymax, np.max(y1)])
             # if "following_costs" in res_dict["meas_noise_robustness"][nf].keys():
             #     y2 = np.median(res_dict["meas_noise_robustness"][nf]["following_costs"], axis=1) / norm_cost_follow
@@ -165,7 +149,7 @@ def plot_benchmark_results(
                     c = "red"
                     if succ[j] > 0.5 * np.shape(succs)[-1]:
                         c = "green"
-                    ax_nr[i].add_patch(
+                    ax_nr[i][0].add_patch(
                         Rectangle(
                             (xr[j], 0.0),
                             xr[j + 1] - xr[j],
@@ -179,11 +163,11 @@ def plot_benchmark_results(
                 ymin = 0.0
             else:
                 ymin = 0.95
-            ax_nr[i].set_ylim(ymin, ymax)
-            ax_nr[i].set_ylabel("rel. cost")
-        ax_nr[-1].set_xlabel("Noise Variance")
+            ax_nr[i][0].set_ylim(ymin, ymax)
+            ax_nr[i][0].set_ylabel("rel. cost")
+        ax_nr[-1][0].set_xlabel("Noise Variance")
         if save:
-            plt.savefig(os.path.join(results_dir, "meas_noise_robustness.pdf"))
+            plt.savefig(os.path.join(results_dir, "meas_noise_robustness." + file_format))
         fig_counter += 1
 
     # unoise robustness
@@ -194,10 +178,7 @@ def plot_benchmark_results(
         fig_unr.suptitle("Torque Noise Robustness")
         x = res_dict["u_noise_robustness"]["u_noise_sigma_list"]
         if "free_costs" in res_dict["u_noise_robustness"].keys():
-            y1 = (
-                np.median(res_dict["u_noise_robustness"]["free_costs"], axis=1)
-                / norm_cost_free
-            )
+            y1 = np.median(res_dict["u_noise_robustness"]["free_costs"], axis=1) / norm_cost_free
             ax_unr.plot(x, y1, "o-")
             ymax = np.max([ymax, np.max(y1)])
         # if "following_costs" in res_dict["u_noise_robustness"].keys():
@@ -236,7 +217,7 @@ def plot_benchmark_results(
         ax_unr.set_xlabel("Noise Variance")
         ax_unr.set_ylabel("rel. cost")
         if save:
-            plt.savefig(os.path.join(results_dir, "u_noise_robustness.pdf"))
+            plt.savefig(os.path.join(results_dir, "u_noise_robustness." + file_format))
         fig_counter += 1
 
     # u responsiveness robustness
@@ -247,10 +228,7 @@ def plot_benchmark_results(
         fig_urr.suptitle("Motor Responsiveness Robustness")
         x = res_dict["u_responsiveness_robustness"]["u_responsivenesses"]
         if "free_costs" in res_dict["u_responsiveness_robustness"].keys():
-            y1 = (
-                np.asarray(res_dict["u_responsiveness_robustness"]["free_costs"])
-                / norm_cost_free
-            )
+            y1 = np.asarray(res_dict["u_responsiveness_robustness"]["free_costs"]) / norm_cost_free
             ax_urr.plot(x, y1, "o-")
             ymax = np.max([ymax, np.max(y1)])
         # if "following_costs" in res_dict["u_responsiveness_robustness"].keys():
@@ -288,7 +266,7 @@ def plot_benchmark_results(
         ax_urr.set_xlabel("Responsiveness Factor Amplitude")
         ax_urr.set_ylabel("rel. cost")
         if save:
-            plt.savefig(os.path.join(results_dir, "u_responsivenesses.pdf"))
+            plt.savefig(os.path.join(results_dir, "u_responsivenesses." + file_format))
         fig_counter += 1
 
     # delay robustness
@@ -337,7 +315,7 @@ def plot_benchmark_results(
         ax_dr.set_xlabel("Time Delay [s]")
         ax_dr.set_ylabel("rel. cost")
         if save:
-            plt.savefig(os.path.join(results_dir, "delay_robustness.pdf"))
+            plt.savefig(os.path.join(results_dir, "delay_robustness." + file_format))
         fig_counter += 1
 
     # bar plot
@@ -357,19 +335,18 @@ def plot_benchmark_results(
     bars[2].set_color("green")
     bars[3].set_color("purple")
     bars[4].set_color("orange")
+    ax_bar.set_ylim(0, 1)
     ax_bar.set_xlabel("Robustness Criteria")
     ax_bar.set_ylabel("Success Score")
     if save:
-        plt.savefig(os.path.join(results_dir, "score_plot.pdf"))
+        plt.savefig(os.path.join(results_dir, "score_plot." + file_format))
     fig_counter += 1
 
     if show:
         plt.show()
 
 
-def plot_model_robustness_multi(
-    results_dirs, costlim, show=True, labels=[], save_dir=""
-):
+def plot_model_robustness_multi(results_dirs, costlim, show=True, labels=[], save_dir=""):
     SMALL_SIZE = 16
     MEDIUM_SIZE = 20
     BIGGER_SIZE = 32
@@ -399,9 +376,7 @@ def plot_model_robustness_multi(
         # ToDo: solve better
         if "meas_noise_robustness" in res_dict.keys():
             if "free_costs" in res_dict["meas_noise_robustness"]["None"].keys():
-                y1 = np.median(
-                    res_dict["meas_noise_robustness"]["None"]["free_costs"], axis=1
-                )
+                y1 = np.median(res_dict["meas_noise_robustness"]["None"]["free_costs"], axis=1)
                 norm_cost_free = y1[0]
         else:
             norm_cost_free = 1.0
@@ -417,10 +392,7 @@ def plot_model_robustness_multi(
 
             x = res_dict["model_robustness"][mp]["values"]
             if "free_costs" in res_dict["model_robustness"][mp].keys():
-                y1 = (
-                    np.asarray(res_dict["model_robustness"][mp]["free_costs"])
-                    / norm_cost_free
-                )
+                y1 = np.asarray(res_dict["model_robustness"][mp]["free_costs"]) / norm_cost_free
                 (p,) = ax_mr[j][k].plot(x, y1, "o-")
                 if i == 0:
                     handles.append(p)
@@ -473,8 +445,6 @@ def plot_model_robustness_multi(
     )
 
     plt.savefig(os.path.join(save_dir, "model_robustness.pdf"), bbox_inches="tight")
-    plt.subplots_adjust(
-        left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.3, hspace=0.8
-    )
+    plt.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.3, hspace=0.8)
     if show:
         plt.show()
