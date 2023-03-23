@@ -9,3 +9,4 @@
     Hardware <hardware.rst>
     Control Methods <control.rst>
     Controller Benchmarks <benchmark.rst>
+    Leaderboards <leaderboard.rst>

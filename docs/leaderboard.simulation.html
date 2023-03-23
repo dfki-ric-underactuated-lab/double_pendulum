@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulation Leaderboard &mdash; Double Pendulum 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Hardware Leaderboard" href="leaderboard.hardware.html" />
+    <link rel="prev" title="Leaderboards" href="leaderboard.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Double Pendulum
+              <img src="_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dynamics.html"> Double Pendulum Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software_structure.html"> Repository Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html"> Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="control.html"> Control Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html"> Controller Benchmarks</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="leaderboard.html"> Leaderboards</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Simulation Leaderboard</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-the-leaderboard">Creating the Leaderboard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#leaderboard-parameters">Leaderboard Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#evaluating-your-own-controller">Evaluating your own controller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="leaderboard.hardware.html">Hardware Leaderboard</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Double Pendulum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
+          <li class="breadcrumb-item"><a href="leaderboard.html">Leaderboards</a></li>
+      <li class="breadcrumb-item active">Simulation Leaderboard</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/leaderboard.simulation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="simulation-leaderboard">
+<h1>Simulation Leaderboard<a class="headerlink" href="#simulation-leaderboard" title="Permalink to this heading"></a></h1>
+<p>The simulation leaderboard compares the performance of different control
+methods in simulation. The task for the controller is to swingup and balance
+the acrobot/pendubot and keep the end-effector above the threshhold line..</p>
+<p>The scripts for the leaderboard calculation can be found in
+leaderboard/simulation/acrobot (pendubot is coming soon).</p>
+<section id="creating-the-leaderboard">
+<h2>Creating the Leaderboard<a class="headerlink" href="#creating-the-leaderboard" title="Permalink to this heading"></a></h2>
+<p>For creating the leaderboard locally, you can run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">create_leaderboard</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>This script will:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Check for controllers in all files starting with ‘<a href="#id1"><span class="problematic" id="id2">con_</span></a>’</p></li>
+<li><p>Check if the simulation data for these controllers already exists</p></li>
+<li><p>Generate the data if it does not exist</p></li>
+<li><p>Compute the leaderboard scores and save to a csv file</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="leaderboard-parameters">
+<h2>Leaderboard Parameters<a class="headerlink" href="#leaderboard-parameters" title="Permalink to this heading"></a></h2>
+<p>The leaderboard uses a fixed model of the double pendulum and fixed simulation parameters.
+The parameters can be found in the <cite>sim_parameters.py</cite> file.</p>
+</section>
+<section id="evaluating-your-own-controller">
+<h2>Evaluating your own controller<a class="headerlink" href="#evaluating-your-own-controller" title="Permalink to this heading"></a></h2>
+<p>If you want to evaluate your own controller and compare it to the listed
+controllers on the leaderboard, you have to create a file with the name
+<cite>con_controllername.py</cite>, where <cite>controllername</cite> should be the name of the method
+your controller uses.
+In that file you should create an instance of your controller with the name
+<cite>controller</cite> (will be imported under this name from the other scripts).
+Additionally, yout <cite>con_controllername.py</cite> file should contain a dictionary:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">leaderboard_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;csv_path&quot;</span><span class="p">:</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;/sim_swingup.csv&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                      <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>where <cite>name</cite> is the <cite>controllername</cite> and <cite>username</cite> is your github username.</p>
+<p>Feel free to import the model and simulation parameters from
+<cite>sim_parameters.py</cite> if you need them to instantiate your controller.</p>
+<p>You can now generate the simulation data by calling:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">sim_controller</span><span class="o">.</span><span class="n">py</span> <span class="n">con_controllername</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>This will simulate the double pendulum controlled by your controller and save
+all relevant data in <cite>data/controllername</cite>.</p>
+<p>To calculate the leaderboard scores for your controller do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">calculate_leaderboard_score</span><span class="o">.</span><span class="n">py</span> <span class="n">con_controllername</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>If you create a pull request and your controller and the <cite>con_controllername.py</cite>
+is added to the main repository your controller will appear on the official leaderboard.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="leaderboard.html" class="btn btn-neutral float-left" title="Leaderboards" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="leaderboard.hardware.html" class="btn btn-neutral float-right" title="Hardware Leaderboard" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Underactuated Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

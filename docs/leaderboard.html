@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trajectory Stabilization &mdash; Double Pendulum 1.0.0 documentation</title>
+  <title>Leaderboards &mdash; Double Pendulum 1.0.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,8 +17,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Time Varying Linear Quadrativ Regulator (TVLQR)" href="control.trajstab.tvlqr.html" />
-    <link rel="prev" title="Direct Collocation" href="control.trajopt.dircol.html" /> 
+    <link rel="next" title="Simulation Leaderboard" href="leaderboard.simulation.html" />
+    <link rel="prev" title="Controller Robustness" href="benchmark.robustness.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,19 +48,13 @@
 <li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="software_structure.html"> Repository Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hardware.html"> Hardware</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="control.html"> Control Methods</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="control.trajopt.html">Trajectory Optimization</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Trajectory Stabilization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="control.trajstab.tvlqr.html">Time Varying Linear Quadrativ Regulator (TVLQR)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="control.trajstab.riccati.html">Riccati Gains Stabilization</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="control.policy.html">Policy-based Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.mpc.html">Model Predictive Control (MPC)</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="control.html"> Control Methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="benchmark.html"> Controller Benchmarks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="leaderboard.html"> Leaderboards</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"> Leaderboards</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="leaderboard.simulation.html">Simulation Leaderboard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leaderboard.hardware.html">Hardware Leaderboard</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -78,10 +72,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
-          <li class="breadcrumb-item"><a href="control.html">Control Methods</a></li>
-      <li class="breadcrumb-item active">Trajectory Stabilization</li>
+      <li class="breadcrumb-item active">Leaderboards</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/control.trajstab.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/leaderboard.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -89,17 +82,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="trajectory-stabilization">
-<h1>Trajectory Stabilization<a class="headerlink" href="#trajectory-stabilization" title="Permalink to this heading"></a></h1>
-<p>When transfering a precomputed trajectory from simulation to reality (or even
-another simulator), the trajectory needs to be stabilized, as the mathematical
-system dynamics are always only an approximation of the real dynamics.  Because
-of this, during the execution small errors will sum up and the system will
-eventually deviate from the nominal trajectory.</p>
+  <section id="leaderboards">
+<h1>Leaderboards<a class="headerlink" href="#leaderboards" title="Permalink to this heading"></a></h1>
+<p>This repository features three leaderboards to compare control methods:</p>
+<ul class="simple">
+<li><p>Simulation Leaderboard</p></li>
+<li><p>Robustness Leaderboard</p></li>
+<li><p>Hardware Leaderboard (Coming soon)</p></li>
+</ul>
+<p>For further information and instructions on how to evaluate your own controller
+see the linked descriptions.</p>
+<p>The official leaderboards can be found at
+<a href="#id1"><span class="problematic" id="id2">`official leaderboards&lt;https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/&gt;`__</span></a></p>
+<p>The repository is periodically checked for new controllers and the leaderboard is updated.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="control.trajstab.tvlqr.html">Time Varying Linear Quadrativ Regulator (TVLQR)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="control.trajstab.riccati.html">Riccati Gains Stabilization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="leaderboard.simulation.html">Simulation Leaderboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="leaderboard.hardware.html">Hardware Leaderboard</a></li>
 </ul>
 </div>
 </section>
@@ -108,8 +107,8 @@ eventually deviate from the nominal trajectory.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="control.trajopt.dircol.html" class="btn btn-neutral float-left" title="Direct Collocation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="control.trajstab.tvlqr.html" class="btn btn-neutral float-right" title="Time Varying Linear Quadrativ Regulator (TVLQR)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="benchmark.robustness.html" class="btn btn-neutral float-left" title="Controller Robustness" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="leaderboard.simulation.html" class="btn btn-neutral float-right" title="Simulation Leaderboard" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
