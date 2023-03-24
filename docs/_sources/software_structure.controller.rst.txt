@@ -35,7 +35,8 @@ In addition to this function controllers can optionally have the methods
    controller.get_init_trajectory(self)
 
 
-``set_parameter`` can be used to set controller specific parameters and ``set_goal`` can be used to set the goal and maybe compute internal controller
+``set_parameter`` can be used to set controller specific parameters and
+``set_goal`` can be used to set the goal and maybe compute internal controller
 properties which depend on the goal. 
 The ``init_`` method will be called before the execution and ``reset_`` can
 be used to reset parameters inside the controller. ``save_`` is used to store
@@ -50,7 +51,8 @@ simulator.
 Logging, Filtering and Compensation
 -----------------------------------
 
-The abstract controller class has methods implemented for logging, state filtering and friction/gravity compensation.
+The abstract controller class has methods implemented for logging, state
+filtering and friction/gravity compensation.
 
 To use the state filtering one has to call ``set_filter_args`` method with the
 desired filter parameters. The filter is then initialized during the
@@ -60,8 +62,9 @@ parsed to the ``get_control_output_`` method. By default no filtering is used.
 Friction compensation can be turned on by calling ``set_friction_compensation``
 with the desired friction parameters. Gravity compensation is activated with
 ``set_gravity_compensation`` with a plant object as parameter. Note that gravity
-can only be fully compensated on the fully actuated double pendulum. Friction and gravity compensation torques are both added to the torque returned by
-the ``get_control_output_`` method.
+can only be fully compensated on the fully actuated double pendulum. Friction
+and gravity compensation torques are both added to the torque returned by the
+``get_control_output_`` method.
 
 The controller internally logs the total controller torque in ``u_hist``, the
 friciton compensation torque in ``u_fric_hist``, the gravity compensation torque
@@ -72,7 +75,8 @@ Writing your own controller
 ---------------------------
 
 If you want to write your own controller you may want to use the template below.
-The only method that is strictly necessary and has to be implemented is the ``get_control_output`` method. The other methods are optional.
+The only method that is strictly necessary and has to be implemented is the
+``get_control_output`` method. The other methods are optional.
 
 .. code::
 

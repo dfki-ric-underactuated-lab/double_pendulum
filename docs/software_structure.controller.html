@@ -121,7 +121,8 @@ In addition to this function controllers can optionally have the methods</p>
 <span class="n">controller</span><span class="o">.</span><span class="n">get_init_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">set_parameter</span></code> can be used to set controller specific parameters and <code class="docutils literal notranslate"><span class="pre">set_goal</span></code> can be used to set the goal and maybe compute internal controller
+<p><code class="docutils literal notranslate"><span class="pre">set_parameter</span></code> can be used to set controller specific parameters and
+<code class="docutils literal notranslate"><span class="pre">set_goal</span></code> can be used to set the goal and maybe compute internal controller
 properties which depend on the goal.
 The <code class="docutils literal notranslate"><span class="pre">init_</span></code> method will be called before the execution and <code class="docutils literal notranslate"><span class="pre">reset_</span></code> can
 be used to reset parameters inside the controller. <code class="docutils literal notranslate"><span class="pre">save_</span></code> is used to store
@@ -135,7 +136,8 @@ simulator.</p>
 </section>
 <section id="logging-filtering-and-compensation">
 <h2>Logging, Filtering and Compensation<a class="headerlink" href="#logging-filtering-and-compensation" title="Permalink to this heading"></a></h2>
-<p>The abstract controller class has methods implemented for logging, state filtering and friction/gravity compensation.</p>
+<p>The abstract controller class has methods implemented for logging, state
+filtering and friction/gravity compensation.</p>
 <p>To use the state filtering one has to call <code class="docutils literal notranslate"><span class="pre">set_filter_args</span></code> method with the
 desired filter parameters. The filter is then initialized during the
 <code class="docutils literal notranslate"><span class="pre">controller.init</span></code> and incoming state measurements are filtered before being
@@ -143,8 +145,9 @@ parsed to the <code class="docutils literal notranslate"><span class="pre">get_c
 <p>Friction compensation can be turned on by calling <code class="docutils literal notranslate"><span class="pre">set_friction_compensation</span></code>
 with the desired friction parameters. Gravity compensation is activated with
 <code class="docutils literal notranslate"><span class="pre">set_gravity_compensation</span></code> with a plant object as parameter. Note that gravity
-can only be fully compensated on the fully actuated double pendulum. Friction and gravity compensation torques are both added to the torque returned by
-the <code class="docutils literal notranslate"><span class="pre">get_control_output_</span></code> method.</p>
+can only be fully compensated on the fully actuated double pendulum. Friction
+and gravity compensation torques are both added to the torque returned by the
+<code class="docutils literal notranslate"><span class="pre">get_control_output_</span></code> method.</p>
 <p>The controller internally logs the total controller torque in <code class="docutils literal notranslate"><span class="pre">u_hist</span></code>, the
 friciton compensation torque in <code class="docutils literal notranslate"><span class="pre">u_fric_hist</span></code>, the gravity compensation torque
 in <code class="docutils literal notranslate"><span class="pre">u_grav_hist</span></code>, the state history in <code class="docutils literal notranslate"><span class="pre">x_hist</span></code> and the filtered states in
@@ -153,7 +156,8 @@ in <code class="docutils literal notranslate"><span class="pre">u_grav_hist</spa
 <section id="writing-your-own-controller">
 <h2>Writing your own controller<a class="headerlink" href="#writing-your-own-controller" title="Permalink to this heading"></a></h2>
 <p>If you want to write your own controller you may want to use the template below.
-The only method that is strictly necessary and has to be implemented is the <code class="docutils literal notranslate"><span class="pre">get_control_output</span></code> method. The other methods are optional.</p>
+The only method that is strictly necessary and has to be implemented is the
+<code class="docutils literal notranslate"><span class="pre">get_control_output</span></code> method. The other methods are optional.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">double_pendulum.controller.abstract_controller</span> <span class="kn">import</span> <span class="n">AbstractController</span>
 
 

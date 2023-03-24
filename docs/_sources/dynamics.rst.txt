@@ -69,6 +69,7 @@ the Coriolis matrix
     \dot{q}_1 l_{1} m_{2} r_{2} s_2 &   0
     \end{matrix}\right],
     \label{eq:coriolis_matrix}
+
 the gravity vector
 
 .. math::
@@ -120,17 +121,20 @@ Energy
 ------
 
 -  Kinetic Energy
+
 .. math::
 
     E_{kin} = \dot{\vect{q}}^T \mat{M} \dot{\vect{q}}
 
 
 -  Potential Energy
+
 .. math::
 
        E_{pot} = - m_1 g r_1 c_1 - m_2 g (l_1 c_1 + r_2 c_{1+2}).
 
 -  Total Energy
+
 .. math::
 
        E = E_{kin} + E_{pot}

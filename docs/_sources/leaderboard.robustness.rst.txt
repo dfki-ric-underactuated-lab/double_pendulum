@@ -43,7 +43,8 @@ Evaluating your own controller
 
 .. note::
 
-   For implementing your own controller see [here](https://dfki-ric-underactuated-lab.github.io/double_pendulum/software_structure.controller.html)
+   For implementing your own controller see `here
+   <https://dfki-ric-underactuated-lab.github.io/double_pendulum/software_structure.controller.html>`__
 
 If you want to evaluate your own controller and compare it to the listed
 controllers on the leaderboard, you have to create a file with the name
