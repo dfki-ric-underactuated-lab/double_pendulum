@@ -17,14 +17,16 @@ class AbstractController(ABC):
     Abstract controller class. All controller should inherit from
     this abstract class.
     """
+
     def __init__(self):
         self.set_filter_args()
         self.set_friction_compensation()
         self.set_gravity_compensation()
         self.x_hist = []
         self.x_filt_hist = []
-        self.u_hist = [[0., 0.]]
+        self.u_hist = [[0.0, 0.0]]
         self.u_fric_hist = []
+        self.u_grav_hist = []
 
     @abstractmethod
     def get_control_output_(self, x, t=None):
@@ -32,7 +34,7 @@ class AbstractController(ABC):
         The function to compute the control input for the double pendulum's
         actuator(s).
         Supposed to be overwritten by actual controllers. The API of this
-        method should be adapted. Unused inputs/outputs can be set to None.
+        method should not be changed. Unused inputs/outputs can be set to None.
 
         Parameters
         ----------
@@ -94,6 +96,7 @@ class AbstractController(ABC):
         u += u_fric
 
         u_grav = self.get_gravity_torque(y)
+        self.u_grav_hist.append(u_grav)
         u += u_grav
 
         self.u_hist.append(u)
@@ -124,7 +127,9 @@ class AbstractController(ABC):
         """
         self.init_filter()
         self.x_hist = []
-        self.u_hist = [[0., 0.]]
+        self.u_hist = [[0.0, 0.0]]
+        self.u_fric_hist = []
+        self.u_grav_hist = []
         self.xfilt_hist = []
 
         self.init_()
@@ -165,21 +170,21 @@ class AbstractController(ABC):
         if self.grav_plant is not None:
             g = self.grav_plant.g
         else:
-            g = 0.
+            g = 0.0
 
         par_dict = {
-                "filt" : self.filt,
-                "filt_x0" : self.filt_x0,
-                "filt_dt" : self.filt_dt,
-                "filt_velocity_cut" : self.filt_velocity_cut,
-                "filt_kwargs" : self.filt_kwargs,
-                "coulomb_fric1" : float(self.friction_terms[0]),
-                "coulomb_fric2" : float(self.friction_terms[2]),
-                "damping1" : float(self.friction_terms[1]),
-                "damping2" : float(self.friction_terms[3]),
-                "gravity_compensation_g" : g,
+            "filt": self.filt,
+            "filt_x0": self.filt_x0,
+            "filt_dt": self.filt_dt,
+            "filt_velocity_cut": self.filt_velocity_cut,
+            "filt_kwargs": self.filt_kwargs,
+            "coulomb_fric1": float(self.friction_terms[0]),
+            "coulomb_fric2": float(self.friction_terms[2]),
+            "damping1": float(self.friction_terms[1]),
+            "damping2": float(self.friction_terms[3]),
+            "gravity_compensation_g": g,
         }
-        with open(os.path.join(save_dir, "controller_abstract_parameters.yml"), 'w') as f:
+        with open(os.path.join(save_dir, "controller_abstract_parameters.yml"), "w") as f:
             yaml.dump(par_dict, f)
 
     def save_(self, save_dir):
@@ -254,8 +259,16 @@ class AbstractController(ABC):
         """
         return [], [], []
 
-    def set_filter_args(self, filt=None, x0=[np.pi, 0., 0., 0.], dt=0.001,
-            plant=None, simulator=None, velocity_cut=-1., filter_kwargs={}):
+    def set_filter_args(
+        self,
+        filt=None,
+        x0=[np.pi, 0.0, 0.0, 0.0],
+        dt=0.001,
+        plant=None,
+        simulator=None,
+        velocity_cut=-1.0,
+        filter_kwargs={},
+    ):
         """
         Set filter arguments for the measurement filter.
 
@@ -305,30 +318,26 @@ class AbstractController(ABC):
         Initialize the measurement filter
         """
         if self.filt == "lowpass":
-            #dof = self.filt_plant.dof
+            # dof = self.filt_plant.dof
             dof = 2
 
-            self.filter = lowpass_filter_rt(
-                    dim_x=2*dof,
-                    alpha=self.filt_kwargs["lowpass_alpha"],
-                    x0=self.filt_x0)
+            self.filter = lowpass_filter_rt(dim_x=2 * dof, alpha=self.filt_kwargs["lowpass_alpha"], x0=self.filt_x0)
 
         elif self.filt == "kalman":
             dof = self.filt_plant.dof
 
-            A, B = self.filt_plant.linear_matrices(
-                    self.filt_kwargs["kalman_xlin"],
-                    self.filt_kwargs["kalman_ulin"])
+            A, B = self.filt_plant.linear_matrices(self.filt_kwargs["kalman_xlin"], self.filt_kwargs["kalman_ulin"])
 
             self.filter = kalman_filter_rt(
-                    A=A,
-                    B=B,
-                    dim_x=2*dof,
-                    dim_u=self.filt_plant.n_actuators,
-                    x0=self.filt_x0,
-                    dt=self.filt_dt,
-                    process_noise=self.filt_kwargs["kalman_process_noise_sigmas"],
-                    measurement_noise=self.filt_kwargs["kalman_meas_noise_sigmas"])
+                A=A,
+                B=B,
+                dim_x=2 * dof,
+                dim_u=self.filt_plant.n_actuators,
+                x0=self.filt_x0,
+                dt=self.filt_dt,
+                process_noise=self.filt_kwargs["kalman_process_noise_sigmas"],
+                measurement_noise=self.filt_kwargs["kalman_meas_noise_sigmas"],
+            )
         elif self.filt == "unscented_kalman":
             dof = self.filt_plant.dof
             if self.filt_kwargs["ukalman_integrator"] == "euler":
@@ -336,12 +345,13 @@ class AbstractController(ABC):
             elif self.filt_kwargs["ukalman_integrator"] == "runge_kutta":
                 fx = self.filt_simulator.runge_integrator
             self.filter = unscented_kalman_filter_rt(
-                    dim_x=2*dof,
-                    x0=self.filt_x0,
-                    dt=self.filt_dt,
-                    process_noise=self.filt_kwargs["ukalman_process_noise_sigmas"],
-                    measurement_noise=self.filt_kwargs["ukalman_meas_noise_sigmas"],
-                    fx=fx)
+                dim_x=2 * dof,
+                x0=self.filt_x0,
+                dt=self.filt_dt,
+                process_noise=self.filt_kwargs["ukalman_process_noise_sigmas"],
+                measurement_noise=self.filt_kwargs["ukalman_meas_noise_sigmas"],
+                fx=fx,
+            )
         else:
             self.filter = identity_filter()
 
@@ -371,7 +381,7 @@ class AbstractController(ABC):
         x_filt = np.copy(x)
 
         # velocity cut
-        if self.filt_velocity_cut > 0.:
+        if self.filt_velocity_cut > 0.0:
             x_filt[2] = np.where(np.abs(x_filt[2]) < self.filt_velocity_cut, 0, x_filt[2])
             x_filt[3] = np.where(np.abs(x_filt[3]) < self.filt_velocity_cut, 0, x_filt[3])
 
@@ -380,7 +390,7 @@ class AbstractController(ABC):
 
         return x_filt
 
-    def set_friction_compensation(self, damping=[0., 0.], coulomb_fric=[0., 0.]):
+    def set_friction_compensation(self, damping=[0.0, 0.0], coulomb_fric=[0.0, 0.0]):
         """
         Set friction terms used for the friction compensation.
 
@@ -395,10 +405,7 @@ class AbstractController(ABC):
             coulomb friction coefficients for the double pendulum actuators
             [cf1, cf2], units=[Nm]
         """
-        self.friction_terms = np.array([coulomb_fric[0],
-                                        damping[0],
-                                        coulomb_fric[1],
-                                        damping[1]])
+        self.friction_terms = np.array([coulomb_fric[0], damping[0], coulomb_fric[1], damping[1]])
 
     def get_friction_torque(self, x):
         """
@@ -458,5 +465,5 @@ class AbstractController(ABC):
             g = self.grav_plant.gravity_vector(x)
             tau_grav = -np.dot(self.grav_plant.B, g)
         else:
-            tau_grav = [0., 0.]
+            tau_grav = [0.0, 0.0]
         return np.asarray(tau_grav)

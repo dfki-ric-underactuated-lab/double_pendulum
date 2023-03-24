@@ -32,10 +32,15 @@ The parameters can be found in the `sim_parameters.py` file.
 Evaluating your own controller
 ------------------------------
 
+.. note::
+
+   For implementing your own controller see [here](https://dfki-ric-underactuated-lab.github.io/double_pendulum/software_structure.controller.html)
+
 If you want to evaluate your own controller and compare it to the listed
 controllers on the leaderboard, you have to create a file with the name
 `con_controllername.py`, where `controllername` should be the name of the method
 your controller uses.
+
 In that file you should create an instance of your controller with the name
 `controller` (will be imported under this name from the other scripts).
 Additionally, yout `con_controllername.py` file should contain a dictionary::
@@ -62,4 +67,4 @@ To calculate the leaderboard scores for your controller do::
 
 If you create a pull request and your controller and the `con_controllername.py` 
 is added to the main repository your controller will appear on the
-`official leaderboards <https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/>`__ .
+`official leaderboard <https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_leaderboard.html>`__ .
