@@ -41,6 +41,10 @@ The perturbations applied during the simulation can be checked in the benchmark 
 Evaluating your own controller
 ------------------------------
 
+.. note::
+
+   For implementing your own controller see [here](https://dfki-ric-underactuated-lab.github.io/double_pendulum/software_structure.controller.html)
+
 If you want to evaluate your own controller and compare it to the listed
 controllers on the leaderboard, you have to create a file with the name
 `con_controllername.py`, where `controllername` should be the name of the method
@@ -70,4 +74,4 @@ control of your controlled and save all relevant data in `data/controllername`.
 
 If you create a pull request and your controller and the `con_controllername.py` 
 is added to the main repository your controller will appear on the 
-`official leaderboards <https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/>`__ .
+`official leaderboard <https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_robustness_leaderboard.html>`__ .

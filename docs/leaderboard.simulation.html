@@ -118,11 +118,15 @@ The parameters can be found in the <cite>sim_parameters.py</cite> file.</p>
 </section>
 <section id="evaluating-your-own-controller">
 <h2>Evaluating your own controller<a class="headerlink" href="#evaluating-your-own-controller" title="Permalink to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For implementing your own controller see [here](<a class="reference external" href="https://dfki-ric-underactuated-lab.github.io/double_pendulum/software_structure.controller.html">https://dfki-ric-underactuated-lab.github.io/double_pendulum/software_structure.controller.html</a>)</p>
+</div>
 <p>If you want to evaluate your own controller and compare it to the listed
 controllers on the leaderboard, you have to create a file with the name
 <cite>con_controllername.py</cite>, where <cite>controllername</cite> should be the name of the method
-your controller uses.
-In that file you should create an instance of your controller with the name
+your controller uses.</p>
+<p>In that file you should create an instance of your controller with the name
 <cite>controller</cite> (will be imported under this name from the other scripts).
 Additionally, yout <cite>con_controllername.py</cite> file should contain a dictionary:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">leaderboard_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;csv_path&quot;</span><span class="p">:</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;/sim_swingup.csv&quot;</span><span class="p">,</span>
@@ -145,7 +149,7 @@ all relevant data in <cite>data/controllername</cite>.</p>
 </div>
 <p>If you create a pull request and your controller and the <cite>con_controllername.py</cite>
 is added to the main repository your controller will appear on the
-<a class="reference external" href="https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/">official leaderboards</a> .</p>
+<a class="reference external" href="https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_leaderboard.html">official leaderboard</a> .</p>
 </section>
 </section>
 

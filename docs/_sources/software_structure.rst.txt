@@ -26,6 +26,13 @@ modules. The interplay of the modules is visualized in the figure below:
 There are standardized interfaces and file formats for the communication
 between the modules which are explained in the following.
 
+For more detail on the controller class see
+
+.. toctree::
+   :maxdepth: 1
+
+   software_structure.controller.rst 
+
 Model Parameters
 ~~~~~~~~~~~~~~~~
 
@@ -113,32 +120,32 @@ The easiest way to stay consistent with this format is to use the functions
 in double_pendulum.utils.csv_trajectory. These functions use the panda library
 to save/load the data. Missing header labels are skipped.
 
-(Abstract) Controller
-~~~~~~~~~~~~~~~~~~~~~
+.. (Abstract) Controller
+.. ~~~~~~~~~~~~~~~~~~~~~
 
-The controller class is central the this library as it has connections to
-many other components. To ensure compatibility with all components, controllers
-should always inherit from the abstract_controller class.
-The abstract controller class can optionally do logging, state filtering,
-friction compensation and gravity compensation.
-Every specific controller, inheriting from the abstract controller class has
-to implement a
+.. The controller class is central the this library as it has connections to
+.. many other components. To ensure compatibility with all components, controllers
+.. should always inherit from the abstract_controller class.
+.. The abstract controller class can optionally do logging, state filtering,
+.. friction compensation and gravity compensation.
+.. Every specific controller, inheriting from the abstract controller class has
+.. to implement a
 
-.. code::
+.. .. code::
 
-   controller.get_control_output_(self, x, t)
+..    controller.get_control_output_(self, x, t)
 
-method, which should return an array-like object with shape=(2,) representing
-the torques to be sent to the motors. The ``get_control_output_`` or more
-precisely the ``get_control_output`` (without underscore) of the abstract
-controller will be called by the simulator and the hardware control loop during
-hardware experiments.
-In addition to this function controllers can also have the methods
+.. method, which should return an array-like object with shape=(2,) representing
+.. the torques to be sent to the motors. The ``get_control_output_`` or more
+.. precisely the ``get_control_output`` (without underscore) of the abstract
+.. controller will be called by the simulator and the hardware control loop during
+.. hardware experiments.
+.. In addition to this function controllers can also have the methods
 
-.. code::
+.. .. code::
 
-   controller.init_(self)
-   controller.reset_(self)
+..    controller.init_(self)
+..    controller.reset_(self)
 
-the ``init_()`` method will be called before the execution and ``reset_()`` can
-be used to reset parameters inside the controller.
+.. the ``init_()`` method will be called before the execution and ``reset_()`` can
+.. be used to reset parameters inside the controller.

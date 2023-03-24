@@ -17,7 +17,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Hardware" href="hardware.html" />
+    <link rel="next" title="Controller Class" href="software_structure.controller.html" />
     <link rel="prev" title="double_pendulum.utils.filters" href="generated/double_pendulum.utils.filters.html" /> 
 </head>
 
@@ -49,9 +49,9 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#"> Repository Structure</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#programming-language">Programming Language</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#repository-overview">Repository Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software_structure.controller.html">Controller Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#model-parameters">Model Parameters</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#trajectory-data">Trajectory data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#abstract-controller">(Abstract) Controller</a></li>
 </ul>
 </li>
 </ul>
@@ -105,6 +105,12 @@ modules. The interplay of the modules is visualized in the figure below:</p>
 <a class="reference internal image-reference" href="_images/repository_structure.png"><img alt="_images/repository_structure.png" class="align-center" src="_images/repository_structure.png" style="width: 100%;" /></a>
 <p>There are standardized interfaces and file formats for the communication
 between the modules which are explained in the following.</p>
+<p>For more detail on the controller class see</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="software_structure.controller.html">Controller Class</a></li>
+</ul>
+</div>
 <section id="model-parameters">
 <h3>Model Parameters<a class="headerlink" href="#model-parameters" title="Permalink to this heading"></a></h3>
 <p>The model parameters are the masses, lengths, … of the double pendulum.
@@ -186,31 +192,6 @@ column. The headers used are:</p>
 <p>in double_pendulum.utils.csv_trajectory. These functions use the panda library
 to save/load the data. Missing header labels are skipped.</p>
 </section>
-<section id="abstract-controller">
-<h3>(Abstract) Controller<a class="headerlink" href="#abstract-controller" title="Permalink to this heading"></a></h3>
-<p>The controller class is central the this library as it has connections to
-many other components. To ensure compatibility with all components, controllers
-should always inherit from the abstract_controller class.
-The abstract controller class can optionally do logging, state filtering,
-friction compensation and gravity compensation.
-Every specific controller, inheriting from the abstract controller class has
-to implement a</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">controller</span><span class="o">.</span><span class="n">get_control_output_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>method, which should return an array-like object with shape=(2,) representing
-the torques to be sent to the motors. The <code class="docutils literal notranslate"><span class="pre">get_control_output_</span></code> or more
-precisely the <code class="docutils literal notranslate"><span class="pre">get_control_output</span></code> (without underscore) of the abstract
-controller will be called by the simulator and the hardware control loop during
-hardware experiments.
-In addition to this function controllers can also have the methods</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">controller</span><span class="o">.</span><span class="n">init_</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-<span class="n">controller</span><span class="o">.</span><span class="n">reset_</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>the <code class="docutils literal notranslate"><span class="pre">init_()</span></code> method will be called before the execution and <code class="docutils literal notranslate"><span class="pre">reset_()</span></code> can
-be used to reset parameters inside the controller.</p>
-</section>
 </section>
 </section>
 
@@ -219,7 +200,7 @@ be used to reset parameters inside the controller.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="generated/double_pendulum.utils.filters.html" class="btn btn-neutral float-left" title="double_pendulum.utils.filters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="hardware.html" class="btn btn-neutral float-right" title="Hardware" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="software_structure.controller.html" class="btn btn-neutral float-right" title="Controller Class" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

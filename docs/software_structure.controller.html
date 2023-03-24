@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Controller Class &mdash; Double Pendulum 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Hardware" href="hardware.html" />
+    <link rel="prev" title="Repository Structure" href="software_structure.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Double Pendulum
+              <img src="_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dynamics.html"> Double Pendulum Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="software_structure.html"> Repository Structure</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="software_structure.html#programming-language">Programming Language</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="software_structure.html#repository-overview">Repository Overview</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Controller Class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#class-methods">Class Methods</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#logging-filtering-and-compensation">Logging, Filtering and Compensation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#writing-your-own-controller">Writing your own controller</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="software_structure.html#model-parameters">Model Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software_structure.html#trajectory-data">Trajectory data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html"> Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="control.html"> Control Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="leaderboard.html"> Leaderboards</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Double Pendulum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
+          <li class="breadcrumb-item"><a href="software_structure.html">Repository Structure</a></li>
+      <li class="breadcrumb-item active">Controller Class</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/software_structure.controller.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="controller-class">
+<h1>Controller Class<a class="headerlink" href="#controller-class" title="Permalink to this heading"></a></h1>
+<p>The controller class is central the this library as it has connections to
+many other components. To ensure compatibility with all components, controllers
+should always inherit from the abstract_controller class.
+The abstract controller class can optionally do logging, state filtering,
+friction compensation and gravity compensation.</p>
+<section id="class-methods">
+<h2>Class Methods<a class="headerlink" href="#class-methods" title="Permalink to this heading"></a></h2>
+<p>Every specific controller, inheriting from the abstract controller class has
+to implement a</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">controller</span><span class="o">.</span><span class="n">get_control_output_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>method, which should return an array-like object with shape=(2,) representing
+the torques to be sent to the motors. The <code class="docutils literal notranslate"><span class="pre">get_control_output_</span></code> or more
+precisely the <code class="docutils literal notranslate"><span class="pre">get_control_output</span></code> (without underscore) of the abstract
+controller will be called by the simulator and the hardware control loop during
+hardware experiments.
+In addition to this function controllers can optionally have the methods</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">controller</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">set_goal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">goal</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">init_</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">reset_</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">save_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">get_forecast</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">get_init_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">set_parameter</span></code> can be used to set controller specific parameters and <code class="docutils literal notranslate"><span class="pre">set_goal</span></code> can be used to set the goal and maybe compute internal controller
+properties which depend on the goal.
+The <code class="docutils literal notranslate"><span class="pre">init_</span></code> method will be called before the execution and <code class="docutils literal notranslate"><span class="pre">reset_</span></code> can
+be used to reset parameters inside the controller. <code class="docutils literal notranslate"><span class="pre">save_</span></code> is used to store
+controller parameters to be able retrace the controller properties after
+execution. <code class="docutils literal notranslate"><span class="pre">get_forecast</span></code> can be implemented in predictive controllers to
+return the predicted trajectory and <code class="docutils literal notranslate"><span class="pre">get_init_trajectory</span></code> can return the
+initialy planned trajectory of the controller (e.g. the trajectory a controller
+is supposed to stabilize). If the latter two trajectory returning methods are
+implemented these trajectories can ba plotted in the animation funciton of the
+simulator.</p>
+</section>
+<section id="logging-filtering-and-compensation">
+<h2>Logging, Filtering and Compensation<a class="headerlink" href="#logging-filtering-and-compensation" title="Permalink to this heading"></a></h2>
+<p>The abstract controller class has methods implemented for logging, state filtering and friction/gravity compensation.</p>
+<p>To use the state filtering one has to call <code class="docutils literal notranslate"><span class="pre">set_filter_args</span></code> method with the
+desired filter parameters. The filter is then initialized during the
+<code class="docutils literal notranslate"><span class="pre">controller.init</span></code> and incoming state measurements are filtered before being
+parsed to the <code class="docutils literal notranslate"><span class="pre">get_control_output_</span></code> method. By default no filtering is used.</p>
+<p>Friction compensation can be turned on by calling <code class="docutils literal notranslate"><span class="pre">set_friction_compensation</span></code>
+with the desired friction parameters. Gravity compensation is activated with
+<code class="docutils literal notranslate"><span class="pre">set_gravity_compensation</span></code> with a plant object as parameter. Note that gravity
+can only be fully compensated on the fully actuated double pendulum. Friction and gravity compensation torques are both added to the torque returned by
+the <code class="docutils literal notranslate"><span class="pre">get_control_output_</span></code> method.</p>
+<p>The controller internally logs the total controller torque in <code class="docutils literal notranslate"><span class="pre">u_hist</span></code>, the
+friciton compensation torque in <code class="docutils literal notranslate"><span class="pre">u_fric_hist</span></code>, the gravity compensation torque
+in <code class="docutils literal notranslate"><span class="pre">u_grav_hist</span></code>, the state history in <code class="docutils literal notranslate"><span class="pre">x_hist</span></code> and the filtered states in
+<code class="docutils literal notranslate"><span class="pre">xfilt_hist</span></code> and they can be accesses via the controller object.</p>
+</section>
+<section id="writing-your-own-controller">
+<h2>Writing your own controller<a class="headerlink" href="#writing-your-own-controller" title="Permalink to this heading"></a></h2>
+<p>If you want to write your own controller you may want to use the template below.
+The only method that is strictly necessary and has to be implemented is the <code class="docutils literal notranslate"><span class="pre">get_control_output</span></code> method. The other methods are optional.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">double_pendulum.controller.abstract_controller</span> <span class="kn">import</span> <span class="n">AbstractController</span>
+
+
+<span class="k">class</span> <span class="nc">ControllerTemplate</span><span class="p">(</span><span class="n">AbstractController</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controller Template&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">set_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set controller parameters. Optional.</span>
+<span class="sd">        Can be overwritten by actual controller.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">set_goal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the desired state for the controller. Optional.</span>
+<span class="sd">        Can be overwritten by actual controller.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : array_like, shape=(4,), dtype=float,</span>
+<span class="sd">            state of the double pendulum,</span>
+<span class="sd">            order=[angle1, angle2, velocity1, velocity2],</span>
+<span class="sd">            units=[rad, rad, rad/s, rad/s]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="n">x</span>
+
+    <span class="k">def</span> <span class="nf">init_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the controller. Optional.</span>
+<span class="sd">        Can be overwritten by actual controller.</span>
+<span class="sd">        Initialize function which will always be called before using the</span>
+<span class="sd">        controller.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">reset_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset the Controller. Optional</span>
+<span class="sd">        Can be overwritten by actual controller.</span>
+<span class="sd">        Function to reset parameters inside the controller.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">get_control_output_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The function to compute the control input for the double pendulum&#39;s</span>
+<span class="sd">        actuator(s).</span>
+<span class="sd">        Supposed to be overwritten by actual controllers. The API of this</span>
+<span class="sd">        method should not be changed. Unused inputs/outputs can be set to None.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : array_like, shape=(4,), dtype=float,</span>
+<span class="sd">            state of the double pendulum,</span>
+<span class="sd">            order=[angle1, angle2, velocity1, velocity2],</span>
+<span class="sd">            units=[rad, rad, rad/s, rad/s]</span>
+<span class="sd">        t : float, optional</span>
+<span class="sd">            time, unit=[s]</span>
+<span class="sd">            (Default value=None)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        array_like</span>
+<span class="sd">            shape=(2,), dtype=float</span>
+<span class="sd">            actuation input/motor torque,</span>
+<span class="sd">            order=[u1, u2],</span>
+<span class="sd">            units=[Nm]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">u</span>
+
+    <span class="k">def</span> <span class="nf">save_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save controller parameters. Optional</span>
+<span class="sd">        Can be overwritten by actual controller.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        save_dir : string or path object</span>
+<span class="sd">            directory where the parameters will be saved</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">get_forecast</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a forecast trajectory as planned by the controller. Optional.</span>
+<span class="sd">        Can be overwritten by actual controller.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            Time array</span>
+<span class="sd">        list</span>
+<span class="sd">            X array</span>
+<span class="sd">        list</span>
+<span class="sd">            U array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">get_init_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get an initial (reference) trajectory used by the controller. Optional.</span>
+<span class="sd">        Can be overwritten by actual controller.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            Time array</span>
+<span class="sd">        list</span>
+<span class="sd">            X array</span>
+<span class="sd">        list</span>
+<span class="sd">            U array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="software_structure.html" class="btn btn-neutral float-left" title="Repository Structure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hardware.html" class="btn btn-neutral float-right" title="Hardware" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Underactuated Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
