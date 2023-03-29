@@ -14,7 +14,8 @@ The criteria can be found in
 
 
 The scripts for the leaderboard calculation can be found in
-leaderboard/robustness/acrobot (pendubot is coming soon).
+`leaderboard/robustness/acrobot` for the acrobot and in
+`leaderboard/robustness/pendubot` for the pendubot.
 
 Creating the Leaderboard
 ------------------------
