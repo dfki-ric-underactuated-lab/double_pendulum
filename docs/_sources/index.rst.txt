@@ -28,7 +28,7 @@ with the simulator and the real system. This repository describes the hardware
 (CAD, Bill Of Materials (BOM) etc.) required to build the physical system and
 provides the software (URDF models, simulation and controller) to control it.
 
-Link to repository: `<https://git.hb.dfki.de/underactuated-robotics/release_version/caprr-release-version>`__
+Link to repository: `<https://github.com/dfki-ric-underactuated-lab/double_pendulum>`__
 
 .. toctree::
     :maxdepth: 1
