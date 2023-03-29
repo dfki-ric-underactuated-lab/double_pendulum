@@ -29,14 +29,15 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
                     U_friccomp=None,
                     ACC_des=None,
                     save_to=None,
-                    show=True
+                    show=True,
+                    scale=1.,
                     ):
 
     n_subplots = np.sum([plot_pos, plot_vel, plot_tau, plot_acc, plot_energy])
 
-    SMALL_SIZE = 16
-    MEDIUM_SIZE = 20
-    BIGGER_SIZE = 24
+    SMALL_SIZE = 16 * scale
+    MEDIUM_SIZE = 20 * scale
+    BIGGER_SIZE = 24 * scale
 
     mpl.rc('font', size=SMALL_SIZE)          # controls default text sizes
     mpl.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
@@ -48,7 +49,7 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
 
     fig, ax = plt.subplots(n_subplots,
                            1,
-                           figsize=(18, n_subplots*3),
+                           figsize=(18 * scale, n_subplots * 3 * scale),
                            sharex="all")
 
 
@@ -77,7 +78,7 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         for line in pos_y_lines:
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
-        ax[i].set_ylabel("angle [rad]", fontsize=20)
+        ax[i].set_ylabel("angle [rad]", fontsize=MEDIUM_SIZE)
         #ax[i].legend(loc="best")
         ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
     if plot_vel:
@@ -105,7 +106,7 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         for line in vel_y_lines:
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
-        ax[i].set_ylabel("velocity [rad/s]", fontsize=20)
+        ax[i].set_ylabel("velocity [rad/s]", fontsize=MEDIUM_SIZE)
         #ax[i].legend(loc="best")
         ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
     if plot_acc:
@@ -123,7 +124,7 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         for line in acc_y_lines:
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
-        ax[i].set_ylabel("acceleration [rad/s^2]", fontsize=20)
+        ax[i].set_ylabel("acceleration [rad/s^2]", fontsize=MEDIUM_SIZE)
         #ax[i].legend(loc="best")
         ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
     if plot_tau:
@@ -151,7 +152,7 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         for line in tau_y_lines:
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
-        ax[i].set_ylabel("torque [Nm]", fontsize=20)
+        ax[i].set_ylabel("torque [Nm]", fontsize=MEDIUM_SIZE)
         #ax[i].legend(loc="best")
         ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
     if plot_energy:
@@ -163,10 +164,10 @@ def plot_timeseries(T, X=None, U=None, ACC=None, energy=None,
         for line in energy_y_lines:
             ax[i].plot([T[0], T[-1]], [line, line],
                        ls="--", color="gray")
-        ax[i].set_ylabel("energy [J]", fontsize=20)
+        ax[i].set_ylabel("energy [J]", fontsize=MEDIUM_SIZE)
         #ax[i].legend(loc="best")
         ax[i].legend(bbox_to_anchor=(1.01,1), loc="upper left")
-    ax[i].set_xlabel("time [s]", fontsize=20)
+    ax[i].set_xlabel("time [s]", fontsize=MEDIUM_SIZE)
     if not (save_to is None):
         plt.savefig(save_to, bbox_inches="tight")
     if show:
@@ -323,12 +324,12 @@ def plot_figures(save_dir,
 #                        shoulder_fric_tau=None,
 #                        elbow_fric_tau=None,
 #                        error=None):
-# 
+#
 #     fig, ax = plt.subplots(3,
 #                            1,
 #                            figsize=(18, 9),
 #                            sharex="all")
-# 
+#
 #     # position plot
 #     ax[0].plot(meas_time[:index], shoulder_meas_pos[:index], label="shoulder measured position", color="blue")
 #     ax[0].plot(meas_time[:index], elbow_meas_pos[:index], label='elbow measured position', color="green")
@@ -338,7 +339,7 @@ def plot_figures(save_dir,
 #         ax[0].plot(elbow_des_time, elbow_des_pos, label="elbow desired position", color="lightgreen")
 #     ax[0].set_ylabel("Position (rad)")
 #     ax[0].legend()
-# 
+#
 #     # velocity plot
 #     ax[1].plot(meas_time[:index], shoulder_meas_vel[:index], label="shoulder measured velocity", color="blue")
 #     if not (shoulder_filtered_vel is None):
@@ -352,7 +353,7 @@ def plot_figures(save_dir,
 #         ax[1].plot(elbow_des_time, elbow_des_vel, label="elbow desired velocity", color="lightgreen")
 #     ax[1].set_ylabel("Velocity (rad)")
 #     ax[1].legend()
-# 
+#
 #     # torque plot for elbow
 #     print('plotting elbow torque')
 #     ax[2].plot(meas_time[:index], shoulder_meas_tau[:index], label="shoulder total commanded torque", color="blue")
@@ -370,7 +371,7 @@ def plot_figures(save_dir,
 #     ax[2].set_xlabel("Time (s)")
 #     ax[2].set_ylabel("Torque (Nm)")
 #     ax[2].legend()
-# 
+#
 #     plt.savefig(os.path.join(save_dir, f'{date}_combiplot.pdf'))
 #     plt.show()
-# 
+#

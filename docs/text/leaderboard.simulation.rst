@@ -3,10 +3,11 @@ Simulation Leaderboard
 
 The simulation leaderboard compares the performance of different control
 methods in simulation. The task for the controller is to swingup and balance
-the acrobot/pendubot and keep the end-effector above the threshhold line..
+the acrobot/pendubot and keep the end-effector above the threshhold line.
 
 The scripts for the leaderboard calculation can be found in
-leaderboard/simulation/acrobot (pendubot is coming soon).
+`leaderboard/simulation/acrobot` for the acrobot and in
+`leaderboard/simulation/pendubot` for the pendubot.
 
 Creating the Leaderboard
 ------------------------

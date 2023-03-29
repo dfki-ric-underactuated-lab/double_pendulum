@@ -7,7 +7,9 @@ import matplotlib.animation as mplanimation
 from double_pendulum.simulation.visualization import get_arrow, set_arrow_properties
 from double_pendulum.utils.filters.low_pass import lowpass_filter_rt
 from double_pendulum.utils.filters.kalman_filter import kalman_filter_rt
-from double_pendulum.utils.filters.unscented_kalman_filter import unscented_kalman_filter_rt
+from double_pendulum.utils.filters.unscented_kalman_filter import (
+    unscented_kalman_filter_rt,
+)
 
 
 class Simulator:
@@ -138,7 +140,12 @@ class Simulator:
         self.process_noise_sigmas = process_noise_sigmas
 
     def set_measurement_parameters(
-        self, C=np.eye(4), D=np.zeros((4, 2)), meas_noise_sigmas=[0.0, 0.0, 0.0, 0.0], delay=0.0, delay_mode="None"
+        self,
+        C=np.eye(4),
+        D=np.zeros((4, 2)),
+        meas_noise_sigmas=[0.0, 0.0, 0.0, 0.0],
+        delay=0.0,
+        delay_mode="None",
     ):
         """
         Set parameters for state measuremts
@@ -175,7 +182,10 @@ class Simulator:
         self.delay_mode = delay_mode
 
     def set_filter_parameters(
-        self, meas_noise_cut=0.0, meas_noise_vfilter="None", meas_noise_vfilter_args={"alpha": [1.0, 1.0, 1.0, 1.0]}
+        self,
+        meas_noise_cut=0.0,
+        meas_noise_vfilter="None",
+        meas_noise_vfilter_args={"alpha": [1.0, 1.0, 1.0, 1.0]},
     ):
         """
         Set filter parameters for filtering raw measurments
@@ -294,13 +304,16 @@ class Simulator:
         if self.meas_noise_vfilter == "lowpass":
             dof = self.plant.dof
 
-            self.filter = lowpass_filter_rt(dim_x=2 * dof, alpha=self.meas_noise_vfilter_args["alpha"], x0=x0)
+            self.filter = lowpass_filter_rt(
+                dim_x=2 * dof, alpha=self.meas_noise_vfilter_args["alpha"], x0=x0
+            )
 
         elif self.meas_noise_vfilter == "kalman":
             dof = self.plant.dof
 
             A, B = self.plant.linear_matrices(
-                self.meas_noise_vfilter_args["kalman"]["x_lin"], self.meas_noise_vfilter_args["kalman"]["u_lin"]
+                self.meas_noise_vfilter_args["kalman"]["x_lin"],
+                self.meas_noise_vfilter_args["kalman"]["u_lin"],
             )
 
             self.filter = kalman_filter_rt(
@@ -410,16 +423,30 @@ class Simulator:
             "runge_kutta" : Runge Kutta integrator
              (Default value = "runge_kutta")
         """
-        tau = np.clip(tau, -np.asarray(self.plant.torque_limit), np.asarray(self.plant.torque_limit))
+        tau = np.clip(
+            tau,
+            -np.asarray(self.plant.torque_limit),
+            np.asarray(self.plant.torque_limit),
+        )
 
         if integrator == "runge_kutta":
-            self.x = np.add(self.x, dt * self.runge_integrator(self.x, dt, self.t, tau), casting="unsafe")
+            self.x = np.add(
+                self.x,
+                dt * self.runge_integrator(self.x, dt, self.t, tau),
+                casting="unsafe",
+            )
             # self.x += dt * self.runge_integrator(self.x, dt, self.t, tau)
         elif integrator == "euler":
-            self.x = np.add(self.x, dt * self.euler_integrator(self.x, dt, self.t, tau), casting="unsafe")
+            self.x = np.add(
+                self.x,
+                dt * self.euler_integrator(self.x, dt, self.t, tau),
+                casting="unsafe",
+            )
             # self.x += dt * self.euler_integrator(self.x, dt, self.t, tau)
         else:
-            raise NotImplementedError(f"Sorry, the integrator {integrator} is not implemented.")
+            raise NotImplementedError(
+                f"Sorry, the integrator {integrator} is not implemented."
+            )
         # process noise
         self.x = np.random.normal(self.x, self.process_noise_sigmas, np.shape(self.x))
 
@@ -703,8 +730,12 @@ class Simulator:
 
     def _animation_init(self):
         """init of the animation plot"""
-        self.animation_ax.set_xlim(self.plant.workspace_range[0][0], self.plant.workspace_range[0][1])
-        self.animation_ax.set_ylim(self.plant.workspace_range[1][0], self.plant.workspace_range[1][1])
+        self.animation_ax.set_xlim(
+            self.plant.workspace_range[0][0], self.plant.workspace_range[0][1]
+        )
+        self.animation_ax.set_ylim(
+            self.plant.workspace_range[1][0], self.plant.workspace_range[1][1]
+        )
         self.animation_ax.get_xaxis().set_visible(False)
         self.animation_ax.get_yaxis().set_visible(False)
         plt.axis("off")
@@ -718,7 +749,9 @@ class Simulator:
         self.tau_arrowarcs = []
         self.tau_arrowheads = []
         for link in range(self.plant.n_links):
-            arc, head = get_arrow(radius=0.001, centX=0, centY=0, angle_=110, theta2_=320, color_="red")
+            arc, head = get_arrow(
+                radius=0.001, centX=0, centY=0, angle_=110, theta2_=320, color_="red"
+            )
             self.tau_arrowarcs.append(arc)
             self.tau_arrowheads.append(head)
             self.animation_ax.add_patch(arc)
@@ -763,14 +796,16 @@ class Simulator:
         if self.plot_horizontal_line:
             ll = 0.5 * (self.plant.l[0] + self.plant.l[1])
             self.animation_plots[ani_plot_counter].set_data(
-                np.linspace(-ll, ll, 2), [self.horizontal_line_height, self.horizontal_line_height]
+                np.linspace(-ll, ll, 2),
+                [self.horizontal_line_height, self.horizontal_line_height],
             )
             ani_plot_counter += 1
 
         # plot links
         for link in range(self.plant.n_links):
             self.animation_plots[ani_plot_counter].set_data(
-                [ee_pos[link][0], ee_pos[link + 1][0]], [ee_pos[link][1], ee_pos[link + 1][1]]
+                [ee_pos[link][0], ee_pos[link + 1][0]],
+                [ee_pos[link][1], ee_pos[link + 1][1]],
             )
             ani_plot_counter += 1
 
@@ -780,17 +815,24 @@ class Simulator:
 
         # plot bodies
         for link in range(self.plant.n_links):
-            self.animation_plots[ani_plot_counter].set_data(ee_pos[link + 1][0], ee_pos[link + 1][1])
+            self.animation_plots[ani_plot_counter].set_data(
+                ee_pos[link + 1][0], ee_pos[link + 1][1]
+            )
             ani_plot_counter += 1
 
             if self.plot_trail:
                 self.animation_plots[ani_plot_counter].set_data(
-                    np.asarray(self.ee_poses)[:, link + 1, 0], np.asarray(self.ee_poses)[:, link + 1, 1]
+                    np.asarray(self.ee_poses)[:, link + 1, 0],
+                    np.asarray(self.ee_poses)[:, link + 1, 1],
                 )
                 ani_plot_counter += 1
 
             set_arrow_properties(
-                self.tau_arrowarcs[link], self.tau_arrowheads[link], tau[link], ee_pos[link][0], ee_pos[link][1]
+                self.tau_arrowarcs[link],
+                self.tau_arrowheads[link],
+                tau[link],
+                ee_pos[link][0],
+                ee_pos[link][1],
             )
 
         if self.plot_inittraj:
@@ -801,7 +843,9 @@ class Simulator:
 
             coords = np.asarray(coords)
             if len(coords) > 1:
-                self.animation_plots[ani_plot_counter].set_data(coords.T[0], coords.T[1])
+                self.animation_plots[ani_plot_counter].set_data(
+                    coords.T[0], coords.T[1]
+                )
             ani_plot_counter += 1
 
         if self.plot_forecast:
@@ -812,7 +856,9 @@ class Simulator:
 
             coords = np.asarray(coords)
             if len(coords) > 1:
-                self.animation_plots[ani_plot_counter].set_data(coords.T[0], coords.T[1])
+                self.animation_plots[ani_plot_counter].set_data(
+                    coords.T[0], coords.T[1]
+                )
             ani_plot_counter += 1
 
         t = float(self.animation_plots[ani_plot_counter].get_text()[4:])
@@ -845,6 +891,7 @@ class Simulator:
         anim_dt=0.02,
         plot_horizontal_line=False,
         horizontal_line_height=0.0,
+        scale=1.0,
     ):
         """
         Simulate and animate the double pendulum for a time period under the
@@ -922,7 +969,7 @@ class Simulator:
         # self.record_data(t0, np.copy(x0), None)
         # self.meas_x_values.append(np.copy(x0))
 
-        fig = plt.figure(figsize=(20, 20))
+        fig = plt.figure(figsize=(20 * scale, 20 * scale))
         self.animation_ax = plt.axes()
         self.animation_plots = []
 
@@ -930,17 +977,24 @@ class Simulator:
         colors_trails = ["#d2eeff", "#ffebd8"]
 
         if self.plot_horizontal_line:
-            (vl_plot,) = self.animation_ax.plot([], [], "--", lw=2, color="black")
+            (vl_plot,) = self.animation_ax.plot([], [], "--", lw=2 * scale, color="black")
             self.animation_plots.append(vl_plot)
         for link in range(self.plant.n_links):
-            (bar_plot,) = self.animation_ax.plot([], [], "-", lw=10, color="k")
+            (bar_plot,) = self.animation_ax.plot([], [], "-", lw=10 * scale, color="k")
             self.animation_plots.append(bar_plot)
 
-        (base_plot,) = self.animation_ax.plot([], [], "s", markersize=25.0, color="black")
+        (base_plot,) = self.animation_ax.plot(
+            [], [], "s", markersize=25.0 * scale, color="black"
+        )
         self.animation_plots.append(base_plot)
         for link in range(self.plant.n_links):
             (ee_plot,) = self.animation_ax.plot(
-                [], [], "o", markersize=50.0, color="k", markerfacecolor=colors[link % len(colors)]
+                [],
+                [],
+                "o",
+                markersize=50.0 * scale,
+                color="k",
+                markerfacecolor=colors[link % len(colors)],
             )
             self.animation_plots.append(ee_plot)
             if self.plot_trail:
@@ -949,22 +1003,28 @@ class Simulator:
                     [],
                     "-",
                     color=colors[link],
-                    markersize=24,
+                    markersize=24 * scale,
                     markerfacecolor=colors_trails[link % len(colors_trails)],
-                    lw=2,
+                    lw=2 * scale,
                     markevery=10000,
                     markeredgecolor="None",
                 )
                 self.animation_plots.append(trail_plot)
 
         if self.plot_inittraj:
-            (it_plot,) = self.animation_ax.plot([], [], "--", lw=1, color="gray")
+            (it_plot,) = self.animation_ax.plot(
+                [], [], "--", lw=1 * scale, color="gray"
+            )
             self.animation_plots.append(it_plot)
         if self.plot_forecast:
-            (fc_plot,) = self.animation_ax.plot([], [], "-", lw=1, color="green")
+            (fc_plot,) = self.animation_ax.plot(
+                [], [], "-", lw=1 * scale, color="green"
+            )
             self.animation_plots.append(fc_plot)
 
-        text_plot = self.animation_ax.text(0.1, 0.9, [], fontsize=60, transform=fig.transFigure)
+        text_plot = self.animation_ax.text(
+            0.1, 0.9, [], fontsize=60 * scale, transform=fig.transFigure
+        )
 
         self.animation_plots.append(text_plot)
 
