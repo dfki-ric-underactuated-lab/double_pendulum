@@ -126,6 +126,9 @@ time t = float and receiving a torque tau.
 
 More examples can be found in the [examples](examples) folder.
 
+For implementing your own controller, have a look at the 
+[controller class](https://dfki-ric-underactuated-lab.github.io/double_pendulum/software_structure.controller.html).
+
 ## Benchmark Results
 
 The following plot shows benchmark results obtained in simulation for the
