@@ -14,9 +14,9 @@ The criteria can be found in
 
 
 The scripts for the leaderboard calculation can be found in
-[leaderboard/robustness/acrobot](https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/robustness/acrobot)
+`leaderboard/robustness/acrobot <https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/robustness/acrobot>`__ .
 for the acrobot and in
-[leaderboard/robustness/pendubot](https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/robustness/pendubot)
+`leaderboard/robustness/pendubot <https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/robustness/pendubot>`__ .
 for the pendubot.
 
 Creating the Leaderboard

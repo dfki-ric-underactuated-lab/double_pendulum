@@ -6,9 +6,9 @@ methods in simulation. The task for the controller is to swingup and balance
 the acrobot/pendubot and keep the end-effector above the threshhold line.
 
 The scripts for the leaderboard calculation can be found in
-[leaderboard/simulation/acrobot](https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/simulation/acrobot)
+`leaderboard/simulation/acrobot <https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/simulation/acrobot>`__ .
 for the acrobot and in
-[leaderboard/simulation/pendubot](https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/simulation/pendubot)
+`leaderboard/simulation/pendubot <https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/simulation/pendubot>`__ .
 for the pendubot.
 
 Creating the Leaderboard
