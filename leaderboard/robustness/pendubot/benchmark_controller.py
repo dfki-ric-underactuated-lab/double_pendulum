@@ -25,7 +25,7 @@ from sim_parameters import (
 )
 
 
-def benchmark_controller(controller, save_dir):
+def benchmark_controller(controller, save_dir, controller_name=""):
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
 
@@ -145,6 +145,9 @@ def benchmark_controller(controller, save_dir):
 
     with open(os.path.join(save_dir, "scores.yml"), "w") as f:
         yaml.dump(scores, f)
+
+    if os.path.exists(f"readmes/{controller_name}.md"):
+        os.system(f"cp readmes/{controller_name}.md {save_dir}/README.md")
 
 
 if __name__ == "__main__":

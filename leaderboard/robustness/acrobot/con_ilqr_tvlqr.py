@@ -4,17 +4,35 @@ import numpy as np
 from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.controller.tvlqr.tvlqr_controller import TVLQRController
 
-from sim_parameters import mpar, dt, t_final, t0, x0, goal, integrator, design, model, robot
+from sim_parameters import (
+    mpar,
+    dt,
+    t_final,
+    t0,
+    x0,
+    goal,
+    integrator,
+    design,
+    model,
+    robot,
+)
 
 name = "ilqr_tvlqr"
-leaderboard_config = {"csv_path": name + "/sim_swingup.csv",
-                      "name": name,
-                      "username": "fwiebe"}
+leaderboard_config = {
+    "csv_path": name + "/sim_swingup.csv",
+    "name": name,
+    "simple_name": "TVLQR",
+    "short_description": "Stabilization of iLQR trajectory with time-varying LQR.",
+    "readme_path": f"readmes/{name}.md",
+    "username": "fwiebe",
+}
 
 traj_model = "model_3.1"
 
 ## trajectory parameters
-csv_path = os.path.join("../../../data/trajectories", design, traj_model, robot, "ilqr_2/trajectory.csv")
+csv_path = os.path.join(
+    "../../../data/trajectories", design, traj_model, robot, "ilqr_2/trajectory.csv"
+)
 
 
 ## controller parameters

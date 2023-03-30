@@ -96,8 +96,22 @@ if recompute_leaderboard:
                         + 0.2 * scores["delay"]
                     )
 
+                    if link_base != "":
+                        if "simple_name" in conf.keys():
+                            name_with_link = (
+                                f"[{conf['simple_name']}]({link_base}{conf['name']}/README.md)"
+                            )
+                        else:
+                            name_with_link = f"[{conf['name']}]({link_base}{conf['name']}/README.md)"
+                    else:
+                        if "simple_name" in conf.keys():
+                            name_with_link = conf["simple_name"]
+                        else:
+                            name_with_link = conf["name"]
+
                     append_data = [
-                        conf["name"],
+                        name_with_link,
+                        conf["short_description"],
                         "{:.1f}".format(100*scores["model"]),
                         "{:.1f}".format(100*scores["measurement_noise"]),
                         "{:.1f}".format(100*scores["u_noise"]),
@@ -107,11 +121,11 @@ if recompute_leaderboard:
                         conf["username"],
                     ]
                     if link_base != "":
-                        append_data.append("[Data and Plots]("+link_base + conf["name"]+")")
+                        append_data.append("[Data and Plots](" + link_base + conf["name"] + ")")
 
                     leaderboard_data.append(append_data)
 
-    header = "Controller,Model [%],Velocity Noise [%], Torque Noise [%], Torque Step Response [%], Time delay [%],Overall Robustness Score,Username"
+    header = "Controller,Short Controller Description,Model [%],Velocity Noise [%], Torque Noise [%], Torque Step Response [%], Time delay [%],Overall Robustness Score,Username"
 
     if link_base != "":
         header += ",Data"

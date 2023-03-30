@@ -18,8 +18,8 @@ def plot_benchmark_results(
     file_format="pdf",
     scale=1.0,
 ):
-    SMALL_SIZE = 16 * scale
-    MEDIUM_SIZE = 20 * scale
+    SMALL_SIZE = 20 * scale
+    MEDIUM_SIZE = 24 * scale
     BIGGER_SIZE = 32 * scale
 
     mpl.rc("font", size=SMALL_SIZE)  # controls default text sizes
@@ -59,7 +59,9 @@ def plot_benchmark_results(
         mpar.load_yaml(os.path.join(results_dir, "model_parameters.yml"))
         mpar_dict = mpar.get_dict()
 
-        fig_mr, ax_mr = plt.subplots(5, 2, figsize=(32 * scale, 24 * scale), num=fig_counter)
+        fig_mr, ax_mr = plt.subplots(
+            5, 2, figsize=(32 * scale, 24 * scale), num=fig_counter
+        )
         fig_mr.suptitle("Model Robustness")
         for i, mp in enumerate(res_dict["model_robustness"].keys()):
             j = int(i % 5)
@@ -124,14 +126,14 @@ def plot_benchmark_results(
             ax_mr[j][k].set_ylim(ymin, ymax)
             ax_mr[j][k].set_ylabel("rel. cost")
             ax_mr[j][k].set_xlabel(mp)
+        plt.subplots_adjust(
+            left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.1, hspace=0.5
+        )
         if save:
             plt.savefig(
                 os.path.join(results_dir, "model_robustness." + file_format),
                 bbox_inches="tight",
             )
-        plt.subplots_adjust(
-            left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.3, hspace=0.8
-        )
         fig_counter += 1
 
     # noise robustness
@@ -204,7 +206,9 @@ def plot_benchmark_results(
     if "u_noise_robustness" in res_dict.keys():
         ymax = 0.0
         # plt.figure(fig_counter, figsize=(16, 9))
-        fig_unr, ax_unr = plt.subplots(1, 1, figsize=(16 * scale, 9 * scale), num=fig_counter)
+        fig_unr, ax_unr = plt.subplots(
+            1, 1, figsize=(16 * scale, 9 * scale), num=fig_counter
+        )
         fig_unr.suptitle("Torque Noise Robustness")
         x = res_dict["u_noise_robustness"]["u_noise_sigma_list"]
         if "free_costs" in res_dict["u_noise_robustness"].keys():
@@ -257,7 +261,9 @@ def plot_benchmark_results(
     if "u_responsiveness_robustness" in res_dict.keys():
         ymax = 0.0
         # plt.figure(fig_counter, figsize=(16, 9))
-        fig_urr, ax_urr = plt.subplots(1, 1, figsize=(16 * scale, 9 * scale), num=fig_counter)
+        fig_urr, ax_urr = plt.subplots(
+            1, 1, figsize=(16 * scale, 9 * scale), num=fig_counter
+        )
         fig_urr.suptitle("Motor Responsiveness Robustness")
         x = res_dict["u_responsiveness_robustness"]["u_responsivenesses"]
         if "free_costs" in res_dict["u_responsiveness_robustness"].keys():
@@ -308,7 +314,9 @@ def plot_benchmark_results(
     # delay robustness
     if "delay_robustness" in res_dict.keys():
         ymax = 0.0
-        fig_dr, ax_dr = plt.subplots(1, 1, figsize=(16 * scale, 9 * scale), num=fig_counter)
+        fig_dr, ax_dr = plt.subplots(
+            1, 1, figsize=(16 * scale, 9 * scale), num=fig_counter
+        )
         # plt.figure(fig_counter, figsize=(16, 9))
         fig_dr.suptitle("Time Delay Robustness")
         x = res_dict["delay_robustness"]["measurement_delay"]
@@ -355,7 +363,9 @@ def plot_benchmark_results(
         fig_counter += 1
 
     # bar plot
-    fig_bar, ax_bar = plt.subplots(1, 1, figsize=(8 * scale, 6 * scale), num=fig_counter)
+    fig_bar, ax_bar = plt.subplots(
+        1, 1, figsize=(8 * scale, 6 * scale), num=fig_counter
+    )
     scores = get_scores(results_dir, filename)
     crits = ["model", r"$\dot{q}$ noise", r"$\tau$ noise", r"$\tau$ response", "delay"]
     numbers = [
@@ -375,7 +385,9 @@ def plot_benchmark_results(
     ax_bar.set_xlabel("Robustness Criteria")
     ax_bar.set_ylabel("Success Score")
     if save:
-        plt.savefig(os.path.join(results_dir, "score_plot." + file_format))
+        plt.savefig(
+            os.path.join(results_dir, "score_plot." + file_format), bbox_inches="tight"
+        )
     fig_counter += 1
 
     if show:

@@ -21,6 +21,9 @@ name = "pflcol_lqr"
 leaderboard_config = {
     "csv_path": name + "/sim_swingup.csv",
     "name": name,
+    "simple_name": "Energy PFL",
+    "short_description": "Partial Feedback Linearization with energy shaping control. Stabilization with LQR.",
+    "readme_path": f"readmes/{name}.md",
     "username": "fwiebe",
 }
 

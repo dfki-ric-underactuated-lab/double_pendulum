@@ -65,7 +65,7 @@ for file in os.listdir("."):
 
             controller = imp.controller
 
-            simulate_controller(controller, save_dir)
+            simulate_controller(controller, save_dir, controller_name)
             recompute_leaderboard = True
 
 if recompute_leaderboard:

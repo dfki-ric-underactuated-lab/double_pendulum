@@ -4,12 +4,28 @@ from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.controller.partial_feedback_linearization.symbolic_pfl import (
     SymbolicPFLAndLQRController,
 )
-from sim_parameters import mpar, dt, t_final, t0, x0, goal, integrator, design, model, robot
+from sim_parameters import (
+    mpar,
+    dt,
+    t_final,
+    t0,
+    x0,
+    goal,
+    integrator,
+    design,
+    model,
+    robot,
+)
 
 name = "pflcol_lqr"
-leaderboard_config = {"csv_path": name + "/sim_swingup.csv",
-                      "name": name,
-                      "username": "fwiebe"}
+leaderboard_config = {
+    "csv_path": name + "/sim_swingup.csv",
+    "name": name,
+    "simple_name": "Energy PFL",
+    "short_description": "Partial Feedback Linearization with energy shaping control. Stabilization with LQR.",
+    "readme_path": f"readmes/{name}.md",
+    "username": "fwiebe",
+}
 
 pfl_method = "collocated"
 
@@ -24,7 +40,7 @@ mpar.set_torque_limit(torque_limit)
 # lqr parameters
 Q = np.diag((0.97, 0.93, 0.39, 0.26))
 R = np.diag((0.11, 0.11))
-par = [1., 1., 1.]
+par = [1.0, 1.0, 1.0]
 
 controller = SymbolicPFLAndLQRController(
     model_pars=mpar, robot=robot, pfl_method=pfl_method

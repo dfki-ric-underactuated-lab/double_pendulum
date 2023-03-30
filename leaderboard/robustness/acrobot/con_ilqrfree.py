@@ -10,6 +10,9 @@ name = "ilqrfree"
 leaderboard_config = {
     "csv_path": name + "/sim_swingup.csv",
     "name": name,
+    "simple_name": "iLQR MPC",
+    "short_description": "Online optimization with iterative LQR. Without reference trajectory.",
+    "readme_path": f"readmes/{name}.md",
     "username": "fwiebe",
 }
 
