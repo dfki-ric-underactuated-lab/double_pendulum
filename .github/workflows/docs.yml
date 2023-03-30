@@ -52,7 +52,7 @@ jobs:
         sudo wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
         sudo unzip Eigen.zip
         sudo mv eigen-*/Eigen /usr/local/include/
-        sudo rm -rf eigen-3.4.0
+        sudo rm -rf eigen-*
         sudo rm -rf Eigen.zip
     - name: Install project dependencies
       run: |
