@@ -131,7 +131,7 @@ def benchmark_controller(controller, save_dir):
         delay_mode=delay_mode,
         delays=delays,
     )
-    pprint.pprint(res)
+    #pprint.pprint(res)
 
     # saving
     f = open(os.path.join(save_dir, "benchmark_results.pkl"), "wb")
