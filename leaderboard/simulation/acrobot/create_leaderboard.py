@@ -65,7 +65,7 @@ for file in os.listdir("."):
 
             controller = imp.controller
 
-            simulate_controller(controller, save_dir)
+            simulate_controller(controller, save_dir, controller_name)
             recompute_leaderboard = True
 
 if recompute_leaderboard:
@@ -77,10 +77,16 @@ if recompute_leaderboard:
         if f[:4] == "con_":
             mod = importlib.import_module(f[:-3])
             if hasattr(mod, "leaderboard_config"):
-                if os.path.exists(os.path.join(data_dir, mod.leaderboard_config["csv_path"])):
-                    print(f"Found leaderboard_config and data for {mod.leaderboard_config['name']}")
+                if os.path.exists(
+                    os.path.join(data_dir, mod.leaderboard_config["csv_path"])
+                ):
+                    print(
+                        f"Found leaderboard_config and data for {mod.leaderboard_config['name']}"
+                    )
                     conf = mod.leaderboard_config
-                    conf["csv_path"] = os.path.join(data_dir, mod.leaderboard_config["csv_path"])
+                    conf["csv_path"] = os.path.join(
+                        data_dir, mod.leaderboard_config["csv_path"]
+                    )
                     data_paths[mod.leaderboard_config["name"]] = conf
 
     leaderboard_scores(
@@ -90,10 +96,10 @@ if recompute_leaderboard:
         # weights={"swingup_time": 0.5, "max_tau": 0.1, "energy": 0.0, "integ_tau": 0.4, "tau_cost": 0.0, "tau_smoothness": 0.0},
         weights={
             "swingup_time": 0.2,
-            "max_tau": 0.2,
-            "energy": 0.0,
-            "integ_tau": 0.2,
-            "tau_cost": 0.0,
+            "max_tau": 0.1,
+            "energy": 0.1,
+            "integ_tau": 0.1,
+            "tau_cost": 0.1,
             "tau_smoothness": 0.2,
             "velocity_cost": 0.2,
         },
@@ -109,4 +115,8 @@ if recompute_leaderboard:
         link_base=link_base,
     )
 
-    print(pandas.read_csv(save_to).sort_values(by=["Real AI Score"], ascending=False).to_markdown(index=False))
+    print(
+        pandas.read_csv(save_to)
+        .sort_values(by=["Real AI Score"], ascending=False)
+        .to_markdown(index=False)
+    )

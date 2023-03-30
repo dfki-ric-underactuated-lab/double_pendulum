@@ -14,8 +14,10 @@ The criteria can be found in
 
 
 The scripts for the leaderboard calculation can be found in
-`leaderboard/robustness/acrobot` for the acrobot and in
-`leaderboard/robustness/pendubot` for the pendubot.
+[leaderboard/robustness/acrobot](https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/robustness/acrobot)
+for the acrobot and in
+[leaderboard/robustness/pendubot](https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/robustness/pendubot)
+for the pendubot.
 
 Creating the Leaderboard
 ------------------------
@@ -57,9 +59,18 @@ Additionally, yout `con_controllername.py` file should contain a dictionary::
 
   leaderboard_config = {"csv_path": name + "/sim_swingup.csv",
                         "name": name,
+                        "simple_name": "simple name",
+                        "short_description": "Short controller description (max 100 characters)",
+                        "readme_path": f"readmes/{name}.md",
                         "username": username}
 
 where `name` is the `controllername` and `username` is your github username.
+Please add a simple name to display in the leaderboard and a short description
+of your controller with max. 100 characters.  Do not use commas (,) in your
+description as they are used as separators in the data table!
+For participating on the official leaderboard, i.e. when you create a pull
+request, please also add a readme markdown file which describes your controller
+in `readmes/controllername.md`. Add references if applicable.
 
 Feel free to import the model and simulation parameters from
 `sim_parameters.py` if you need them to instantiate your controller.

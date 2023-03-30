@@ -80,7 +80,9 @@ def leaderboard_scores(
         X = data_dict["X_meas"]
         U = data_dict["U_con"]
 
-        swingup_time = get_swingup_time(T=T, X=X, has_to_stay=True, mpar=mpar, method="height", height=0.9)
+        swingup_time = get_swingup_time(
+            T=T, X=X, has_to_stay=True, mpar=mpar, method="height", height=0.9
+        )
         max_tau = get_max_tau(U)
         energy = get_energy(X, U)
         integ_tau = get_integrated_torque(T, U)
@@ -102,8 +104,22 @@ def leaderboard_scores(
 
         score = 1 - score
 
+        if link_base != "":
+            if "simple_name" in d.keys():
+                name_with_link = (
+                    f"[{d['simple_name']}]({link_base}{d['name']}/README.md)"
+                )
+            else:
+                name_with_link = f"[{d['name']}]({link_base}{d['name']}/README.md)"
+        else:
+            if "simple_name" in d.keys():
+                name_with_link = d["simple_name"]
+            else:
+                name_with_link = d["name"]
+
         append_data = [
-            d["name"],
+            name_with_link,
+            d["short_description"],
             str(bool(success)),
             str(round(swingup_time, 2)),
             str(round(energy, 2)),
@@ -126,7 +142,7 @@ def leaderboard_scores(
 
         leaderboard_data.append(append_data)
 
-    header = "Controller,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Real AI Score,Username"
+    header = "Controller,Short Controller Description,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Real AI Score,Username"
     if link_base != "":
         header += ",Data"
 
@@ -140,7 +156,15 @@ def leaderboard_scores(
     )
 
 
-def get_swingup_time(T, X, eps=[1e-2, 1e-2, 1e-2, 1e-2], has_to_stay=True, mpar=None, method="height", height=0.9):
+def get_swingup_time(
+    T,
+    X,
+    eps=[1e-2, 1e-2, 1e-2, 1e-2],
+    has_to_stay=True,
+    mpar=None,
+    method="height",
+    height=0.9,
+):
     """get_swingup_time.
     get the swingup time from a data_dict.
 

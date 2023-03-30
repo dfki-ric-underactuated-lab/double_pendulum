@@ -14,6 +14,9 @@ from sim_parameters import mpar, dt, t_final, t0, x0, goal, integrator, design, 
 name = "ilqr_ilqrmpc_lqr"
 leaderboard_config = {"csv_path": name + "/sim_swingup.csv",
                       "name": name,
+                      "simple_name": "iLQR MPC stabilization",
+                      "short_description": "Online optimization with iterative LQR. Stabilization of iLQR trajectory. Top stabilization with LQR.",
+                      "readme_path": f"readmes/{name}.md",
                       "username": "fwiebe"}
 
 traj_model = "model_2.1"

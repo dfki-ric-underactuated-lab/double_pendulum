@@ -49,6 +49,9 @@ def simulate_controller(controller, save_dir):
         scale=0.5,
     )
 
+    if os.path.exists(f"readmes/{controller_name}.md"):
+        os.system(f"cp readmes/{controller_name}.md {save_dir}/README.md")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

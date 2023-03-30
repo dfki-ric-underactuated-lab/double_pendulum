@@ -14,6 +14,9 @@ name = "ilqr_riccati_lqr"
 leaderboard_config = {
     "csv_path": name + "/sim_swingup.csv",
     "name": name,
+    "simple_name": "iLQR Riccati Gains",
+    "short_description": "Stabilization of iLQR trajectorry with Riccati gains. Top stabilizaion with LQR.",
+    "readme_path": f"readmes/{name}.md",
     "username": "fwiebe",
 }
 
