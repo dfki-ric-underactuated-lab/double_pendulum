@@ -62,7 +62,7 @@ install the header only library with::
 
     wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
     unzip Eigen.zip
-    sudo mv eigen-3.4.0/Eigen /usr/local/include/
+    sudo mv eigen-*/Eigen /usr/local/include/
 
 For more information visit `eigen
 <https://eigen.tuxfamily.org/index.php?title=Main_Page>`__ .

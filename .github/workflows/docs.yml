@@ -51,8 +51,7 @@ jobs:
       run: |
         sudo wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
         sudo unzip Eigen.zip
-        sudo mv eigen-* eigen-3.4.0  # not sure why this is neccessary in ~50% of the runs
-        sudo mv eigen-3.4.0/Eigen /usr/local/include/
+        sudo mv eigen-*/Eigen /usr/local/include/
         sudo rm -rf eigen-3.4.0
         sudo rm -rf Eigen.zip
     - name: Install project dependencies
