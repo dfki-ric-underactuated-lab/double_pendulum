@@ -101,8 +101,10 @@ The task for the controller is to swingup and balance the acrobot/pendubot.</p>
 </ul>
 </div>
 <p>The scripts for the leaderboard calculation can be found in
-<cite>leaderboard/robustness/acrobot</cite> for the acrobot and in
-<cite>leaderboard/robustness/pendubot</cite> for the pendubot.</p>
+<a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/robustness/acrobot">leaderboard/robustness/acrobot</a> .
+for the acrobot and in
+<a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/robustness/pendubot">leaderboard/robustness/pendubot</a> .
+for the pendubot.</p>
 <section id="creating-the-leaderboard">
 <h2>Creating the Leaderboard<a class="headerlink" href="#creating-the-leaderboard" title="Permalink to this heading"></a></h2>
 <p>For creating the leaderboard locally, you can run:</p>
@@ -140,10 +142,19 @@ In that file you should create an instance of your controller with the name
 Additionally, yout <cite>con_controllername.py</cite> file should contain a dictionary:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">leaderboard_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;csv_path&quot;</span><span class="p">:</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;/sim_swingup.csv&quot;</span><span class="p">,</span>
                       <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                      <span class="s2">&quot;simple_name&quot;</span><span class="p">:</span> <span class="s2">&quot;simple name&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;short_description&quot;</span><span class="p">:</span> <span class="s2">&quot;Short controller description (max 100 characters)&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;readme_path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;readmes/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.md&quot;</span><span class="p">,</span>
                       <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>where <cite>name</cite> is the <cite>controllername</cite> and <cite>username</cite> is your github username.</p>
+<p>where <cite>name</cite> is the <cite>controllername</cite> and <cite>username</cite> is your github username.
+Please add a simple name to display in the leaderboard and a short description
+of your controller with max. 100 characters.  Do not use commas (,) in your
+description as they are used as separators in the data table!
+For participating on the official leaderboard, i.e. when you create a pull
+request, please also add a readme markdown file which describes your controller
+in <cite>readmes/controllername.md</cite>. Add references if applicable.</p>
 <p>Feel free to import the model and simulation parameters from
 <cite>sim_parameters.py</cite> if you need them to instantiate your controller.</p>
 <p>You can now generate the robustness data by calling:</p>
@@ -158,7 +169,7 @@ control of your controlled and save all relevant data in <cite>data/controllerna
 </div>
 <p>If you create a pull request and your controller and the <cite>con_controllername.py</cite>
 is added to the main repository your controller will appear on the
-<a class="reference external" href="https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_robustness_leaderboard.html">official leaderboard</a> .</p>
+<a class="reference external" href="https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_robustness_leaderboard.html">official leaderboard</a> .</p>
 </section>
 </section>
 
