@@ -60,44 +60,18 @@ repository on a real system. The instructions for testing the code can be found
 
 ## Installation
 
-We recommend using a virtual python environment with version >=3.8.10.
-
-Install dependencies:
-
-    # ubuntu20
-    sudo apt-get install libyaml-cpp-dev libeigen3-dev libpython3.8 libx11-6 libsm6 libxt6 libglib2.0-0 python3-sphinx python3-numpydoc python3-sphinx-rtd-theme
-
-    # ubuntu22
-    sudo apt-get install libyaml-cpp-dev libeigen3-dev libx11-6 libsm6 libglib2.0-0 python3-sphinx python3-numpydoc python3-sphinx-rtd-theme
-
-Update pip:
-
-    pip install -U pip
-
-To install this project, clone this repository and do
-
-    make install
-
-in the main directory.
-For more details, we refer to the
-[documentation](https://dfki-ric-underactuated-lab.github.io/double_pendulum/index.html).
+[Installation Instructions](https://dfki-ric-underactuated-lab.github.io/double_pendulum/installation.html).
 
 ## Documentation
 
-The
-[documentation](https://dfki-ric-underactuated-lab.github.io/double_pendulum/index.html)
-for this project can be found
-[here](https://dfki-ric-underactuated-lab.github.io/double_pendulum/index.html).
+Link to [documentation](https://dfki-ric-underactuated-lab.github.io/double_pendulum/index.html).
 
 The documentation can also be generated locally by doing
 
     make doc
 
 in the main directory. Afterwards you can open the file
-<mark>
-    docs/build/_build/html/index.html
-</mark>
-in your browser.
+*docs/build/_build/html/index.html* in your browser.
 
 ## Getting Started
 
