@@ -23,12 +23,12 @@ We recommend using a virtual python environment.
 
 2. Clone the repository::
 
-    git clone git@git.hb.dfki.de:underactuated-robotics/release_version/caprr-release-version.git
+    git clone git@github.com:dfki-ric-underactuated-lab/double_pendulum.git
 
 
 3. Install the double pendulum package::
    
-    cd caprr-release-version
+    cd double_pendulum
     make install
 
 
@@ -62,7 +62,7 @@ install the header only library with::
 
     wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
     unzip Eigen.zip
-    cp -r eigen-3.4.0/Eigen /usr/local/include
+    sudo mv eigen-*/Eigen /usr/local/include/
 
 For more information visit `eigen
 <https://eigen.tuxfamily.org/index.php?title=Main_Page>`__ .
