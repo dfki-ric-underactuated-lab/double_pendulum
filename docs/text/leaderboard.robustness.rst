@@ -87,4 +87,4 @@ control of your controlled and save all relevant data in `data/controllername`.
 
 If you create a pull request and your controller and the `con_controllername.py` 
 is added to the main repository your controller will appear on the 
-`official leaderboard <https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_robustness_leaderboard.html>`__ .
+`official leaderboard <https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_robustness_leaderboard.html>`__ .
