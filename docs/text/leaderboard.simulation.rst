@@ -69,4 +69,4 @@ To calculate the leaderboard scores for your controller do::
 
 If you create a pull request and your controller and the `con_controllername.py` 
 is added to the main repository your controller will appear on the
-`official leaderboard <https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_leaderboard.html>`__ .
+`official leaderboard <https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_performance_leaderboard.html>`__ .
