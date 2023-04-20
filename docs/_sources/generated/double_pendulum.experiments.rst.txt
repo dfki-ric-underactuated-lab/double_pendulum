@@ -33,14 +33,6 @@ double\_pendulum.experiments.hardware\_control\_loop\_tmotors
    :undoc-members:
    :show-inheritance:
 
-double\_pendulum.experiments.hardware\_control\_loop\_tmotors\_old
--------------------------------------------------------------------------
-
-.. automodule:: double_pendulum.experiments.hardware_control_loop_tmotors_old
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 double\_pendulum.experiments.performance\_profiler
 ---------------------------------------------------------
 
