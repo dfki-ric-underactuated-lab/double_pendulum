@@ -22,6 +22,7 @@
   <url>https://github.com/dfki-ric-underactuated-lab/double_pendulum</url>
   <logo>https://github.com/dfki-ric-underactuated-lab/double_pendulum/blob/main/docs/figures/chaotic_freefall_long_exposure_shot.jpg</logo>
   <keywords>
+    <keyword>control</keyword>
     <keyword>optimal control</keyword>
     <keyword>underactuation</keyword>
     <keyword>dynamics</keyword>
