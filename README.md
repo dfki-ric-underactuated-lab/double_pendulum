@@ -199,3 +199,14 @@ developers are released under their very own terms and conditions. If you
 install third-party software packages along with this repo ensure  that you
 follow each individual license agreement.
 
+## Citation
+
+1. Wiebe F., Kumar S., Shala L., Vyas S., Javadi M., Kirchner F., (2023). An Open Source Dual Purpose Acrobot and Pendubot Platform for Benchmarking Control Algorithms for Underactuated Robotics. In: IEEE Robotics and Automation Magazine (RAM), 2023, under review.
+```
+@ARTICLE{2023_ram_wiebe_double_pendulum,
+  author={Wiebe, Felix and Kumar, Shivesh and Shala, Lasse and Vyas, Shubham and Javadi, Mahdi and Kirchner, Frank},
+  journal={IEEE Robotics and Automation Magazine}, 
+  title={An Open Source Dual Purpose Acrobot and Pendubot Platform for Benchmarking Control Algorithms for Underactuated Robotics}, 
+  year={2023},
+  note={under review}}
+```
