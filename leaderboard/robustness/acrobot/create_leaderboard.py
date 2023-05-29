@@ -138,5 +138,6 @@ if recompute_leaderboard:
         fmt="%s",
         comments="",
     )
-
-    print(pandas.read_csv(save_to).sort_values(by=["Overall Robustness Score"], ascending=False).to_markdown(index=False))
+    df = pandas.read_csv(save_to)
+    df = df.drop(df.columns[1], axis=1)
+    print(df.sort_values(by=["Overall Robustness Score"], ascending=False).to_markdown(index=False))

@@ -1,0 +1,8 @@
+Controller,Short Controller Description,Model [%],Velocity Noise [%], Torque Noise [%], Torque Step Response [%], Time delay [%],Overall Robustness Score,Username
+iLQR Riccati Gains,Stabilization of iLQR trajectorry with Riccati gains. Top stabilizaion with LQR.,10.5,100.0,61.9,90.5,33.3,0.592,fwiebe
+iLQR MPC stabilization,Online optimization with iterative LQR. Stabilization of iLQR trajectory. Top stabilization with LQR.,44.3,100.0,100.0,100.0,85.7,0.860,fwiebe
+TVLQR,Stabilization of iLQR trajectory with time-varying LQR.,75.2,100.0,100.0,100.0,100.0,0.950,fwiebe
+mcpilco,,45.2,85.7,100.0,100.0,90.5,0.843,turcato-niccolo
+mcpilco,,45.2,85.7,100.0,100.0,90.5,0.843,turcato-niccolo
+Energy PFL,Partial Feedback Linearization with energy shaping control. Stabilization with LQR.,11.0,9.5,9.5,9.5,19.0,0.117,fwiebe
+iLQR MPC,Online optimization with iterative LQR. Without reference trajectory.,19.0,4.8,4.8,61.9,9.5,0.200,fwiebe
