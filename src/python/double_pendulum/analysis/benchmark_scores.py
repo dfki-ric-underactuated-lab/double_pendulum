@@ -46,7 +46,7 @@ def get_measurement_noise_score(res_dict):
 
 def get_unoise_score(res_dict):
     succs = res_dict["u_noise_robustness"]["successes"]
-    succ = np.sum(succs, axis=1)
+    #succ = np.sum(succs, axis=1)
     succ = np.average(succs, axis=1)
     succ = np.where(succ > 0.5, True, False)
     N = len(succ)
