@@ -35,7 +35,7 @@ T_sym = 0.002
 
 # controller parameters
 ctrl_rate = int(T_control/T_sym)
-u_max = torque_limit[1] * .47
+u_max = torque_limit[1] * .7
 n_dof = 2
 controlled_joint = [1]
 switch_stabilization = True
@@ -47,16 +47,16 @@ controller = Controller_sum_of_Gaussians_with_angles_numpy(parameters, ctrl_rate
 
 if switch_stabilization:
     stabilization_controller = LQRController_nonsymbolic(model_pars=mpar)
-    Q = np.diag((0.97, 0.93, 0.39, 0.26))
-    R = np.diag((0.11, 0.11))
-    # stabilization_controller.set_cost_parameters(u2u2_cost=100, p1p1_cost=100, p2p2_cost=100)
-    stabilization_controller.set_cost_matrices(Q=Q, R=R)
+    # Q = np.diag((0.97, 0.93, 0.39, 0.26))
+    # R = np.diag((0.11, 0.11))
+    # stabilization_controller.set_cost_matrices(Q=Q, R=R)
+    stabilization_controller.set_cost_parameters(u2u2_cost=100, p1p1_cost=100, p2p2_cost=100)
     stabilization_controller.set_parameters(failure_value=0., cost_to_go_cut=10 ** 3)
     condition_policy = lambda t, x: abs(x[0]) < 2.7 #abs(x[0]) - np.pi > 0.1 or abs(x[1]) > 0.1
-    condition_stabilization = lambda t, x: abs(x[0]) > 2.8
+    condition_stabilization = lambda t, x: abs(x[0]) > 2.75
     comb_controller = CombinedController(controller1=controller, controller2=stabilization_controller,
                                          condition1=condition_policy, condition2=condition_stabilization,
-                                         verbose=True)
+                                         verbose=False)
     controller = comb_controller
 
 controller.set_goal(goal)

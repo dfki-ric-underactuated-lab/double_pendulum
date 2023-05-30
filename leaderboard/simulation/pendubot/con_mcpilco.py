@@ -61,7 +61,7 @@ else:
 
 comb_controller = CombinedController(controller1=controller, controller2=stabilization_controller,
                                      condition1=condition_policy, condition2=condition_stabilization,
-                                     verbose=True)
+                                     verbose=False)
 controller = comb_controller
 
 controller.set_goal(goal)

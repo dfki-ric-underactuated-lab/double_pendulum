@@ -22,7 +22,7 @@ class Controller_sum_of_Gaussians_with_angles_numpy(AbstractController):
     def get_control_output(self, meas_pos, meas_vel, meas_tau, meas_time):
         if self.ctrl_cnt % self.ctrl_rate == 0:
             x = np.zeros((self.num_dof * 3))  # velocities, cos, sin
-            print(meas_vel)
+            # print(meas_vel)
             x[:self.num_dof] = meas_vel
             x[self.num_dof:2*self.num_dof] = np.cos(meas_pos)
             x[2 * self.num_dof:] = np.sin(meas_pos)
