@@ -9,6 +9,14 @@ double\_pendulum.simulation
 Submodules
 ----------
 
+double\_pendulum.simulation.gym\_env
+-------------------------------------------
+
+.. automodule:: double_pendulum.simulation.gym_env
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 double\_pendulum.simulation.simulation
 ---------------------------------------------
 

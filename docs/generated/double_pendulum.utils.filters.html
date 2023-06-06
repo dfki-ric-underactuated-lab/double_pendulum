@@ -11,6 +11,8 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
@@ -146,29 +148,8 @@ denominator (a) polynomials for a Infinite Impulse Response (IIR) filter</p>
 </dd></dl>
 
 </section>
-<section id="module-double_pendulum.utils.filters.kalman_filter">
-<span id="double-pendulum-utils-filters-kalman-filter"></span><h2>double_pendulum.utils.filters.kalman_filter<a class="headerlink" href="#module-double_pendulum.utils.filters.kalman_filter" title="Permalink to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.utils.filters.kalman_filter.kalman_filter">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.filters.kalman_filter.</span></span><span class="sig-name descname"><span class="pre">kalman_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_measured</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.filters.kalman_filter.kalman_filter" title="Permalink to this definition"></a></dt>
-<dd><p>Kalman Filter
-Filter that tracks position and velocity using a sensor that only reads position.
-State vector: [q1 q2 q1_dot q2_dot]
-Reference: <a class="reference external" href="https://filterpy.readthedocs.io/en/latest/kalman/KalmanFilter.html">https://filterpy.readthedocs.io/en/latest/kalman/KalmanFilter.html</a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="double_pendulum.utils.filters.kalman_filter.kalman_filter_rt">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.filters.kalman_filter.</span></span><span class="sig-name descname"><span class="pre">kalman_filter_rt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurement_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.001,</span> <span class="pre">0.001,</span> <span class="pre">0.1,</span> <span class="pre">0.1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariance_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[1.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">1.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">1.]])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.filters.kalman_filter.kalman_filter_rt" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>kalman filter for realtime data processing</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.utils.filters.kalman_filter.main">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.filters.kalman_filter.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.filters.kalman_filter.main" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
+<section id="double-pendulum-utils-filters-kalman-filter">
+<h2>double_pendulum.utils.filters.kalman_filter<a class="headerlink" href="#double-pendulum-utils-filters-kalman-filter" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-double_pendulum.utils.filters.low_pass">
 <span id="double-pendulum-utils-filters-low-pass"></span><h2>double_pendulum.utils.filters.low_pass<a class="headerlink" href="#module-double_pendulum.utils.filters.low_pass" title="Permalink to this heading"></a></h2>
@@ -237,19 +218,8 @@ Delay = (window-1)/2 * delta_t</p>
 </dd></dl>
 
 </section>
-<section id="module-double_pendulum.utils.filters.unscented_kalman_filter">
-<span id="double-pendulum-utils-filters-unscented-kalman-filter"></span><h2>double_pendulum.utils.filters.unscented_kalman_filter<a class="headerlink" href="#module-double_pendulum.utils.filters.unscented_kalman_filter" title="Permalink to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.utils.filters.unscented_kalman_filter.iden">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.filters.unscented_kalman_filter.</span></span><span class="sig-name descname"><span class="pre">iden</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.filters.unscented_kalman_filter.iden" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="double_pendulum.utils.filters.unscented_kalman_filter.unscented_kalman_filter_rt">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.utils.filters.unscented_kalman_filter.</span></span><span class="sig-name descname"><span class="pre">unscented_kalman_filter_rt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurement_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.001,</span> <span class="pre">0.001,</span> <span class="pre">0.1,</span> <span class="pre">0.1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.utils.filters.unscented_kalman_filter.unscented_kalman_filter_rt" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
+<section id="double-pendulum-utils-filters-unscented-kalman-filter">
+<h2>double_pendulum.utils.filters.unscented_kalman_filter<a class="headerlink" href="#double-pendulum-utils-filters-unscented-kalman-filter" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 

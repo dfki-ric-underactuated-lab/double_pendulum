@@ -11,6 +11,8 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
@@ -51,8 +53,8 @@
 <li class="toctree-l3 current"><a class="reference internal" href="double_pendulum.controller.html">double_pendulum.controller</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="double_pendulum.controller.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#module-double_pendulum.controller.abstract_controller">double_pendulum.controller.abstract_controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#module-double_pendulum.controller.combined_controller">double_pendulum.controller.combined_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#double-pendulum-controller-abstract-controller">double_pendulum.controller.abstract_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#double-pendulum-controller-combined-controller">double_pendulum.controller.combined_controller</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.experiments.html">double_pendulum.experiments</a></li>
@@ -103,178 +105,8 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-double_pendulum.controller.energy.energy_Xin">
-<span id="double-pendulum-controller-energy-energy-xin"></span><h2>double_pendulum.controller.energy.energy_Xin<a class="headerlink" href="#module-double_pendulum.controller.energy.energy_Xin" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="double_pendulum.controller.energy.energy_Xin.EnergyController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.energy.energy_Xin.</span></span><span class="sig-name descname"><span class="pre">EnergyController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0,</span> <span class="pre">1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">0.1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9.81</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coulomb_fric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gear_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[inf,</span> <span class="pre">inf]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_pars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.energy.energy_Xin.EnergyController" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController" title="double_pendulum.controller.abstract_controller.AbstractController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractController</span></code></a></p>
-<p>Energy-based controller for acrobot swingup based on this paper:
-<a class="reference external" href="https://onlinelibrary.wiley.com/doi/abs/10.1002/rnc.1184">https://onlinelibrary.wiley.com/doi/abs/10.1002/rnc.1184</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>mass</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[1.0, 1.0]
-masses of the double pendulum,
-[m1, m2], units=[kg]</p>
-</dd>
-<dt><strong>length</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.5, 0.5]
-link lengths of the double pendulum,
-[l1, l2], units=[m]</p>
-</dd>
-<dt><strong>com</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.5, 0.5]
-center of mass lengths of the double pendulum links
-[r1, r2], units=[m]</p>
-</dd>
-<dt><strong>damping</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.5, 0.5]
-damping coefficients of the double pendulum actuators
-[b1, b2], units=[kg*m/s]</p>
-</dd>
-<dt><strong>gravity</strong><span class="classifier">float, optional</span></dt><dd><p>default=9.81
-gravity acceleration (pointing downwards),
-units=[m/s²]</p>
-</dd>
-<dt><strong>coulomb_fric</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.0, 0.0]
-coulomb friction coefficients for the double pendulum actuators
-[cf1, cf2], units=[Nm]</p>
-</dd>
-<dt><strong>inertia</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[None, None]
-inertia of the double pendulum links
-[I1, I2], units=[kg*m²]
-if entry is None defaults to point mass m*l² inertia for the entry</p>
-</dd>
-<dt><strong>motor_inertia</strong><span class="classifier">float, optional</span></dt><dd><p>default=0.0
-inertia of the actuators/motors
-[Ir1, Ir2], units=[kg*m²]</p>
-</dd>
-<dt><strong>gear_ratio</strong><span class="classifier">int, optional</span></dt><dd><p>gear ratio of the motors, default=6</p>
-</dd>
-<dt><strong>torque_limit</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[np.inf, np.inf]
-torque limit of the motors
-[tl1, tl2], units=[Nm, Nm]</p>
-</dd>
-<dt><strong>model_pars</strong><span class="classifier">model_parameters object, optional</span></dt><dd><p>object of the model_parameters class, default=None
-Can be used to set all model parameters above
-If provided, the model_pars parameters overwrite
-the other provided parameters
-(Default value=None)</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.energy.energy_Xin.EnergyController.check_parameters">
-<span class="sig-name descname"><span class="pre">check_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.energy.energy_Xin.EnergyController.check_parameters" title="Permalink to this definition"></a></dt>
-<dd><p>Check if the parameters fulfill the convergence conditions presented in
-the paper.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.energy.energy_Xin.EnergyController.get_control_output_">
-<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.energy.energy_Xin.EnergyController.get_control_output_" title="Permalink to this definition"></a></dt>
-<dd><p>The function to compute the control input for the double pendulum’s
-actuator(s).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
-order=[angle1, angle2, velocity1, velocity2],
-units=[rad, rad, rad/s, rad/s]</p>
-</dd>
-<dt><strong>t</strong><span class="classifier">float, optional</span></dt><dd><p>time, unit=[s]
-(Default value=None)</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>array_like</dt><dd><p>shape=(2,), dtype=float
-actuation input/motor torque,
-order=[u1, u2],
-units=[Nm]</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.energy.energy_Xin.EnergyController.init_">
-<span class="sig-name descname"><span class="pre">init_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.energy.energy_Xin.EnergyController.init_" title="Permalink to this definition"></a></dt>
-<dd><p>Initialize the controller.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.energy.energy_Xin.EnergyController.save_">
-<span class="sig-name descname"><span class="pre">save_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.energy.energy_Xin.EnergyController.save_" title="Permalink to this definition"></a></dt>
-<dd><p>Save controller parameters</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>save_dir</strong><span class="classifier">string or path object</span></dt><dd><p>directory where the parameters will be saved</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.energy.energy_Xin.EnergyController.set_goal">
-<span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.energy.energy_Xin.EnergyController.set_goal" title="Permalink to this definition"></a></dt>
-<dd><p>set_goal.
-Set goal for the controller.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
-order=[angle1, angle2, velocity1, velocity2],
-units=[rad, rad, rad/s, rad/s]</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.energy.energy_Xin.EnergyController.set_parameters">
-<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.energy.energy_Xin.EnergyController.set_parameters" title="Permalink to this definition"></a></dt>
-<dd><p>set_parameters.
-Set controller gains.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>kp</strong><span class="classifier">float</span></dt><dd><p>gain for position error</p>
-</dd>
-<dt><strong>kd</strong><span class="classifier">float</span></dt><dd><p>gain</p>
-</dd>
-<dt><strong>kv</strong><span class="classifier">float</span></dt><dd><p>gain for velocity error</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.controller.energy.energy_Xin.kd_func">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.energy.energy_Xin.</span></span><span class="sig-name descname"><span class="pre">kd_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Er</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.energy.energy_Xin.kd_func" title="Permalink to this definition"></a></dt>
-<dd><p>Function to check the convergence property of kd.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>q2</strong><span class="classifier">float</span></dt><dd></dd>
-<dt><strong>a1</strong><span class="classifier">float</span></dt><dd></dd>
-<dt><strong>a2</strong><span class="classifier">float</span></dt><dd></dd>
-<dt><strong>a3</strong><span class="classifier">float</span></dt><dd></dd>
-<dt><strong>b1</strong><span class="classifier">float</span></dt><dd></dd>
-<dt><strong>b2</strong><span class="classifier">float</span></dt><dd></dd>
-<dt><strong>Er</strong><span class="classifier">float</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="double-pendulum-controller-energy-energy-xin">
+<h2>double_pendulum.controller.energy.energy_Xin<a class="headerlink" href="#double-pendulum-controller-energy-energy-xin" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 
