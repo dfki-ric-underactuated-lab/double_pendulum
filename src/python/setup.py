@@ -10,10 +10,7 @@ setup(
         # general
         'numpy',
         'matplotlib',
-        # 'bitstring',
-        # 'pyyaml',
         'pandas',
-        # 'argparse',
         'scipy',
         'sympy',
         'scikit-learn',
@@ -23,30 +20,44 @@ setup(
         'moteus',
         'inputs',
         'tabulate',
+        # 'bitstring',
+        # 'pyyaml',
+        # 'argparse',
 
         # c++ python bindings
         'cython',
 
-        # optimal control
-        'drake',
-        'meshcat',
-        'IPython',
-        'filterpy',
-        # 'crocoddyl',
+        # # optimal control
+        # 'drake',
+        # 'meshcat',
+        # 'IPython',
+        # 'filterpy',
+        # # 'crocoddyl',
 
         # # reinforcement learning
         # 'tensorflow>=2.6.0',
         # 'pickle5',
         # 'stable_baselines3'
 
-        # documentation
-        'sphinx',
-        'sphinx-rtd-theme',
-        'numpydoc',
+        # # documentation
+        # 'sphinx',
+        # 'sphinx-rtd-theme',
+        # 'numpydoc',
 
-        # testing
-        'pytest',
+        # # testing
+        # 'pytest',
+        # 'lark',
     ],
+    extras_require={
+        "all" : ['sphinx', 'sphinx-rtd-theme', 'numpydoc',
+                 'pytest', 'lark',
+                 'drake', 'meshcat',
+                 'gym', 'stable_baselines3'],
+        "doc" : ['sphinx', 'sphinx-rtd-theme', 'numpydoc'],
+        "test": ['pytest', 'lark'],
+        "OC" : ['drake', 'meshcat'],
+        "RL" : ['gym', 'stable_baselines3'],
+    },
     classifiers=[
           'Development Status :: 5 - Stable',
           'Environment :: Console',
