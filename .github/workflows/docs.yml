@@ -56,6 +56,8 @@ jobs:
         sudo rm -rf Eigen.zip
     - name: Install project dependencies
       run: |
+        pip install setuptools==65.5.0
+        pip install pip==21
         make install
     - name: Install HTML math dependencies
       run: |

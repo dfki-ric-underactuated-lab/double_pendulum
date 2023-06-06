@@ -14,6 +14,7 @@ class CustomEnv(gym.Env):
             np.array([-1.0, -1.0, -1.0, -1.0]), np.array([1.0, 1.0, 1.0, 1.0])
         ),
         act_space=gym.spaces.Box(np.array([-1.0, -1.0]), np.array([1.0, 1.0])),
+        max_episode_steps=1000,
     ):
         self.dynamics_func = dynamics_func
         self.reward_func = reward_func
@@ -22,14 +23,20 @@ class CustomEnv(gym.Env):
 
         self.observation_space = obs_space
         self.action_space = act_space
+        self.max_episode_steps = max_episode_steps
 
         self.observation = self.reset_func()
+        self.step_counter = 0
 
     def step(self, action):
         self.observation = self.dynamics_func(self.observation, action)
         reward = self.reward_func(self.observation, action)
         done = self.terminated_func(self.observation)
         info = {}
+        self.step_counter += 1
+        if self.step_counter >= self.max_episode_steps:
+            done = True
+            self.step_counter = 0
         return self.observation, reward, done, info
 
     def reset(self):
