@@ -99,7 +99,7 @@ class double_pendulum_dynamics_func:
         elif self.robot == "pendubot":
             a = np.array([float(self.torque_limit[0] * action[0]), 0.0])
         elif self.robot == "acrobot":
-            a = np.array([0.0, float(self.torque_limit[0] * action[0])])
+            a = np.array([0.0, float(self.torque_limit[1] * action[0])])
         return a
 
     def unscale_state(self, observation):

@@ -20,6 +20,7 @@ setup(
         'moteus',
         'inputs',
         'tabulate',
+        'filterpy',
         # 'bitstring',
         # 'pyyaml',
         # 'argparse',
@@ -31,7 +32,6 @@ setup(
         # 'drake',
         # 'meshcat',
         # 'IPython',
-        # 'filterpy',
         # # 'crocoddyl',
 
         # # reinforcement learning
