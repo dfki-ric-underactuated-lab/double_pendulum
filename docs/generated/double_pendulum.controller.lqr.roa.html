@@ -53,8 +53,8 @@
 <li class="toctree-l3 current"><a class="reference internal" href="double_pendulum.controller.html">double_pendulum.controller</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="double_pendulum.controller.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#double-pendulum-controller-abstract-controller">double_pendulum.controller.abstract_controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#double-pendulum-controller-combined-controller">double_pendulum.controller.combined_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#module-double_pendulum.controller.abstract_controller">double_pendulum.controller.abstract_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#module-double_pendulum.controller.combined_controller">double_pendulum.controller.combined_controller</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.experiments.html">double_pendulum.experiments</a></li>
@@ -106,8 +106,41 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="double-pendulum-controller-lqr-roa-check">
-<h2>double_pendulum.controller.lqr.roa.check<a class="headerlink" href="#double-pendulum-controller-lqr-roa-check" title="Permalink to this heading"></a></h2>
+<section id="module-double_pendulum.controller.lqr.roa.check">
+<span id="double-pendulum-controller-lqr-roa-check"></span><h2>double_pendulum.controller.lqr.roa.check<a class="headerlink" href="#module-double_pendulum.controller.lqr.roa.check" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.roa.check.lqr_check_ctg">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.lqr.roa.check.</span></span><span class="sig-name descname"><span class="pre">lqr_check_ctg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.roa.check.lqr_check_ctg" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.roa.check.lqr_check_ctg.sim_callback">
+<span class="sig-name descname"><span class="pre">sim_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.roa.check.lqr_check_ctg.sim_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Callback that is passed to the probabilitic RoA estimation class</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.roa.check.lqr_check_ctg_verification">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.lqr.roa.check.</span></span><span class="sig-name descname"><span class="pre">lqr_check_ctg_verification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dpar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.roa.check.lqr_check_ctg_verification" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.roa.check.lqr_check_epsilon">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.lqr.roa.check.</span></span><span class="sig-name descname"><span class="pre">lqr_check_epsilon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([3.14159265,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.roa.check.lqr_check_epsilon" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.roa.check.lqr_check_epsilon.sim_callback">
+<span class="sig-name descname"><span class="pre">sim_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.roa.check.lqr_check_epsilon.sim_callback" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.roa.check.lqr_check_epsilon_verification">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.lqr.roa.check.</span></span><span class="sig-name descname"><span class="pre">lqr_check_epsilon_verification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dpar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.roa.check.lqr_check_epsilon_verification" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="double-pendulum-controller-lqr-roa-coopt-interface">
 <h2>double_pendulum.controller.lqr.roa.coopt_interface<a class="headerlink" href="#double-pendulum-controller-lqr-roa-coopt-interface" title="Permalink to this heading"></a></h2>

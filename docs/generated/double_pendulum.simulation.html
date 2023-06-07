@@ -56,7 +56,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">double_pendulum.simulation</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.simulation.gym_env">double_pendulum.simulation.gym_env</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#double-pendulum-simulation-simulation">double_pendulum.simulation.simulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.simulation.simulation">double_pendulum.simulation.simulation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.simulation.visualization">double_pendulum.simulation.visualization</a></li>
 </ul>
 </li>
@@ -236,8 +236,654 @@ info (dict): contains auxiliary diagnostic information (helpful for debugging, a
 </dd></dl>
 
 </section>
-<section id="double-pendulum-simulation-simulation">
-<h2>double_pendulum.simulation.simulation<a class="headerlink" href="#double-pendulum-simulation-simulation" title="Permalink to this heading"></a></h2>
+<section id="module-double_pendulum.simulation.simulation">
+<span id="double-pendulum-simulation-simulation"></span><h2>double_pendulum.simulation.simulation<a class="headerlink" href="#module-double_pendulum.simulation.simulation" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.simulation.simulation.</span></span><span class="sig-name descname"><span class="pre">Simulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plant</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Simulator class
+simulates and optionally animates the double pendulum motion.
+Animation is done with matplotlib Funcanimation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>plant</strong><span class="classifier">SymbolicDoublePendulum or DoublePendulumPlant object</span></dt><dd><p>A plant object containing the kinematics and dynamics of the
+double pendulum</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.controller_step">
+<span class="sig-name descname"><span class="pre">controller_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runge_kutta'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.controller_step" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Perform a full simulation step including</dt><dd><ul class="simple">
+<li><p>get measurement</p></li>
+<li><p>filter measurement</p></li>
+<li><p>get controller signal</p></li>
+<li><p>calculate actual applied torques</p></li>
+<li><p>integrate the eom</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>timestep, unit=[s]</p>
+</dd>
+<dt><strong>controller</strong><span class="classifier">Controller object</span></dt><dd><p>Controller whose control signal is used
+If None, motir torques are set to 0.</p>
+<blockquote>
+<div><p>(Default value = None)</p>
+</div></blockquote>
+</dd>
+<dt><strong>integrator</strong><span class="classifier">string</span></dt><dd><p>string determining the integration method
+“euler” : Euler integrator
+“runge_kutta” : Runge Kutta integrator</p>
+<blockquote>
+<div><p>(Default value = “runge_kutta”)</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>bool</dt><dd><p>Flag stating real time calculation
+True: The calculation was performed in real time
+False: The calculation was not performed in real time</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.euler_integrator">
+<span class="sig-name descname"><span class="pre">euler_integrator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.euler_integrator" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a Euler integration step</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>y</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>timestep, unit=[s]</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">float</span></dt><dd><p>time, unit=[s]</p>
+</dd>
+<dt><strong>tau</strong><span class="classifier">array_like, shape=(2,), dtype=float</span></dt><dd><p>actuation input/motor torque,
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy_array</dt><dd><p>shape=(4,), dtype=float,
+new state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.filter_measurement">
+<span class="sig-name descname"><span class="pre">filter_measurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.filter_measurement" title="Permalink to this definition"></a></dt>
+<dd><p>Filter a measured state.</p>
+<p>(parameters set in set_filter_parameters)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy_array</dt><dd><p>shape=(4,), dtype=float,
+filters state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.get_control_u">
+<span class="sig-name descname"><span class="pre">get_control_u</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.get_control_u" title="Permalink to this definition"></a></dt>
+<dd><p>Get the control signal from the controller</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>controller</strong><span class="classifier">Controller object</span></dt><dd><p>Controller whose control signal is used
+If None, motir torques are set to 0.</p>
+</dd>
+<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">float,</span></dt><dd><p>time, units=[s], not used</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>timestep, unit=[s]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy_array</dt><dd><p>shape=(2,), dtype=float
+actuation input/motor torque,
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+<dt>bool</dt><dd><p>Flag stating real time calculation
+True: The calculation was performed in real time
+False: The calculation was not performed in real time</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.get_measurement">
+<span class="sig-name descname"><span class="pre">get_measurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.get_measurement" title="Permalink to this definition"></a></dt>
+<dd><p>Get a measurement from the internal state</p>
+<p>The state measurement is described by
+x_meas(t) = C*x(t-delay) + D*u(t-delay) + N(sigma)</p>
+<p>(parameters set by set_measurement_parameters)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>timestep, unit=[s]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy_array</dt><dd><p>shape=(4,), dtype=float,
+measured state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.get_real_applied_u">
+<span class="sig-name descname"><span class="pre">get_real_applied_u</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.get_real_applied_u" title="Permalink to this definition"></a></dt>
+<dd><p>Get the torque that the motor actually applies.</p>
+<p>The applied motor torque (u_out) is related to the commanded torque
+(u) and the last torque output (u_last) via</p>
+<p>u_out = u_responsiveness*u + (1-u_responsiveness)*u_last + N(sigma)</p>
+<p>(parameters set in set_motor_parameters)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>tau</strong><span class="classifier">array_like, shape=(2,), dtype=float</span></dt><dd><p>desired actuation input/motor torque,
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>array-like</dt><dd><p>shape=(2,), dtype=float
+actual actuation input/motor torque,
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.get_state">
+<span class="sig-name descname"><span class="pre">get_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.get_state" title="Permalink to this definition"></a></dt>
+<dd><p>Get the double pendulum state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>float</dt><dd><p>time, unit=[s]</p>
+</dd>
+<dt>numpy_array</dt><dd><p>shape=(4,)
+state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.get_trajectory_data">
+<span class="sig-name descname"><span class="pre">get_trajectory_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.get_trajectory_data" title="Permalink to this definition"></a></dt>
+<dd><p>Get the rocrded trajectory data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>numpy_array</dt><dd><p>time points, unit=[s]
+shape=(N,)</p>
+</dd>
+<dt>numpy_array</dt><dd><p>shape=(N, 4)
+states, units=[rad, rad, rad/s, rad/s]
+order=[angle1, angle2, velocity1, velocity2]</p>
+</dd>
+<dt>numpy_array</dt><dd><p>shape=(N, 2)
+actuations/motor torques
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.init_filter">
+<span class="sig-name descname"><span class="pre">init_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integrator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.init_filter" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize the filter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x0</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>reference state if a linearization is needed (Kalman filter),
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>timestep, unit=[s]</p>
+</dd>
+<dt><strong>integrator</strong><span class="classifier">string</span></dt><dd><p>string determining the integration method
+“euler” : Euler integrator
+“runge_kutta” : Runge Kutta integrator</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.record_data">
+<span class="sig-name descname"><span class="pre">record_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.record_data" title="Permalink to this definition"></a></dt>
+<dd><p>Record a data point in the simulator’s internal record</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>t</strong><span class="classifier">float</span></dt><dd><p>time, units=[s]</p>
+</dd>
+<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+<dt><strong>tau</strong><span class="classifier">array_like, shape=(2,), dtype=float</span></dt><dd><p>actuation input/motor torque,
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the Simulator
+Resets</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the internal data recorder</p></li>
+<li><p>the filter + arguments</p></li>
+<li><p>the process noise</p></li>
+<li><p>the measurement parameters</p></li>
+<li><p>the motor parameters</p></li>
+<li><p>perturbations</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.reset_data_recorder">
+<span class="sig-name descname"><span class="pre">reset_data_recorder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.reset_data_recorder" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the internal data record of the simulator</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.runge_integrator">
+<span class="sig-name descname"><span class="pre">runge_integrator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.runge_integrator" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a Runge-Kutta integration step</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>y</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>timestep, unit=[s]</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">float</span></dt><dd><p>time, unit=[s]</p>
+</dd>
+<dt><strong>tau</strong><span class="classifier">array_like, shape=(2,), dtype=float</span></dt><dd><p>actuation input/motor torque,
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy_array</dt><dd><p>shape=(4,), dtype=float,
+new state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.set_disturbances">
+<span class="sig-name descname"><span class="pre">set_disturbances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">perturbation_times</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_taus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.set_disturbances" title="Permalink to this definition"></a></dt>
+<dd><p>Set disturbances (hits) happening during the simulation.
+(Not yet implemented)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>perturbation_times</strong><span class="classifier">array_like</span></dt><dd><p>(Default value = [])</p>
+</dd>
+<dt><strong>perturbation_taus</strong><span class="classifier">array_like</span></dt><dd><p>(Default value = [])</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.set_filter_parameters">
+<span class="sig-name descname"><span class="pre">set_filter_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meas_noise_cut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_noise_vfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_noise_vfilter_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">[1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0]}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.set_filter_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Set filter parameters for filtering raw measurments</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>meas_noise_cut</strong><span class="classifier">float</span></dt><dd><p>measurements smaller than this value will be set to 0.
+(they are assumed to be noise)
+For meas_noise_cut==0.0, the measurement is not cut
+(Default value = 0.0)</p>
+</dd>
+<dt><strong>meas_noise_vfilter</strong><span class="classifier">string</span></dt><dd><p>string determining the velocity noise filter
+“None”: No filter
+“lowpass”: lowpass filter
+“kalman”: kalman filter
+“unscented_kalman”: unscented kalman filter
+(Default value = “None”)</p>
+</dd>
+<dt><strong>meas_noise_vfilter_args</strong><span class="classifier">dict</span></dt><dd><p>dictionary containing parameters for the velocity filter
+(Default value = {“alpha”: [1., 1., 1., 1.]})</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.set_measurement_parameters">
+<span class="sig-name descname"><span class="pre">set_measurement_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[1.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">1.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">1.]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_noise_sigmas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.set_measurement_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Set parameters for state measuremts</p>
+<p>The state measurement is described by
+x_meas(t) = C*x(t-delay) + D*u(t-delay) + N(sigma)</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>C</strong><span class="classifier">numpy_array</span></dt><dd><p>state-state measurement matrix
+(Default value = np.eye(4))</p>
+</dd>
+<dt><strong>D</strong><span class="classifier">numpy_array</span></dt><dd><p>state-torque measurement matrix
+(Default value = np.zeros((4, 2))</p>
+</dd>
+<dt><strong>meas_noise_sigmas</strong><span class="classifier">array_like</span></dt><dd><p>Standard deviations of Gaussian measurement noise
+(Default value = [0., 0., 0., 0.])</p>
+</dd>
+<dt><strong>delay</strong><span class="classifier">float</span></dt><dd><dl class="simple">
+<dt>time delay of measurements, unit=[s]</dt><dd><p>(Default value = 0.0)</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>delay_mode</strong><span class="classifier">string</span></dt><dd><p>string determining what state variables are delayed:
+“None”: no delay
+“vel”: velocity measurements are delayed
+“posvel”: position and velocity measurements are delayed</p>
+<blockquote>
+<div><p>(Default value = “None”)</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.set_motor_parameters">
+<span class="sig-name descname"><span class="pre">set_motor_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_noise_sigmas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_responsiveness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.set_motor_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Set parameters for the motors</p>
+<p>The applied motor torque (u_out) is related to the commanded torque
+(u) and the last torque output (u_last) via</p>
+<p>u_out = u_responsiveness*u + (1-u_responsiveness)*u_last + N(sigma)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>u_noise_sigmas</strong><span class="classifier">array_like</span></dt><dd><p>shape=(2,)
+Standard deviation of the gaussian noise for the torque produced by
+the motors
+(Default value = [0., 0.])</p>
+</dd>
+<dt><strong>u_responsiveness</strong><span class="classifier">float</span></dt><dd><p>resonsiveness of the motors
+(Default value = 1.)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.set_process_noise">
+<span class="sig-name descname"><span class="pre">set_process_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_noise_sigmas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.set_process_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Set parameters for process noise (Gaussian)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>process_noise_sigmas</strong><span class="classifier">array_like</span></dt><dd><p>shape=(4,)
+Gaussian standard deviations for the process noise.
+Each entry in the list corresponds to a state variable.
+(Default value = [0., 0., 0., 0.])</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.set_state" title="Permalink to this definition"></a></dt>
+<dd><p>Set the time and state of the double pendulum</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>t</strong><span class="classifier">float</span></dt><dd><p>time, units=[s]</p>
+</dd>
+<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runge_kutta'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.simulate" title="Permalink to this definition"></a></dt>
+<dd><p>Simulate the double pendulum for a time period under the control of a
+controller</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>t0</strong><span class="classifier">float,</span></dt><dd><p>start time, units=[s]</p>
+</dd>
+<dt><strong>x0</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>initial state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+<dt><strong>tf</strong><span class="classifier">float</span></dt><dd><p>final time, units=[s]</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>timestep, unit=[s]</p>
+</dd>
+<dt><strong>controller</strong><span class="classifier">Controller object</span></dt><dd><p>Controller whose control signal is used
+If None, motir torques are set to 0.</p>
+<blockquote>
+<div><p>(Default value = None)</p>
+</div></blockquote>
+</dd>
+<dt><strong>integrator</strong><span class="classifier">string</span></dt><dd><p>string determining the integration method
+“euler” : Euler integrator
+“runge_kutta” : Runge Kutta integrator</p>
+<blockquote>
+<div><p>(Default value = “runge_kutta”)</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>list</dt><dd><p>time points, unit=[s]
+shape=(N,)</p>
+</dd>
+<dt>list</dt><dd><p>shape=(N, 4)
+states, units=[rad, rad, rad/s, rad/s]
+order=[angle1, angle2, velocity1, velocity2]</p>
+</dd>
+<dt>list</dt><dd><p>shape=(N, 2)
+actuations/motor torques
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.simulate_and_animate">
+<span class="sig-name descname"><span class="pre">simulate_and_animate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runge_kutta'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_inittraj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_forecast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_trail</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_video</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pendulum_swingup.mp4'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anim_dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_horizontal_line</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontal_line_height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.simulate_and_animate" title="Permalink to this definition"></a></dt>
+<dd><p>Simulate and animate the double pendulum for a time period under the
+control of a controller.
+The animation is only implemented for 2d serial chains.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>t0</strong><span class="classifier">float,</span></dt><dd><p>start time, units=[s]</p>
+</dd>
+<dt><strong>x0</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>initial state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+<dt><strong>tf</strong><span class="classifier">float</span></dt><dd><p>final time, units=[s]</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>timestep, unit=[s]</p>
+</dd>
+<dt><strong>controller</strong><span class="classifier">Controller object</span></dt><dd><p>Controller whose control signal is used
+If None, motir torques are set to 0.
+(Default value = None)</p>
+</dd>
+<dt><strong>integrator</strong><span class="classifier">string</span></dt><dd><p>string determining the integration method
+“euler” : Euler integrator
+“runge_kutta” : Runge Kutta integrator</p>
+<blockquote>
+<div><p>(Default value = “runge_kutta”)</p>
+</div></blockquote>
+</dd>
+<dt><strong>plot_inittraj</strong><span class="classifier">bool</span></dt><dd><p>Whether to plot an initial (reference) trajectory
+(Default value = False)</p>
+</dd>
+<dt><strong>plot_forecast</strong><span class="classifier">bool</span></dt><dd><p>Whether to plot a forcasted trajectory
+(Default value = False)</p>
+</dd>
+<dt><strong>plot_trail</strong><span class="classifier">bool</span></dt><dd><p>Whether to plot a trail for the masses
+(Default value = True)</p>
+</dd>
+<dt><strong>phase_plot</strong><span class="classifier">bool</span></dt><dd><p>not used
+(Default value = False)</p>
+</dd>
+<dt><strong>save_video</strong><span class="classifier">bool</span></dt><dd><p>Whether to render and save a video of the animation.
+Will be saved to video_name
+(Default value = False)</p>
+</dd>
+<dt><strong>video_name</strong><span class="classifier">string</span></dt><dd><p>filepath where a video of the animation is stored if
+save_video==True
+(Default value = “pendulum_swingup.mp4”)</p>
+</dd>
+<dt><strong>anim_dt</strong><span class="classifier">float</span></dt><dd><p>timestep used for the animation, unit=[s]
+(Default value = 0.02)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>list</dt><dd><p>time points, unit=[s]
+shape=(N,)</p>
+</dd>
+<dt>list</dt><dd><p>shape=(N, 4)
+states, units=[rad, rad, rad/s, rad/s]
+order=[angle1, angle2, velocity1, velocity2]</p>
+</dd>
+<dt>list</dt><dd><p>shape=(N, 2)
+actuations/motor torques
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runge_kutta'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.step" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a simulation step with the specified integrator.
+Also adds process noise to the integration result.
+Uses and updates the internal state</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>tau</strong><span class="classifier">array_like, shape=(2,), dtype=float</span></dt><dd><p>actuation input/motor torque,
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>timestep, unit=[s]</p>
+</dd>
+<dt><strong>integrator</strong><span class="classifier">string</span></dt><dd><p>string determining the integration method
+“euler” : Euler integrator
+“runge_kutta” : Runge Kutta integrator</p>
+<blockquote>
+<div><p>(Default value = “runge_kutta”)</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-double_pendulum.simulation.visualization">
 <span id="double-pendulum-simulation-visualization"></span><h2>double_pendulum.simulation.visualization<a class="headerlink" href="#module-double_pendulum.simulation.visualization" title="Permalink to this heading"></a></h2>

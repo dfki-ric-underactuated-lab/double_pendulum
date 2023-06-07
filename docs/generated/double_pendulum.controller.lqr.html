@@ -53,8 +53,8 @@
 <li class="toctree-l3 current"><a class="reference internal" href="double_pendulum.controller.html">double_pendulum.controller</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="double_pendulum.controller.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#double-pendulum-controller-abstract-controller">double_pendulum.controller.abstract_controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#double-pendulum-controller-combined-controller">double_pendulum.controller.combined_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#module-double_pendulum.controller.abstract_controller">double_pendulum.controller.abstract_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#module-double_pendulum.controller.combined_controller">double_pendulum.controller.combined_controller</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.experiments.html">double_pendulum.experiments</a></li>
@@ -188,11 +188,695 @@ cost = integral x.T*Q*x + u.T*R*u</p>
 </dd></dl>
 
 </section>
-<section id="double-pendulum-controller-lqr-lqr-controller">
-<h2>double_pendulum.controller.lqr.lqr_controller<a class="headerlink" href="#double-pendulum-controller-lqr-lqr-controller" title="Permalink to this heading"></a></h2>
+<section id="module-double_pendulum.controller.lqr.lqr_controller">
+<span id="double-pendulum-controller-lqr-lqr-controller"></span><h2>double_pendulum.controller.lqr.lqr_controller<a class="headerlink" href="#module-double_pendulum.controller.lqr.lqr_controller" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.lqr.lqr_controller.</span></span><span class="sig-name descname"><span class="pre">LQRController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.6]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.3,</span> <span class="pre">0.2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.3,</span> <span class="pre">0.2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">0.1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coulomb_fric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9.81</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_pars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController" title="double_pendulum.controller.abstract_controller.AbstractController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractController</span></code></a></p>
+<p>LQRController.
+Controller which uses LQR to stabilize a (unstable) fixpoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>mass</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.5, 0.6]
+masses of the double pendulum,
+[m1, m2], units=[kg]</p>
+</dd>
+<dt><strong>length</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.3, 0.2]
+link lengths of the double pendulum,
+[l1, l2], units=[m]</p>
+</dd>
+<dt><strong>com</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.3, 0.3]
+center of mass lengths of the double pendulum links
+[r1, r2], units=[m]</p>
+</dd>
+<dt><strong>damping</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.1, 0.1]
+damping coefficients of the double pendulum actuators
+[b1, b2], units=[kg*m/s]</p>
+</dd>
+<dt><strong>gravity</strong><span class="classifier">float, optional</span></dt><dd><p>default=9.81
+gravity acceleration (pointing downwards),
+units=[m/s²]</p>
+</dd>
+<dt><strong>coulomb_fric</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.0, 0.0]
+coulomb friction coefficients for the double pendulum actuators
+[cf1, cf2], units=[Nm]</p>
+</dd>
+<dt><strong>inertia</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[None, None]
+inertia of the double pendulum links
+[I1, I2], units=[kg*m²]
+if entry is None defaults to point mass m*l² inertia for the entry</p>
+</dd>
+<dt><strong>torque_limit</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.0, 1.0]
+torque limit of the motors
+[tl1, tl2], units=[Nm, Nm]</p>
+</dd>
+<dt><strong>model_pars</strong><span class="classifier">model_parameters object, optional</span></dt><dd><p>object of the model_parameters class, default=None
+Can be used to set all model parameters above
+If provided, the model_pars parameters overwrite
+the other provided parameters</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController.get_control_output_">
+<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController.get_control_output_" title="Permalink to this definition"></a></dt>
+<dd><p>The function to compute the control input for the double pendulum’s
+actuator(s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">float, optional</span></dt><dd><p>time, unit=[s]
+(Default value=None)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>array_like</dt><dd><p>shape=(2,), dtype=float
+actuation input/motor torque,
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController.init_">
+<span class="sig-name descname"><span class="pre">init_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController.init_" title="Permalink to this definition"></a></dt>
+<dd><p>Initalize the controller.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController.save_">
+<span class="sig-name descname"><span class="pre">save_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController.save_" title="Permalink to this definition"></a></dt>
+<dd><p>Save controller parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>save_dir</strong><span class="classifier">string or path object</span></dt><dd><p>directory where the parameters will be saved</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController.set_cost_matrices">
+<span class="sig-name descname"><span class="pre">set_cost_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController.set_cost_matrices" title="Permalink to this definition"></a></dt>
+<dd><p>Set the Q and R matrices directly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Q</strong><span class="classifier">numpy_array</span></dt><dd><p>shape=(4,4)
+Q-matrix describing quadratic state cost</p>
+</dd>
+<dt><strong>R</strong><span class="classifier">numpy_array</span></dt><dd><p>shape=(2,2)
+R-matrix describing quadratic control cost</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController.set_cost_parameters">
+<span class="sig-name descname"><span class="pre">set_cost_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1p1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2p2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v1v1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2v2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1p2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v1v2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1v1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1v2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2v1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2v2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1u1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u2u2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1u2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController.set_cost_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>set_cost_parameters.
+Parameters of Q and R matrices. The parameters are</p>
+<dl class="simple">
+<dt>Q = ((p1p1, p1p2, p1v1, p1v2),</dt><dd><p>(p1p2, p2p2, p2v1, p2v2),
+(p1v1, p2v1, v1v1, v1v2),
+(p1v2, p2v2, v1v2, v2v2))</p>
+</dd>
+<dt>R = ((u1u1, u1u2),</dt><dd><p>(u1u2, u2u2))</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>p1p1_cost</strong><span class="classifier">float</span></dt><dd><p>p1p1_cost
+(Default value=1.)</p>
+</dd>
+<dt><strong>p2p2_cost</strong><span class="classifier">float</span></dt><dd><p>p2p2_cost
+(Default value=1.)</p>
+</dd>
+<dt><strong>v1v1_cost</strong><span class="classifier">float</span></dt><dd><p>v1v1_cost
+(Default value=1.)</p>
+</dd>
+<dt><strong>v2v2_cost</strong><span class="classifier">float</span></dt><dd><p>v2v2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p1p2_cost</strong><span class="classifier">float</span></dt><dd><p>p1p2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>v1v2_cost</strong><span class="classifier">float</span></dt><dd><p>v1v2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p1v1_cost</strong><span class="classifier">float</span></dt><dd><p>p1v1_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p1v2_cost</strong><span class="classifier">float</span></dt><dd><p>p1v2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p2v1_cost</strong><span class="classifier">float</span></dt><dd><p>p2v1_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p2v2_cost</strong><span class="classifier">float</span></dt><dd><p>p2v2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>u1u1_cost</strong><span class="classifier">float</span></dt><dd><p>u1u1_cost
+(Default value=0.01)</p>
+</dd>
+<dt><strong>u2u2_cost</strong><span class="classifier">float</span></dt><dd><p>u2u2_cost
+(Default value=0.01)</p>
+</dd>
+<dt><strong>u1u2_cost</strong><span class="classifier">float</span></dt><dd><p>u1u2_cost
+(Default value=0.)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController.set_cost_parameters_">
+<span class="sig-name descname"><span class="pre">set_cost_parameters_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController.set_cost_parameters_" title="Permalink to this definition"></a></dt>
+<dd><p>Set the diagonal parameters of Q and R matrices with a list.</p>
+<p>The parameters are
+Q = ((pars[0], 0, 0, 0),</p>
+<blockquote>
+<div><p>(0, pars[1], 0, 0),
+(0, 0, pars[2], 0),
+(0, 0, 0, pars[3]))</p>
+</div></blockquote>
+<dl class="simple">
+<dt>R = ((pars[4], 0)</dt><dd><p>(0, pars[4]))</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>pars</strong><span class="classifier">list</span></dt><dd><p>shape=(5,), dtype=float
+(Default value=[1., 1., 1., 1., 1.])</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController.set_goal">
+<span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[3.141592653589793,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController.set_goal" title="Permalink to this definition"></a></dt>
+<dd><p>set_goal.
+Set goal for the controller.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]
+(Default value=[np.pi, 0., 0., 0.])</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failure_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_to_go_cut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController.set_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>set_parameters.
+Set parameters for this controller.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>failure_value</strong><span class="classifier">float</span></dt><dd><p>if the cost-to-go exceeds cost_to_go_cut this value is retured as torque
+(Default value=np.nan)</p>
+</dd>
+<dt><strong>cost_to_go_cut</strong><span class="classifier">float</span></dt><dd><p>if the cost-to-go exceeds this values the controller
+returns failure_value
+(Default value=15.)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.lqr.lqr_controller.</span></span><span class="sig-name descname"><span class="pre">LQRController_nonsymbolic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.6]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.3,</span> <span class="pre">0.2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.3,</span> <span class="pre">0.2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">0.1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coulomb_fric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9.81</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_pars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController" title="double_pendulum.controller.abstract_controller.AbstractController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractController</span></code></a></p>
+<p>LQRController.
+Controller which uses LQR to stabilize a (unstable) fixpoint.  This version
+of the LQR controller does not use the symbolic plant and thus is
+compatible with the cma-es optimizer for parameter optimization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>mass</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.5, 0.6]
+masses of the double pendulum,
+[m1, m2], units=[kg]</p>
+</dd>
+<dt><strong>length</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.3, 0.2]
+link lengths of the double pendulum,
+[l1, l2], units=[m]</p>
+</dd>
+<dt><strong>com</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.3, 0.3]
+center of mass lengths of the double pendulum links
+[r1, r2], units=[m]</p>
+</dd>
+<dt><strong>damping</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.1, 0.1]
+damping coefficients of the double pendulum actuators
+[b1, b2], units=[kg*m/s]</p>
+</dd>
+<dt><strong>gravity</strong><span class="classifier">float, optional</span></dt><dd><p>default=9.81
+gravity acceleration (pointing downwards),
+units=[m/s²]</p>
+</dd>
+<dt><strong>coulomb_fric</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.0, 0.0]
+coulomb friction coefficients for the double pendulum actuators
+[cf1, cf2], units=[Nm]</p>
+</dd>
+<dt><strong>inertia</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[None, None]
+inertia of the double pendulum links
+[I1, I2], units=[kg*m²]
+if entry is None defaults to point mass m*l² inertia for the entry</p>
+</dd>
+<dt><strong>torque_limit</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.0, 1.0]
+torque limit of the motors
+[tl1, tl2], units=[Nm, Nm]</p>
+</dd>
+<dt><strong>model_pars</strong><span class="classifier">model_parameters object, optional</span></dt><dd><p>object of the model_parameters class, default=None
+Can be used to set all model parameters above
+If provided, the model_pars parameters overwrite
+the other provided parameters</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.get_control_output_">
+<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.get_control_output_" title="Permalink to this definition"></a></dt>
+<dd><p>The function to compute the control input for the double pendulum’s
+actuator(s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">float, optional</span></dt><dd><p>time, unit=[s]
+(Default value=None)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>array_like</dt><dd><p>shape=(2,), dtype=float
+actuation input/motor torque,
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.init_">
+<span class="sig-name descname"><span class="pre">init_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.init_" title="Permalink to this definition"></a></dt>
+<dd><p>Initalize the controller.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.save_">
+<span class="sig-name descname"><span class="pre">save_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.save_" title="Permalink to this definition"></a></dt>
+<dd><p>Save the energy trajectory to file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>path</strong><span class="classifier">string or path object</span></dt><dd><p>directory where the parameters will be saved</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.set_cost_matrices">
+<span class="sig-name descname"><span class="pre">set_cost_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.set_cost_matrices" title="Permalink to this definition"></a></dt>
+<dd><p>Set the Q and R matrices directly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Q</strong><span class="classifier">numpy_array</span></dt><dd><p>shape=(4,4)
+Q-matrix describing quadratic state cost</p>
+</dd>
+<dt><strong>R</strong><span class="classifier">numpy_array</span></dt><dd><p>shape=(2,2)
+R-matrix describing quadratic control cost</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.set_cost_parameters">
+<span class="sig-name descname"><span class="pre">set_cost_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1p1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2p2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v1v1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2v2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1p2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v1v2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1v1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1v2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2v1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2v2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1u1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u2u2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1u2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.set_cost_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>set_cost_parameters.
+Parameters of Q and R matrices. The parameters are</p>
+<dl class="simple">
+<dt>Q = ((p1p1, p1p2, p1v1, p1v2),</dt><dd><p>(p1p2, p2p2, p2v1, p2v2),
+(p1v1, p2v1, v1v1, v1v2),
+(p1v2, p2v2, v1v2, v2v2))</p>
+</dd>
+<dt>R = ((u1u1, u1u2),</dt><dd><p>(u1u2, u2u2))</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>p1p1_cost</strong><span class="classifier">float</span></dt><dd><p>p1p1_cost
+(Default value=1.)</p>
+</dd>
+<dt><strong>p2p2_cost</strong><span class="classifier">float</span></dt><dd><p>p2p2_cost
+(Default value=1.)</p>
+</dd>
+<dt><strong>v1v1_cost</strong><span class="classifier">float</span></dt><dd><p>v1v1_cost
+(Default value=1.)</p>
+</dd>
+<dt><strong>v2v2_cost</strong><span class="classifier">float</span></dt><dd><p>v2v2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p1p2_cost</strong><span class="classifier">float</span></dt><dd><p>p1p2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>v1v2_cost</strong><span class="classifier">float</span></dt><dd><p>v1v2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p1v1_cost</strong><span class="classifier">float</span></dt><dd><p>p1v1_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p1v2_cost</strong><span class="classifier">float</span></dt><dd><p>p1v2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p2v1_cost</strong><span class="classifier">float</span></dt><dd><p>p2v1_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p2v2_cost</strong><span class="classifier">float</span></dt><dd><p>p2v2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>u1u1_cost</strong><span class="classifier">float</span></dt><dd><p>u1u1_cost
+(Default value=0.01)</p>
+</dd>
+<dt><strong>u2u2_cost</strong><span class="classifier">float</span></dt><dd><p>u2u2_cost
+(Default value=0.01)</p>
+</dd>
+<dt><strong>u1u2_cost</strong><span class="classifier">float</span></dt><dd><p>u1u2_cost
+(Default value=0.)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.set_cost_parameters_">
+<span class="sig-name descname"><span class="pre">set_cost_parameters_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.set_cost_parameters_" title="Permalink to this definition"></a></dt>
+<dd><p>Set the diagonal parameters of Q and R matrices with a list.</p>
+<p>The parameters are
+Q = ((pars[0], 0, 0, 0),</p>
+<blockquote>
+<div><p>(0, pars[1], 0, 0),
+(0, 0, pars[2], 0),
+(0, 0, 0, pars[3]))</p>
+</div></blockquote>
+<dl class="simple">
+<dt>R = ((pars[4], 0)</dt><dd><p>(0, pars[4]))</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>pars</strong><span class="classifier">list</span></dt><dd><p>shape=(5,), dtype=float
+(Default value=[1., 1., 1., 1., 1.])</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.set_goal">
+<span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[3.141592653589793,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.set_goal" title="Permalink to this definition"></a></dt>
+<dd><p>set_goal.
+Set goal for the controller.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]
+(Default value=[np.pi, 0., 0., 0.])</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failure_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_to_go_cut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller.LQRController_nonsymbolic.set_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>set_parameters.
+Set parameters for this controller.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>failure_value</strong><span class="classifier">float</span></dt><dd><p>if the cost-to-go exceeds cost_to_go_cut this value is retured as torque
+(Default value=np.nan)</p>
+</dd>
+<dt><strong>cost_to_go_cut</strong><span class="classifier">float</span></dt><dd><p>if the cost-to-go exceeds this values the controller
+returns failure_value
+(Default value=15.)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="double-pendulum-controller-lqr-lqr-controller-drake">
-<h2>double_pendulum.controller.lqr.lqr_controller_drake<a class="headerlink" href="#double-pendulum-controller-lqr-lqr-controller-drake" title="Permalink to this heading"></a></h2>
+<section id="module-double_pendulum.controller.lqr.lqr_controller_drake">
+<span id="double-pendulum-controller-lqr-lqr-controller-drake"></span><h2>double_pendulum.controller.lqr.lqr_controller_drake<a class="headerlink" href="#module-double_pendulum.controller.lqr.lqr_controller_drake" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller_drake.LQRController">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.lqr.lqr_controller_drake.</span></span><span class="sig-name descname"><span class="pre">LQRController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">urdf_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acrobot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller_drake.LQRController" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController" title="double_pendulum.controller.abstract_controller.AbstractController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractController</span></code></a></p>
+<p>LQRController.
+Controller which uses LQR to stabilize a (unstable) fixpoint.
+Uses drake LQR.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>urdf_path</strong><span class="classifier">string or path object</span></dt><dd><p>path to urdf file</p>
+</dd>
+<dt><strong>model_pars</strong><span class="classifier">model_parameters object</span></dt><dd><p>object of the model_parameters class</p>
+</dd>
+<dt><strong>robot</strong><span class="classifier">string</span></dt><dd><dl class="simple">
+<dt>robot which is used, Options:</dt><dd><ul class="simple">
+<li><p>acrobot</p></li>
+<li><p>pendubot</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt><strong>torque_limit</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.0, 1.0]
+torque limit of the motors
+[tl1, tl2], units=[Nm, Nm]</p>
+</dd>
+<dt><strong>save_dir</strong><span class="classifier">string</span></dt><dd><p>path to directory where log data can be stored
+(necessary for temporary generated urdf)
+(Default value=”.”)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller_drake.LQRController.get_control_output_">
+<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller_drake.LQRController.get_control_output_" title="Permalink to this definition"></a></dt>
+<dd><p>The function to compute the control input for the double pendulum’s
+actuator(s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">float, optional</span></dt><dd><p>time, unit=[s]
+(Default value=None)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>array_like</dt><dd><p>shape=(2,), dtype=float
+actuation input/motor torque,
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller_drake.LQRController.init_">
+<span class="sig-name descname"><span class="pre">init_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller_drake.LQRController.init_" title="Permalink to this definition"></a></dt>
+<dd><p>Initalize the controller.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller_drake.LQRController.save_">
+<span class="sig-name descname"><span class="pre">save_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller_drake.LQRController.save_" title="Permalink to this definition"></a></dt>
+<dd><p>Save controller parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>save_dir</strong><span class="classifier">string or path object</span></dt><dd><p>directory where the parameters will be saved</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller_drake.LQRController.set_cost_matrices">
+<span class="sig-name descname"><span class="pre">set_cost_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller_drake.LQRController.set_cost_matrices" title="Permalink to this definition"></a></dt>
+<dd><p>Set the Q and R matrices directly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Q</strong><span class="classifier">numpy_array</span></dt><dd><p>shape=(4,4)
+Q-matrix describing quadratic state cost</p>
+</dd>
+<dt><strong>R</strong><span class="classifier">numpy_array</span></dt><dd><p>shape=(2,2)
+R-matrix describing quadratic control cost</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller_drake.LQRController.set_cost_parameters">
+<span class="sig-name descname"><span class="pre">set_cost_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1p1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2p2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v1v1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2v2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1p2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v1v2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1v1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1v2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2v1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2v2_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1u1_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller_drake.LQRController.set_cost_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>set_cost_parameters.
+Parameters of Q and R matrices. The parameters are</p>
+<dl class="simple">
+<dt>Q = ((p1p1, p1p2, p1v1, p1v2),</dt><dd><p>(p1p2, p2p2, p2v1, p2v2),
+(p1v1, p2v1, v1v1, v1v2),
+(p1v2, p2v2, v1v2, v2v2))</p>
+</dd>
+</dl>
+<p>R = ((u1u1))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>p1p1_cost</strong><span class="classifier">float</span></dt><dd><p>p1p1_cost
+(Default value=1.)</p>
+</dd>
+<dt><strong>p2p2_cost</strong><span class="classifier">float</span></dt><dd><p>p2p2_cost
+(Default value=1.)</p>
+</dd>
+<dt><strong>v1v1_cost</strong><span class="classifier">float</span></dt><dd><p>v1v1_cost
+(Default value=1.)</p>
+</dd>
+<dt><strong>v2v2_cost</strong><span class="classifier">float</span></dt><dd><p>v2v2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p1p2_cost</strong><span class="classifier">float</span></dt><dd><p>p1p2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>v1v2_cost</strong><span class="classifier">float</span></dt><dd><p>v1v2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p1v1_cost</strong><span class="classifier">float</span></dt><dd><p>p1v1_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p1v2_cost</strong><span class="classifier">float</span></dt><dd><p>p1v2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p2v1_cost</strong><span class="classifier">float</span></dt><dd><p>p2v1_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>p2v2_cost</strong><span class="classifier">float</span></dt><dd><p>p2v2_cost
+(Default value=0.)</p>
+</dd>
+<dt><strong>u1u1_cost</strong><span class="classifier">float</span></dt><dd><p>u1u1_cost
+(Default value=0.01)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller_drake.LQRController.set_cost_parameters_">
+<span class="sig-name descname"><span class="pre">set_cost_parameters_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller_drake.LQRController.set_cost_parameters_" title="Permalink to this definition"></a></dt>
+<dd><p>Set the diagonal parameters of Q and R matrices with a list.</p>
+<p>The parameters are
+Q = ((pars[0], 0, 0, 0),</p>
+<blockquote>
+<div><p>(0, pars[1], 0, 0),
+(0, 0, pars[2], 0),
+(0, 0, 0, pars[3]))</p>
+</div></blockquote>
+<p>R = ((pars[4]))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>pars</strong><span class="classifier">list</span></dt><dd><p>shape=(5,), dtype=float
+(Default value=[1., 1., 1., 1., 1.])</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.lqr.lqr_controller_drake.LQRController.set_goal">
+<span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[3.141592653589793,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.lqr.lqr_controller_drake.LQRController.set_goal" title="Permalink to this definition"></a></dt>
+<dd><p>set_goal.
+Set goal for the controller.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]
+(Default value=[np.pi, 0., 0., 0.])</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 
