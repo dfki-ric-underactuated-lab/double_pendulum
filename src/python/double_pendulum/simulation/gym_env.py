@@ -55,14 +55,17 @@ class double_pendulum_dynamics_func:
         integrator="runge_kutta",
         robot="double_pendulum",
         state_representation=2,
+        max_velocity=20.0,
+        torque_limit=[5.0, 5.0],
     ):
         self.simulator = simulator
         self.dt = dt
         self.integrator = integrator
         self.robot = robot
         self.state_representation = state_representation
+        self.max_velocity = max_velocity
 
-        self.torque_limit = simulator.plant.torque_limit
+        self.torque_limit = torque_limit
 
     def __call__(self, state, action):
         x = self.unscale_state(state)
@@ -112,8 +115,8 @@ class double_pendulum_dynamics_func:
                 [
                     observation[0] * np.pi + np.pi,
                     observation[1] * np.pi + np.pi,
-                    observation[2] * 8.0,
-                    observation[3] * 8.0,
+                    observation[2] * self.max_velocity,
+                    observation[3] * self.max_velocity,
                 ]
             )
         elif self.state_representation == 3:
@@ -121,8 +124,8 @@ class double_pendulum_dynamics_func:
                 [
                     np.arctan2(observation[0], observation[1]),
                     np.arctan2(observation[2], observation[3]),
-                    observation[4] * 8.0,
-                    observation[5] * 8.0,
+                    observation[4] * self.max_velocity,
+                    observation[5] * self.max_velocity,
                 ]
             )
         return x
@@ -137,8 +140,8 @@ class double_pendulum_dynamics_func:
                 [
                     (state[0] % (2 * np.pi) - np.pi) / np.pi,
                     (state[1] % (2 * np.pi) - np.pi) / np.pi,
-                    np.clip(state[2], -8.0, 8.0) / 8.0,
-                    np.clip(state[3], -8.0, 8.0) / 8.0,
+                    np.clip(state[2], -self.max_velocity, self.max_velocity) / self.max_velocity,
+                    np.clip(state[3], -self.max_velocity, self.max_velocity) / self.max_velocity,
                 ]
             )
         elif self.state_representation == 3:
@@ -148,8 +151,8 @@ class double_pendulum_dynamics_func:
                     np.sin(state[0]),
                     np.cos(state[1]),
                     np.sin(state[1]),
-                    np.clip(state[2], -8.0, 8.0) / 8.0,
-                    np.clip(state[3], -8.0, 8.0) / 8.0,
+                    np.clip(state[2], -self.max_velocity, self.max_velocity) / self.max_velocity,
+                    np.clip(state[3], -self.max_velocity, self.max_velocity) / self.max_velocity,
                 ]
             )
 
