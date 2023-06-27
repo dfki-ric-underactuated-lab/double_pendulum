@@ -1,0 +1,46 @@
+robot = "acrobot"
+reward_type = "quadratic"
+Q[0, 0] = 10
+Q[1, 1] = 10
+Q[2, 2] = 0.2
+Q[3, 3] = 0.2
+R = np.array([[0.0001]])
+n_envs = 50
+
+# tuning parameters
+n_envs = 100
+training_steps = 5e6
+log_dir = "sac_training"
+verbose = 1
+reward_threshold = 1e6
+eval_freq=5000
+n_eval_episodes=2
+learning_rate=0.01
+
+control_line = 0.4
+##########################################
+reward = -1.0 * r
+    if flag:
+        # print("obs=", observation)
+        # print("s=", s)
+        # print("y=", y)
+        reward += 500
+        if np.abs(y[2])>8 :
+            reward -= 1e4
+            print("oops_1!")
+        if np.abs(y[3])>8:
+            reward -= 1e4
+            print("oops_2!")
+        if bonus:
+            # epsilon method
+            # reward = (2 - max_diff)**2 * 1000
+            # print("!!!!bonus=True")
+
+            # roa method
+            reward += 1e4
+            print("!!!bonus = True")
+##########################################
+
+check_if_state_in_roa(S,rho,x)
+
+speed clip = 20

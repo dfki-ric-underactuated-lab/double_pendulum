@@ -1,0 +1,2 @@
+Controller,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Real AI Score,Username
+pflcol_lqr,True,4.8,53.75,3.0,12.28,33.06,0.136,870.16,0.587,fwiebe
