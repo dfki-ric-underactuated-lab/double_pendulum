@@ -12,7 +12,9 @@ from double_pendulum.controller.abstract_controller import AbstractController
 from double_pendulum.simulation.gym_env import (
     double_pendulum_dynamics_func,
 )
-
+"""
+This testing script is purely for testing the behaviour of SAC controller in swing-up task.
+"""
 
 class SACController(AbstractController):
     def __init__(self, model_path, dynamics_func, dt):
@@ -29,21 +31,29 @@ class SACController(AbstractController):
         return u
 
 
-# model parameters
-design = "design_C.0"
-model = "model_3.0"
+# hyperparameters
 # robot = "pendubot"
 robot = "acrobot"
 
 if robot == "pendubot":
     torque_limit = [5.0, 0.0]
     active_act = 0
+    design = "design_A.0"
+    model = "model_2.0"
+    model_path = "best_model/pendubot_model.zip"
 elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
     active_act = 1
+    design = "design_C.0"
+    model = "model_3.0"
+    model_path = "best_model/acrobot_model.zip"
 
+# testing for newly trained model
+# model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/best_model/best_model.zip"
+
+# import model parameter
 model_par_path = (
-    "/home/chi/Github/double_pendulum/data/system_identification/identified_parameters/"
+    "../../../data/system_identification/identified_parameters/"
     + design
     + "/"
     + model
@@ -66,6 +76,7 @@ plant = SymbolicDoublePendulum(model_pars=mpar)
 
 sim = Simulator(plant=plant)
 
+# initialize double pendulum dynamics
 dynamics_func = double_pendulum_dynamics_func(
     simulator=sim,
     dt=dt,
@@ -74,39 +85,15 @@ dynamics_func = double_pendulum_dynamics_func(
     state_representation=2,
 )
 
+# initialize sac controller
 controller = SACController(
-    # model_path="/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/best_model/acrobot_model.zip",
-    # pendubot
-    # model_path="/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/pendubot_2e6/v0_5e6/acrobot_model.zip",
-    # model_path="/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/pendubot_2e6/v1_1e6/acrobot_model.zip",
-    # model_path="/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/pendubot_2e6/v2/acrobot_model.zip",
-    # model_path="/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/pendubot_2e6/v3/acrobot_model.zip",
-
-    # acrobot
-    # model_path = "/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/acrobot_2e6/v0_5e6/acrobot_model.zip",
-    # model_path = "/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/acrobot_2e6/v1_1e6/acrobot_model.zip",
-    # model_path = "/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/acrobot_2e6/v2_1e6/acrobot_model.zip",
-    # model_path = "/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/acrobot_2e6/v3_1e6/acrobot_model.zip",
-    # model_path = "/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/acrobot_2e6/v4_1e6/acrobot_model.zip",
-    # model_path = "/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/acrobot_2e6/v5_1e6/acrobot_model.zip",
-    # model_path = "/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/acrobot_2e6/v6_1e6/acrobot_model.zip",
-
-    # acrobot quadratic modifeid reward
-    # model_path = "/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/acrobot_1e6_quadraticModified_reward/v0/acrobot_model.zip",
-    # model_path = "/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/acrobot_1e6_quadraticModified_reward/v2/acrobot_model.zip",
-    # model_path = "/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/acrobot_1e6_quadraticModified_reward/v3/acrobot_model.zip",
-    # model_path = "/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/acrobot_1e6_quadraticModified_reward/v4_with_termination/acrobot_model.zip",
-    # model_path = "/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/acrobot_1e6_quadraticModified_reward/v5_without_termination_5e7/acrobot_model.zip",
-
-    # acrobot with speed limitation
-    # model_path = "/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/acrobot_speed_modified/v0_5e6/acrobot_model.zip",
-    # model_path = "/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/sac_training/acrobot_speed_modified/v1_5e6/acrobot_model.zip",
-    model_path ="sac_training/acrobot/acrobot_speed_modified/v2_5e6_final/best_model.zip",
+    model_path = model_path,
     dynamics_func=dynamics_func,
     dt=dt,
 )
 controller.init()
 
+# start simulation
 T, X, U = sim.simulate_and_animate(
     t0=0.0,
     x0=[0.0, 0.0, 0.0, 0.0],
@@ -117,6 +104,7 @@ T, X, U = sim.simulate_and_animate(
     save_video=False,
 )
 
+# plot time series
 plot_timeseries(
     T,
     X,

@@ -23,17 +23,22 @@ log_dir = "./log_data/SAC_training"
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 
+# define robot variation
 robot = "acrobot"
+# robot = "pendubot"
 
 # model parameter
 if robot == "pendubot":
     torque_limit = [5.0, 0.0]
     design = "design_A.0"
     model = "model_2.0"
+    load_path = "lqr_data/pendubot/lqr/roa"
+
 elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
     design = "design_C.0"
     model = "model_3.0"
+    load_path = "lqr_data/acrobot/lqr/roa"
 
 model_par_path = (
         "../../../data/system_identification/identified_parameters/"
@@ -63,10 +68,11 @@ act_space = gym.spaces.Box(np.array([-1]), np.array([1]))
 max_steps = 1000
 termination = False
 ############################################################################
+
 #tuning parameter
-n_envs = 100
-training_steps = 1e8
-log_dir = "../../../src/python/double_pendulum/controller/SAC/sac_training"
+n_envs = 100 # we found n_envs > 50 has very little improvement in training speed.
+training_steps = 1e6 # default = 1e6
+log_dir = "./log_data/SAC_training"
 verbose = 1
 # reward_threshold = -0.01
 reward_threshold = 3e7
@@ -84,7 +90,6 @@ dynamics_func = double_pendulum_dynamics_func(
 )
 
 # import lqr parameters
-load_path = "lqr_data/acrobot/lqr/roa/"
 rho = np.loadtxt(os.path.join(load_path, "rho"))
 vol = np.loadtxt(os.path.join(load_path, "vol"))
 S = np.loadtxt(os.path.join(load_path, "Smatrix"))
@@ -176,9 +181,12 @@ def terminated_func(observation):
     # y = wrap_angles_top(s)
     y = wrap_angles_diff(s)
     bonus, rad = check_if_state_in_roa(S, rho, y)
-    if bonus:
-        print("terminated")
-        return bonus
+    if termination:
+        if bonus:
+            print("terminated")
+            return bonus
+    else:
+        return False
 
 def noisy_reset_func():
     rand = np.random.rand(4) * 0.01
@@ -236,7 +244,7 @@ eval_callback = EvalCallback(
     eval_env,
     callback_on_new_best=callback_on_best,
     best_model_save_path=os.path.join(log_dir,
-                                      "../../../src/python/double_pendulum/controller/SAC/sac_training/best_model"),
+                                      "best_model"),
     log_path=log_dir,
     eval_freq=eval_freq,
     verbose=verbose,
@@ -248,7 +256,7 @@ agent = SAC(
     MlpPolicy,
     envs,
     verbose=verbose,
-    tensorboard_log=os.path.join(log_dir, "../../../src/python/double_pendulum/controller/SAC/sac_training/tb_logs"),
+    tensorboard_log=os.path.join(log_dir, "tb_logs"),
     learning_rate=learning_rate,
 )
 

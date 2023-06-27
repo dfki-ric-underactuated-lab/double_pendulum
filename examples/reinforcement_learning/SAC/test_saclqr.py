@@ -42,8 +42,6 @@ elif robot == "acrobot":
     model = "model_3.0"
     torque_limit = [0.0, 5.0]
     active_act = 1
-    # Q = np.diag((0.0125, 6.5, 6.88, 6.88))
-    # R = np.diag((6e-2, 6e-2))
     Q = np.diag((0.97, 0.93, 0.39, 0.26))
     R = np.diag((0.11, 0.11))
     load_path = "lqr_data/acrobot/lqr/roa"
