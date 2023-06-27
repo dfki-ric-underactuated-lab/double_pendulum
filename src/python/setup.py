@@ -28,18 +28,18 @@ setup(
         # c++ python bindings
         'cython',
 
-        # # optimal control
+        # optimal control
         # 'drake',
         # 'meshcat',
         # 'IPython',
         # # 'crocoddyl',
 
-        # # reinforcement learning
+        # reinforcement learning
         # 'tensorflow>=2.6.0',
         # 'pickle5',
         # 'stable_baselines3'
 
-        # # documentation
+        # documentation
         # 'sphinx',
         # 'sphinx-rtd-theme',
         # 'numpydoc',
@@ -52,7 +52,7 @@ setup(
         "all": ['sphinx', 'sphinx-rtd-theme', 'numpydoc',
                  'pytest', 'lark',
                  'drake', 'meshcat',
-                 'gym==0.21', 'stable_baselines3'],
+                 'gym==0.21', 'stable_baselines3',],
         "doc": ['sphinx', 'sphinx-rtd-theme', 'numpydoc'],
         "test": ['pytest', 'lark'],
         "OC": ['drake', 'meshcat'],

@@ -21,8 +21,8 @@ u1 = np.zeros(N + 1)
 u2 = np.zeros(N + 1)
 U_des = np.array([u1, u2]).T
 
-# measurement filter
-meas_noise_cut = 0.0
+# measurement filterq
+meas_noise_cut = 0.1
 meas_noise_vfilter = "None"
 filter_kwargs = {"lowpass_alpha": [1.0, 1.0, 0.2, 0.2]}
 
@@ -55,7 +55,7 @@ run_experiment(
     dt=dt,
     t_final=t_final,
     can_port="can0",
-    motor_ids=[7, 8],
+    motor_ids=[1, 2],
     tau_limit=torque_limit,
     save_dir=os.path.join("data", design, "double-pendulum/tmotors/donothing"),
 )
