@@ -68,6 +68,8 @@ jobs:
         sudo mv eigen-*/Eigen /usr/local/include/
     - name: Install project dependencies
       run: |
+        pip install setuptools==65.5.0
+        pip install pip==21
         make install
     # Run unit tests =============================================
     - name: Run tests
