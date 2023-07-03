@@ -27,12 +27,13 @@ RUN cp -r eigen-3.4.0/Eigen /usr/local/include
 
 #RUN python -m ensurepip --upgrade
 RUN pip install -U pip
+RUN pip install shimmy
 
-RUN git clone https://github.com/dfki-ric-underactuated-lab/double_pendulum.git
+RUN git clone https://github.com/Chiniklas/double_pendulum.git
 
 WORKDIR "/double_pendulum"
 
-RUN git checkout v0.1.0
+# RUN git checkout v0.1.0
 
 RUN make install
 RUN make doc
