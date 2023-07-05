@@ -24,6 +24,7 @@ setup(
         # 'bitstring',
         # 'pyyaml',
         # 'argparse',
+        'opencv-python',
 
         # c++ python bindings
         'cython',
