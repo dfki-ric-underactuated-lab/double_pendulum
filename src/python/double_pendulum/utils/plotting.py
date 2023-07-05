@@ -315,6 +315,7 @@ def plot_figures(
     shoulder_fric_tau=None,
     elbow_fric_tau=None,
     error=None,
+    show=True,
 ):
     # position plot of elbow
     print("plotting started")
@@ -437,7 +438,9 @@ def plot_figures(
     plt.draw()
     plt.savefig(os.path.join(save_dir, "shoulder_swingup_torque.pdf"))
 
-    plt.show()
+    if show:
+        plt.show()
+    plt.close()
 
 
 # def plot_figure_single(save_dir,

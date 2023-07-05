@@ -123,7 +123,7 @@ def run_experiment(
         width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         writer = cv2.VideoWriter(
-            os.path.join(save_dir, "video.mp4"),
+            os.path.join(save_dir_time, "video.mp4"),
             cv2.VideoWriter_fourcc(*"DIVX"),
             20,
             (width, height),
@@ -407,6 +407,7 @@ def run_experiment(
                 elbow_des_vel=elbow_des_vel,
                 elbow_des_tau=elbow_des_tau,
                 error=None,
+                show=False,
             )
     else:
         print("Disabling Motors...")
