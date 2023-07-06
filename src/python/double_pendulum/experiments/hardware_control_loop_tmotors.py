@@ -8,7 +8,7 @@ from motor_driver.canmotorlib import CanMotorController
 from double_pendulum.experiments.experimental_utils import setZeroPosition
 from double_pendulum.utils.csv_trajectory import save_trajectory
 from double_pendulum.utils.plotting import plot_timeseries, plot_figures
-
+from double_pendulum.experiments.video_recording import VideoWriterWidget
 
 def run_experiment(
     controller,
@@ -119,15 +119,7 @@ def run_experiment(
 
     # video recorder
     if record_video:
-        cap = cv2.VideoCapture(0)
-        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        writer = cv2.VideoWriter(
-            os.path.join(save_dir_time, "video.mp4"),
-            cv2.VideoWriter_fourcc(*"DIVX"),
-            20,
-            (width, height),
-        )
+        video_writer = VideoWriterWidget(os.path.join(save_dir_time, "video"), 0)
 
     if input("Do you want to proceed for real time execution? (y/N) ") == "y":
         (
@@ -162,11 +154,6 @@ def run_experiment(
         try:
             while t < t_final:
                 start_loop = time.time()
-
-                if record_video:
-                    # record video frame
-                    ret, frame = cap.read()
-                    writer.write(frame)
 
                 x = np.array([shoulder_pos, elbow_pos, shoulder_vel, elbow_vel])
 
@@ -239,13 +226,13 @@ def run_experiment(
                     or np.abs(shoulder_vel) > 20
                     or np.abs(elbow_vel) > 20
                 ):
-                    for _ in range(100):
+                    for _ in range(int(1 / dt)):
                         # send kd command to slow down motors for 100 steps
                         _ = motor_elbow_controller.send_rad_command(
-                            0.0, 0.0, 0.0, 10.0, 0.0
+                            0.0, 0.0, 0.0, 1.0, 0.0
                         )
                         _ = motor_shoulder_controller.send_rad_command(
-                            0.0, 0.0, 0.0, 10.0, 0.0
+                            0.0, 0.0, 0.0, 1.0, 0.0
                         )
                     break
 
@@ -310,12 +297,6 @@ def run_experiment(
                 # stop video recording
             except TypeError:
                 pass
-
-            if record_video:
-                # stop video recording
-                cap.release()
-                writer.release()
-                cv2.destroyAllWindows()
 
             X_meas = np.asarray(
                 [
@@ -431,9 +412,3 @@ def run_experiment(
                 elbow_pos, elbow_vel, elbow_tau
             )
         )
-
-        if record_video:
-            # stop video recording
-            cap.release()
-            writer.release()
-            cv2.destroyAllWindows()
