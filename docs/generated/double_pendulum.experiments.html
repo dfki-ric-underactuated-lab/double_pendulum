@@ -57,6 +57,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#double-pendulum-experiments-hardware-control-loop-mjbots">double_pendulum.experiments.hardware_control_loop_mjbots</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.experiments.hardware_control_loop_tmotors">double_pendulum.experiments.hardware_control_loop_tmotors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.experiments.performance_profiler">double_pendulum.experiments.performance_profiler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.experiments.video_recording">double_pendulum.experiments.video_recording</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.model.html">double_pendulum.model</a></li>
@@ -246,6 +247,35 @@ torque limit of the motors
 <dt class="sig sig-object py" id="double_pendulum.experiments.performance_profiler.profiler">
 <span class="sig-prename descclassname"><span class="pre">double_pendulum.experiments.performance_profiler.</span></span><span class="sig-name descname"><span class="pre">profiler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.performance_profiler.profiler" title="Permalink to this definition"></a></dt>
 <dd><p>validate avg dt of the control loop with (start time - end time) / numSteps</p>
+</dd></dl>
+
+</section>
+<section id="module-double_pendulum.experiments.video_recording">
+<span id="double-pendulum-experiments-video-recording"></span><h2>double_pendulum.experiments.video_recording<a class="headerlink" href="#module-double_pendulum.experiments.video_recording" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.experiments.video_recording.VideoWriterWidget">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.experiments.video_recording.</span></span><span class="sig-name descname"><span class="pre">VideoWriterWidget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">video_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.video_recording.VideoWriterWidget" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.experiments.video_recording.VideoWriterWidget.save_frame">
+<span class="sig-name descname"><span class="pre">save_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.video_recording.VideoWriterWidget.save_frame" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.experiments.video_recording.VideoWriterWidget.show_frame">
+<span class="sig-name descname"><span class="pre">show_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.video_recording.VideoWriterWidget.show_frame" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.experiments.video_recording.VideoWriterWidget.start_recording">
+<span class="sig-name descname"><span class="pre">start_recording</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.video_recording.VideoWriterWidget.start_recording" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.experiments.video_recording.VideoWriterWidget.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.video_recording.VideoWriterWidget.update" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>

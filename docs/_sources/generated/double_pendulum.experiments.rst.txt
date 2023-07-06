@@ -40,3 +40,11 @@ double\_pendulum.experiments.performance\_profiler
    :members:
    :undoc-members:
    :show-inheritance:
+
+double\_pendulum.experiments.video\_recording
+----------------------------------------------------
+
+.. automodule:: double_pendulum.experiments.video_recording
+   :members:
+   :undoc-members:
+   :show-inheritance:
