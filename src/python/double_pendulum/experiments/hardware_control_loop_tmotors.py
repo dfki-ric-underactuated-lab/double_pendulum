@@ -117,10 +117,6 @@ def run_experiment(
     if not os.path.exists(save_dir_time):
         os.makedirs(save_dir_time)
 
-    # video recorder
-    if record_video:
-        video_writer = VideoWriterWidget(os.path.join(save_dir_time, "video"), 0)
-
     if input("Do you want to proceed for real time execution? (y/N) ") == "y":
         (
             shoulder_pos,
@@ -132,8 +128,12 @@ def run_experiment(
             0.0, 0.0, 0.0, 0.0, 0.0
         )
 
-        # last_shoulder_pos = shoulder_pos
-        # last_elbow_pos = elbow_pos
+        # video recorder
+        if record_video:
+            video_writer = VideoWriterWidget(os.path.join(save_dir_time, "video"), 0)
+
+        last_shoulder_pos = shoulder_pos
+        last_elbow_pos = elbow_pos
 
         # defining running index variables
         index = 0
@@ -184,10 +184,10 @@ def run_experiment(
                 # store the measured sensor data of
                 # position, velocity and torque in each time step
                 pos_meas1[index] = shoulder_pos
-                vel_meas1[index] = shoulder_vel
+                #vel_meas1[index] = shoulder_vel
                 tau_meas1[index] = shoulder_tau
                 pos_meas2[index] = elbow_pos
-                vel_meas2[index] = elbow_vel
+                #vel_meas2[index] = elbow_vel
                 tau_meas2[index] = elbow_tau
 
                 # wait to enforce the demanded control frequency
@@ -205,16 +205,16 @@ def run_experiment(
                 meas_time[index] = t
 
                 # velocities from position measurements
-                # shoulder_vel = (shoulder_pos - last_shoulder_pos) / (
-                #     meas_time[index] - meas_time[index - 1]
-                # )
-                # elbow_vel = (elbow_pos - last_elbow_pos) / (
-                #     meas_time[index] - meas_time[index - 1]
-                # )
-                # last_shoulder_pos = shoulder_pos
-                # last_elbow_pos = elbow_pos
-                # vel_meas1[index] = shoulder_vel
-                # vel_meas2[index] = elbow_vel
+                shoulder_vel = (shoulder_pos - last_shoulder_pos) / (
+                    meas_time[index] - meas_time[index - 1]
+                )
+                elbow_vel = (elbow_pos - last_elbow_pos) / (
+                    meas_time[index] - meas_time[index - 1]
+                )
+                last_shoulder_pos = shoulder_pos
+                last_elbow_pos = elbow_pos
+                vel_meas1[index] = shoulder_vel
+                vel_meas2[index] = elbow_vel
 
                 index += 1
                 # end of control loop

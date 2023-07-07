@@ -324,7 +324,7 @@ def plot_figures(
     plt.plot(meas_time[:index], elbow_meas_pos[:index], label="measured position")
     if not (elbow_des_pos is None):
         plt.plot(
-            elbow_des_time[:index], elbow_des_pos[:index], label="desired position"
+            elbow_des_time, elbow_des_pos, label="desired position"
         )
     # trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
     plt.xlabel("Time (s)")
@@ -344,7 +344,7 @@ def plot_figures(
         )
     if not (elbow_des_vel is None):
         plt.plot(
-            elbow_des_time[:index], elbow_des_vel[:index], label="desired velocity"
+            elbow_des_time, elbow_des_vel, label="desired velocity"
         )
     # trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
     plt.xlabel("Time (s)")
@@ -360,7 +360,7 @@ def plot_figures(
     plt.plot(meas_time[:index], elbow_meas_tau[:index], label="total commanded torque")
     plt.plot(meas_time[:index], elbow_tau_controller[:index], label="controller torque")
     if not (elbow_des_tau is None):
-        plt.plot(elbow_des_time[:index], elbow_des_tau[:index], label="desired torque")
+        plt.plot(elbow_des_time, elbow_des_tau, label="desired torque")
     if not (elbow_fric_tau is None):
         plt.plot(
             meas_time[:index], elbow_fric_tau[:index], label="friction comp. torque"
@@ -379,8 +379,8 @@ def plot_figures(
     plt.plot(meas_time[:index], shoulder_meas_pos[:index], label="measured position")
     if not (shoulder_des_pos is None):
         plt.plot(
-            shoulder_des_time[:index],
-            shoulder_des_pos[:index],
+            shoulder_des_time,
+            shoulder_des_pos,
             label="desired position",
         )
     # trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
@@ -401,8 +401,8 @@ def plot_figures(
         )
     if not (shoulder_des_vel is None):
         plt.plot(
-            shoulder_des_time[:index],
-            shoulder_des_vel[:index],
+            shoulder_des_time,
+            shoulder_des_vel,
             label="desired velocity",
         )
     # trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
@@ -424,7 +424,7 @@ def plot_figures(
     )
     if not (shoulder_des_tau is None):
         plt.plot(
-            shoulder_des_time[:index], shoulder_des_tau[:index], label="desired torque"
+            shoulder_des_time, shoulder_des_tau, label="desired torque"
         )
     if not (shoulder_fric_tau is None):
         plt.plot(
