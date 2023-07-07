@@ -19,5 +19,3 @@ docs/text/generated/*
 results*
 test/acrobot.urdf
 test/pendubot.urdf
-leaderboard/simulation/acrobot/data/*
-leaderboard/robustness/acrobot/data/*

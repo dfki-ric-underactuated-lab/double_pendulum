@@ -23,7 +23,7 @@ name = "mcpilco"
 leaderboard_config = {"csv_path": name + "/sim_swingup.csv",
                       "name": name,
                       "simple_name": "mcpilco",
-                      "short_description": "",
+                      "short_description": "Swingup trained with MBRL algorithm MC-PILCO + stabilization with LQR.",
                       "readme_path": f"readmes/{name}.md",
                       "username": 'turcato-niccolo'}
 
@@ -52,11 +52,11 @@ if switch_stabilization:
     # stabilization_controller.set_cost_matrices(Q=Q, R=R)
     stabilization_controller.set_cost_parameters(u2u2_cost=100, p1p1_cost=100, p2p2_cost=100)
     stabilization_controller.set_parameters(failure_value=0., cost_to_go_cut=10 ** 3)
-    condition_policy = lambda t, x: abs(x[0]) < 2.5 #abs(x[0]) - np.pi > 0.1 or abs(x[1]) > 0.1
-    condition_stabilization = lambda t, x: abs(x[0]) > 2.75
+    condition_policy = lambda t, x: abs(x[0]) < 2.7 #abs(x[0]) - np.pi > 0.1 or abs(x[1]) > 0.1
+    condition_stabilization = lambda t, x: abs(x[0]) > 2.8
     comb_controller = CombinedController(controller1=controller, controller2=stabilization_controller,
                                          condition1=condition_policy, condition2=condition_stabilization,
-                                         verbose=True)
+                                         verbose=False)
     controller = comb_controller
 
 controller.set_goal(goal)

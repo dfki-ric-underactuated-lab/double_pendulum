@@ -1,7 +1,0 @@
-Controller,Short Controller Description,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Real AI Score,Username
-iLQR Riccati Gains,Stabilization of iLQR trajectorry with Riccati gains. Top stabilizaion with LQR.,True,0.084,0.009061,0.027625,0.004408,0.000548,0.00014,0.02744,0.847,fwiebe
-iLQR MPC stabilization,Online optimization with iterative LQR. Stabilization of iLQR trajectory. Top stabilization with LQR.,True,0.08384,0.009139,0.029124,0.004661,0.000566,0.000324,0.02739,0.845,fwiebe
-TVLQR,Stabilization of iLQR trajectory with time-varying LQR.,True,0.08396,0.009061,0.046952,0.00429,0.000556,0.000513,0.027462,0.827,fwiebe
-mcpilco,,True,0.02868,0.012667,0.04,0.005801,0.002159,0.00117,0.018937,0.891,turcato-niccolo
-Energy PFL,Partial Feedback Linearization with energy shaping control. Stabilization with LQR.,True,0.09608,0.053751,0.05,0.020473,0.009182,0.002264,0.174031,0.594,fwiebe
-iLQR MPC,Online optimization with iterative LQR. Without reference trajectory.,True,0.01304,0.009982,0.1,0.003985,0.002935,0.000435,0.008833,0.861,fwiebe

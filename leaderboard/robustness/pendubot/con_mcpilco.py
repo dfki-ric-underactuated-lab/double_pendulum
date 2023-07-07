@@ -23,7 +23,7 @@ name = "mcpilco"
 leaderboard_config = {"csv_path": name + "/sim_swingup.csv",
                       "name": name,
                       "simple_name": "mcpilco",
-                      "short_description": "",
+                      "short_description": "Swingup trained with MBRL algorithm MC-PILCO + stabilization with LQR.",
                       "readme_path": f"readmes/{name}.md",
                       "username": 'turcato-niccolo'}
 
