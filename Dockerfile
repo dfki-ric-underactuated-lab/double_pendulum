@@ -20,6 +20,9 @@ RUN apt-get update && \
     apt-get install python3-sphinx-rtd-theme -y && \
     apt-get install python-is-python3
 
+RUN pip3 install numpy dill
+RUN python3 -m pip install drake
+
 # libeigen3-dev install does not work with apt
 RUN wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
 RUN unzip Eigen.zip
