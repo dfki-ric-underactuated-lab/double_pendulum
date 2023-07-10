@@ -5,7 +5,7 @@ BIN		:= bin
 SRC_PLANT		:= model/src
 SRC_SIMULATOR	:= simulator/src
 SRC_UTILS		:= utils/src
-INCLUDE := -I/usr/include/eigen3 -I/usr/local/include
+INCLUDE := -I/usr/local/include-I/usr/local/include/eigen3
 LIB		:= lib
 LIBRARIES	:= -lyaml-cpp
 

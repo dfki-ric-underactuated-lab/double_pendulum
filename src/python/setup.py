@@ -21,6 +21,7 @@ setup(
         'inputs',
         'tabulate',
         'filterpy',
+        'dill',
         # 'bitstring',
         # 'pyyaml',
         # 'argparse',
@@ -30,7 +31,7 @@ setup(
         'cython',
 
         # # optimal control
-        # 'drake',
+        'drake',
         # 'meshcat',
         # 'IPython',
         # # 'crocoddyl',

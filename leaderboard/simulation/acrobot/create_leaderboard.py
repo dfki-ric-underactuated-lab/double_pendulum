@@ -114,9 +114,11 @@ if recompute_leaderboard:
         },
         link_base=link_base,
     )
-
+    df = pandas.read_csv(save_to)
+    df = df.drop(df.columns[1], axis=1)
+    df = df.drop(df.columns[1], axis=1)
     print(
-        pandas.read_csv(save_to)
+        df
         .sort_values(by=["Real AI Score"], ascending=False)
         .to_markdown(index=False)
     )
