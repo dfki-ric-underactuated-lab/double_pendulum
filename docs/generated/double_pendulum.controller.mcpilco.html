@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>double_pendulum.controller.mcpilco &mdash; Double Pendulum 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="double_pendulum.controller.partial_feedback_linearization" href="double_pendulum.controller.partial_feedback_linearization.html" />
+    <link rel="prev" title="double_pendulum.controller.lqr.roa" href="double_pendulum.controller.lqr.roa.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Double Pendulum
+              <img src="../_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../dynamics.html"> Double Pendulum Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html"> Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="double_pendulum.html"> Software Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="double_pendulum.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.analysis.html">double_pendulum.analysis</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="double_pendulum.controller.html">double_pendulum.controller</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="double_pendulum.controller.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#module-double_pendulum.controller.abstract_controller">double_pendulum.controller.abstract_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#module-double_pendulum.controller.combined_controller">double_pendulum.controller.combined_controller</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.experiments.html">double_pendulum.experiments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.model.html">double_pendulum.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.simulation.html">double_pendulum.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.system_identification.html">double_pendulum.system_identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.trajectory_optimization.html">double_pendulum.trajectory_optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.utils.html">double_pendulum.utils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../software_structure.html"> Repository Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware.html"> Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../control.html"> Control Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../leaderboard.html"> Leaderboards</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Double Pendulum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">&lt;no title&gt;</a></li>
+          <li class="breadcrumb-item"><a href="double_pendulum.html">double_pendulum</a></li>
+          <li class="breadcrumb-item"><a href="double_pendulum.controller.html">double_pendulum.controller</a></li>
+      <li class="breadcrumb-item active">double_pendulum.controller.mcpilco</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/double_pendulum.controller.mcpilco.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-double_pendulum.controller.mcpilco">
+<span id="double-pendulum-controller-mcpilco"></span><h1>double_pendulum.controller.mcpilco<a class="headerlink" href="#module-double_pendulum.controller.mcpilco" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-double_pendulum.controller.mcpilco.mcpilco_controller">
+<span id="double-pendulum-controller-mcpilco-mcpilco-controller"></span><h2>double_pendulum.controller.mcpilco.mcpilco_controller<a class="headerlink" href="#module-double_pendulum.controller.mcpilco.mcpilco_controller" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.mcpilco.mcpilco_controller.</span></span><span class="sig-name descname"><span class="pre">Controller_sum_of_Gaussians_with_angles_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_dof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlled_dof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController" title="double_pendulum.controller.abstract_controller.AbstractController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractController</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy.get_control_output">
+<span class="sig-name descname"><span class="pre">get_control_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meas_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_vel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy.get_control_output" title="Permalink to this definition"></a></dt>
+<dd><p>The method which is called in the Simulator and real experiment loop
+to get the control signal from the controller.
+This method does:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>filter the state</p></li>
+<li><p>comput torques by calling <a href="#id1"><span class="problematic" id="id2">get_control_output_</span></a></p></li>
+<li><p>compute friction compensation torque (if activated)</p></li>
+<li><p>comput gravity compensation torque (if activated)</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">float, optional</span></dt><dd><p>time, unit=[s]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>array_like</dt><dd><p>shape=(2,), dtype=float
+actuation input/motor torque,
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy.get_control_output_">
+<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy.get_control_output_" title="Permalink to this definition"></a></dt>
+<dd><p>The function to compute the control input for the double pendulum’s
+actuator(s).
+Supposed to be overwritten by actual controllers. The API of this
+method should not be changed. Unused inputs/outputs can be set to None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">float, optional</span></dt><dd><p>time, unit=[s]
+(Default value=None)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>array_like</dt><dd><p>shape=(2,), dtype=float
+actuation input/motor torque,
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="double_pendulum.controller.lqr.roa.html" class="btn btn-neutral float-left" title="double_pendulum.controller.lqr.roa" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="double_pendulum.controller.partial_feedback_linearization.html" class="btn btn-neutral float-right" title="double_pendulum.controller.partial_feedback_linearization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Underactuated Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

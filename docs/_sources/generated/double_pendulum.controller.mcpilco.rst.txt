@@ -1,0 +1,18 @@
+double\_pendulum.controller.mcpilco
+===========================================
+
+.. automodule:: double_pendulum.controller.mcpilco
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.mcpilco.mcpilco\_controller
+--------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.mcpilco.mcpilco_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:

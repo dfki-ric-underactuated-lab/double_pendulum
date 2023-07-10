@@ -19,6 +19,7 @@ Subpackages
    double_pendulum.controller.ilqr
    double_pendulum.controller.inverse_dynamics
    double_pendulum.controller.lqr
+   double_pendulum.controller.mcpilco
    double_pendulum.controller.partial_feedback_linearization
    double_pendulum.controller.pid
    double_pendulum.controller.trajectory_following
