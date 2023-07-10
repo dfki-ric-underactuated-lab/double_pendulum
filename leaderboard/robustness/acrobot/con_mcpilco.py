@@ -40,7 +40,16 @@ n_dof = 2
 controlled_joint = [1]
 switch_stabilization = True
 
-file = open(os.getcwd()+'/policy_mcpilco_nostab.np', 'rb')
+policy_par_path = (
+    "../../../data/policies/"
+    + design
+    + "/"
+    + model
+    + "/"
+    + robot
+    + "/MC-PILCO/policy_mcpilco_nostab.np"
+)
+file = open(policy_par_path, 'rb')
 parameters = pkl.load(file)
 
 controller = Controller_sum_of_Gaussians_with_angles_numpy(parameters, ctrl_rate, u_max, n_dof, controlled_joint)
