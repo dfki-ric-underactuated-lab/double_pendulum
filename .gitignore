@@ -21,3 +21,5 @@ test/acrobot.urdf
 test/pendubot.urdf
 leaderboard/simulation/acrobot/data/*
 leaderboard/robustness/acrobot/data/*
+leaderboard/simulation/pendubot/data/*
+leaderboard/robustness/pendubot/data/*

@@ -5,6 +5,11 @@
 #include <Eigen/Dense>
 //#include <vector>
 
+namespace Eigen {
+    template<typename Type, int sz>
+    using Vector = Matrix<Type, sz, 1>;
+}
+
 class DPPlant{
 
     double mass1, mass2;
@@ -53,7 +58,7 @@ public:
     Eigen::Vector<double, n_x> rhs(double, double, double, double, double, double,
                             double);
     Eigen::Vector<double, n_x> rhs(double, Eigen::Vector<double, n_x> , Eigen::Vector<double, n_u>);
-    
+
     double calculate_potential_energy(Eigen::Vector<double, n_x>);
     double calculate_kinetic_energy(Eigen::Vector<double, n_x>);
     double calculate_total_energy(Eigen::Vector<double, n_x>);

@@ -21,15 +21,18 @@ setup(
         'inputs',
         'tabulate',
         'filterpy',
+        'dill',
         # 'bitstring',
         # 'pyyaml',
         # 'argparse',
+        'opencv-python',
 
         # c++ python bindings
         'cython',
 
         # optimal control
         # 'drake',
+
         # 'meshcat',
         # 'IPython',
         # # 'crocoddyl',
