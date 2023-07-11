@@ -5,7 +5,7 @@ from double_pendulum.controller.abstract_controller import AbstractController
 from double_pendulum.controller.combined_controller import CombinedController
 from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.utils.wrap_angles import wrap_angles_top
-
+from double_pendulum.controller.SAC import SAC_controller
 from double_pendulum.simulation.gym_env import (
     double_pendulum_dynamics_func,
 )
@@ -34,19 +34,19 @@ leaderboard_config = {
     "username": "chiniklas",
 }
 
-class SACController(AbstractController):
-    def __init__(self, model_path, dynamics_func, dt):
-        super().__init__()
-
-        self.model = SAC.load(model_path)
-        self.dynamics_func = dynamics_func
-        self.dt = dt
-
-    def get_control_output_(self, x, t=None):
-        obs = self.dynamics_func.normalize_state(x)
-        action = self.model.predict(obs)
-        u = self.dynamics_func.unscale_action(action)
-        return u
+# class SACController(AbstractController):
+#     def __init__(self, model_path, dynamics_func, dt):
+#         super().__init__()
+#
+#         self.model = SAC.load(model_path)
+#         self.dynamics_func = dynamics_func
+#         self.dt = dt
+#
+#     def get_control_output_(self, x, t=None):
+#         obs = self.dynamics_func.normalize_state(x)
+#         action = self.model.predict(obs)
+#         u = self.dynamics_func.unscale_action(action)
+#         return u
 
 
 torque_limit = [0.0, 5.0]
@@ -118,8 +118,8 @@ dynamics_func = double_pendulum_dynamics_func(
     torque_limit=torque_limit,
 )
 
-controller1 = SACController(
-    model_path="SAC/sac_model.zip",
+controller1 = SAC_controller(
+    model_path="../../../data/policies/design_C.0/model_3.0/acrobot/sac_model.zip",
     dynamics_func=dynamics_func,
     dt=dt,
 )

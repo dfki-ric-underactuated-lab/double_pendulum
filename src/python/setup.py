@@ -21,6 +21,7 @@ setup(
         'inputs',
         'tabulate',
         'filterpy',
+        'shimmy',
         # 'bitstring',
         # 'pyyaml',
         # 'argparse',

@@ -1,8 +1,8 @@
 import os
 import numpy as np
 
-# load_path = "data/acrobot/lqr/roa"
-load_path = "data/pendubot/lqr/roa"
+# load_path = "lqr_data/acrobot/lqr/roa"
+load_path = "lqr_data/pendubot/lqr/roa"
 
 rho = np.loadtxt(os.path.join(load_path, "rho"))
 vol = np.loadtxt(os.path.join(load_path, "vol"))

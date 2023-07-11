@@ -1,2 +1,0 @@
-Controller,Short Controller Description,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Real AI Score,Username
-SAC LQR,Swing-up with an RL Policy learned with SAC.,True,0.65,9.4,5.0,2.21,8.58,0.172,44.98,0.801,chiniklas
