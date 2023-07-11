@@ -53,7 +53,7 @@ setup(
         "all": ['sphinx', 'sphinx-rtd-theme', 'numpydoc',
                  'pytest', 'lark',
                  'drake', 'meshcat',
-                 'gym==0.21', 'stable_baselines3',],
+                 'gym', 'stable_baselines3',],
         "doc": ['sphinx', 'sphinx-rtd-theme', 'numpydoc'],
         "test": ['pytest', 'lark'],
         "OC": ['drake', 'meshcat'],

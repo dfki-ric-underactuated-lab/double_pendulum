@@ -53,7 +53,7 @@ dynamics_func = double_pendulum_dynamics_func(
 
 
 controller1 = SACController(
-    model_path="SAC/sac_model.zip",
+    model_path="../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model.zip",
     dynamics_func=dynamics_func,
     dt=dt,
 )

@@ -8,7 +8,7 @@ from double_pendulum.simulation.gym_env import (
     double_pendulum_dynamics_func,
 )
 from double_pendulum.utils.wrap_angles import wrap_angles_diff
-from double_pendulum.controller.SAC import SAC_controller
+from double_pendulum.controller.SAC.SAC_controller import SACController
 from sim_parameters import mpar, goal, x0, dt, integrator, design, robot
 
 name = "sac_lqr"
@@ -52,7 +52,7 @@ dynamics_func = double_pendulum_dynamics_func(
 )
 
 
-controller1 = SAC_controller(
+controller1 = SACController(
     model_path="../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model.zip",
     dynamics_func=dynamics_func,
     dt=dt,

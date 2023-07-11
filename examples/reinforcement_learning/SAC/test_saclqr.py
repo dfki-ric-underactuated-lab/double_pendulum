@@ -35,7 +35,7 @@ if robot == "pendubot":
     Q = 3.0 * np.diag([0.64, 0.64, 0.1, 0.1])
     R = np.eye(2) * 0.82
     load_path = "lqr_data/pendubot/lqr/roa"
-    model_path = "best_model/pendubot_model.zip"
+    model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model"
 
 elif robot == "acrobot":
     design = "design_C.0"
@@ -45,7 +45,7 @@ elif robot == "acrobot":
     Q = np.diag((0.97, 0.93, 0.39, 0.26))
     R = np.diag((0.11, 0.11))
     load_path = "lqr_data/acrobot/lqr/roa"
-    model_path = "best_model/acrobot_model.zip"
+    model_path = "../../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model"
 
 
 # import model parameter

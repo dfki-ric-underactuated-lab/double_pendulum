@@ -263,6 +263,3 @@ agent = SAC(
 agent.learn(total_timesteps=training_steps, callback=eval_callback)
 
 
-
-# to be tested
-

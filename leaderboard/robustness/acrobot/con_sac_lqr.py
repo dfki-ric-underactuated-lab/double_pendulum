@@ -5,7 +5,7 @@ from double_pendulum.controller.abstract_controller import AbstractController
 from double_pendulum.controller.combined_controller import CombinedController
 from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.utils.wrap_angles import wrap_angles_top
-from double_pendulum.controller.SAC import SAC_controller
+from double_pendulum.controller.SAC.SAC_controller import SACController
 from double_pendulum.simulation.gym_env import (
     double_pendulum_dynamics_func,
 )
@@ -118,8 +118,8 @@ dynamics_func = double_pendulum_dynamics_func(
     torque_limit=torque_limit,
 )
 
-controller1 = SAC_controller(
-    model_path="../../../data/policies/design_C.0/model_3.0/acrobot/sac_model.zip",
+controller1 = SACController(
+    model_path="../../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model.zip",
     dynamics_func=dynamics_func,
     dt=dt,
 )
