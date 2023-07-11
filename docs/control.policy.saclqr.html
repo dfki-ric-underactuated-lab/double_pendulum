@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soft Actor Critic (SAC) &mdash; Double Pendulum 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Model Predictive Control (MPC)" href="control.mpc.html" />
+    <link rel="prev" title="Partial Feedback Linearization (PFL)" href="control.policy.pfl.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Double Pendulum
+              <img src="_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dynamics.html"> Double Pendulum Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software_structure.html"> Repository Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html"> Hardware</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="control.html"> Control Methods</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="control.trajopt.html">Trajectory Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.trajstab.html">Trajectory Stabilization</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="control.policy.html">Policy-based Control</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="control.policy.lqr.html">Linear Quadratic Regulator (LQR)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="control.policy.pfl.html">Partial Feedback Linearization (PFL)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Soft Actor Critic (SAC)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="control.mpc.html">Model Predictive Control (MPC)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="leaderboard.html"> Leaderboards</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Double Pendulum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
+          <li class="breadcrumb-item"><a href="control.html">Control Methods</a></li>
+          <li class="breadcrumb-item"><a href="control.policy.html">Policy-based Control</a></li>
+      <li class="breadcrumb-item active">Soft Actor Critic (SAC)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/control.policy.saclqr.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="soft-actor-critic-sac">
+<h1>Soft Actor Critic (SAC)<a class="headerlink" href="#soft-actor-critic-sac" title="Permalink to this heading"></a></h1>
+<p>The SAC controller is a reinforcement learning-based control strategy
+that is particularly well-suited for scenarios with continuous action
+and state spaces. In such environments, where the agent has an infinite
+range of actions to choose from and the system’s states can be
+represented as continuous real values, the SAC controller proves to
+be effective.</p>
+<p>In the context of the double pendulum swing-up and stabilization
+tasks, the actuators controlling the double pendulum can be
+adjusted to any value within the specified torque limit range.
+Additionally, the measurements of position and velocity obtained
+from the motors can also be represented continuously.
+The problem setup makes it suitable for SAC implementation.</p>
+<p>SAC[1][2] optimizes a policy by maximizing the expected cumulative reward
+obtained by the agent over time. This is achieved through an actor
+and critic structure [3].</p>
+<p>The actor is responsible for selecting actions based on
+the current policy in response to the observed state of the
+environment. It is typically represented by a shallow neural
+network that approximates the mapping between the input
+state and the output probability distribution over actions.
+SAC incorporates a stochastic policy in its actor part, which
+encourages exploration and helps the agent improve policies.</p>
+<p>The critic, on the other hand, evaluates the value of state-
+action pairs. It estimates the expected cumulative reward that
+the agent can obtain by following a certain policy. Typically,
+the critic is also represented by a neural network that takes
+state-action pairs as inputs and outputs estimated value.</p>
+<p>In addition to the actor and critic, a central feature of SAC is entropy
+regularization[4]. The policy is trained
+to maximize a trade-off between expected return and entropy, which is a
+measure of randomness in the action selection. If <span class="math notranslate nohighlight">\(x\)</span> is a random
+variable with a probability density function <span class="math notranslate nohighlight">\(P\)</span>, the entropy
+<span class="math notranslate nohighlight">\(H\)</span> of <span class="math notranslate nohighlight">\(x\)</span> is defined as:</p>
+<div class="math notranslate nohighlight">
+\[H(P) = \displaystyle \mathop{\mathbb{E}}_{x \sim P}[-\log P(x)]\]</div>
+<p>By maximizing entropy, SAC encourages exploration and accelerates
+learning. It also prevents the policy from prematurely converging to a
+suboptimal solution. The trade-off between maximizing reward and
+maximizing entropy is controlled through a parameter, <span class="math notranslate nohighlight">\(\alpha\)</span>.
+This parameter serves to balance the importance of exploration and
+exploitation within the optimization problem. The optimal policy
+<span class="math notranslate nohighlight">\(\pi^*\)</span> can be defined as follows:</p>
+<div class="math notranslate nohighlight">
+\[\pi^* = {arg}{\max_{\pi}}{\displaystyle
+ \mathop{\mathbb{E}}_{\tau\sim\pi}}{\Bigg[{\sum_{t=0}^{\infty}}{\gamma^{t}}{\Big(R(s_t,a_t,s_{t+1})}+{\alpha}H(\pi(\cdot\mid{s_t}))\Big)\Bigg]}\]</div>
+<p>During training, SAC learns a policy <span class="math notranslate nohighlight">\(\pi_{\theta}\)</span> and two
+Q-functions <span class="math notranslate nohighlight">\(Q_{\phi_1} , Q_{\phi_2}\)</span> concurrently. The loss
+functions for the two Q-networks are <span class="math notranslate nohighlight">\((i \in {1, 2})\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[L(\phi_i,D) = \displaystyle
+  \mathop{\mathbb{E}}_{(s,a,r,s',d)\sim{D}}\bigg[\bigg(Q_{\phi_i}(s,a)-y(r,s',d)\bigg)^2\bigg],\]</div>
+<p>where the temporal difference target <span class="math notranslate nohighlight">\(y\)</span> is given by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+  y(r,s',d) &amp;= r + \gamma(1-d) \times \nonumber \\
+  &amp; \bigg(\displaystyle
+  \mathop{\min}_{j=1,2}Q_{\phi_{targ,j}}(s',\tilde{a}')-\alpha\log
+  {\pi_\theta}(\tilde{a}'\mid{s}')\bigg), \\
+  \tilde{a}'&amp;\sim{\pi_\theta}(\cdot\mid{s'})
+\end{aligned}\end{split}\]</div>
+<p>In each state, the policy <span class="math notranslate nohighlight">\(\pi_\theta\)</span> should act to maximize the
+expected future return <span class="math notranslate nohighlight">\(Q\)</span> while also considering the expected
+future entropy <span class="math notranslate nohighlight">\(H\)</span>. In other words, it should maximize
+<span class="math notranslate nohighlight">\(V^\pi(s)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+ V^\pi(s) &amp;= {\displaystyle \mathop{\mathbb{E}}_{a\sim\pi}[Q^\pi(s,a)]} +
+ \alpha{H(\pi(\cdot\mid{s}))} \\
+ &amp;= {\displaystyle \mathop{\mathbb{E}}_{a\sim\pi}[Q^\pi(s,a)]} -
+ \alpha{\log {\pi(a\mid{s})}}
+\end{aligned}\end{split}\]</div>
+<p>By employing an effective gradient-based optimization technique, the
+parameters of both the actor and critic neural networks undergo updates,
+subsequently leading to the adaptation of the policies themselves.</p>
+<p>In conclusion, SAC’s combination of stochastic policies, exploration
+through entropy regularization, value estimation, and gradient-based
+optimization make it a well-suited algorithm for addressing the
+challenges posed by continuous state and action spaces.</p>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>[1] Haarnoja, Tuomas, et al. “Soft actor-critic: Off-policy maximum
+entropy deep reinforcement learning with a stochastic actor.
+” International conference on machine learning. PMLR, 2018.</p></li>
+<li><p>[2] Haarnoja, Tuomas, et al. “Soft actor-critic algorithms and
+applications.” arXiv preprint arXiv:1812.05905 (2018).</p></li>
+<li><p>[3] Konda, Vijay, and John Tsitsiklis. “Actor-critic algorithms.
+” Advances in neural information processing systems 12 (1999).</p></li>
+<li><p>[4] J. Achiam, “Spinning Up in Deep Reinforcement Learning,” 2018.
+url: <a class="reference external" href="https://spinningup.openai.com/en/latest/algorithms/sac.html">https://spinningup.openai.com/en/latest/algorithms/sac.html</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="control.policy.pfl.html" class="btn btn-neutral float-left" title="Partial Feedback Linearization (PFL)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="control.mpc.html" class="btn btn-neutral float-right" title="Model Predictive Control (MPC)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Underactuated Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

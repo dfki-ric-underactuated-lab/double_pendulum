@@ -1,0 +1,18 @@
+double\_pendulum.controller.SAC
+=======================================
+
+.. automodule:: double_pendulum.controller.SAC
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.SAC.SAC\_controller
+------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.SAC.SAC_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:
