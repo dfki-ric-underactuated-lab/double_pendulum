@@ -25,4 +25,5 @@ learning.
 
    control.policy.lqr.rst
    control.policy.pfl.rst
+   control.policy.saclqr.rst
    .. control.energyXin.rst
