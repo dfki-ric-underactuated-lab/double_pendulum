@@ -63,10 +63,11 @@ class Controller_Random_exploration(AbstractController):
                 for _ in range(num_sin):
                     self.u_profile[:, k] += self.u_max * np.sin(2 * np.pi * sin_freq * np.random.rand() * sys_time)
 
-        self.u_profile[:, k] = np.clip(self.u_profile[:, k], a_min=-self.u_max, a_max=self.u_max)
-        self.u_profile[:, k] = signal.filtfilt(b, a, self.u_profile[:, k])
-        self.u_profile[:, k] = np.clip(self.u_profile[:, k], a_min=-self.u_max, a_max=self.u_max)
-        resamp[:, k] = self.u_profile[::self.ctrl_rate, k]
+        for k in self.controlled_dof:
+            self.u_profile[:, k] = np.clip(self.u_profile[:, k], a_min=-self.u_max, a_max=self.u_max)
+            self.u_profile[:, k] = signal.filtfilt(b, a, self.u_profile[:, k])
+            self.u_profile[:, k] = np.clip(self.u_profile[:, k], a_min=-self.u_max, a_max=self.u_max)
+            resamp[:, k] = self.u_profile[::self.ctrl_rate, k]
 
         plt.figure('Control profile')
         for k in range(self.num_dof):
@@ -81,7 +82,7 @@ class Controller_Random_exploration(AbstractController):
 
     def get_control_output(self, meas_pos, meas_vel, meas_tau, meas_time):
         if self.ctrl_cnt % self.ctrl_rate == 0:
-            self.last_control = np.zeros(self.num_dof)
+            self.last_control = self.u_profile[int(meas_time * self.system_freq), :]
 
         self.ctrl_cnt += 1
         return self.last_control
@@ -92,5 +93,5 @@ class Controller_Random_exploration(AbstractController):
         return self.get_control_output(pos, vel, None, t)
 
 
-#c = Controller_Random_exploration(10, 1, controlled_dof=[1], random_par={'std': 10, 'butter_order': 5})
-c = Controller_Random_exploration(10, 1, type_random='SUM_SIN', controlled_dof=[1])
+c = Controller_Random_exploration(10, 5, controlled_dof=[1], random_par={'std': 10, 'butter_order': 5})
+#c = Controller_Random_exploration(10, 1, type_random='SUM_SIN', controlled_dof=[1])
