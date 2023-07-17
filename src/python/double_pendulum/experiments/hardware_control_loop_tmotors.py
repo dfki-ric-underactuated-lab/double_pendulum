@@ -2,7 +2,6 @@ import os
 import time
 from datetime import datetime
 import numpy as np
-import cv2
 
 from motor_driver.canmotorlib import CanMotorController
 from double_pendulum.experiments.experimental_utils import setZeroPosition
@@ -55,6 +54,9 @@ def run_experiment(
     """
 
     np.set_printoptions(formatter={"float": lambda x: "{0:0.4f}".format(x)})
+
+    safety_position_limit = 2 * np.pi
+    safety_velocity_limit = 20.0
 
     n = int(t_final / dt) + 2
 
@@ -219,21 +221,27 @@ def run_experiment(
                 index += 1
                 # end of control loop
 
-                # check termination condition
+                # check safety conditions
                 if (
-                    np.abs(shoulder_pos) > 2 * np.pi
-                    or np.abs(elbow_pos) > 2 * np.pi
-                    or np.abs(shoulder_vel) > 20
-                    or np.abs(elbow_vel) > 20
+                    np.abs(shoulder_pos) > safety_position_limit
+                    or np.abs(elbow_pos) > safety_position_limit
+                    or np.abs(shoulder_vel) > safety_velocity_limit
+                    or np.abs(elbow_vel) > safety_velocity_limit
                 ):
                     for _ in range(int(1 / dt)):
-                        # send kd command to slow down motors for 100 steps
+                        # send kd command to slow down motors for 1 second
                         _ = motor_elbow_controller.send_rad_command(
                             0.0, 0.0, 0.0, 1.0, 0.0
                         )
                         _ = motor_shoulder_controller.send_rad_command(
                             0.0, 0.0, 0.0, 1.0, 0.0
                         )
+                    print("Safety conditions violated! Stopping experiment.")
+                    print("The measured state violating the limits was ({}, {}, {}, {})".format(
+                          shoulder_pos,
+                          elbow_pos,
+                          shoulder_vel,
+                          elbow_vel))
                     break
 
             try:
@@ -361,8 +369,9 @@ def run_experiment(
                 X_filt=np.asarray(controller.x_filt_hist)[: index - 1],
                 U_con=np.asarray(controller.u_hist)[1 : index - 1],
                 U_friccomp=np.asarray(controller.u_fric_hist)[: index - 1],
-                pos_y_lines=[-np.pi, 0.0, np.pi],
-                vel_y_lines=[0.0],
+                pos_y_lines=[-safety_position_limit, -np.pi, 0.0, np.pi, safety_position_limit],
+                vel_y_lines=[-safety_velocity_limit, 0.0, safety_velocity_limit],
+                tau_y_lines=[-tau_limit[0], -tau_limit[1], 0.0, tau_limit[0], tau_limit[1]]
                 save_to=os.path.join(save_dir_time, "combiplot.pdf"),
                 show=True,
             )
