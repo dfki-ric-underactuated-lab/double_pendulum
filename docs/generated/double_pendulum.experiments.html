@@ -55,7 +55,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.experiments.experimental_utils">double_pendulum.experiments.experimental_utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#double-pendulum-experiments-hardware-control-loop-mjbots">double_pendulum.experiments.hardware_control_loop_mjbots</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.experiments.hardware_control_loop_tmotors">double_pendulum.experiments.hardware_control_loop_tmotors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#double-pendulum-experiments-hardware-control-loop-tmotors">double_pendulum.experiments.hardware_control_loop_tmotors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.experiments.performance_profiler">double_pendulum.experiments.performance_profiler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.experiments.video_recording">double_pendulum.experiments.video_recording</a></li>
 </ul>
@@ -179,47 +179,8 @@ Deprecated. One should use double_pendulum.utils.save_trajectory instead.</p>
 <section id="double-pendulum-experiments-hardware-control-loop-mjbots">
 <h2>double_pendulum.experiments.hardware_control_loop_mjbots<a class="headerlink" href="#double-pendulum-experiments-hardware-control-loop-mjbots" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-double_pendulum.experiments.hardware_control_loop_tmotors">
-<span id="double-pendulum-experiments-hardware-control-loop-tmotors"></span><h2>double_pendulum.experiments.hardware_control_loop_tmotors<a class="headerlink" href="#module-double_pendulum.experiments.hardware_control_loop_tmotors" title="Permalink to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.experiments.hardware_control_loop_tmotors.run_experiment">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.experiments.hardware_control_loop_tmotors.</span></span><span class="sig-name descname"><span class="pre">run_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_final</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'can0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AK80_6_V1p1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[6.0,</span> <span class="pre">6.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_video</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.hardware_control_loop_tmotors.run_experiment" title="Permalink to this definition"></a></dt>
-<dd><p>run_experiment.
-Hardware control loop for tmotor system.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>controller</strong><span class="classifier">controller object</span></dt><dd><p>controller which gives the control signal</p>
-</dd>
-<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>timestep of the control, unit=[s]
-(Default value=0.01)</p>
-</dd>
-<dt><strong>t_final</strong><span class="classifier">float</span></dt><dd><p>duration of the experiment
-(Default value=10.)</p>
-</dd>
-<dt><strong>can_port</strong><span class="classifier">string</span></dt><dd><p>the can port which is used to control the motors
-(Default value=”can0”)</p>
-</dd>
-<dt><strong>motor_ids</strong><span class="classifier">list</span></dt><dd><p>shape=(2,), dtype=int
-ids of the 2 motors
-(Default value=[8, 9])</p>
-</dd>
-<dt><strong>motor_type</strong><span class="classifier">string</span></dt><dd><p>the motor type being used
-(Default value=”AK80_6_V1p1”)</p>
-</dd>
-<dt><strong>tau_limit</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float,
-torque limit of the motors
-[tl1, tl2], units=[Nm, Nm]
-(Default value=[4., 4.])</p>
-</dd>
-<dt><strong>save_dir</strong><span class="classifier">string of path object</span></dt><dd><p>directory where log data will be stored
-(Default value=”.”)</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="double-pendulum-experiments-hardware-control-loop-tmotors">
+<h2>double_pendulum.experiments.hardware_control_loop_tmotors<a class="headerlink" href="#double-pendulum-experiments-hardware-control-loop-tmotors" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-double_pendulum.experiments.performance_profiler">
 <span id="double-pendulum-experiments-performance-profiler"></span><h2>double_pendulum.experiments.performance_profiler<a class="headerlink" href="#module-double_pendulum.experiments.performance_profiler" title="Permalink to this heading"></a></h2>
