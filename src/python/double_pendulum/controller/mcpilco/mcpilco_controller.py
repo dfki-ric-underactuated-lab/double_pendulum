@@ -19,16 +19,18 @@ class Controller_sum_of_Gaussians_with_angles_numpy(AbstractController):
         self.ctrl_cnt = 0
         self.last_control = None
 
-    def get_control_output(self, meas_pos, meas_vel, meas_tau, meas_time):
+    def get_control_output(self, x, t):
+        meas_pos = x[:self.num_dof]
+        meas_vel = x[self.num_dof:]
         if self.ctrl_cnt % self.ctrl_rate == 0:
-            x = np.zeros((self.num_dof * 3))  # velocities, cos, sin
+            state = np.zeros((self.num_dof * 3))  # velocities, cos, sin
             # print(meas_vel)
-            x[:self.num_dof] = meas_vel
-            x[self.num_dof:2*self.num_dof] = np.cos(meas_pos)
-            x[2 * self.num_dof:] = np.sin(meas_pos)
+            state[:self.num_dof] = meas_vel
+            state[self.num_dof:2*self.num_dof] = np.cos(meas_pos)
+            state[2 * self.num_dof:] = np.sin(meas_pos)
 
-            x = x / self.lengthscales
-            dist = self.norm_centers - x
+            state = state / self.lengthscales
+            dist = self.norm_centers - state
             sq_dist = np.sum(dist**2, axis=-1)
             u = np.sum(self.linear_weight * np.exp(-sq_dist))
             u = self.u_max * np.tanh((u / self.u_max))
@@ -42,6 +44,4 @@ class Controller_sum_of_Gaussians_with_angles_numpy(AbstractController):
         return self.last_control
 
     def get_control_output_(self, x, t=None):
-        pos = x[:self.num_dof]
-        vel = x[self.num_dof:]
-        return self.get_control_output(pos, vel, None, t)
+        return self.get_control_output(x, t)

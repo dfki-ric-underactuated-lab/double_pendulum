@@ -1,4 +1,4 @@
-From ubuntu:22.04
+From ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -28,12 +28,14 @@ RUN cp -r eigen-3.4.0/Eigen /usr/local/include
 #RUN python -m ensurepip --upgrade
 RUN pip install -U pip
 
-RUN git clone https://github.com/dfki-ric-underactuated-lab/double_pendulum.git
+#RUN git clone https://github.com/dfki-ric-underactuated-lab/double_pendulum.git
+COPY . ./double_pendulum/
+
 
 WORKDIR "/double_pendulum"
 
-RUN git checkout v0.1.0
+#RUN git checkout v0.1.0
 
 RUN make install
-RUN make doc
-RUN make tests
+# RUN make doc
+# RUN make tests

@@ -7,7 +7,7 @@ import scipy.signal as signal
 
 class Controller_Random_exploration(AbstractController):
     def __init__(self, ctrl_rate, filt_freq, seed, type_random='WGN', random_par=None, expl_time=10., system_freq=500,
-                 u_max=6, num_dof=2, controlled_dof=None):
+                 u_max=6, num_dof=2, controlled_dof=None, plot_profile=True):
         """
             type_random:
                 -WGN: white Gaussian noise
@@ -43,9 +43,9 @@ class Controller_Random_exploration(AbstractController):
         self.expl_time = expl_time
         self.system_freq = system_freq
 
-        self.init_profile()
+        self.init_profile(plot_profile=plot_profile)
 
-    def init_profile(self):
+    def init_profile(self, plot_profile=True):
         self.u_profile = None
         n_samples = int(self.expl_time * self.system_freq)
         self.u_profile = np.zeros((n_samples, self.num_dof))
@@ -73,28 +73,27 @@ class Controller_Random_exploration(AbstractController):
             self.u_profile[:, k] = np.clip(self.u_profile[:, k], a_min=-self.u_max, a_max=self.u_max)
             resamp[:, k] = self.u_profile[::self.ctrl_rate, k]
 
-        plt.figure('Control profile')
-        for k in range(self.num_dof):
-            plt.plot(sys_time, self.u_profile[:, k], label=r'$u_{}$'.format(k+1))
-            plt.step(sys_time[::self.ctrl_rate], resamp[:, k], label=r'$\hat{u}_'+str(k + 1)+'$', where='post')
-        plt.xlabel('time [s]')
-        plt.ylabel('torque [Nm]')
+        if plot_profile:
+            plt.figure('Control profile')
+            for k in range(self.num_dof):
+                plt.plot(sys_time, self.u_profile[:, k], label=r'$u_{}$'.format(k+1))
+                plt.step(sys_time[::self.ctrl_rate], resamp[:, k], label=r'$\hat{u}_'+str(k + 1)+'$', where='post')
+            plt.xlabel('time [s]')
+            plt.ylabel('torque [Nm]')
 
-        plt.legend()
-        plt.show()
+            plt.legend()
+            plt.show()
 
 
-    def get_control_output(self, meas_pos, meas_vel, meas_tau, meas_time):
+    def get_control_output(self, x, t):
         if self.ctrl_cnt % self.ctrl_rate == 0:
-            self.last_control = self.u_profile[int(meas_time * self.system_freq), :]
+            self.last_control = self.u_profile[int(t * self.system_freq), :]
 
         self.ctrl_cnt += 1
         return self.last_control
 
     def get_control_output_(self, x, t=None):
-        pos = x[:self.num_dof]
-        vel = x[self.num_dof:]
-        return self.get_control_output(pos, vel, None, t)
+        return self.get_control_output(x, t)
 
 #c = Controller_Random_exploration(10, 4, 0, controlled_dof=[1], random_par={'std': 10, 'butter_order': 2})
 c = Controller_Random_exploration(10, 5, 1, type_random='SUM_SIN', controlled_dof=[1], random_par = {'sin_freq': 5, 'num_sin': 5, 'butter_order': 2})
