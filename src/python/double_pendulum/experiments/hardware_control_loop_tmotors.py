@@ -372,7 +372,7 @@ def run_experiment(
                 pos_y_lines=[-safety_position_limit, -np.pi, 0.0, np.pi, safety_position_limit],
                 vel_y_lines=[-safety_velocity_limit, 0.0, safety_velocity_limit],
                 tau_y_lines=[-tau_limit[0], -tau_limit[1], 0.0, tau_limit[0], tau_limit[1]],
-                save_to=os.path.join(save_dir_time, "combiplot.pdf"),
+                save_to=os.path.join(save_dir_time, "timeseries"),
                 show=True,
             )
 
