@@ -112,20 +112,24 @@ def leaderboard_scores(
             successes.append(int(swingup_times[-1] < T[-1]))
 
             scores.append(
-                1 - successes[-1] * (
-                    weights["swingup_time"]
-                    * swingup_times[-1]
-                    / normalize["swingup_time"]
-                    + weights["max_tau"] * max_taus[-1] / normalize["max_tau"]
-                    + weights["energy"] * energies[-1] / normalize["energy"]
-                    + weights["integ_tau"] * integ_taus[-1] / normalize["integ_tau"]
-                    + weights["tau_cost"] * tau_costs[-1] / normalize["tau_cost"]
-                    + weights["tau_smoothness"]
-                    * tau_smoothnesses[-1]
-                    / normalize["tau_smoothness"]
-                    + weights["velocity_cost"]
-                    * velocity_costs[-1]
-                    / normalize["velocity_cost"]
+                successes[-1]
+                * (
+                    1.0
+                    - (
+                        weights["swingup_time"]
+                        * swingup_times[-1]
+                        / normalize["swingup_time"]
+                        + weights["max_tau"] * max_taus[-1] / normalize["max_tau"]
+                        + weights["energy"] * energies[-1] / normalize["energy"]
+                        + weights["integ_tau"] * integ_taus[-1] / normalize["integ_tau"]
+                        + weights["tau_cost"] * tau_costs[-1] / normalize["tau_cost"]
+                        + weights["tau_smoothness"]
+                        * tau_smoothnesses[-1]
+                        / normalize["tau_smoothness"]
+                        + weights["velocity_cost"]
+                        * velocity_costs[-1]
+                        / normalize["velocity_cost"]
+                    )
                 )
             )
 
