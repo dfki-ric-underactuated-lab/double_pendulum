@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hardware Leaderboard &mdash; Double Pendulum 1.0.0 documentation</title>
+  <title>Real System Leaderboard &mdash; Double Pendulum 1.0.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -53,7 +53,11 @@
 <li class="toctree-l1 current"><a class="reference internal" href="leaderboard.html"> Leaderboards</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="leaderboard.simulation.html">Simulation Leaderboard</a></li>
 <li class="toctree-l2"><a class="reference internal" href="leaderboard.robustness.html">Robustness Leaderboard</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Hardware Leaderboard</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Real System Leaderboard</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-the-leaderboard">Creating the Leaderboard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#evaluating-your-own-controller">Evaluating your own controller</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -74,7 +78,7 @@
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
           <li class="breadcrumb-item"><a href="leaderboard.html">Leaderboards</a></li>
-      <li class="breadcrumb-item active">Hardware Leaderboard</li>
+      <li class="breadcrumb-item active">Real System Leaderboard</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/leaderboard.hardware.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -84,9 +88,88 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="hardware-leaderboard">
-<h1>Hardware Leaderboard<a class="headerlink" href="#hardware-leaderboard" title="Permalink to this heading"></a></h1>
-<p>Coming soon :)</p>
+  <section id="real-system-leaderboard">
+<h1>Real System Leaderboard<a class="headerlink" href="#real-system-leaderboard" title="Permalink to this heading"></a></h1>
+<p>The real system leaderboard compares the performance of different control
+methods on the real hardware. The task for the controller is to swingup and balance
+the acrobot/pendubot and keep the end-effector above the threshhold line.</p>
+<p>The scripts for the leaderboard calculation can be found in
+<a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/real_system/acrobot">leaderboard/simulation/acrobot</a> .
+for the acrobot and in
+<a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/real_system/pendubot">leaderboard/simulation/pendubot</a> .
+for the pendubot.</p>
+<section id="creating-the-leaderboard">
+<h2>Creating the Leaderboard<a class="headerlink" href="#creating-the-leaderboard" title="Permalink to this heading"></a></h2>
+<p>For creating the leaderboard locally, you can run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">create_leaderboard</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">data</span><span class="o">-</span><span class="nb">dir</span> <span class="o">&lt;</span><span class="n">data</span><span class="o">-</span><span class="nb">dir</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">target</span><span class="o">-</span><span class="nb">dir</span> <span class="o">&lt;</span><span class="n">target</span><span class="o">-</span><span class="nb">dir</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>This script will compute the leaderboard scores and save to a csv file.</p>
+<p>The structure of the <cite>data-dir</cite> should be as follows</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>data-dir</dt><dd><ul>
+<li><dl class="simple">
+<dt>controller_1</dt><dd><ul>
+<li><p>experiment01
+- trajectory.csv
+- timeseries.png</p></li>
+<li><p>experiment02</p></li>
+<li><p>…</p></li>
+<li><p>experiment10</p></li>
+<li><p>username.txt</p></li>
+<li><p>short_description.txt</p></li>
+<li><p>README.md</p></li>
+<li><p>name.txt</p></li>
+<li><p>video.gif</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>controller_2
+- …</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>The files are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>trajectory.csv</cite> data recorded from the real system</p></li>
+<li><p><cite>timeseries.png</cite> plot of <cite>trajectory.csv</cite></p></li>
+<li><p><cite>name.txt</cite> contains the name of the controller</p></li>
+<li><p><cite>username.txt</cite> contains the (github) username of the creator f the controller</p></li>
+<li><p><cite>short_description.txt</cite> contains a short description of the controller (1-2 sentences)</p></li>
+<li><p><cite>README.md</cite> contains a longer description of the controller</p></li>
+<li><p><cite>video.gif</cite> is a video of one of the 10 experiments</p></li>
+</ul>
+</div></blockquote>
+<p>See
+[here](<a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/real_ai_gym_leaderboard/tree/main/data/acrobot/real_system">https://github.com/dfki-ric-underactuated-lab/real_ai_gym_leaderboard/tree/main/data/acrobot/real_system</a>)
+for an example structure.</p>
+<p>The leaderboard will be stored in the <cite>target-dir</cite> (can be the same as the
+<cite>data-dir</cite>). Additionally, the script will save individual scores in the
+experiment folders of the <cite>data-dir</cite>.</p>
+</section>
+<section id="evaluating-your-own-controller">
+<h2>Evaluating your own controller<a class="headerlink" href="#evaluating-your-own-controller" title="Permalink to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For implementing your own controller see <a class="reference external" href="https://dfki-ric-underactuated-lab.github.io/double_pendulum/software_structure.controller.html">here</a></p>
+</div>
+<p>If you want to evaluate your own controller and compare it to the listed
+controllers on the leaderboard, we offer remote experiments with the real hardware setup.
+Please contact
+<a class="reference external" href="mailto:shivesh&#46;kumar&#37;&#52;&#48;dfki&#46;de">shivesh<span>&#46;</span>kumar<span>&#64;</span>dfki<span>&#46;</span>de</a>, <a class="reference external" href="mailto:felix&#46;wiebe&#37;&#52;&#48;dfki&#46;de">felix<span>&#46;</span>wiebe<span>&#64;</span>dfki<span>&#46;</span>de</a> or <a class="reference external" href="mailto:shubham&#46;vyas&#37;&#52;&#48;dfki&#46;de">shubham<span>&#46;</span>vyas<span>&#64;</span>dfki<span>&#46;</span>de</a> for details
+and scheduling.
+We recommend submitting the controller first to the acrobot [simulation
+leaderboard](<a class="reference external" href="https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_performance_leaderboard.html">https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_performance_leaderboard.html</a>)
+and the [robustness
+leaderboard](<a class="reference external" href="https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_robustness_leaderboard.html">https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_robustness_leaderboard.html</a>).</p>
+</section>
 </section>
 
 
