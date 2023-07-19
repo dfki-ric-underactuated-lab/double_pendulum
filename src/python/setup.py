@@ -25,7 +25,7 @@ setup(
         "argparse",
         "opencv-python",
         # c++ python bindings
-        "cython==0.29.36",
+        "cython<1.0.0",
     ],
     extras_require={
         "all": [
