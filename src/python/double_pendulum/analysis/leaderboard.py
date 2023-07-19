@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 from double_pendulum.utils.csv_trajectory import load_trajectory_full
@@ -111,29 +112,49 @@ def leaderboard_scores(
 
             successes.append(int(swingup_times[-1] < T[-1]))
 
-            scores.append(
-                successes[-1]
-                * (
-                    1.0
-                    - (
-                        weights["swingup_time"]
-                        * swingup_times[-1]
-                        / normalize["swingup_time"]
-                        + weights["max_tau"] * max_taus[-1] / normalize["max_tau"]
-                        + weights["energy"] * energies[-1] / normalize["energy"]
-                        + weights["integ_tau"] * integ_taus[-1] / normalize["integ_tau"]
-                        + weights["tau_cost"] * tau_costs[-1] / normalize["tau_cost"]
-                        + weights["tau_smoothness"]
-                        * tau_smoothnesses[-1]
-                        / normalize["tau_smoothness"]
-                        + weights["velocity_cost"]
-                        * velocity_costs[-1]
-                        / normalize["velocity_cost"]
-                    )
+            score = successes[-1] * (
+                1.0
+                - (
+                    weights["swingup_time"]
+                    * swingup_times[-1]
+                    / normalize["swingup_time"]
+                    + weights["max_tau"] * max_taus[-1] / normalize["max_tau"]
+                    + weights["energy"] * energies[-1] / normalize["energy"]
+                    + weights["integ_tau"] * integ_taus[-1] / normalize["integ_tau"]
+                    + weights["tau_cost"] * tau_costs[-1] / normalize["tau_cost"]
+                    + weights["tau_smoothness"]
+                    * tau_smoothnesses[-1]
+                    / normalize["tau_smoothness"]
+                    + weights["velocity_cost"]
+                    * velocity_costs[-1]
+                    / normalize["velocity_cost"]
                 )
             )
 
-            # score = 1 - score
+            scores.append(score)
+
+            results = np.array(
+                [
+                    [successes[-1]],
+                    [swingup_times[-1]],
+                    [energies[-1]],
+                    [max_taus[-1]],
+                    [integ_taus[-1]],
+                    [tau_costs[-1]],
+                    [tau_smoothnesses[-1]],
+                    [velocity_costs[-1]],
+                    [score],
+                ]
+            ).T
+
+            np.savetxt(
+                os.path.join(os.path.dirname(path), "scores.csv"),
+                results,
+                header="Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Real AI Score",
+                delimiter=",",
+                fmt="%s",
+                comments="",
+            )
 
         best = np.argmax(scores)
         swingup_time = swingup_times[best]

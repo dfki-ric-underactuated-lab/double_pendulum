@@ -8,7 +8,7 @@ This repository features three leaderboards to compare control methods:
 
 * Simulation Leaderboard
 * Robustness Leaderboard
-* Hardware Leaderboard (Coming soon)
+* Real Hardware Leaderboard
 
 For further information and instructions on how to evaluate your own controller
 see the linked descriptions.
