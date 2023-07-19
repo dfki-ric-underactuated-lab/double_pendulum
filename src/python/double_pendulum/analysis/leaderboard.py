@@ -207,7 +207,7 @@ def leaderboard_scores(
                 # data_link = "[data](" + controller_link + "/trajectory.csv)"
                 # plot_link = "[plot](" + controller_link + "/timeseries.png)"
                 # video_link = "[video](" + controller_link + "/video.gif)"
-                link = "[data, plots and videos](" + controller_link + ")"
+                link = "[data plots videos](" + controller_link + ")"
                 append_data.append(link)
 
         leaderboard_data.append(append_data)
