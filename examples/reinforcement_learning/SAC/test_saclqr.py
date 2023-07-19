@@ -157,5 +157,4 @@ plot_timeseries(
     X_meas=sim.meas_x_values,
     pos_y_lines=[np.pi],
     tau_y_lines=[-torque_limit[active_act], torque_limit[active_act]],
-    # save_to="/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/plots/acrobot.png"
 )

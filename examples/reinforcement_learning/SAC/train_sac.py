@@ -1,6 +1,6 @@
 import os
 import numpy as np
-import gym
+import gymnasium as gym
 from stable_baselines3 import SAC
 from stable_baselines3.sac.policies import MlpPolicy
 from stable_baselines3.common.callbacks import (
