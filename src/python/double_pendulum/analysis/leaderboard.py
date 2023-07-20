@@ -227,6 +227,7 @@ def leaderboard_scores(
                 video_link = "[video](" + controller_link + "/experiment" + str(best+1).zfill(2) + "/video.gif)"
                 # link = "[data plots videos](" + controller_link + ")"
                 # append_data.append(link)
+                append_data.append(data_link + " " + plot_link + " " + video_link)
 
         leaderboard_data.append(append_data)
 

@@ -6,9 +6,9 @@ methods on the real hardware. The task for the controller is to swingup and bala
 the acrobot/pendubot and keep the end-effector above the threshhold line.
 
 The scripts for the leaderboard calculation can be found in
-`leaderboard/simulation/acrobot <https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/real_hardware/acrobot>`__ .
+`leaderboard/real_hardware/acrobot <https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/real_hardware/acrobot>`__ .
 for the acrobot and in
-`leaderboard/simulation/pendubot <https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/real_hardware/pendubot>`__ .
+`leaderboard/real_hardware/pendubot <https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/real_hardware/pendubot>`__ .
 for the pendubot.
 
 Creating the Leaderboard
