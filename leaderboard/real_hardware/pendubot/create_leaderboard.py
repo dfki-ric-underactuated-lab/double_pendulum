@@ -17,10 +17,10 @@ parser.add_argument(
     required=False,
 )
 parser.add_argument(
-    "--target-dir",
-    dest="target_dir",
-    help="Directory for saving data. Existing data will be kept.",
-    default="target_data",
+    "--save_to",
+    dest="save_to",
+    help="Path for saving the leaderbaord csv file.",
+    default="leaderboard.csv",
     required=False,
 )
 parser.add_argument(
@@ -41,7 +41,7 @@ parser.add_argument(
 
 
 data_dir = parser.parse_args().data_dir
-target_dir = parser.parse_args().target_dir
+save_to = parser.parse_args().save_to
 recompute_leaderboard = parser.parse_args().recompute
 link_base = parser.parse_args().link
 
@@ -53,12 +53,11 @@ for con in existing_list:
     if not os.path.exists(os.path.join(data_dir, con, "data_paths.csv")):
         existing_list.remove(con)
 
-if not os.path.exists(os.path.join(target_dir, "leaderboard.csv")):
+if not os.path.exists(save_to):
     recompute_leaderboard = True
 
 if recompute_leaderboard:
     src_dir = "."
-    save_to = os.path.join(target_dir, "leaderboard.csv")
     data_paths = {}
 
     for con_dir in os.listdir(data_dir):
@@ -109,5 +108,5 @@ if recompute_leaderboard:
     df = pandas.read_csv(save_to)
     df = df.drop(df.columns[1], axis=1)
     print(
-        df.sort_values(by=["Real AI Score"], ascending=False).to_markdown(index=False)
+        df.sort_values(by=["Average RealAI Score"], ascending=False).to_markdown(index=False)
     )

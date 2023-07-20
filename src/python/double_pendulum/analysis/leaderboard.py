@@ -92,7 +92,7 @@ def leaderboard_scores(
         successes = []
         scores = []
 
-        for path in csv_paths:
+        for path in sorted(csv_paths):
             data_dict = load_trajectory_full(path)
             T = data_dict["T"]
             X = data_dict["X_meas"]
@@ -166,6 +166,7 @@ def leaderboard_scores(
         velocity_cost = velocity_costs[best]
         success = np.sum(successes)
         score = np.mean(scores)
+        best_score = np.max(scores)
 
         if link_base != "":
             if "simple_name" in d.keys():
@@ -180,20 +181,37 @@ def leaderboard_scores(
             else:
                 name_with_link = d["name"]
 
-        append_data = [
-            name_with_link,
-            d["short_description"],
-            str(int(success)) + "/" + str(len(csv_paths)),
-            str(round(swingup_time, 2)),
-            str(round(energy, 2)),
-            str(round(max_tau, 2)),
-            str(round(integ_tau, 2)),
-            str(round(tau_cost, 2)),
-            str(round(tau_smoothness, 3)),
-            str(round(velocity_cost, 2)),
-            str(round(score, 3)),
-            d["username"],
-        ]
+        if simulation:
+            append_data = [
+                name_with_link,
+                d["short_description"],
+                str(int(success)) + "/" + str(len(csv_paths)),
+                str(round(swingup_time, 2)),
+                str(round(energy, 2)),
+                str(round(max_tau, 2)),
+                str(round(integ_tau, 2)),
+                str(round(tau_cost, 2)),
+                str(round(tau_smoothness, 3)),
+                str(round(velocity_cost, 2)),
+                str(round(score, 3)),
+                d["username"],
+            ]
+        else:
+            append_data = [
+                name_with_link,
+                d["short_description"],
+                str(int(success)) + "/" + str(len(csv_paths)),
+                str(round(swingup_time, 2)),
+                str(round(energy, 2)),
+                str(round(max_tau, 2)),
+                str(round(integ_tau, 2)),
+                str(round(tau_cost, 2)),
+                str(round(tau_smoothness, 3)),
+                str(round(velocity_cost, 2)),
+                str(round(best_score, 3)),
+                str(round(score, 3)),
+                d["username"],
+            ]
 
         if link_base != "":
             controller_link = link_base + d["name"]
@@ -204,15 +222,18 @@ def leaderboard_scores(
                 video_link = "[video](" + controller_link + "/sim_video.gif)"
                 append_data.append(data_link + " " + plot_link + " " + video_link)
             else:
-                # data_link = "[data](" + controller_link + "/trajectory.csv)"
-                # plot_link = "[plot](" + controller_link + "/timeseries.png)"
-                # video_link = "[video](" + controller_link + "/video.gif)"
-                link = "[data plots videos](" + controller_link + ")"
-                append_data.append(link)
+                data_link = "[data](" + controller_link + "/experiment" + str(best+1).zfill(2) + "/trajectory.csv)"
+                plot_link = "[plot](" + controller_link + "/experiment" + str(best+1).zfill(2) + "/timeseries.png)"
+                video_link = "[video](" + controller_link + "/experiment" + str(best+1).zfill(2) + "/video.gif)"
+                # link = "[data plots videos](" + controller_link + ")"
+                # append_data.append(link)
 
         leaderboard_data.append(append_data)
 
-    header = "Controller,Short Controller Description,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Real AI Score,Username"
+    if simulation:
+        header = "Controller,Short Controller Description,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],RealAI Score,Username"
+    else:
+        header = "Controller,Short Controller Description,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Best RealAI Score,Average RealAI Score,Username"
     if link_base != "":
         header += ",Data"
 
