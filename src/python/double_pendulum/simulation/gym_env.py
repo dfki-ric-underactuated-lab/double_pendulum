@@ -36,13 +36,14 @@ class CustomEnv(gym.Env):
         truncated = False
         self.step_counter += 1
         if self.step_counter >= self.max_episode_steps:
-            terminated = True
+            truncated = True
             self.step_counter = 0
         return self.observation, reward, terminated, truncated, info
 
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
         self.observation = self.reset_func()
+        self.step_counter = 0
         info = {}
         return self.observation, info
 
