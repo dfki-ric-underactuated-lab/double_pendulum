@@ -94,14 +94,14 @@
 methods on the real hardware. The task for the controller is to swingup and balance
 the acrobot/pendubot and keep the end-effector above the threshhold line.</p>
 <p>The scripts for the leaderboard calculation can be found in
-<a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/real_system/acrobot">leaderboard/simulation/acrobot</a> .
+<a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/real_hardware/acrobot">leaderboard/real_hardware/acrobot</a> .
 for the acrobot and in
-<a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/real_system/pendubot">leaderboard/simulation/pendubot</a> .
+<a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/real_hardware/pendubot">leaderboard/real_hardware/pendubot</a> .
 for the pendubot.</p>
 <section id="creating-the-leaderboard">
 <h2>Creating the Leaderboard<a class="headerlink" href="#creating-the-leaderboard" title="Permalink to this heading"></a></h2>
 <p>For creating the leaderboard locally, you can run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">create_leaderboard</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">data</span><span class="o">-</span><span class="nb">dir</span> <span class="o">&lt;</span><span class="n">data</span><span class="o">-</span><span class="nb">dir</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">target</span><span class="o">-</span><span class="nb">dir</span> <span class="o">&lt;</span><span class="n">target</span><span class="o">-</span><span class="nb">dir</span><span class="o">&gt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">create_leaderboard</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">data</span><span class="o">-</span><span class="nb">dir</span> <span class="o">&lt;</span><span class="n">data</span><span class="o">-</span><span class="nb">dir</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">save_to</span> <span class="o">&lt;</span><span class="n">save_to</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p>This script will compute the leaderboard scores and save to a csv file.</p>
@@ -148,10 +148,10 @@ for the pendubot.</p>
 </ul>
 </div></blockquote>
 <p>See
-[here](<a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/real_ai_gym_leaderboard/tree/main/data/acrobot/real_system">https://github.com/dfki-ric-underactuated-lab/real_ai_gym_leaderboard/tree/main/data/acrobot/real_system</a>)
+<a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/real_ai_gym_leaderboard/tree/main/data/acrobot/real_system">here</a>
 for an example structure.</p>
-<p>The leaderboard will be stored in the <cite>target-dir</cite> (can be the same as the
-<cite>data-dir</cite>). Additionally, the script will save individual scores in the
+<p>The leaderboard will be stored in the <cite>save_to</cite> path
+Additionally, the script will save individual scores in the
 experiment folders of the <cite>data-dir</cite>.</p>
 </section>
 <section id="evaluating-your-own-controller">
@@ -165,10 +165,10 @@ controllers on the leaderboard, we offer remote experiments with the real hardwa
 Please contact
 <a class="reference external" href="mailto:shivesh&#46;kumar&#37;&#52;&#48;dfki&#46;de">shivesh<span>&#46;</span>kumar<span>&#64;</span>dfki<span>&#46;</span>de</a>, <a class="reference external" href="mailto:felix&#46;wiebe&#37;&#52;&#48;dfki&#46;de">felix<span>&#46;</span>wiebe<span>&#64;</span>dfki<span>&#46;</span>de</a> or <a class="reference external" href="mailto:shubham&#46;vyas&#37;&#52;&#48;dfki&#46;de">shubham<span>&#46;</span>vyas<span>&#64;</span>dfki<span>&#46;</span>de</a> for details
 and scheduling.
-We recommend submitting the controller first to the acrobot [simulation
-leaderboard](<a class="reference external" href="https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_performance_leaderboard.html">https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_performance_leaderboard.html</a>)
-and the [robustness
-leaderboard](<a class="reference external" href="https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_robustness_leaderboard.html">https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_robustness_leaderboard.html</a>).</p>
+We recommend submitting the controller first to the acrobot <a class="reference external" href="https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_performance_leaderboard.html">simulation
+leaderboard</a>
+and the <a class="reference external" href="https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_robustness_leaderboard.html">robustness
+leaderboard</a>).</p>
 </section>
 </section>
 
