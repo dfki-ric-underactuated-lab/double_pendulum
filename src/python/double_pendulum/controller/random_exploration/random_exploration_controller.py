@@ -7,7 +7,7 @@ import scipy.signal as signal
 
 class Controller_Random_exploration(AbstractController):
     def __init__(self, ctrl_rate, filt_freq, seed, type_random='WGN', random_par=None, expl_time=10., system_freq=500,
-                 u_max=6, num_dof=2, controlled_dof=None, plot_profile=True):
+                 u_max=6, num_dof=2, controlled_dof=None, plot_profile=True, wait_steps=0):
         """
             type_random:
                 -WGN: white Gaussian noise
@@ -20,7 +20,7 @@ class Controller_Random_exploration(AbstractController):
         self.controlled_dof = controlled_dof
 
         self.ctrl_cnt = 0
-        self.last_control = None
+        self.last_control = np.zeros(self.num_dof)
 
         self.ctrl_rate = ctrl_rate
         self.filt_freq = filt_freq
@@ -44,6 +44,8 @@ class Controller_Random_exploration(AbstractController):
         self.system_freq = system_freq
 
         self.init_profile(plot_profile=plot_profile)
+
+        self.wait_steps = wait_steps
 
     def init_profile(self, plot_profile=True):
         self.u_profile = None
@@ -85,15 +87,13 @@ class Controller_Random_exploration(AbstractController):
             plt.show()
 
 
-    def get_control_output(self, x, t):
-        if self.ctrl_cnt % self.ctrl_rate == 0:
+    def get_control_output_(self, x, t):
+        if self.ctrl_cnt % self.ctrl_rate == 0 and self.ctrl_cnt >= self.wait_steps:
             self.last_control = self.u_profile[int(t * self.system_freq), :]
 
         self.ctrl_cnt += 1
         return self.last_control
 
-    def get_control_output_(self, x, t=None):
-        return self.get_control_output(x, t)
 
 #c = Controller_Random_exploration(10, 4, 0, controlled_dof=[1], random_par={'std': 10, 'butter_order': 2})
-c = Controller_Random_exploration(10, 5, 1, type_random='SUM_SIN', controlled_dof=[1], random_par = {'sin_freq': 5, 'num_sin': 5, 'butter_order': 2})
+#c = Controller_Random_exploration(10, 5, 1, type_random='SUM_SIN', controlled_dof=[1], random_par = {'sin_freq': 5, 'num_sin': 5, 'butter_order': 2})

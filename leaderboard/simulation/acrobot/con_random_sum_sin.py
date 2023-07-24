@@ -32,5 +32,7 @@ n_dof = 2
 controlled_joint = [1]
 
 controller = Controller_Random_exploration(ctrl_rate=10, filt_freq=10, seed=0, type_random='SUM_SIN', controlled_dof=[1],
-                                           random_par={'sin_freq': 10, 'num_sin': 5, 'sin_amp': 1.6, 'butter_order': 2})
+                                           random_par={'sin_freq': 10, 'num_sin': 5, 'sin_amp': 1.6, 'butter_order': 2},
+                                           wait_steps=10)
 
+controller.init()
