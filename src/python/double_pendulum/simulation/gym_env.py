@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 import numpy as np
 import math
 
@@ -31,17 +31,21 @@ class CustomEnv(gym.Env):
     def step(self, action):
         self.observation = self.dynamics_func(self.observation, action)
         reward = self.reward_func(self.observation, action)
-        done = self.terminated_func(self.observation)
+        terminated = self.terminated_func(self.observation)
         info = {}
+        truncated = False
         self.step_counter += 1
         if self.step_counter >= self.max_episode_steps:
-            done = True
+            truncated = True
             self.step_counter = 0
-        return self.observation, reward, done, info
+        return self.observation, reward, terminated, truncated, info
 
-    def reset(self):
+    def reset(self, seed=None, options=None):
+        super().reset(seed=seed)
         self.observation = self.reset_func()
-        return self.observation
+        self.step_counter = 0
+        info = {}
+        return self.observation, info
 
     def render(self, mode="human"):
         pass
@@ -140,8 +144,10 @@ class double_pendulum_dynamics_func:
                 [
                     (state[0] % (2 * np.pi) - np.pi) / np.pi,
                     (state[1] % (2 * np.pi) - np.pi) / np.pi,
-                    np.clip(state[2], -self.max_velocity, self.max_velocity) / self.max_velocity,
-                    np.clip(state[3], -self.max_velocity, self.max_velocity) / self.max_velocity,
+                    np.clip(state[2], -self.max_velocity, self.max_velocity)
+                    / self.max_velocity,
+                    np.clip(state[3], -self.max_velocity, self.max_velocity)
+                    / self.max_velocity,
                 ]
             )
         elif self.state_representation == 3:
@@ -151,8 +157,10 @@ class double_pendulum_dynamics_func:
                     np.sin(state[0]),
                     np.cos(state[1]),
                     np.sin(state[1]),
-                    np.clip(state[2], -self.max_velocity, self.max_velocity) / self.max_velocity,
-                    np.clip(state[3], -self.max_velocity, self.max_velocity) / self.max_velocity,
+                    np.clip(state[2], -self.max_velocity, self.max_velocity)
+                    / self.max_velocity,
+                    np.clip(state[3], -self.max_velocity, self.max_velocity)
+                    / self.max_velocity,
                 ]
             )
 

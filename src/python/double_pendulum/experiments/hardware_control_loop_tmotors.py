@@ -2,7 +2,6 @@ import os
 import time
 from datetime import datetime
 import numpy as np
-import cv2
 
 from motor_driver.canmotorlib import CanMotorController
 from double_pendulum.experiments.experimental_utils import setZeroPosition
@@ -55,6 +54,9 @@ def run_experiment(
     """
 
     np.set_printoptions(formatter={"float": lambda x: "{0:0.4f}".format(x)})
+
+    safety_position_limit = 2 * np.pi
+    safety_velocity_limit = 20.0
 
     n = int(t_final / dt) + 2
 
@@ -117,10 +119,6 @@ def run_experiment(
     if not os.path.exists(save_dir_time):
         os.makedirs(save_dir_time)
 
-    # video recorder
-    if record_video:
-        video_writer = VideoWriterWidget(os.path.join(save_dir_time, "video"), 0)
-
     if input("Do you want to proceed for real time execution? (y/N) ") == "y":
         (
             shoulder_pos,
@@ -132,8 +130,12 @@ def run_experiment(
             0.0, 0.0, 0.0, 0.0, 0.0
         )
 
-        # last_shoulder_pos = shoulder_pos
-        # last_elbow_pos = elbow_pos
+        # video recorder
+        if record_video:
+            video_writer = VideoWriterWidget(os.path.join(save_dir_time, "video"), 0)
+
+        last_shoulder_pos = shoulder_pos
+        last_elbow_pos = elbow_pos
 
         # defining running index variables
         index = 0
@@ -184,10 +186,10 @@ def run_experiment(
                 # store the measured sensor data of
                 # position, velocity and torque in each time step
                 pos_meas1[index] = shoulder_pos
-                vel_meas1[index] = shoulder_vel
+                #vel_meas1[index] = shoulder_vel
                 tau_meas1[index] = shoulder_tau
                 pos_meas2[index] = elbow_pos
-                vel_meas2[index] = elbow_vel
+                #vel_meas2[index] = elbow_vel
                 tau_meas2[index] = elbow_tau
 
                 # wait to enforce the demanded control frequency
@@ -205,35 +207,41 @@ def run_experiment(
                 meas_time[index] = t
 
                 # velocities from position measurements
-                # shoulder_vel = (shoulder_pos - last_shoulder_pos) / (
-                #     meas_time[index] - meas_time[index - 1]
-                # )
-                # elbow_vel = (elbow_pos - last_elbow_pos) / (
-                #     meas_time[index] - meas_time[index - 1]
-                # )
-                # last_shoulder_pos = shoulder_pos
-                # last_elbow_pos = elbow_pos
-                # vel_meas1[index] = shoulder_vel
-                # vel_meas2[index] = elbow_vel
+                shoulder_vel = (shoulder_pos - last_shoulder_pos) / (
+                    meas_time[index] - meas_time[index - 1]
+                )
+                elbow_vel = (elbow_pos - last_elbow_pos) / (
+                    meas_time[index] - meas_time[index - 1]
+                )
+                last_shoulder_pos = shoulder_pos
+                last_elbow_pos = elbow_pos
+                vel_meas1[index] = shoulder_vel
+                vel_meas2[index] = elbow_vel
 
                 index += 1
                 # end of control loop
 
-                # check termination condition
+                # check safety conditions
                 if (
-                    np.abs(shoulder_pos) > 2 * np.pi
-                    or np.abs(elbow_pos) > 2 * np.pi
-                    or np.abs(shoulder_vel) > 20
-                    or np.abs(elbow_vel) > 20
+                    np.abs(shoulder_pos) > safety_position_limit
+                    or np.abs(elbow_pos) > safety_position_limit
+                    or np.abs(shoulder_vel) > safety_velocity_limit
+                    or np.abs(elbow_vel) > safety_velocity_limit
                 ):
                     for _ in range(int(1 / dt)):
-                        # send kd command to slow down motors for 100 steps
+                        # send kd command to slow down motors for 1 second
                         _ = motor_elbow_controller.send_rad_command(
                             0.0, 0.0, 0.0, 1.0, 0.0
                         )
                         _ = motor_shoulder_controller.send_rad_command(
                             0.0, 0.0, 0.0, 1.0, 0.0
                         )
+                    print("Safety conditions violated! Stopping experiment.")
+                    print("The measured state violating the limits was ({}, {}, {}, {})".format(
+                          shoulder_pos,
+                          elbow_pos,
+                          shoulder_vel,
+                          elbow_vel))
                     break
 
             try:
@@ -361,9 +369,10 @@ def run_experiment(
                 X_filt=np.asarray(controller.x_filt_hist)[: index - 1],
                 U_con=np.asarray(controller.u_hist)[1 : index - 1],
                 U_friccomp=np.asarray(controller.u_fric_hist)[: index - 1],
-                pos_y_lines=[-np.pi, 0.0, np.pi],
-                vel_y_lines=[0.0],
-                save_to=os.path.join(save_dir_time, "combiplot.pdf"),
+                pos_y_lines=[-safety_position_limit, -np.pi, 0.0, np.pi, safety_position_limit],
+                vel_y_lines=[-safety_velocity_limit, 0.0, safety_velocity_limit],
+                tau_y_lines=[-tau_limit[0], -tau_limit[1], 0.0, tau_limit[0], tau_limit[1]],
+                save_to=os.path.join(save_dir_time, "timeseries"),
                 show=True,
             )
 

@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 from double_pendulum.utils.csv_trajectory import load_trajectory_full
@@ -25,6 +26,7 @@ def leaderboard_scores(
         "tau_smoothness": 1.0,
     },
     link_base="",
+    simulation=True,
 ):
     """leaderboard_scores.
     Compute leaderboard scores from data_dictionaries which will be loaded from
@@ -75,34 +77,96 @@ def leaderboard_scores(
 
     for key in data_paths:
         d = data_paths[key]
-        data_dict = load_trajectory_full(d["csv_path"])
-        T = data_dict["T"]
-        X = data_dict["X_meas"]
-        U = data_dict["U_con"]
+        if type(d["csv_path"]) == str:
+            csv_paths = [d["csv_path"]]
+        else:
+            csv_paths = d["csv_path"]
 
-        swingup_time = get_swingup_time(
-            T=T, X=X, has_to_stay=True, mpar=mpar, method="height", height=0.9
-        )
-        max_tau = get_max_tau(U)
-        energy = get_energy(X, U)
-        integ_tau = get_integrated_torque(T, U)
-        tau_cost = get_torque_cost(T, U)
-        tau_smoothness = get_tau_smoothness(U)
-        velocity_cost = get_velocity_cost(T, X)
+        swingup_times = []
+        max_taus = []
+        energies = []
+        integ_taus = []
+        tau_costs = []
+        tau_smoothnesses = []
+        velocity_costs = []
+        successes = []
+        scores = []
 
-        success = int(swingup_time < T[-1])
+        for path in sorted(csv_paths):
+            data_dict = load_trajectory_full(path)
+            T = data_dict["T"]
+            X = data_dict["X_meas"]
+            U = data_dict["U_con"]
 
-        score = success * (
-            weights["swingup_time"] * swingup_time / normalize["swingup_time"]
-            + weights["max_tau"] * max_tau / normalize["max_tau"]
-            + weights["energy"] * energy / normalize["energy"]
-            + weights["integ_tau"] * integ_tau / normalize["integ_tau"]
-            + weights["tau_cost"] * tau_cost / normalize["tau_cost"]
-            + weights["tau_smoothness"] * tau_smoothness / normalize["tau_smoothness"]
-            + weights["velocity_cost"] * velocity_cost / normalize["velocity_cost"]
-        )
+            swingup_times.append(
+                get_swingup_time(
+                    T=T, X=X, has_to_stay=True, mpar=mpar, method="height", height=0.9
+                )
+            )
+            max_taus.append(get_max_tau(U))
+            energies.append(get_energy(X, U))
+            integ_taus.append(get_integrated_torque(T, U))
+            tau_costs.append(get_torque_cost(T, U))
+            tau_smoothnesses.append(get_tau_smoothness(U))
+            velocity_costs.append(get_velocity_cost(T, X))
 
-        score = 1 - score
+            successes.append(int(swingup_times[-1] < T[-1]))
+
+            score = successes[-1] * (
+                1.0
+                - (
+                    weights["swingup_time"]
+                    * swingup_times[-1]
+                    / normalize["swingup_time"]
+                    + weights["max_tau"] * max_taus[-1] / normalize["max_tau"]
+                    + weights["energy"] * energies[-1] / normalize["energy"]
+                    + weights["integ_tau"] * integ_taus[-1] / normalize["integ_tau"]
+                    + weights["tau_cost"] * tau_costs[-1] / normalize["tau_cost"]
+                    + weights["tau_smoothness"]
+                    * tau_smoothnesses[-1]
+                    / normalize["tau_smoothness"]
+                    + weights["velocity_cost"]
+                    * velocity_costs[-1]
+                    / normalize["velocity_cost"]
+                )
+            )
+
+            scores.append(score)
+
+            results = np.array(
+                [
+                    [successes[-1]],
+                    [swingup_times[-1]],
+                    [energies[-1]],
+                    [max_taus[-1]],
+                    [integ_taus[-1]],
+                    [tau_costs[-1]],
+                    [tau_smoothnesses[-1]],
+                    [velocity_costs[-1]],
+                    [score],
+                ]
+            ).T
+
+            np.savetxt(
+                os.path.join(os.path.dirname(path), "scores.csv"),
+                results,
+                header="Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Real AI Score",
+                delimiter=",",
+                fmt="%s",
+                comments="",
+            )
+
+        best = np.argmax(scores)
+        swingup_time = swingup_times[best]
+        max_tau = max_taus[best]
+        energy = energies[best]
+        integ_tau = integ_taus[best]
+        tau_cost = tau_costs[best]
+        tau_smoothness = tau_smoothnesses[best]
+        velocity_cost = velocity_costs[best]
+        success = np.sum(successes)
+        score = np.mean(scores)
+        best_score = np.max(scores)
 
         if link_base != "":
             if "simple_name" in d.keys():
@@ -117,32 +181,60 @@ def leaderboard_scores(
             else:
                 name_with_link = d["name"]
 
-        append_data = [
-            name_with_link,
-            d["short_description"],
-            str(bool(success)),
-            str(round(swingup_time, 2)),
-            str(round(energy, 2)),
-            str(round(max_tau, 2)),
-            str(round(integ_tau, 2)),
-            str(round(tau_cost, 2)),
-            str(round(tau_smoothness, 3)),
-            str(round(velocity_cost, 2)),
-            str(round(score, 3)),
-            d["username"],
-        ]
+        if simulation:
+            append_data = [
+                name_with_link,
+                d["short_description"],
+                str(int(success)) + "/" + str(len(csv_paths)),
+                str(round(swingup_time, 2)),
+                str(round(energy, 2)),
+                str(round(max_tau, 2)),
+                str(round(integ_tau, 2)),
+                str(round(tau_cost, 2)),
+                str(round(tau_smoothness, 3)),
+                str(round(velocity_cost, 2)),
+                str(round(score, 3)),
+                d["username"],
+            ]
+        else:
+            append_data = [
+                name_with_link,
+                d["short_description"],
+                str(int(success)) + "/" + str(len(csv_paths)),
+                str(round(swingup_time, 2)),
+                str(round(energy, 2)),
+                str(round(max_tau, 2)),
+                str(round(integ_tau, 2)),
+                str(round(tau_cost, 2)),
+                str(round(tau_smoothness, 3)),
+                str(round(velocity_cost, 2)),
+                str(round(best_score, 3)),
+                str(round(score, 3)),
+                d["username"],
+            ]
 
         if link_base != "":
             controller_link = link_base + d["name"]
 
-            data_link = "[data](" + controller_link + "/sim_swingup.csv)"
-            plot_link = "[plot](" + controller_link + "/timeseries.png)"
-            video_link = "[video](" + controller_link + "/sim_video.gif)"
-            append_data.append(data_link + " " + plot_link + " " + video_link)
+            if simulation:
+                data_link = "[data](" + controller_link + "/sim_swingup.csv)"
+                plot_link = "[plot](" + controller_link + "/timeseries.png)"
+                video_link = "[video](" + controller_link + "/sim_video.gif)"
+                append_data.append(data_link + " " + plot_link + " " + video_link)
+            else:
+                data_link = "[data](" + controller_link + "/experiment" + str(best+1).zfill(2) + "/trajectory.csv)"
+                plot_link = "[plot](" + controller_link + "/experiment" + str(best+1).zfill(2) + "/timeseries.png)"
+                video_link = "[video](" + controller_link + "/experiment" + str(best+1).zfill(2) + "/video.gif)"
+                # link = "[data plots videos](" + controller_link + ")"
+                # append_data.append(link)
+                append_data.append(data_link + " " + plot_link + " " + video_link)
 
         leaderboard_data.append(append_data)
 
-    header = "Controller,Short Controller Description,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Real AI Score,Username"
+    if simulation:
+        header = "Controller,Short Controller Description,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],RealAI Score,Username"
+    else:
+        header = "Controller,Short Controller Description,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Best RealAI Score,Average RealAI Score,Username"
     if link_base != "":
         header += ",Data"
 

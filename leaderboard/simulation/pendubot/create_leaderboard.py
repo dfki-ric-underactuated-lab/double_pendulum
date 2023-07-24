@@ -115,6 +115,6 @@ if recompute_leaderboard:
     df = df.drop(df.columns[1], axis=1)
     print(
         df
-        .sort_values(by=["Real AI Score"], ascending=False)
+        .sort_values(by=["RealAI Score"], ascending=False)
         .to_markdown(index=False)
     )

@@ -1,8 +1,9 @@
 import os
 import numpy as np
 
-import gym
-from stable_baselines3.common.env_checker import check_env
+import gymnasium as gym
+from gymnasium.utils.env_checker import check_env as gymnasium_check_env
+from stable_baselines3.common.env_checker import check_env as sb3_check_env
 from stable_baselines3.common.env_util import make_vec_env
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
@@ -92,8 +93,12 @@ env = CustomEnv(
 )
 
 # stable baselines check
-check_env(env)
+sb3_check_env(env)
 print("StableBaselines3 env_check successful.")
+
+# gymnasium env check
+gymnasium_check_env(env, skip_render_check=True)
+print("Gymnasium env_check successful.")
 
 # # vectorized environment
 # envs = make_vec_env(
