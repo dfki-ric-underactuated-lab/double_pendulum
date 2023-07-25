@@ -47,6 +47,8 @@ class Controller_Random_exploration(AbstractController):
 
         self.wait_steps = wait_steps
 
+        super().__init__()
+
     def init_profile(self, plot_profile=True):
         self.u_profile = None
         n_samples = int(self.expl_time * self.system_freq)
