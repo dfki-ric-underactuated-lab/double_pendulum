@@ -35,7 +35,8 @@ if robot == "pendubot":
     Q = 3.0 * np.diag([0.64, 0.64, 0.1, 0.1])
     R = np.eye(2) * 0.82
     load_path = "lqr_data/pendubot/lqr/roa"
-    model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model"
+    # model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model"
+    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/saved_models/pendubot/design_A.0/model_2.0/gymnasium_2e7/best_model.zip"
 
 elif robot == "acrobot":
     design = "design_C.0"
@@ -46,6 +47,7 @@ elif robot == "acrobot":
     R = np.diag((0.11, 0.11))
     load_path = "lqr_data/acrobot/lqr/roa"
     model_path = "../../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model"
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/best_model/best_model.zip"
 
 
 # import model parameter
@@ -67,7 +69,7 @@ mpar.set_torque_limit(torque_limit)
 
 # simulation parameters
 dt = 0.002
-t_final = 5.0
+t_final = 10.0
 integrator = "runge_kutta"
 goal = [np.pi, 0.0, 0.0, 0.0]
 
@@ -104,6 +106,9 @@ def condition2(t, x):
         print(flag)
         return flag
     return flag
+
+# def condition2(t,x):
+#     return False
 
 # initialize double pendulum dynamics
 dynamics_func = double_pendulum_dynamics_func(
@@ -157,4 +162,5 @@ plot_timeseries(
     X_meas=sim.meas_x_values,
     pos_y_lines=[np.pi],
     tau_y_lines=[-torque_limit[active_act], torque_limit[active_act]],
+    # save_to="/home/chi/Github/double_pendulum/src/python/double_pendulum/controller/SAC/plots/acrobot.png"
 )

@@ -1,6 +1,7 @@
 import os
 import numpy as np
-import gymnasium as gym
+import gym
+import gymnasium
 from stable_baselines3 import SAC
 from stable_baselines3.sac.policies import MlpPolicy
 from stable_baselines3.common.callbacks import (
@@ -19,6 +20,7 @@ from double_pendulum.simulation.gym_env import (
 from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.wrap_angles import wrap_angles_diff
 
+# setting log path for the training
 log_dir = "./log_data/SAC_training"
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
@@ -27,18 +29,42 @@ if not os.path.exists(log_dir):
 robot = "acrobot"
 # robot = "pendubot"
 
-# model parameter
+# model and reward parameter
+max_velocity = 20
 if robot == "pendubot":
     torque_limit = [5.0, 0.0]
-    design = "design_A.0"
-    model = "model_2.0"
+    design = "design_C.1"
+    model = "model_1.0"
     load_path = "lqr_data/pendubot/lqr/roa"
+    warm_start_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/possible_models/pendubot/coldstart2/best_model.zip"
+    # define para for quadratic reward
+    Q = np.zeros((4, 4))
+    Q[0, 0] = 8.0
+    Q[1, 1] = 5.0
+    Q[2, 2] = 0.1
+    Q[3, 3] = 0.1
+    R = np.array([[0.0001]])
+    r_line = 500
+    r_vel = 0
+    r_lqr = 1e4
+
 
 elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
     design = "design_C.0"
     model = "model_3.0"
     load_path = "lqr_data/acrobot/lqr/roa"
+    warm_start_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/saved_models/acrobot/design_C.0/model_3.0/possible_warmstart/best_model.zip"
+    # define para for quadratic reward
+    Q = np.zeros((4, 4))
+    Q[0, 0] = 10.0
+    Q[1, 1] = 10.0
+    Q[2, 2] = 0.2
+    Q[3, 3] = 0.2
+    R = np.array([[0.0001]])
+    r_line = 500
+    r_vel = 1e4
+    r_lqr = 1e4
 
 model_par_path = (
         "../../../data/system_identification/identified_parameters/"
@@ -71,13 +97,12 @@ termination = False
 
 #tuning parameter
 n_envs = 100 # we found n_envs > 50 has very little improvement in training speed.
-training_steps = 1e6 # default = 1e6
-log_dir = "./log_data/SAC_training"
+training_steps = 3e7 # default = 1e6
 verbose = 1
 # reward_threshold = -0.01
 reward_threshold = 3e7
 eval_freq=5000
-n_eval_episodes=2
+n_eval_episodes=5
 learning_rate=0.01
 ##############################################################################
 # initialize double pendulum dynamics
@@ -100,20 +125,21 @@ def check_if_state_in_roa(S, rho, x):
     return rad < rho, rad
 
 def reward_func(observation, action):
-    # quadratic with roa attraction
-    Q = np.zeros((4, 4))
-    Q[0, 0] = 10
-    Q[1, 1] = 10
-    Q[2, 2] = 0.4
-    Q[3, 3] = 0.3
-    R = np.array([[0.0001]])
+    # define reward para according to robot type
+    control_line = 0.4
+    v_thresh = 8.0
+    vflag = False
+    flag = False
+    bonus = False
+    stab = False
 
+    # state
     s = np.array(
         [
             observation[0] * np.pi + np.pi,  # [0, 2pi]
             (observation[1] * np.pi + np.pi + np.pi) % (2 * np.pi) - np.pi,  # [-pi, pi]
-            observation[2] * 8.0,
-            observation[3] * 8.0,
+            observation[2] * max_velocity,
+            observation[3] * max_velocity,
         ]
     )
 
@@ -128,10 +154,7 @@ def reward_func(observation, action):
     # print("s=",s)
     # print("y=",y)
 
-    flag = False
-    bonus = False
-
-    # openAI
+    # criterion 1: control line
     p1 = y[0]
     p2 = y[1]
     ee1_pos_x = 0.2 * np.sin(p1)
@@ -139,31 +162,41 @@ def reward_func(observation, action):
 
     ee2_pos_x = ee1_pos_x + 0.3 * np.sin(p1 + p2)
     ee2_pos_y = ee1_pos_y - 0.3 * np.cos(p1 + p2)
-
-    control_line = 0.4
     # print(ee2_pos_y)
-
-
-    # criteria 2
-    bonus,rad = check_if_state_in_roa(S,rho,y)
-    # print(bonus)
-
-    # criteria 4
     if ee2_pos_y >= control_line:
         flag = True
-        # print("flag=", flag)
+        print("flag=", flag)
         # print(ee2_pos_y)
     else:
         flag = False
 
+    # criteria 2: roa check
+    bonus, rad = check_if_state_in_roa(S, rho, y)
+
+    # criteria 3: velocity check
+    if flag and (np.abs(y[2]) > v_thresh or np.abs(y[3]) > v_thresh):
+        vflag = True
+
+
+    # reward calculation
+    ## stage1: quadratic reward
     r = np.einsum("i, ij, j", s - goal, Q, s - goal) + np.einsum("i, ij, j", u, R, u)
     reward = -1.0 * r
+
+    ## stage2: control line reward
     if flag:
-        reward += 100
+        reward += r_line
+        ## stage 3: roa reward
         if bonus:
             # roa method
-            reward += 1e3
-            # print("!!!bonus = True")
+            reward += r_lqr
+            print("!!!bonus = True")
+            if stab:
+                reward += 1e4
+        ## penalize on high velocity
+        if vflag:
+            print("oops")
+            reward -= r_vel
     else:
         reward = reward
 
@@ -174,8 +207,8 @@ def terminated_func(observation):
         [
             observation[0] * np.pi + np.pi,  # [0, 2pi]
             (observation[1] * np.pi + np.pi + np.pi) % (2 * np.pi) - np.pi,  # [-pi, pi]
-            observation[2] * 8.0,
-            observation[3] * 8.0,
+            observation[2] * max_velocity,
+            observation[3] * max_velocity,
         ]
     )
     # y = wrap_angles_top(s)
@@ -259,6 +292,11 @@ agent = SAC(
     tensorboard_log=os.path.join(log_dir, "tb_logs"),
     learning_rate=learning_rate,
 )
+
+# warm_start = True
+warm_start = True
+if warm_start:
+    agent.set_parameters(load_path_or_dict=warm_start_path)
 
 agent.learn(total_timesteps=training_steps, callback=eval_callback)
 
