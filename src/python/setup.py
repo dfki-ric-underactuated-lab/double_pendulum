@@ -43,7 +43,7 @@ setup(
         "doc": ["sphinx", "sphinx-rtd-theme", "numpydoc"],
         "test": ["pytest", "lark"],
         "OC": ["drake", "meshcat"],
-        "RL": ["gymnasium", "stable_baselines3", "shimmy"],
+        "RL": ["gymnasium", "stable_baselines3", "shimmy", "pyyaml", "jax", "jaxlib", "flax", "tqdm"],
     },
     classifiers=[
         "Development Status :: 5 - Stable",
