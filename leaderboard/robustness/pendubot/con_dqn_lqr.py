@@ -17,7 +17,7 @@ leaderboard_config = {
     "simple_name": "DQN LQR",
     "short_description": "Swing-up with an RL Policy learned with DQN.",
     "readme_path": f"readmes/{name}.md",
-    "username": "vincent",
+    "username": "theovincent",
 }
 
 torque_limit = [5.0, 0.0]
