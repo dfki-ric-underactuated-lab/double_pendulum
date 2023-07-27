@@ -24,31 +24,40 @@ from double_pendulum.simulation.gym_env import (
 # hyperparameters
 friction_compensation = True
 stabilization = "lqr"
-robot = "pendubot"
-# robot = "acrobot"
+# robot = "pendubot"
+robot = "acrobot"
 
 if robot == "pendubot":
     design = "design_A.0"
     model = "model_2.0"
+    # design = "design_C.1"
+    # model = "model_1.0"
     torque_limit = [5.0, 0.0]
     active_act = 0
     Q = 3.0 * np.diag([0.64, 0.64, 0.1, 0.1])
     R = np.eye(2) * 0.82
     load_path = "lqr_data/pendubot/lqr/roa"
+    # gym version
     # model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model"
-    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/saved_models/pendubot/design_A.0/model_2.0/gymnasium_2e7/best_model.zip"
-
+    # gymnasium version
+    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_models/pendubot/design_A.0/model_2.0/gymnasium_2e7/pendubot_model.zip"
+    # model_path = "/examples/reinforcement_learning/SAC/saved_models/pendubot/design_C.1/model_1.0/gymnasium_3e7/best_model.zip"
 elif robot == "acrobot":
-    design = "design_C.0"
-    model = "model_3.0"
+    # design = "design_C.0"
+    # model = "model_3.0"
+    design = "design_C.1"
+    model = "model_1.0"
     torque_limit = [0.0, 5.0]
     active_act = 1
     Q = np.diag((0.97, 0.93, 0.39, 0.26))
     R = np.diag((0.11, 0.11))
     load_path = "lqr_data/acrobot/lqr/roa"
-    model_path = "../../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model"
-    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/best_model/best_model.zip"
+    # gym version
+    # model_path = "../../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model"
+    # gymnasirum version
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/saved_models/acrobot/design_C.0/model_3.0/gymnasium_3e7/best_model.zip"
 
+    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data_designC.1/SAC_training/best_model/best_model.zip"
 
 # import model parameter
 model_par_path = (

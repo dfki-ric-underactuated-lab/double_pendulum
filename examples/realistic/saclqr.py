@@ -19,21 +19,21 @@ from double_pendulum.simulation.gym_env import (
 )
 
 ## model parameters
-# robot = "pendubot"
-robot = "acrobot"
+robot = "pendubot"
+# robot = "acrobot"
 
 friction_compensation = True
 stabilization = "lqr"
 
 if robot == "pendubot":
-    design = "design_A.0"
-    model = "model_2.0"
+    design = "design_C.1"
+    model = "model_1.0"
     torque_limit = [5.0, 0.0]
     active_act = 0
     Q = 3.0 * np.diag([0.64, 0.64, 0.1, 0.1])
     R = np.eye(2) * 0.82
     load_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/lqr_data/pendubot/lqr/roa"
-    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/best_model/pendubot_model.zip"
+    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_models/pendubot/design_C.1/model1.0/gymnasium_3e7/best_model.zip"
 
 elif robot == "acrobot":
     design = "design_C.0"
@@ -171,7 +171,8 @@ T, X, U = sim.simulate_and_animate(
     dt=dt,
     controller=controller,
     integrator=integrator,
-    save_video=False,
+    # save_video=True,
+    # video_name="pendubot_designC.1_noisy.mp4"
 )
 
 # plot timeseries

@@ -41,7 +41,7 @@ if robot == "pendubot":
     design = "design_A.0"
     model = "model_2.0"
     # model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model"
-    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/saved_models/pendubot/design_A.0/model_2.0/gymnasium_2e7/best_model.zip"
+    model_path = "/examples/reinforcement_learning/SAC/saved_models/pendubot/design_A.0/model_2.0/gymnasium_2e7/best_model.zip"
 
 elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
@@ -50,7 +50,7 @@ elif robot == "acrobot":
     model = "model_3.0"
     # model_path = "../../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model"
     model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/best_model/best_model.zip"
-
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/saved_models/acrobot/design_C.0/model_3.0/possible_warmstart/best_model.zip"
 # import model parameter
 model_par_path = (
     "../../../data/system_identification/identified_parameters/"
