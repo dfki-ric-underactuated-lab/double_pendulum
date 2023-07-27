@@ -13,7 +13,7 @@ from double_pendulum.controller.DQN.environment import get_environment
 from double_pendulum.controller.DQN.simulate import simulate
 
 
-def train(argvs=sys.argv[1:]) -> None:
+def train(argvs) -> None:
     experiment_path = f"experiments/{argvs[0]}/"
     if not os.path.exists(experiment_path):
         os.makedirs(experiment_path)
@@ -100,4 +100,4 @@ def train(argvs=sys.argv[1:]) -> None:
 
 
 if __name__ == "__main__":
-    train()
+    train(sys.argv[1:])

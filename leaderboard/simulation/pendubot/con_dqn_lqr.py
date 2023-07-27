@@ -34,7 +34,7 @@ dynamics_func = double_pendulum_dynamics_func(
     torque_limit=torque_limit,
 )
 
-experiment_path = f"../../../examples/reinforcement_learning/DQN/experiments/r200000_d25000_b64_t100/"
+experiment_path = "../../../data/policies/design_A.0/model_2.0/pendubot/DQN/"
 env = get_environment(9)
 controller1 = DQNController(
     experiment_path,
