@@ -91,7 +91,7 @@ class Controller_Random_exploration(AbstractController):
 
     def get_control_output_(self, x, t):
         if self.ctrl_cnt % self.ctrl_rate == 0 and self.ctrl_cnt >= self.wait_steps:
-            self.last_control = self.u_profile[int(t * self.system_freq), :]
+            self.last_control = self.u_profile[int(t * self.system_freq)-self.wait_steps, :]
 
         self.ctrl_cnt += 1
         return self.last_control
