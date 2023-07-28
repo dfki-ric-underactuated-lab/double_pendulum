@@ -110,6 +110,8 @@
 </li>
       <li><a href="generated/double_pendulum.simulation.html#double_pendulum.simulation.gym_env.CustomEnv.action_space">action_space (double_pendulum.simulation.gym_env.CustomEnv attribute)</a>
 </li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.add">add() (double_pendulum.controller.DQN.replay_buffer.ReplayBuffer method)</a>
+</li>
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.angular_momentum_base">angular_momentum_base() (double_pendulum.model.symbolic_plant.SymbolicDoublePendulum method)</a>
 </li>
   </ul></td>
@@ -119,6 +121,8 @@
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.angular_momentum_dot_base">angular_momentum_dot_base() (double_pendulum.model.symbolic_plant.SymbolicDoublePendulum method)</a>
 </li>
       <li><a href="generated/double_pendulum.trajectory_optimization.direct_collocation.html#double_pendulum.trajectory_optimization.direct_collocation.dircol_utils.animation">animation() (in module double_pendulum.trajectory_optimization.direct_collocation.dircol_utils)</a>
+</li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.DQN.apply">apply() (double_pendulum.controller.DQN.networks.DQN method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -132,12 +136,20 @@
 </li>
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.base">base (double_pendulum.model.symbolic_plant.SymbolicDoublePendulum attribute)</a>
 </li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.BaseQ">BaseQ (class in double_pendulum.controller.DQN.networks)</a>
+</li>
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.benchmark.benchmarker.benchmark">benchmark() (double_pendulum.analysis.benchmark.benchmarker method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.benchmark.benchmarker">benchmarker (class in double_pendulum.analysis.benchmark)</a>
 </li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.BaseQ.best_action">best_action() (double_pendulum.controller.DQN.networks.BaseQ method)</a>
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.DQN.best_action">(double_pendulum.controller.DQN.networks.DQN method)</a>
+</li>
+      </ul></li>
       <li><a href="generated/double_pendulum.system_identification.html#double_pendulum.system_identification.dynamics.build_identification_function">build_identification_function() (in module double_pendulum.system_identification.dynamics)</a>
 </li>
       <li><a href="generated/double_pendulum.system_identification.html#double_pendulum.system_identification.dynamics.build_identification_matrices">build_identification_matrices() (in module double_pendulum.system_identification.dynamics)</a>
@@ -182,16 +194,22 @@
 </li>
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.benchmark.benchmarker.compute_cost">compute_cost() (double_pendulum.analysis.benchmark.benchmarker method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/double_pendulum.controller.ilqr.html#double_pendulum.controller.ilqr.ilqr_mpc_cpp.ILQRMPCCPPController.compute_init_traj">compute_init_traj() (double_pendulum.controller.ilqr.ilqr_mpc_cpp.ILQRMPCCPPController method)</a>
 </li>
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.benchmark.benchmarker.compute_ref_cost">compute_ref_cost() (double_pendulum.analysis.benchmark.benchmarker method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/double_pendulum.controller.lqr.roa.html#double_pendulum.controller.lqr.roa.prob_roa.compute_roa_prob">compute_roa_prob() (in module double_pendulum.controller.lqr.roa.prob_roa)</a>
 </li>
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.benchmark.benchmarker.compute_success_measure">compute_success_measure() (double_pendulum.analysis.benchmark.benchmarker method)</a>
 </li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.BaseQ.compute_target">compute_target() (double_pendulum.controller.DQN.networks.BaseQ method)</a>
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.DQN.compute_target">(double_pendulum.controller.DQN.networks.DQN method)</a>
+</li>
+      </ul></li>
       <li><a href="generated/double_pendulum.trajectory_optimization.ilqr.html#double_pendulum.trajectory_optimization.ilqr.ilqr_cpp.ilqr_calculator.compute_trajectory">compute_trajectory() (double_pendulum.trajectory_optimization.ilqr.ilqr_cpp.ilqr_calculator method)</a>
 </li>
       <li><a href="generated/double_pendulum.controller.inverse_dynamics.html#double_pendulum.controller.inverse_dynamics.computed_torque_controller.ComputedTorqueController">ComputedTorqueController (class in double_pendulum.controller.inverse_dynamics.computed_torque_controller)</a>
@@ -216,6 +234,8 @@
         <li><a href="generated/double_pendulum.model.html#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.coulomb_vector">(double_pendulum.model.symbolic_plant.SymbolicDoublePendulum method)</a>
 </li>
       </ul></li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.create_batch">create_batch() (double_pendulum.controller.DQN.replay_buffer.ReplayBuffer static method)</a>
+</li>
       <li><a href="generated/double_pendulum.trajectory_optimization.direct_collocation.html#double_pendulum.trajectory_optimization.direct_collocation.dircol_utils.create_plant_from_urdf">create_plant_from_urdf() (in module double_pendulum.trajectory_optimization.direct_collocation.dircol_utils)</a>
 </li>
       <li><a href="generated/double_pendulum.utils.html#double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial.create_section_poly">create_section_poly() (double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial method)</a>
@@ -310,6 +330,55 @@
 
       <ul>
         <li><a href="generated/double_pendulum.controller.html#module-double_pendulum.controller.combined_controller">module</a>
+</li>
+      </ul></li>
+      <li>
+    double_pendulum.controller.DQN
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.DQN.html#module-double_pendulum.controller.DQN">module</a>
+</li>
+      </ul></li>
+      <li>
+    double_pendulum.controller.DQN.DQN_controller
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.DQN.html#module-double_pendulum.controller.DQN.DQN_controller">module</a>
+</li>
+      </ul></li>
+      <li>
+    double_pendulum.controller.DQN.exploration
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.DQN.html#module-double_pendulum.controller.DQN.exploration">module</a>
+</li>
+      </ul></li>
+      <li>
+    double_pendulum.controller.DQN.networks
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.DQN.html#module-double_pendulum.controller.DQN.networks">module</a>
+</li>
+      </ul></li>
+      <li>
+    double_pendulum.controller.DQN.replay_buffer
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.DQN.html#module-double_pendulum.controller.DQN.replay_buffer">module</a>
+</li>
+      </ul></li>
+      <li>
+    double_pendulum.controller.DQN.simulate
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.DQN.html#module-double_pendulum.controller.DQN.simulate">module</a>
+</li>
+      </ul></li>
+      <li>
+    double_pendulum.controller.DQN.utils
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.DQN.html#module-double_pendulum.controller.DQN.utils">module</a>
 </li>
       </ul></li>
       <li>
@@ -543,6 +612,8 @@
         <li><a href="generated/double_pendulum.controller.SAC.html#module-double_pendulum.controller.SAC">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     double_pendulum.controller.SAC.SAC_controller
 
@@ -564,8 +635,6 @@
         <li><a href="generated/double_pendulum.controller.trajectory_following.html#module-double_pendulum.controller.trajectory_following.feed_forward">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     double_pendulum.controller.trajectory_following.trajectory_controller
 
@@ -899,6 +968,10 @@
 </li>
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.plant.DoublePendulumPlant">DoublePendulumPlant (class in double_pendulum.model.plant)</a>
 </li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.DQN">DQN (class in double_pendulum.controller.DQN.networks)</a>
+</li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.DQN_controller.DQNController">DQNController (class in double_pendulum.controller.DQN.DQN_controller)</a>
+</li>
       <li><a href="generated/double_pendulum.system_identification.html#double_pendulum.system_identification.dynamics.dynamics_func">dynamics_func() (in module double_pendulum.system_identification.dynamics)</a>
 </li>
   </ul></td>
@@ -915,15 +988,21 @@
 </li>
       <li><a href="generated/double_pendulum.controller.partial_feedback_linearization.html#double_pendulum.controller.partial_feedback_linearization.pfl.EnergyShapingPFLController">EnergyShapingPFLController (class in double_pendulum.controller.partial_feedback_linearization.pfl)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.exploration.EpsilonGreedySchedule">EpsilonGreedySchedule (class in double_pendulum.controller.DQN.exploration)</a>
+</li>
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.equation_of_motion">equation_of_motion() (double_pendulum.model.symbolic_plant.SymbolicDoublePendulum method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/double_pendulum.system_identification.html#double_pendulum.system_identification.loss.errfunc">errfunc (class in double_pendulum.system_identification.loss)</a>
 </li>
       <li><a href="generated/double_pendulum.system_identification.html#double_pendulum.system_identification.loss.errfunc_nl">errfunc_nl (class in double_pendulum.system_identification.loss)</a>
 </li>
       <li><a href="generated/double_pendulum.simulation.html#double_pendulum.simulation.simulation.Simulator.euler_integrator">euler_integrator() (double_pendulum.simulation.simulation.Simulator method)</a>
+</li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.exploration.EpsilonGreedySchedule.explore">explore() (double_pendulum.controller.DQN.exploration.EpsilonGreedySchedule method)</a>
+</li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.exploration.EpsilonGreedySchedule.explore_">explore_() (double_pendulum.controller.DQN.exploration.EpsilonGreedySchedule method)</a>
 </li>
       <li><a href="generated/double_pendulum.trajectory_optimization.direct_collocation.html#double_pendulum.trajectory_optimization.direct_collocation.dircol_utils.extract_data_from_polynomial">extract_data_from_polynomial() (in module double_pendulum.trajectory_optimization.direct_collocation.dircol_utils)</a>
 </li>
@@ -935,6 +1014,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/double_pendulum.utils.filters.html#double_pendulum.utils.filters.fast_fourier_transform.fast_fourier_transform">fast_fourier_transform() (in module double_pendulum.utils.filters.fast_fourier_transform)</a>
 </li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.MLP.features">features (double_pendulum.controller.DQN.networks.MLP attribute)</a>
+</li>
       <li><a href="generated/double_pendulum.controller.trajectory_following.html#double_pendulum.controller.trajectory_following.feed_forward.FeedForwardController">FeedForwardController (class in double_pendulum.controller.trajectory_following.feed_forward)</a>
 </li>
       <li><a href="generated/double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController.filter_measurement">filter_measurement() (double_pendulum.controller.abstract_controller.AbstractController method)</a>
@@ -943,10 +1024,10 @@
         <li><a href="generated/double_pendulum.simulation.html#double_pendulum.simulation.simulation.Simulator.filter_measurement">(double_pendulum.simulation.simulation.Simulator method)</a>
 </li>
       </ul></li>
-      <li><a href="generated/double_pendulum.utils.html#double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial">FitPiecewisePolynomial (class in double_pendulum.utils.pcw_polynomial)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/double_pendulum.utils.html#double_pendulum.utils.pcw_polynomial.FitPiecewisePolynomial">FitPiecewisePolynomial (class in double_pendulum.utils.pcw_polynomial)</a>
+</li>
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.plant.DoublePendulumPlant.forward_dynamics">forward_dynamics() (double_pendulum.model.plant.DoublePendulumPlant method)</a>
 
       <ul>
@@ -993,6 +1074,8 @@
         <li><a href="generated/double_pendulum.controller.html#double_pendulum.controller.combined_controller.CombinedController.get_control_output_">(double_pendulum.controller.combined_controller.CombinedController method)</a>
 </li>
         <li><a href="generated/double_pendulum.controller.html#double_pendulum.controller.combined_controller.SimultaneousControllers.get_control_output_">(double_pendulum.controller.combined_controller.SimultaneousControllers method)</a>
+</li>
+        <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.DQN_controller.DQNController.get_control_output_">(double_pendulum.controller.DQN.DQN_controller.DQNController method)</a>
 </li>
         <li><a href="generated/double_pendulum.controller.energy.html#double_pendulum.controller.energy.energy_Xin.EnergyController.get_control_output_">(double_pendulum.controller.energy.energy_Xin.EnergyController method)</a>
 </li>
@@ -1114,6 +1197,8 @@
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.utils.get_par_list">get_par_list() (in module double_pendulum.analysis.utils)</a>
 </li>
       <li><a href="generated/double_pendulum.simulation.html#double_pendulum.simulation.simulation.Simulator.get_real_applied_u">get_real_applied_u() (double_pendulum.simulation.simulation.Simulator method)</a>
+</li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.get_sample_indexes">get_sample_indexes() (double_pendulum.controller.DQN.replay_buffer.ReplayBuffer method)</a>
 </li>
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.benchmark_scores.get_scores">get_scores() (in module double_pendulum.analysis.benchmark_scores)</a>
 </li>
@@ -1279,6 +1364,8 @@
 </li>
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.leaderboard.leaderboard_scores">leaderboard_scores() (in module double_pendulum.analysis.leaderboard)</a>
 </li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.BaseQ.learn_on_batch">learn_on_batch() (double_pendulum.controller.DQN.networks.BaseQ method)</a>
+</li>
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.plant.DoublePendulumPlant.linear_matrices">linear_matrices() (double_pendulum.model.plant.DoublePendulumPlant method)</a>
 
       <ul>
@@ -1286,6 +1373,8 @@
 </li>
       </ul></li>
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.linear_matrices_discrete">linear_matrices_discrete() (double_pendulum.model.symbolic_plant.SymbolicDoublePendulum method)</a>
+</li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.load">load() (double_pendulum.controller.DQN.replay_buffer.ReplayBuffer method)</a>
 </li>
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.model_parameters.model_parameters.load_dict">load_dict() (double_pendulum.model.model_parameters.model_parameters method)</a>
 </li>
@@ -1295,14 +1384,22 @@
 </li>
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.model_parameters.model_parameters.load_model">load_model() (double_pendulum.model.model_parameters.model_parameters method)</a>
 </li>
-      <li><a href="generated/double_pendulum.utils.html#double_pendulum.utils.csv_trajectory.load_trajectory">load_trajectory() (in module double_pendulum.utils.csv_trajectory)</a>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.utils.load_pickled_data">load_pickled_data() (in module double_pendulum.controller.DQN.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/double_pendulum.utils.html#double_pendulum.utils.csv_trajectory.load_trajectory">load_trajectory() (in module double_pendulum.utils.csv_trajectory)</a>
+</li>
       <li><a href="generated/double_pendulum.utils.html#double_pendulum.utils.csv_trajectory.load_trajectory_full">load_trajectory_full() (in module double_pendulum.utils.csv_trajectory)</a>
 </li>
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.model_parameters.model_parameters.load_yaml">load_yaml() (double_pendulum.model.model_parameters.model_parameters method)</a>
 </li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.BaseQ.loss">loss() (double_pendulum.controller.DQN.networks.BaseQ method)</a>
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.DQN.loss">(double_pendulum.controller.DQN.networks.DQN method)</a>
+</li>
+      </ul></li>
       <li><a href="generated/double_pendulum.utils.filters.html#double_pendulum.utils.filters.low_pass.lowpass_filter">lowpass_filter() (in module double_pendulum.utils.filters.low_pass)</a>
 </li>
       <li><a href="generated/double_pendulum.utils.filters.html#double_pendulum.utils.filters.low_pass.lowpass_filter_rt">lowpass_filter_rt (class in double_pendulum.utils.filters.low_pass)</a>
@@ -1343,6 +1440,10 @@
         <li><a href="generated/double_pendulum.model.html#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.mass_matrix">(double_pendulum.model.symbolic_plant.SymbolicDoublePendulum method)</a>
 </li>
       </ul></li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.BaseQ.metric">metric() (double_pendulum.controller.DQN.networks.BaseQ static method)</a>
+</li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.MLP">MLP (class in double_pendulum.controller.DQN.networks)</a>
+</li>
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.model_parameters.model_parameters">model_parameters (class in double_pendulum.model.model_parameters)</a>
 </li>
       <li>
@@ -1368,6 +1469,20 @@
         <li><a href="generated/double_pendulum.controller.html#module-double_pendulum.controller.abstract_controller">double_pendulum.controller.abstract_controller</a>
 </li>
         <li><a href="generated/double_pendulum.controller.html#module-double_pendulum.controller.combined_controller">double_pendulum.controller.combined_controller</a>
+</li>
+        <li><a href="generated/double_pendulum.controller.DQN.html#module-double_pendulum.controller.DQN">double_pendulum.controller.DQN</a>
+</li>
+        <li><a href="generated/double_pendulum.controller.DQN.html#module-double_pendulum.controller.DQN.DQN_controller">double_pendulum.controller.DQN.DQN_controller</a>
+</li>
+        <li><a href="generated/double_pendulum.controller.DQN.html#module-double_pendulum.controller.DQN.exploration">double_pendulum.controller.DQN.exploration</a>
+</li>
+        <li><a href="generated/double_pendulum.controller.DQN.html#module-double_pendulum.controller.DQN.networks">double_pendulum.controller.DQN.networks</a>
+</li>
+        <li><a href="generated/double_pendulum.controller.DQN.html#module-double_pendulum.controller.DQN.replay_buffer">double_pendulum.controller.DQN.replay_buffer</a>
+</li>
+        <li><a href="generated/double_pendulum.controller.DQN.html#module-double_pendulum.controller.DQN.simulate">double_pendulum.controller.DQN.simulate</a>
+</li>
+        <li><a href="generated/double_pendulum.controller.DQN.html#module-double_pendulum.controller.DQN.utils">double_pendulum.controller.DQN.utils</a>
 </li>
         <li><a href="generated/double_pendulum.controller.energy.html#module-double_pendulum.controller.energy">double_pendulum.controller.energy</a>
 </li>
@@ -1554,9 +1669,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.n_actuators">n_actuators (double_pendulum.model.symbolic_plant.SymbolicDoublePendulum attribute)</a>
 </li>
+      <li><a href="generated/double_pendulum.model.html#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.n_links">n_links (double_pendulum.model.symbolic_plant.SymbolicDoublePendulum attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="generated/double_pendulum.model.html#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.n_links">n_links (double_pendulum.model.symbolic_plant.SymbolicDoublePendulum attribute)</a>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.MLP.name">name (double_pendulum.controller.DQN.networks.MLP attribute)</a>
 </li>
       <li><a href="generated/double_pendulum.simulation.html#double_pendulum.simulation.gym_env.double_pendulum_dynamics_func.normalize_state">normalize_state() (double_pendulum.simulation.gym_env.double_pendulum_dynamics_func method)</a>
 </li>
@@ -1574,6 +1691,8 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.MLP.parent">parent (double_pendulum.controller.DQN.networks.MLP attribute)</a>
+</li>
       <li><a href="generated/double_pendulum.controller.gravity_compensation.html#double_pendulum.controller.gravity_compensation.PID_gravity_compensation_controller.PIDGravityCompensationController">PIDGravityCompensationController (class in double_pendulum.controller.gravity_compensation.PID_gravity_compensation_controller)</a>
 </li>
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.benchmark_plot.plot_benchmark_results">plot_benchmark_results() (in module double_pendulum.analysis.benchmark_plot)</a>
@@ -1586,10 +1705,10 @@
 </li>
       <li><a href="generated/double_pendulum.system_identification.html#double_pendulum.system_identification.plotting.plot_torques">plot_torques() (in module double_pendulum.system_identification.plotting)</a>
 </li>
-      <li><a href="generated/double_pendulum.controller.lqr.roa.html#double_pendulum.controller.lqr.roa.ellipsoid.plotEllipse">plotEllipse() (in module double_pendulum.controller.lqr.roa.ellipsoid)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/double_pendulum.controller.lqr.roa.html#double_pendulum.controller.lqr.roa.ellipsoid.plotEllipse">plotEllipse() (in module double_pendulum.controller.lqr.roa.ellipsoid)</a>
+</li>
       <li><a href="generated/double_pendulum.controller.pid.html#double_pendulum.controller.pid.point_pid_controller.PointPIDController">PointPIDController (class in double_pendulum.controller.pid.point_pid_controller)</a>
 </li>
       <li><a href="generated/double_pendulum.utils.html#double_pendulum.utils.pcw_polynomial.poly1">poly1() (in module double_pendulum.utils.pcw_polynomial)</a>
@@ -1654,6 +1773,8 @@
 </li>
       <li><a href="generated/double_pendulum.experiments.html#double_pendulum.experiments.experimental_utils.rad2rev">rad2rev() (in module double_pendulum.experiments.experimental_utils)</a>
 </li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.BaseQ.random_action">random_action() (double_pendulum.controller.DQN.networks.BaseQ method)</a>
+</li>
       <li><a href="generated/double_pendulum.controller.gamepad.html#double_pendulum.controller.gamepad.gamepad.GamePad.read">read() (double_pendulum.controller.gamepad.gamepad.GamePad method)</a>
 </li>
       <li><a href="generated/double_pendulum.simulation.html#double_pendulum.simulation.simulation.Simulator.record_data">record_data() (double_pendulum.simulation.simulation.Simulator method)</a>
@@ -1663,6 +1784,8 @@
       <li><a href="generated/double_pendulum.simulation.html#double_pendulum.simulation.gym_env.CustomEnv.render">render() (double_pendulum.simulation.gym_env.CustomEnv method)</a>
 </li>
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.symbolic_plant.SymbolicDoublePendulum.replace_parameters">replace_parameters() (double_pendulum.model.symbolic_plant.SymbolicDoublePendulum method)</a>
+</li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer">ReplayBuffer (class in double_pendulum.controller.DQN.replay_buffer)</a>
 </li>
       <li><a href="generated/double_pendulum.utils.html#double_pendulum.utils.pcw_polynomial.ResampleTrajectory">ResampleTrajectory() (in module double_pendulum.utils.pcw_polynomial)</a>
 </li>
@@ -1728,10 +1851,18 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/double_pendulum.controller.SAC.html#double_pendulum.controller.SAC.SAC_controller.SACController">SACController (class in double_pendulum.controller.SAC.SAC_controller)</a>
 </li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.sample_random_batch">sample_random_batch() (double_pendulum.controller.DQN.replay_buffer.ReplayBuffer method)</a>
+</li>
       <li><a href="generated/double_pendulum.controller.lqr.roa.html#double_pendulum.controller.lqr.roa.ellipsoid.sampleFromEllipsoid">sampleFromEllipsoid() (in module double_pendulum.controller.lqr.roa.ellipsoid)</a>
 </li>
       <li><a href="generated/double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController.save">save() (double_pendulum.controller.abstract_controller.AbstractController method)</a>
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.BaseQ.save">(double_pendulum.controller.DQN.networks.BaseQ method)</a>
 </li>
+        <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.save">(double_pendulum.controller.DQN.replay_buffer.ReplayBuffer method)</a>
+</li>
+      </ul></li>
       <li><a href="generated/double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController.save_">save_() (double_pendulum.controller.abstract_controller.AbstractController method)</a>
 
       <ul>
@@ -1782,6 +1913,8 @@
 </li>
       <li><a href="generated/double_pendulum.experiments.html#double_pendulum.experiments.video_recording.VideoWriterWidget.save_frame">save_frame() (double_pendulum.experiments.video_recording.VideoWriterWidget method)</a>
 </li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.utils.save_pickled_data">save_pickled_data() (in module double_pendulum.controller.DQN.utils)</a>
+</li>
       <li><a href="generated/double_pendulum.utils.html#double_pendulum.utils.csv_trajectory.save_trajectory">save_trajectory() (in module double_pendulum.utils.csv_trajectory)</a>
 </li>
       <li><a href="generated/double_pendulum.trajectory_optimization.ilqr.html#double_pendulum.trajectory_optimization.ilqr.ilqr_cpp.ilqr_calculator.save_trajectory_csv">save_trajectory_csv() (double_pendulum.trajectory_optimization.ilqr.ilqr_cpp.ilqr_calculator method)</a>
@@ -1791,6 +1924,8 @@
       <li><a href="generated/double_pendulum.utils.filters.html#double_pendulum.utils.filters.fast_fourier_transform.scipy_fft">scipy_fft() (in module double_pendulum.utils.filters.fast_fourier_transform)</a>
 </li>
       <li><a href="generated/double_pendulum.utils.html#double_pendulum.utils.optimization.scipy_par_optimization">scipy_par_optimization() (in module double_pendulum.utils.optimization)</a>
+</li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.MLP.scope">scope (double_pendulum.controller.DQN.networks.MLP attribute)</a>
 </li>
       <li><a href="generated/double_pendulum.simulation.html#double_pendulum.simulation.visualization.set_arrow_properties">set_arrow_properties() (in module double_pendulum.simulation.visualization)</a>
 </li>
@@ -1987,7 +2122,11 @@
 </li>
       </ul></li>
       <li><a href="generated/double_pendulum.simulation.html#double_pendulum.simulation.simulation.Simulator.simulate">simulate() (double_pendulum.simulation.simulation.Simulator method)</a>
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.simulate.simulate">(in module double_pendulum.controller.DQN.simulate)</a>
 </li>
+      </ul></li>
       <li><a href="generated/double_pendulum.simulation.html#double_pendulum.simulation.simulation.Simulator.simulate_and_animate">simulate_and_animate() (double_pendulum.simulation.simulation.Simulator method)</a>
 </li>
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.benchmark.benchmarker.simulate_and_get_cost">simulate_and_get_cost() (double_pendulum.analysis.benchmark.benchmarker method)</a>
@@ -2116,6 +2255,14 @@
 </li>
       <li><a href="generated/double_pendulum.experiments.html#double_pendulum.experiments.video_recording.VideoWriterWidget.update">update() (double_pendulum.experiments.video_recording.VideoWriterWidget method)</a>
 </li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.BaseQ.update_online_params">update_online_params() (double_pendulum.controller.DQN.networks.BaseQ method)</a>
+</li>
+      <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.BaseQ.update_target_params">update_target_params() (double_pendulum.controller.DQN.networks.BaseQ method)</a>
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.DQN.update_target_params">(double_pendulum.controller.DQN.networks.DQN method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 

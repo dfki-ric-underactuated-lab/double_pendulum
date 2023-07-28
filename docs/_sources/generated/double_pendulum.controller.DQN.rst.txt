@@ -1,0 +1,66 @@
+double\_pendulum.controller.DQN
+=======================================
+
+.. automodule:: double_pendulum.controller.DQN
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.DQN.DQN\_controller
+------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.DQN.DQN_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.DQN.environment
+--------------------------------------------------
+
+.. automodule:: double_pendulum.controller.DQN.environment
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.DQN.exploration
+--------------------------------------------------
+
+.. automodule:: double_pendulum.controller.DQN.exploration
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.DQN.networks
+-----------------------------------------------
+
+.. automodule:: double_pendulum.controller.DQN.networks
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.DQN.replay\_buffer
+-----------------------------------------------------
+
+.. automodule:: double_pendulum.controller.DQN.replay_buffer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.DQN.simulate
+-----------------------------------------------
+
+.. automodule:: double_pendulum.controller.DQN.simulate
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.DQN.utils
+--------------------------------------------
+
+.. automodule:: double_pendulum.controller.DQN.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
