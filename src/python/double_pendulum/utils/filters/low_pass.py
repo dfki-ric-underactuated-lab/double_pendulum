@@ -40,18 +40,23 @@ class lowpass_filter_rt():
 
 class butter_filter_rt():
     def __init__(self,
-                 dof=2, cutoff=0.5,
+                 dof=2, cutoff=0.5, dt=0.002,
                  x0=[0., 0., 0., 0.]):
         self.dof = dof
         # self.dim_x = dim_x
-        self.data = np.asarray(x0).reshape(1, len(x0))
-        self.data = [x0]
-        self.data_filt = [x0]
+        self.data = [np.array(x0)]
+        self.data_filt = [np.array(x0)]
         self.cutoff = cutoff
         self.b, self.a = scipy_signal.butter(1, self.cutoff)
-    def __call__(self, x, u=None):
-        vel = x[self.dof:]
+        self.dt = dt
 
+    def __call__(self, x, u=None):
+        pos = x[:self.dof]
+
+        # numeric diff
+        vel = (pos - self.data[-1][:self.dof]) / self.dt
+
+        # filtering
         vel = (self.b[0] * vel + self.b[1] * self.data[-1][self.dof:] - self.a[1] * self.data_filt[-1][self.dof:]) / self.a[0]
 
         self.data.append(x)

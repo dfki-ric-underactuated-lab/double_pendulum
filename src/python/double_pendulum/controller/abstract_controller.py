@@ -320,7 +320,8 @@ class AbstractController(ABC):
         if self.filt == "butter":
             dof = 2
 
-            self.filter = butter_filter_rt(dof=dof, cutoff=self.filt_kwargs["butter_cutoff"], x0=self.filt_x0)
+            self.filter = butter_filter_rt(dof=dof, cutoff=self.filt_kwargs["butter_cutoff"], x0=self.filt_x0,
+                                           dt=self.filt_kwargs['dt'])
 
         elif self.filt == "lowpass":
             # dof = self.filt_plant.dof
