@@ -68,7 +68,9 @@ Link to [documentation](https://dfki-ric-underactuated-lab.github.io/double_pend
 
 The documentation can also be generated locally by doing
 
-    make doc
+```bash
+make doc
+```
 
 in the main directory. Afterwards you can open the file
 *docs/build/_build/html/index.html* in your browser.
@@ -91,27 +93,31 @@ visualized in the figure below:
 A minimal example showcasing the interfaces between the plant, a controller and
 the simulator is:
 
-    from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
-    from double_pendulum.simulation.simulation import Simulator
-    from double_pendulum.controller.pid.point_pid_controller import PointPIDController
-    from double_pendulum.utils.plotting import plot_timeseries
+```python
+from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
+from double_pendulum.simulation.simulation import Simulator
+from double_pendulum.controller.pid.point_pid_controller import PointPIDController
+from double_pendulum.utils.plotting import plot_timeseries
 
-    plant = SymbolicDoublePendulum(mass=[0.6, 0.5],
-                                   length=[0.3, 0.2])
+plant = SymbolicDoublePendulum(mass=[0.6, 0.5],
+                               length=[0.3, 0.2])
 
-    sim = Simulator(plant=plant)
+sim = Simulator(plant=plant)
 
-    controller = PointPIDController(torque_limit=[5.0, 5.0])
-    controller.set_parameters(Kp=10, Ki=1, Kd=1)
-    controller.init()
-    T, X, U = sim.simulate_and_animate(t0=0.0, x0=[2.8, 1.2, 0., 0.],
-                                       tf=5., dt=0.01, controller=controller)
-    plot_timeseries(T, X, U)
+controller = PointPIDController(torque_limit=[5.0, 5.0])
+controller.set_parameters(Kp=10, Ki=1, Kd=1)
+controller.init()
+T, X, U = sim.simulate_and_animate(t0=0.0, x0=[2.8, 1.2, 0., 0.],
+                                   tf=5., dt=0.01, controller=controller)
+plot_timeseries(T, X, U)
+```
 
 This code snippet uses a plant which is parsed to the simulator. The simulator
 is then used to simulate and animate the double pendulum motion by calling the
 
-    plant.rhs(t, x, tau)
+```python
+plant.rhs(t, x, tau)
+```
 
 with a time t = float, state x = [float, float, float, float] and torque
 tau = [float, float] and receiving the change in x in form of its derivative.
@@ -119,7 +125,9 @@ tau = [float, float] and receiving the change in x in form of its derivative.
 The simulation is performed for 5 seconds under the influence of a PID
 controller by at every time step calling the
 
-    controller.get_control_output(x, t)
+```python
+controller.get_control_output(x, t)
+```
 
 method of the controller with a state x = [float, float, float, float] and a
 time t = float and receiving a torque tau.
@@ -202,7 +210,7 @@ follow each individual license agreement.
 ## Citation
 
 1. Wiebe F., Kumar S., Shala L., Vyas S., Javadi M., Kirchner F., (2023). An Open Source Dual Purpose Acrobot and Pendubot Platform for Benchmarking Control Algorithms for Underactuated Robotics. In: IEEE Robotics and Automation Magazine (RAM), 2023, under review.
-```
+```bibtex
 @ARTICLE{2023_ram_wiebe_double_pendulum,
   author={Wiebe, Felix and Kumar, Shivesh and Shala, Lasse and Vyas, Shubham and Javadi, Mahdi and Kirchner, Frank},
   journal={IEEE Robotics and Automation Magazine}, 
