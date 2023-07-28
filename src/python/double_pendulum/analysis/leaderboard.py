@@ -150,7 +150,7 @@ def leaderboard_scores(
             np.savetxt(
                 os.path.join(os.path.dirname(path), "scores.csv"),
                 results,
-                header="Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Real AI Score",
+                header="Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],RealAI Score",
                 delimiter=",",
                 fmt="%s",
                 comments="",
@@ -222,9 +222,27 @@ def leaderboard_scores(
                 video_link = "[video](" + controller_link + "/sim_video.gif)"
                 append_data.append(data_link + " " + plot_link + " " + video_link)
             else:
-                data_link = "[data](" + controller_link + "/experiment" + str(best+1).zfill(2) + "/trajectory.csv)"
-                plot_link = "[plot](" + controller_link + "/experiment" + str(best+1).zfill(2) + "/timeseries.png)"
-                video_link = "[video](" + controller_link + "/experiment" + str(best+1).zfill(2) + "/video.gif)"
+                data_link = (
+                    "[data]("
+                    + controller_link
+                    + "/experiment"
+                    + str(best + 1).zfill(2)
+                    + "/trajectory.csv)"
+                )
+                plot_link = (
+                    "[plot]("
+                    + controller_link
+                    + "/experiment"
+                    + str(best + 1).zfill(2)
+                    + "/timeseries.png)"
+                )
+                video_link = (
+                    "[video]("
+                    + controller_link
+                    + "/experiment"
+                    + str(best + 1).zfill(2)
+                    + "/video.gif)"
+                )
                 # link = "[data plots videos](" + controller_link + ")"
                 # append_data.append(link)
                 append_data.append(data_link + " " + plot_link + " " + video_link)
