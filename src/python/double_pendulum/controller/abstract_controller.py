@@ -7,7 +7,7 @@ import numpy as np
 
 from double_pendulum.model.friction_matrix import yb_friction_matrix
 from double_pendulum.utils.filters.identity import identity_filter
-from double_pendulum.utils.filters.low_pass import lowpass_filter_rt
+from double_pendulum.utils.filters.low_pass import lowpass_filter_rt, butter_filter_rt
 from double_pendulum.utils.filters.kalman_filter import kalman_filter_rt
 from double_pendulum.utils.filters.unscented_kalman_filter import unscented_kalman_filter_rt
 
@@ -317,7 +317,12 @@ class AbstractController(ABC):
         """
         Initialize the measurement filter
         """
-        if self.filt == "lowpass":
+        if self.filt == "butter":
+            dof = 2
+
+            self.filter = butter_filter_rt(dof=dof, cutoff=self.filt_kwargs["butter_cutoff"], x0=self.filt_x0)
+
+        elif self.filt == "lowpass":
             # dof = self.filt_plant.dof
             dof = 2
 

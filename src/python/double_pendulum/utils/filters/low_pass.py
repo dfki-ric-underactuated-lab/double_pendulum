@@ -1,3 +1,6 @@
+import copy
+import signal
+from scipy import signal as scipy_signal
 import numpy as np
 
 
@@ -33,3 +36,28 @@ class lowpass_filter_rt():
         self.data.append(x_est)
         # print(self.data[-2], x, x_est, np.shape(self.data), self.data)
         return np.copy(x_est)
+
+
+class butter_filter_rt():
+    def __init__(self,
+                 dof=2, cutoff=0.5,
+                 x0=[0., 0., 0., 0.]):
+        self.dof = dof
+        # self.dim_x = dim_x
+        self.data = np.asarray(x0).reshape(1, len(x0))
+        self.data = [x0]
+        self.data_filt = [x0]
+        self.cutoff = cutoff
+        self.b, self.a = scipy_signal.butter(1, self.cutoff)
+    def __call__(self, x, u=None):
+        vel = x[self.dof:]
+
+        vel = (self.b[0] * vel + self.b[1] * self.data[-1][self.dof:] - self.a[1] * self.data_filt[-1][self.dof:]) / self.a[0]
+
+        self.data.append(x)
+
+        x_ = copy.deepcopy(x)
+        x_[self.dof:] = vel
+        self.data_filt.append(x_)
+
+        return np.array(self.data_filt[-1])
