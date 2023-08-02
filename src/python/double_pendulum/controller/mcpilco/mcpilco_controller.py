@@ -111,7 +111,8 @@ class Controller_muli_out_sum_of_Gaussians_with_angles_numpy(AbstractController)
 
 
 class Controller_multi_policy_sum_of_gaussians_with_angles_numpy(AbstractController):
-    def __init__(self, parameters_list, ctrl_rate, u_max=[5.], num_dof=2, controlled_dof=None):
+    def __init__(self, parameters_list, ctrl_rate, u_max=[5.], num_dof=2, controlled_dof=None, active_pos_list=None,
+                 active_vel_list=None):
         # list of np arrays
         self.lengthscales = []
         self.norm_centers = []
@@ -136,27 +137,49 @@ class Controller_multi_policy_sum_of_gaussians_with_angles_numpy(AbstractControl
         self.last_control = None
         self.parameters = parameters
 
+        if active_pos_list is None:
+            active_pos_list = [list(range(num_dof))] * num_dof
+        self.active_pos_list = active_pos_list
+
+        if active_vel_list is None:
+            active_vel_list = [list(range(num_dof, 2*num_dof))] * num_dof
+        self.active_vel_list = active_vel_list
+
+
         super().__init__()
 
     def get_control_output_(self, x, t=None):
-        meas_pos = x[:self.num_dof]
-        meas_vel = x[self.num_dof:]
 
         if self.ctrl_cnt % self.ctrl_rate == 0:
-            x = np.zeros((self.num_dof * 3))  # velocities, cos, sin
+            # x = np.zeros((self.num_dof * 3))  # velocities, cos, sin
             # print(meas_vel)
-            x[:self.num_dof] = meas_vel
-            x[self.num_dof:2 * self.num_dof] = np.cos(meas_pos)
-            x[2 * self.num_dof:] = np.sin(meas_pos)
+            # x[:self.num_dof] = meas_vel
+            # x[self.num_dof:2 * self.num_dof] = np.cos(meas_pos)
+            # x[2 * self.num_dof:] = np.sin(meas_pos)
 
-            out_u = np.zeros(len(self.parameters_list))  # as many outputs as policies
+            out_u = np.zeros(self.num_dof)  # as many outputs as policies
 
-            for i in range(len(self.parameters_list)):
-                x_ = x / self.lengthscales[i]
+            for i in range(self.num_dof):
+                meas_pos = x[self.active_pos_list[i]]
+                meas_vel = x[self.active_vel_list[i]]
+                x_ = np.concatenate([meas_vel, np.cos(meas_pos), np.sin(meas_pos)])
+                # print(i, x_)
+
+                x_ = x_ / self.lengthscales[i]
                 dist_ = self.norm_centers[i] - x_
+                dist_ = dist_.reshape((-1, self.lengthscales[i].size))
+
+                # print(i, dist_)
+
                 sq_dist = np.sum(dist_ ** 2, axis=-1)
+
+                # print(i, sq_dist)
+
                 u = np.sum(self.linear_weight[i] * np.exp(-sq_dist))
+                # print(i, u)
                 out_u[i] = self.u_max[i] * np.tanh((u / self.u_max[i]))
+
+            # print(out_u)
 
             self.last_control = out_u[self.controlled_dof]
 
