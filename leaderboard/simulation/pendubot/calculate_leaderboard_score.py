@@ -65,4 +65,8 @@ leaderboard_scores(
     link_base="",
 )
 
-print(pandas.read_csv(save_to).sort_values(by=["Real AI Score"], ascending=False).to_markdown(index=False))
+print(
+    pandas.read_csv(save_to)
+    .sort_values(by=["RealAI Score"], ascending=False)
+    .to_markdown(index=False)
+)
