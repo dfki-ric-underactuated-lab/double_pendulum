@@ -3,6 +3,9 @@ import pickle as pkl
 
 from exp_parameters import t_final, dt, x0, goal, mpar, design, model, robot
 
+design = "design_C.1"
+model = "model_1.0"
+
 u_max = [0.5, 5.0]
 n_dof = 2
 controlled_joint = [0, 1]

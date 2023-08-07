@@ -73,8 +73,6 @@ comb_controller = CombinedController(controller1=controller, controller2=stabili
                                      verbose=False)
 controller = comb_controller
 
-controller.set_filter_args(filt='butter', x0=x0, dt=T_sym, filter_kwargs={'butter_cutoff': 0.5, 'dt': T_sym})
-
 controller.set_goal(goal)
 controller.init()
 controller.init_()
