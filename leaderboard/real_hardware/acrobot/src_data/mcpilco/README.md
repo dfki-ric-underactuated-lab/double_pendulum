@@ -1,0 +1,3 @@
+Monte-Carlo Probabilistic Inference for Learning COntrol (MC-PILCO) is a Model-Based Reinforcement Learning algorithm.
+MC-PILCO exploits data collected by interacting with the system to derive a model of the system dynamics, and optimizes the policy by simulating the system, rather than optimizing the policy directly on the actual system.
+The MC-PILCO controller is based on a policy trained in order to minimize the siwngup-time and to keep the joints within limits.
