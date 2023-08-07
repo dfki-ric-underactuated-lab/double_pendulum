@@ -65,9 +65,9 @@ leaderboard_scores(
     link_base="",
 )
 df = pandas.read_csv(save_to)
+print(df.sort_values(by=["RealAI Score"], ascending=False).to_markdown(index=False))
 print(
-    df
-    .sort_values(by=["Real AI Score"], ascending=False)
+    pandas.read_csv(save_to)
+    .sort_values(by=["RealAI Score"], ascending=False)
     .to_markdown(index=False)
 )
-print(pandas.read_csv(save_to).sort_values(by=["Real AI Score"], ascending=False).to_markdown(index=False))
