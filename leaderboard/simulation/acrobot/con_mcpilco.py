@@ -52,7 +52,7 @@ policy_par_path = (
 file = open(policy_par_path, 'rb')
 parameters = pkl.load(file)
 
-controller = Controller_sum_of_Gaussians_with_angles_numpy(parameters, ctrl_rate, u_max, n_dof, controlled_joint, wait_steps=10)
+controller = Controller_sum_of_Gaussians_with_angles_numpy(parameters, ctrl_rate, u_max, n_dof, controlled_joint)
 
 if switch_stabilization:
     stabilization_controller = LQRController_nonsymbolic(model_pars=mpar)
