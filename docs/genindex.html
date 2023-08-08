@@ -140,10 +140,10 @@
 </li>
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.benchmark.benchmarker.benchmark">benchmark() (double_pendulum.analysis.benchmark.benchmarker method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.benchmark.benchmarker">benchmarker (class in double_pendulum.analysis.benchmark)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.BaseQ.best_action">best_action() (double_pendulum.controller.DQN.networks.BaseQ method)</a>
 
       <ul>
@@ -153,6 +153,8 @@
       <li><a href="generated/double_pendulum.system_identification.html#double_pendulum.system_identification.dynamics.build_identification_function">build_identification_function() (in module double_pendulum.system_identification.dynamics)</a>
 </li>
       <li><a href="generated/double_pendulum.system_identification.html#double_pendulum.system_identification.dynamics.build_identification_matrices">build_identification_matrices() (in module double_pendulum.system_identification.dynamics)</a>
+</li>
+      <li><a href="generated/double_pendulum.utils.filters.html#double_pendulum.utils.filters.low_pass.butter_filter_rt">butter_filter_rt (class in double_pendulum.utils.filters.low_pass)</a>
 </li>
       <li><a href="generated/double_pendulum.utils.filters.html#double_pendulum.utils.filters.butterworth.butterworth_filter">butterworth_filter() (in module double_pendulum.utils.filters.butterworth)</a>
 </li>
@@ -198,10 +200,10 @@
 </li>
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.benchmark.benchmarker.compute_ref_cost">compute_ref_cost() (double_pendulum.analysis.benchmark.benchmarker method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/double_pendulum.controller.lqr.roa.html#double_pendulum.controller.lqr.roa.prob_roa.compute_roa_prob">compute_roa_prob() (in module double_pendulum.controller.lqr.roa.prob_roa)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.benchmark.benchmarker.compute_success_measure">compute_success_measure() (double_pendulum.analysis.benchmark.benchmarker method)</a>
 </li>
       <li><a href="generated/double_pendulum.controller.DQN.html#double_pendulum.controller.DQN.networks.BaseQ.compute_target">compute_target() (double_pendulum.controller.DQN.networks.BaseQ method)</a>
@@ -217,6 +219,12 @@
       <li><a href="generated/double_pendulum.utils.html#double_pendulum.utils.csv_trajectory.concatenate_trajectories">concatenate_trajectories() (in module double_pendulum.utils.csv_trajectory)</a>
 </li>
       <li><a href="generated/double_pendulum.trajectory_optimization.direct_collocation.html#double_pendulum.trajectory_optimization.direct_collocation.dircol_utils.construct_trajectories">construct_trajectories() (in module double_pendulum.trajectory_optimization.direct_collocation.dircol_utils)</a>
+</li>
+      <li><a href="generated/double_pendulum.controller.mcpilco.html#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_muli_out_sum_of_Gaussians_with_angles_numpy">Controller_muli_out_sum_of_Gaussians_with_angles_numpy (class in double_pendulum.controller.mcpilco.mcpilco_controller)</a>
+</li>
+      <li><a href="generated/double_pendulum.controller.mcpilco.html#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_multi_policy_sum_of_gaussians_with_angles_numpy">Controller_multi_policy_sum_of_gaussians_with_angles_numpy (class in double_pendulum.controller.mcpilco.mcpilco_controller)</a>
+</li>
+      <li><a href="generated/double_pendulum.controller.random_exploration.html#double_pendulum.controller.random_exploration.random_exploration_controller.Controller_Random_exploration">Controller_Random_exploration (class in double_pendulum.controller.random_exploration.random_exploration_controller)</a>
 </li>
       <li><a href="generated/double_pendulum.simulation.html#double_pendulum.simulation.simulation.Simulator.controller_step">controller_step() (double_pendulum.simulation.simulation.Simulator method)</a>
 </li>
@@ -606,14 +614,28 @@
 </li>
       </ul></li>
       <li>
+    double_pendulum.controller.random_exploration
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.random_exploration.html#module-double_pendulum.controller.random_exploration">module</a>
+</li>
+      </ul></li>
+      <li>
+    double_pendulum.controller.random_exploration.random_exploration_controller
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.random_exploration.html#module-double_pendulum.controller.random_exploration.random_exploration_controller">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
     double_pendulum.controller.SAC
 
       <ul>
         <li><a href="generated/double_pendulum.controller.SAC.html#module-double_pendulum.controller.SAC">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     double_pendulum.controller.SAC.SAC_controller
 
@@ -1063,11 +1085,7 @@
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.plant.DoublePendulumPlant.get_Blin">get_Blin() (double_pendulum.model.plant.DoublePendulumPlant method)</a>
 </li>
       <li><a href="generated/double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController.get_control_output">get_control_output() (double_pendulum.controller.abstract_controller.AbstractController method)</a>
-
-      <ul>
-        <li><a href="generated/double_pendulum.controller.mcpilco.html#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy.get_control_output">(double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy method)</a>
 </li>
-      </ul></li>
       <li><a href="generated/double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController.get_control_output_">get_control_output_() (double_pendulum.controller.abstract_controller.AbstractController method)</a>
 
       <ul>
@@ -1099,6 +1117,10 @@
 </li>
         <li><a href="generated/double_pendulum.controller.lqr.html#double_pendulum.controller.lqr.lqr_controller_drake.LQRController.get_control_output_">(double_pendulum.controller.lqr.lqr_controller_drake.LQRController method)</a>
 </li>
+        <li><a href="generated/double_pendulum.controller.mcpilco.html#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_muli_out_sum_of_Gaussians_with_angles_numpy.get_control_output_">(double_pendulum.controller.mcpilco.mcpilco_controller.Controller_muli_out_sum_of_Gaussians_with_angles_numpy method)</a>
+</li>
+        <li><a href="generated/double_pendulum.controller.mcpilco.html#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_multi_policy_sum_of_gaussians_with_angles_numpy.get_control_output_">(double_pendulum.controller.mcpilco.mcpilco_controller.Controller_multi_policy_sum_of_gaussians_with_angles_numpy method)</a>
+</li>
         <li><a href="generated/double_pendulum.controller.mcpilco.html#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy.get_control_output_">(double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy method)</a>
 </li>
         <li><a href="generated/double_pendulum.controller.partial_feedback_linearization.html#double_pendulum.controller.partial_feedback_linearization.pfl.EnergyShapingPFLAndLQRController.get_control_output_">(double_pendulum.controller.partial_feedback_linearization.pfl.EnergyShapingPFLAndLQRController method)</a>
@@ -1112,6 +1134,8 @@
         <li><a href="generated/double_pendulum.controller.pid.html#double_pendulum.controller.pid.point_pid_controller.PointPIDController.get_control_output_">(double_pendulum.controller.pid.point_pid_controller.PointPIDController method)</a>
 </li>
         <li><a href="generated/double_pendulum.controller.pid.html#double_pendulum.controller.pid.trajectory_pid_controller.TrajPIDController.get_control_output_">(double_pendulum.controller.pid.trajectory_pid_controller.TrajPIDController method)</a>
+</li>
+        <li><a href="generated/double_pendulum.controller.random_exploration.html#double_pendulum.controller.random_exploration.random_exploration_controller.Controller_Random_exploration.get_control_output_">(double_pendulum.controller.random_exploration.random_exploration_controller.Controller_Random_exploration method)</a>
 </li>
         <li><a href="generated/double_pendulum.controller.SAC.html#double_pendulum.controller.SAC.SAC_controller.SACController.get_control_output_">(double_pendulum.controller.SAC.SAC_controller.SACController method)</a>
 </li>
@@ -1194,6 +1218,12 @@
 </li>
       <li><a href="generated/double_pendulum.model.html#double_pendulum.model.plant.DoublePendulumPlant.get_Mx">get_Mx() (double_pendulum.model.plant.DoublePendulumPlant method)</a>
 </li>
+      <li><a href="generated/double_pendulum.controller.mcpilco.html#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_muli_out_sum_of_Gaussians_with_angles_numpy.get_np_policy">get_np_policy() (double_pendulum.controller.mcpilco.mcpilco_controller.Controller_muli_out_sum_of_Gaussians_with_angles_numpy method)</a>
+
+      <ul>
+        <li><a href="generated/double_pendulum.controller.mcpilco.html#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_multi_policy_sum_of_gaussians_with_angles_numpy.get_np_policy">(double_pendulum.controller.mcpilco.mcpilco_controller.Controller_multi_policy_sum_of_gaussians_with_angles_numpy method)</a>
+</li>
+      </ul></li>
       <li><a href="generated/double_pendulum.analysis.html#double_pendulum.analysis.utils.get_par_list">get_par_list() (in module double_pendulum.analysis.utils)</a>
 </li>
       <li><a href="generated/double_pendulum.simulation.html#double_pendulum.simulation.simulation.Simulator.get_real_applied_u">get_real_applied_u() (double_pendulum.simulation.simulation.Simulator method)</a>
@@ -1316,6 +1346,8 @@
         <li><a href="generated/double_pendulum.simulation.html#double_pendulum.simulation.simulation.Simulator.init_filter">(double_pendulum.simulation.simulation.Simulator method)</a>
 </li>
       </ul></li>
+      <li><a href="generated/double_pendulum.controller.random_exploration.html#double_pendulum.controller.random_exploration.random_exploration_controller.Controller_Random_exploration.init_profile">init_profile() (double_pendulum.controller.random_exploration.random_exploration_controller.Controller_Random_exploration method)</a>
+</li>
       <li><a href="generated/double_pendulum.simulation.html#double_pendulum.simulation.gym_env.double_pendulum_dynamics_func.integration">integration() (double_pendulum.simulation.gym_env.double_pendulum_dynamics_func method)</a>
 </li>
       <li><a href="generated/double_pendulum.utils.html#double_pendulum.utils.pcw_polynomial.InterpolateMatrix">InterpolateMatrix (class in double_pendulum.utils.pcw_polynomial)</a>
@@ -1547,6 +1579,10 @@
         <li><a href="generated/double_pendulum.controller.pid.html#module-double_pendulum.controller.pid.point_pid_controller">double_pendulum.controller.pid.point_pid_controller</a>
 </li>
         <li><a href="generated/double_pendulum.controller.pid.html#module-double_pendulum.controller.pid.trajectory_pid_controller">double_pendulum.controller.pid.trajectory_pid_controller</a>
+</li>
+        <li><a href="generated/double_pendulum.controller.random_exploration.html#module-double_pendulum.controller.random_exploration">double_pendulum.controller.random_exploration</a>
+</li>
+        <li><a href="generated/double_pendulum.controller.random_exploration.html#module-double_pendulum.controller.random_exploration.random_exploration_controller">double_pendulum.controller.random_exploration.random_exploration_controller</a>
 </li>
         <li><a href="generated/double_pendulum.controller.SAC.html#module-double_pendulum.controller.SAC">double_pendulum.controller.SAC</a>
 </li>

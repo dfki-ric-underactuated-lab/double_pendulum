@@ -108,23 +108,16 @@
 <section id="module-double_pendulum.controller.mcpilco.mcpilco_controller">
 <span id="double-pendulum-controller-mcpilco-mcpilco-controller"></span><h2>double_pendulum.controller.mcpilco.mcpilco_controller<a class="headerlink" href="#module-double_pendulum.controller.mcpilco.mcpilco_controller" title="Permalink to this heading"></a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.mcpilco.mcpilco_controller.</span></span><span class="sig-name descname"><span class="pre">Controller_sum_of_Gaussians_with_angles_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_dof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlled_dof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="double_pendulum.controller.mcpilco.mcpilco_controller.Controller_muli_out_sum_of_Gaussians_with_angles_numpy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.mcpilco.mcpilco_controller.</span></span><span class="sig-name descname"><span class="pre">Controller_muli_out_sum_of_Gaussians_with_angles_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_dof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlled_dof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_muli_out_sum_of_Gaussians_with_angles_numpy" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController" title="double_pendulum.controller.abstract_controller.AbstractController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractController</span></code></a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy.get_control_output">
-<span class="sig-name descname"><span class="pre">get_control_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meas_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_vel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy.get_control_output" title="Permalink to this definition"></a></dt>
-<dd><p>The method which is called in the Simulator and real experiment loop
-to get the control signal from the controller.
-This method does:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>filter the state</p></li>
-<li><p>comput torques by calling <a href="#id1"><span class="problematic" id="id2">get_control_output_</span></a></p></li>
-<li><p>compute friction compensation torque (if activated)</p></li>
-<li><p>comput gravity compensation torque (if activated)</p></li>
-</ul>
-</div></blockquote>
+<dt class="sig sig-object py" id="double_pendulum.controller.mcpilco.mcpilco_controller.Controller_muli_out_sum_of_Gaussians_with_angles_numpy.get_control_output_">
+<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_muli_out_sum_of_Gaussians_with_angles_numpy.get_control_output_" title="Permalink to this definition"></a></dt>
+<dd><p>The function to compute the control input for the double pendulum’s
+actuator(s).
+Supposed to be overwritten by actual controllers. The API of this
+method should not be changed. Unused inputs/outputs can be set to None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -132,7 +125,8 @@ This method does:</p>
 order=[angle1, angle2, velocity1, velocity2],
 units=[rad, rad, rad/s, rad/s]</p>
 </dd>
-<dt><strong>t</strong><span class="classifier">float, optional</span></dt><dd><p>time, unit=[s]</p>
+<dt><strong>t</strong><span class="classifier">float, optional</span></dt><dd><p>time, unit=[s]
+(Default value=None)</p>
 </dd>
 </dl>
 </dd>
@@ -149,8 +143,61 @@ units=[Nm]</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.mcpilco.mcpilco_controller.Controller_muli_out_sum_of_Gaussians_with_angles_numpy.get_np_policy">
+<span class="sig-name descname"><span class="pre">get_np_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ret_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_muli_out_sum_of_Gaussians_with_angles_numpy.get_np_policy" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.controller.mcpilco.mcpilco_controller.Controller_multi_policy_sum_of_gaussians_with_angles_numpy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.mcpilco.mcpilco_controller.</span></span><span class="sig-name descname"><span class="pre">Controller_multi_policy_sum_of_gaussians_with_angles_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[5.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_dof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlled_dof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_pos_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_vel_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_multi_policy_sum_of_gaussians_with_angles_numpy" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController" title="double_pendulum.controller.abstract_controller.AbstractController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractController</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.mcpilco.mcpilco_controller.Controller_multi_policy_sum_of_gaussians_with_angles_numpy.get_control_output_">
+<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_multi_policy_sum_of_gaussians_with_angles_numpy.get_control_output_" title="Permalink to this definition"></a></dt>
+<dd><p>The function to compute the control input for the double pendulum’s
+actuator(s).
+Supposed to be overwritten by actual controllers. The API of this
+method should not be changed. Unused inputs/outputs can be set to None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
+order=[angle1, angle2, velocity1, velocity2],
+units=[rad, rad, rad/s, rad/s]</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">float, optional</span></dt><dd><p>time, unit=[s]
+(Default value=None)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>array_like</dt><dd><p>shape=(2,), dtype=float
+actuation input/motor torque,
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.controller.mcpilco.mcpilco_controller.Controller_multi_policy_sum_of_gaussians_with_angles_numpy.get_np_policy">
+<span class="sig-name descname"><span class="pre">get_np_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ret_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_multi_policy_sum_of_gaussians_with_angles_numpy.get_np_policy" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.mcpilco.mcpilco_controller.</span></span><span class="sig-name descname"><span class="pre">Controller_sum_of_Gaussians_with_angles_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_dof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlled_dof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController" title="double_pendulum.controller.abstract_controller.AbstractController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractController</span></code></a></p>
+<dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy.get_control_output_">
-<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy.get_control_output_" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.mcpilco.mcpilco_controller.Controller_sum_of_Gaussians_with_angles_numpy.get_control_output_" title="Permalink to this definition"></a></dt>
 <dd><p>The function to compute the control input for the double pendulum’s
 actuator(s).
 Supposed to be overwritten by actual controllers. The API of this

@@ -1,0 +1,18 @@
+double\_pendulum.controller.random\_exploration
+=======================================================
+
+.. automodule:: double_pendulum.controller.random_exploration
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.random\_exploration.random\_exploration\_controller
+--------------------------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.random_exploration.random_exploration_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:
