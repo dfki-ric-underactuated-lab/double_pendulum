@@ -2,9 +2,9 @@ import numpy as np
 
 from double_pendulum.model.model_parameters import model_parameters
 
-design = "design_C.0"
-model = "model_3.1"
-robot = "acrobot"
+design = "design_C.1"
+model = "model_1.0"
+robot = "pendubot"
 
 model_par_path = (
     "../../../data/system_identification/identified_parameters/"
