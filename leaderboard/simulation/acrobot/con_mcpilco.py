@@ -70,4 +70,3 @@ if switch_stabilization:
 
 controller.set_goal(goal)
 controller.init()
-controller.init_()
