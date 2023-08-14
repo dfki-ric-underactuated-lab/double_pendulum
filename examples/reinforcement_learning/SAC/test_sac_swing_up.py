@@ -8,7 +8,8 @@ from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.utils.plotting import plot_timeseries
-from double_pendulum.controller.abstract_controller import AbstractController
+from double_pendulum.controller.combined_controller import CombinedController
+from double_pendulum.controller.SAC.SAC_controller import SACController
 from double_pendulum.simulation.gym_env import (
     double_pendulum_dynamics_func,
 )
@@ -16,37 +17,30 @@ from double_pendulum.simulation.gym_env import (
 This testing script is purely for testing the behaviour of SAC controller in swing-up task.
 """
 
-class SACController(AbstractController):
-    def __init__(self, model_path, dynamics_func, dt):
-        super().__init__()
-
-        self.model = SAC.load(model_path)
-        self.dynamics_func = dynamics_func
-        self.dt = dt
-
-    def get_control_output_(self, x, t=None):
-        obs = self.dynamics_func.normalize_state(x)
-        action = self.model.predict(obs)
-        u = self.dynamics_func.unscale_action(action)
-        return u
 
 
 # hyperparameters
-# robot = "pendubot"
-robot = "acrobot"
+robot = "pendubot"
+# robot = "acrobot"
 
 if robot == "pendubot":
     torque_limit = [5.0, 0.0]
     active_act = 0
-    design = "design_A.0"
-    model = "model_2.0"
-    model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model"
+    # design = "design_A.0"
+    # model = "model_2.0"
+    design = "design_C.1"
+    model = "model_1.0"
+    # model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model"
+    model_path = "../../../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip"
+
 elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
     active_act = 1
-    design = "design_C.0"
-    model = "model_3.0"
-    model_path = "../../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model"
+    # design = "design_C.0"
+    # model = "model_3.0"
+    design = "design_C.1"
+    model = "model_1.0"
+    model_path = ""
 
 # import model parameter
 model_par_path = (
@@ -64,7 +58,7 @@ mpar.set_cfric([0.0, 0.0])
 mpar.set_torque_limit(torque_limit)
 
 # simulation parameters
-dt = 0.01
+dt = 0.002
 t_final = 10.0
 integrator = "runge_kutta"
 goal = [np.pi, 0.0, 0.0, 0.0]
@@ -80,6 +74,7 @@ dynamics_func = double_pendulum_dynamics_func(
     integrator=integrator,
     robot=robot,
     state_representation=2,
+    scaling=False
 )
 
 # initialize sac controller
@@ -87,6 +82,7 @@ controller = SACController(
     model_path = model_path,
     dynamics_func=dynamics_func,
     dt=dt,
+    scaling=False
 )
 controller.init()
 

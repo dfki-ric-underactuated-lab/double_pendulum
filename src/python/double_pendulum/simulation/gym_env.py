@@ -15,6 +15,7 @@ class CustomEnv(gym.Env):
         ),
         act_space=gym.spaces.Box(np.array([-1.0, -1.0]), np.array([1.0, 1.0])),
         max_episode_steps=1000,
+        scaling = True
     ):
         self.dynamics_func = dynamics_func
         self.reward_func = reward_func
@@ -27,9 +28,10 @@ class CustomEnv(gym.Env):
 
         self.observation = self.reset_func()
         self.step_counter = 0
+        self.scaling = scaling
 
     def step(self, action):
-        self.observation = self.dynamics_func(self.observation, action)
+        self.observation = self.dynamics_func(self.observation, action, scaling = self.scaling)
         reward = self.reward_func(self.observation, action)
         terminated = self.terminated_func(self.observation)
         info = {}
@@ -61,6 +63,7 @@ class double_pendulum_dynamics_func:
         state_representation=2,
         max_velocity=20.0,
         torque_limit=[5.0, 5.0],
+        scaling = True
     ):
         self.simulator = simulator
         self.dt = dt
@@ -70,13 +73,20 @@ class double_pendulum_dynamics_func:
         self.max_velocity = max_velocity
 
         self.torque_limit = torque_limit
+        self.scaling = scaling
 
-    def __call__(self, state, action):
-        x = self.unscale_state(state)
-        u = self.unscale_action(action)
-        xn = self.integration(x, u)
-        obs = self.normalize_state(xn)
-        return np.array(obs, dtype=np.float32)
+    def __call__(self, state, action,scaling = True):
+        if scaling:
+            x = self.unscale_state(state)
+            u = self.unscale_action(action)
+            xn = self.integration(x, u)
+            obs = self.normalize_state(xn)
+            return np.array(obs, dtype=np.float32)
+        else:
+            u = self.unscale_action(action)
+            xn = self.integration(state, u)
+            return np.array(xn, dtype=np.float32)
+
 
     def integration(self, x, u):
         if self.integrator == "runge_kutta":

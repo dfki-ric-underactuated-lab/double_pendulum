@@ -36,35 +36,38 @@ if robot == "pendubot":
     design = "design_C.1"
     model = "model_1.0"
     load_path = "../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/"
+    # load_path = "lqr_data/pendubot/lqr/roa"
     warm_start_path = ""
     # define para for quadratic reward
     Q = np.zeros((4, 4))
-    Q[0, 0] = 8.0
-    Q[1, 1] = 5.0
-    Q[2, 2] = 0.1
-    Q[3, 3] = 0.1
-    R = np.array([[0.0001]])
-    r_line = 500
+    Q[0, 0] = 100.0
+    Q[1, 1] = 100.0
+    Q[2, 2] = 1.0
+    Q[3, 3] = 1.0
+    R = np.array([[0.01]])
+    r_line = 1e3
     r_vel = 0
-    r_lqr = 1e4
+    r_lqr = 1e5
 
 
 elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
     design = "design_C.1"
     model = "model_1.0"
+    # design = "design_C.0"
+    # model = "model_3.0"
     load_path = "../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/"
     warm_start_path = ""
     # define para for quadratic reward
     Q = np.zeros((4, 4))
-    Q[0, 0] = 10.0
-    Q[1, 1] = 10.0
-    Q[2, 2] = 0.2
-    Q[3, 3] = 0.2
-    R = np.array([[0.0001]])
-    r_line = 500
+    Q[0, 0] = 100.0
+    Q[1, 1] = 100.0
+    Q[2, 2] = 1.0
+    Q[3, 3] = 1.0
+    R = np.array([[0.01]])
+    r_line = 1e3
     r_vel = 1e4
-    r_lqr = 1e4
+    r_lqr = 1e5
 
 model_par_path = (
         "../../../data/system_identification/identified_parameters/"
@@ -87,10 +90,10 @@ simulator = Simulator(plant=plant)
 
 # learning environment parameters
 state_representation = 2
-obs_space = gym.spaces.Box(
-    np.array([-1.0, -1.0, -1.0, -1.0]), np.array([1.0, 1.0, 1.0, 1.0])
-)
-act_space = gym.spaces.Box(np.array([-1]), np.array([1]))
+obs_space=gym.spaces.Box(
+            np.array([-1e4, -1e4, -1e4, -1e4]), np.array([1e4, 1e4, 1e4, 1e4])
+        )
+act_space=gym.spaces.Box(np.array([-1.0, -1.0]), np.array([1.0, 1.0]))
 max_steps = 1000
 termination = False
 ############################################################################
@@ -99,8 +102,7 @@ termination = False
 n_envs = 100 # we found n_envs > 50 has very little improvement in training speed.
 training_steps = 2e7 # default = 1e6
 verbose = 1
-# reward_threshold = -0.01
-reward_threshold = 3e7
+reward_threshold = 1e10
 eval_freq=5000
 n_eval_episodes=5
 learning_rate=0.01
@@ -112,6 +114,7 @@ dynamics_func = double_pendulum_dynamics_func(
     integrator=integrator,
     robot=robot,
     state_representation=state_representation,
+    scaling = False
 )
 
 # import lqr parameters
@@ -132,21 +135,15 @@ def reward_func(observation, action):
     flag = False
     bonus = False
 
-    # state
-    s = np.array(
-        [
-            observation[0] * np.pi + np.pi,  # [0, 2pi]
-            (observation[1] * np.pi + np.pi + np.pi) % (2 * np.pi) - np.pi,  # [-pi, pi]
-            observation[2] * max_velocity,
-            observation[3] * max_velocity,
-        ]
-    )
-
     u = 5.0 * action
 
     goal = [np.pi, 0., 0., 0.]
 
-    y = wrap_angles_diff(s)
+    y = wrap_angles_diff(observation)
+    # print(action)
+    # print("obs=",observation)
+    # print("s=",s)
+    # print("y=",y)
 
     # criterion 1: control line
     p1 = y[0]
@@ -171,15 +168,20 @@ def reward_func(observation, action):
     if flag and (np.abs(y[2]) > v_thresh or np.abs(y[3]) > v_thresh):
         vflag = True
 
+    # print("obs=", observation)
+    # print("y=", y)
+    # print(ee2_pos_y)
 
     # reward calculation
     ## stage1: quadratic reward
-    r = np.einsum("i, ij, j", s - goal, Q, s - goal) + np.einsum("i, ij, j", u, R, u)
+    r = np.einsum("i, ij, j", observation - goal, Q,observation - goal) + np.einsum("i, ij, j", u, R, u)
     reward = -1.0 * r
+    # print("quadratic reward = ",r)
 
     ## stage2: control line reward
     if flag:
         reward += r_line
+
         ## stage 3: roa reward
         if bonus:
             # roa method
@@ -195,32 +197,20 @@ def reward_func(observation, action):
     return reward
 
 def terminated_func(observation):
-    s = np.array(
-        [
-            observation[0] * np.pi + np.pi,  # [0, 2pi]
-            (observation[1] * np.pi + np.pi + np.pi) % (2 * np.pi) - np.pi,  # [-pi, pi]
-            observation[2] * max_velocity,
-            observation[3] * max_velocity,
-        ]
-    )
-    # y = wrap_angles_top(s)
-    y = wrap_angles_diff(s)
-    bonus, rad = check_if_state_in_roa(S, rho, y)
-    if termination:
-        if bonus:
-            print("terminated")
-            return bonus
+    if np.abs(observation[0]) > np.pi * 2 or np.abs(observation[1]) > np.pi * 2:
+        print("terminated!!!")
+        return True
     else:
         return False
 
 def noisy_reset_func():
-    rand = np.random.rand(4) * 0.01
-    rand[2:] = rand[2:] - 0.05
-    observation = [-1.0, -1.0, 0.0, 0.0] + rand
+    rand = np.random.rand(4) * 0.1
+    rand[:] = rand[:] - 0.05
+    observation = [0.0, 0.0, 0.0, 0.0] + rand
     return observation
 
 def zero_reset_func():
-    observation = [-1.0, -1.0, 0.0, 0.0]
+    observation = [0.0, 0.0, 0.0, 0.0]
     return observation
 
 # initialize vectorized environment
@@ -232,6 +222,7 @@ env = CustomEnv(
     obs_space=obs_space,
     act_space=act_space,
     max_episode_steps=max_steps,
+    scaling = False
 )
 
 # training env
@@ -246,6 +237,7 @@ envs = make_vec_env(
         "obs_space": obs_space,
         "act_space": act_space,
         "max_episode_steps": max_steps,
+        "scaling":False
     },
 )
 
@@ -258,6 +250,7 @@ eval_env = CustomEnv(
     obs_space=obs_space,
     act_space=act_space,
     max_episode_steps=max_steps,
+    scaling = False
 )
 
 # training callbacks
