@@ -27,23 +27,22 @@ if robot == "pendubot":
     torque_limit = [5.0, 0.5]
     torque_limit_con = [5.0, 0.0]
     active_act = 0
-    load_path = "lqr_data/design_C.1/model_1.1/pendubot/lqr"
+    load_path = "../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr"
     # gymnasium version
-    model_path = "policies/design_C.1/model_1.0/pendubot/best_model/best_model.zip"
+    model_path = "../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip"
 
 elif robot == "acrobot":
     design = "design_C.1"
     model = "model_1.0"
     torque_limit = [0.5, 5.0]
     active_act = 1
-    load_path = "data_con/lqr_data/design_C.1/model_1.1/acrobot/lqr"
+    load_path = "../data_con/lqr_data/design_C.1/model_1.1/acrobot/lqr"
 
     # gymnasium version
-    # model_path = "data_con/policies/design_C.1/model_1.0/acrobot/working_global_speed_penalty_1e5/best_model.zip"
-    model_path = "data_con/policies/design_C.1/model_1.0/acrobot/works_very_well/best_model.zip"
-			
+    # model_path = ""
+
 ## set model and controller parameters
-model_par_path = "model_data/model_parameters.yml"
+model_par_path = "../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 
 mpar_con = model_parameters(filepath=model_par_path)
@@ -68,11 +67,11 @@ goal = [np.pi, 0., 0., 0.]
 print("control frequency is", 1/dt)
 
 # switching conditions between sac and lqr
-lqr_pars = np.loadtxt(os.path.join(load_path, "controller_par.csv"))
 rho = np.loadtxt(os.path.join(load_path, "rho"))
 vol = np.loadtxt(os.path.join(load_path, "vol"))
 S = np.loadtxt(os.path.join(load_path, "Smatrix"))
 
+lqr_pars = np.loadtxt(os.path.join(load_path, "controller_par.csv"))
 Q = np.diag(lqr_pars[:4])
 R = np.diag([lqr_pars[4], lqr_pars[4]])
 flag = False
@@ -140,7 +139,7 @@ controller = CombinedController(
 
 controller.set_filter_args(
     filt=meas_noise_vfilter, 
-    velocity_cut=meas_noise_cut, 
+    velocity_cut=meas_noise_cut,
     filter_kwargs=filter_kwargs
 )
 
