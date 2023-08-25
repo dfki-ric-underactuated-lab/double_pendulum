@@ -158,14 +158,14 @@ fraction of successful swing-up motions under varying conditions.
 
 ## Authors #
 
-* [Shivesh Kumar](https://robotik.dfki-bremen.de/en/about-us/staff/shku02.html) (Project Supervisor)
-* [Felix Wiebe](https://robotik.dfki-bremen.de/en/about-us/staff/fewi01.html) (Software Maintainer)
-* [Mahdi Javadi](https://robotik.dfki-bremen.de/en/about-us/staff/maja04/) (Hardware Maintainer)
-* [Jonathan Babel](https://robotik.dfki-bremen.de/en/about-us/staff/joba02.html)
-* [Lasse Maywald](https://robotik.dfki-bremen.de/en/about-us/staff/lama02/)
-* [Heiner Peters](https://robotik.dfki-bremen.de/en/about-us/staff/hepe02.html)
-* [Shubham Vyas](https://robotik.dfki-bremen.de/en/about-us/staff/shvy01/)
-* [Melya Boukheddimi](https://robotik.dfki-bremen.de/en/about-us/staff/mebo01/)
+* [Shivesh Kumar](https://robotik.dfki-bremen.de/en/about-us/staff/person/shku02) (Project Supervisor)
+* [Felix Wiebe](https://robotik.dfki-bremen.de/en/about-us/staff/person/fewi01) (Software Maintainer)
+* [Mahdi Javadi](https://robotik.dfki-bremen.de/en/about-us/staff/person/maja04) (Hardware Maintainer)
+* [Jonathan Babel](https://robotik.dfki-bremen.de/en/about-us/staff/person/joba02)
+* [Lasse Maywald](https://robotik.dfki-bremen.de/en/about-us/staff/lama02)
+* [Heiner Peters](https://robotik.dfki-bremen.de/en/about-us/staff/person/hepe02)
+* [Shubham Vyas](https://robotik.dfki-bremen.de/en/about-us/staff/person/shvy01)
+* [Melya Boukheddimi](https://robotik.dfki-bremen.de/en/about-us/staff/person/mebo01)
 
 Feel free to contact us if you have questions about the test bench. Enjoy!
 
