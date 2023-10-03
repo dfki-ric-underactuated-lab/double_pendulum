@@ -18,15 +18,19 @@ class AbstractController(ABC):
     this abstract class.
     """
 
-    def __init__(self):
+    def __init__(self, dof=2):
+        self.dof = dof
+
         self.set_filter_args()
         self.set_friction_compensation()
         self.set_gravity_compensation()
         self.x_hist = []
         self.x_filt_hist = []
-        self.u_hist = [[0.0, 0.0]]
+        self.u_hist = [[0.0]*self.dof]
         self.u_fric_hist = []
         self.u_grav_hist = []
+
+        self.init_filter()
 
     @abstractmethod
     def get_control_output_(self, x, t=None):
@@ -55,7 +59,7 @@ class AbstractController(ABC):
             units=[Nm]
         """
 
-        u = [0.0, 0.0]
+        u = [0.0] * self.dof
         return u
 
     def get_control_output(self, x, t=None):
@@ -127,7 +131,7 @@ class AbstractController(ABC):
         """
         self.init_filter()
         self.x_hist = []
-        self.u_hist = [[0.0, 0.0]]
+        self.u_hist = [[0.0]*self.dof]
         self.u_fric_hist = []
         self.u_grav_hist = []
         self.xfilt_hist = []
@@ -318,16 +322,12 @@ class AbstractController(ABC):
         Initialize the measurement filter
         """
         if self.filt == "butter":
-            dof = 2
-
-            self.filter = butter_filter_rt(dof=dof, cutoff=self.filt_kwargs["butter_cutoff"], x0=self.filt_x0,
+            self.filter = butter_filter_rt(dof=self.dof, cutoff=self.filt_kwargs["butter_cutoff"], x0=self.filt_x0,
                                            dt=self.filt_kwargs['dt'])
 
         elif self.filt == "lowpass":
             # dof = self.filt_plant.dof
-            dof = 2
-
-            self.filter = lowpass_filter_rt(dim_x=2 * dof, alpha=self.filt_kwargs["lowpass_alpha"], x0=self.filt_x0)
+            self.filter = lowpass_filter_rt(dim_x=2 * self.dof, alpha=self.filt_kwargs["lowpass_alpha"], x0=self.filt_x0)
 
         elif self.filt == "kalman":
             dof = self.filt_plant.dof
@@ -388,15 +388,16 @@ class AbstractController(ABC):
 
         # velocity cut
         if self.filt_velocity_cut > 0.0:
-            x_filt[2] = np.where(np.abs(x_filt[2]) < self.filt_velocity_cut, 0, x_filt[2])
-            x_filt[3] = np.where(np.abs(x_filt[3]) < self.filt_velocity_cut, 0, x_filt[3])
+            x_filt[self.dof:] = [np.where(np.abs(x_filt[i]) < self.filt_velocity_cut, 0, x_filt[i]) for i in range(self.dof, 2*self.dof)]
+            # x_filt[2] = np.where(np.abs(x_filt[2]) < self.filt_velocity_cut, 0, x_filt[2])
+            # x_filt[3] = np.where(np.abs(x_filt[3]) < self.filt_velocity_cut, 0, x_filt[3])
 
         # filter
         x_filt = self.filter(x_filt, last_u)
 
         return x_filt
 
-    def set_friction_compensation(self, damping=[0.0, 0.0], coulomb_fric=[0.0, 0.0]):
+    def set_friction_compensation(self, damping=None, coulomb_fric=None):
         """
         Set friction terms used for the friction compensation.
 
@@ -411,7 +412,16 @@ class AbstractController(ABC):
             coulomb friction coefficients for the double pendulum actuators
             [cf1, cf2], units=[Nm]
         """
-        self.friction_terms = np.array([coulomb_fric[0], damping[0], coulomb_fric[1], damping[1]])
+        if coulomb_fric is None:
+            coulomb_fric = [0.0] * self.dof
+        if damping is None:
+            damping = [0.0] * self.dof
+
+        f = []
+        for i in range(self.dof):
+            f += [coulomb_fric[i], damping[i]]
+
+        self.friction_terms = np.array(f)
 
     def get_friction_torque(self, x):
         """
@@ -432,7 +442,7 @@ class AbstractController(ABC):
             order=[u1, u2],
             units=[Nm]
         """
-        friction_regressor_mat = yb_friction_matrix([x[2], x[3]])
+        friction_regressor_mat = yb_friction_matrix([x[i] for i in range(self.dof, 2 * self.dof)])
         tau_fric = np.dot(friction_regressor_mat, self.friction_terms)
         return tau_fric
 
@@ -471,5 +481,5 @@ class AbstractController(ABC):
             g = self.grav_plant.gravity_vector(x)
             tau_grav = -np.dot(self.grav_plant.B, g)
         else:
-            tau_grav = [0.0, 0.0]
+            tau_grav = [0.0] * self.dof
         return np.asarray(tau_grav)

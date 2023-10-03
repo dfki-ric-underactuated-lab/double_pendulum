@@ -7,9 +7,8 @@ import matplotlib.animation as mplanimation
 from double_pendulum.simulation.visualization import get_arrow, set_arrow_properties
 from double_pendulum.utils.filters.low_pass import lowpass_filter_rt
 from double_pendulum.utils.filters.kalman_filter import kalman_filter_rt
-from double_pendulum.utils.filters.unscented_kalman_filter import (
-    unscented_kalman_filter_rt,
-)
+from double_pendulum.utils.filters.unscented_kalman_filter import unscented_kalman_filter_rt
+from scipy.integrate import odeint
 
 
 class Simulator:
@@ -23,10 +22,14 @@ class Simulator:
     plant : SymbolicDoublePendulum or DoublePendulumPlant object
         A plant object containing the kinematics and dynamics of the
         double pendulum
+
+    integrator_name : Name of integration function
     """
 
-    def __init__(self, plant):
+    def __init__(self, plant, integrator_name='odeint'):
         self.plant = plant
+
+        self.integrator_name = integrator_name
 
         self.x = np.zeros(2 * self.plant.dof)  # position, velocity
         self.t = 0.0  # time
@@ -125,7 +128,7 @@ class Simulator:
         U = np.asarray(self.tau_values)
         return T, X, U
 
-    def set_process_noise(self, process_noise_sigmas=[0.0, 0.0, 0.0, 0.0]):
+    def set_process_noise(self, process_noise_sigmas=None):
         """
         Set parameters for process noise (Gaussian)
 
@@ -137,13 +140,15 @@ class Simulator:
             Each entry in the list corresponds to a state variable.
             (Default value = [0., 0., 0., 0.])
         """
+        if process_noise_sigmas is None:
+            process_noise_sigmas = [0.0] * 2 * self.plant.dof
         self.process_noise_sigmas = process_noise_sigmas
 
     def set_measurement_parameters(
         self,
-        C=np.eye(4),
-        D=np.zeros((4, 2)),
-        meas_noise_sigmas=[0.0, 0.0, 0.0, 0.0],
+        C=None,
+        D=None,
+        meas_noise_sigmas=None,
         delay=0.0,
         delay_mode="None",
     ):
@@ -175,6 +180,13 @@ class Simulator:
             "posvel": position and velocity measurements are delayed
              (Default value = "None")
         """
+        if C is None:
+            C = np.eye(2*self.plant.dof)
+        if D is None:
+            D = np.zeros((2*self.plant.dof, self.plant.dof))
+        if meas_noise_sigmas is None:
+            meas_noise_sigmas = [0.0] * 2 * self.plant.dof
+
         self.meas_C = C
         self.meas_D = D
         self.meas_noise_sigmas = meas_noise_sigmas
@@ -213,7 +225,7 @@ class Simulator:
         self.meas_noise_vfilter = meas_noise_vfilter
         self.meas_noise_vfilter_args = meas_noise_vfilter_args
 
-    def set_motor_parameters(self, u_noise_sigmas=[0.0, 0.0], u_responsiveness=1.0):
+    def set_motor_parameters(self, u_noise_sigmas=None, u_responsiveness=1.0):
         """
         Set parameters for the motors
 
@@ -233,6 +245,8 @@ class Simulator:
             resonsiveness of the motors
             (Default value = 1.)
         """
+        if u_noise_sigmas is None:
+            u_noise_sigmas = [0.0] * self.plant.dof
         self.u_noise_sigmas = u_noise_sigmas
         self.u_responsiveness = u_responsiveness
 
@@ -263,19 +277,19 @@ class Simulator:
             - perturbations
         """
 
-        self.process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
+        self.process_noise_sigmas = [0.0] * self.plant.dof * 2
 
         self.meas_C = np.eye(4)
         self.meas_D = np.zeros((4, 2))
-        self.meas_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
+        self.meas_noise_sigmas = [0.0] * self.plant.dof * 2
         self.delay = 0.0
         self.delay_mode = "None"
 
         self.meas_noise_cut = 0.0
         self.meas_noise_vfilter = "None"
-        self.meas_noise_vfilter_args = {"alpha": [1.0, 1.0, 1.0, 1.0]}
+        self.meas_noise_vfilter_args = {"alpha": [1.] * self.plant.dof * 2}
 
-        self.u_noise_sigmas = [0.0, 0.0]
+        self.u_noise_sigmas = [0.0] * self.plant.dof
         self.u_responsiveness = 1.0
 
         self.perturbation_times = []
@@ -332,6 +346,8 @@ class Simulator:
                 fx = self.euler_integrator
             elif integrator == "runge_kutta":
                 fx = self.runge_integrator
+            elif integrator == 'odeint':
+                fx = self.odeint_integrator
             self.filter = unscented_kalman_filter_rt(
                 dim_x=2 * dof,
                 x0=x0,
@@ -403,6 +419,12 @@ class Simulator:
         k4 = self.plant.rhs(t + dt, y + dt * k3, tau)
         return (k1 + 2.0 * (k2 + k3) + k4) / 6.0
 
+    def odeint_integrator(self, y, dt, t, tau):
+        # print('odeint t', t)
+        plant_rhs = lambda y_, t_, u_: self.plant.rhs(t_, y_, u_)
+        odeint_out = odeint(plant_rhs, y, [t, t + dt], args=(tau,))
+        return odeint_out[1]
+
     def step(self, tau, dt, integrator="runge_kutta"):
         """
         Performs a simulation step with the specified integrator.
@@ -443,12 +465,14 @@ class Simulator:
                 casting="unsafe",
             )
             # self.x += dt * self.euler_integrator(self.x, dt, self.t, tau)
+        elif integrator == "odeint":
+            self.x = self.odeint_integrator(self.x, dt, self.t, tau)
         else:
             raise NotImplementedError(
                 f"Sorry, the integrator {integrator} is not implemented."
             )
         # process noise
-        self.x = np.random.normal(self.x, self.process_noise_sigmas, np.shape(self.x))
+        self.x = np.random.normal(self.x, self.process_noise_sigmas)#, np.shape(self.x))
 
         self.t += dt
         self.record_data(self.t, self.x.copy(), tau)
@@ -617,7 +641,7 @@ class Simulator:
         nu = last_u + self.u_responsiveness * (nu - last_u)
 
         # tau noise (unoise)
-        nu = np.random.normal(nu, self.u_noise_sigmas, np.shape(nu))
+        nu = np.random.normal(nu, self.u_noise_sigmas) #, np.shape(nu))
         # for i, tau in enumerate(nu):
         #     if np.abs(tau) > 0:
         #         # nu[i] = tau + np.random.uniform(-self.unoise_amplitude,
@@ -626,8 +650,11 @@ class Simulator:
         #         nu[i] = tau + np.random.normal(0,
         #                                        self.unoise_sigmas[i],
         #                                        1)
-        nu[0] = np.clip(nu[0], -self.plant.torque_limit[0], self.plant.torque_limit[0])
-        nu[1] = np.clip(nu[1], -self.plant.torque_limit[1], self.plant.torque_limit[1])
+
+        for i in range(self.plant.dof):
+            nu[i] = np.clip(nu[i], -self.plant.torque_limit[i], self.plant.torque_limit[i])
+        # nu[0] = np.clip(nu[0], -self.plant.torque_limit[0], self.plant.torque_limit[0])
+        # nu[1] = np.clip(nu[1], -self.plant.torque_limit[1], self.plant.torque_limit[1])
         return nu
 
     def controller_step(self, dt, controller=None, integrator="runge_kutta"):
@@ -672,7 +699,7 @@ class Simulator:
 
         return realtime
 
-    def simulate(self, t0, x0, tf, dt, controller=None, integrator="runge_kutta"):
+    def simulate(self, t0, x0, tf, dt, controller=None, integrator=None):
         """
         Simulate the double pendulum for a time period under the control of a
         controller
@@ -714,6 +741,9 @@ class Simulator:
             order=[u1, u2],
             units=[Nm]
         """
+        if integrator is None:
+            integrator = self.integrator_name
+
         self.set_state(t0, x0)
         self.reset_data_recorder()
         self.record_data(t0, np.copy(x0), None)
@@ -727,6 +757,20 @@ class Simulator:
             N += 1
 
         return self.t_values, self.x_values, self.tau_values
+
+    def rollout(self, x0, policy, T, dt, noise, animate=False):
+        self.set_state(0, x0)
+        self.reset_data_recorder()
+        self.record_data(0, np.copy(x0), None)
+        # self.meas_x_values.append(np.copy(x0))
+        self.init_filter(x0, dt, self.integrator_name)
+        self.set_measurement_parameters(meas_noise_sigmas=noise)
+        if animate:
+            self.simulate_and_animate(0, x0, T, dt, policy)
+        else:
+            self.simulate(0, x0, T, dt, policy)
+
+        return np.asarray(self.t_values), np.asarray(self.meas_x_values), np.asarray(self.tau_values), np.asarray(self.x_values)[:-1,:]
 
     def _animation_init(self):
         """init of the animation plot"""
