@@ -279,8 +279,8 @@ class Simulator:
 
         self.process_noise_sigmas = [0.0] * self.plant.dof * 2
 
-        self.meas_C = np.eye(4)
-        self.meas_D = np.zeros((4, 2))
+        self.meas_C = np.eye(self.plant.dof * 2)
+        self.meas_D = np.zeros((self.plant.dof * 2, self.plant.dof))
         self.meas_noise_sigmas = [0.0] * self.plant.dof * 2
         self.delay = 0.0
         self.delay_mode = "None"
