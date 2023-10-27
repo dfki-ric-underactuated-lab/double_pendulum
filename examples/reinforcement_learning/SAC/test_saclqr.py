@@ -65,11 +65,11 @@ elif robot == "acrobot":
     # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/saved_models/acrobot/design_C.0/model_3.0/gymnasium_3e7/best_model.zip"
 
     # for testing
-    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/actually_works/best_model.zip"
     model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data_designC.1/SAC_training/best_model/best_model.zip"
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/candidate_2/best_model.zip"
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/actually_works/best_model.zip"
     # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/another_working/best_model.zip"
-    # model_path = "/home/chi/backup/double_pendulum_aug/examples/reinforcement_learning/SAC/saved_models/acrobot/design_C.1/model_1.0/works_very_well/best_model.zip"
-    # model_path = "/home/chi/backup/double_pendulum_aug/examples/reinforcement_learning/SAC/saved_models/acrobot/design_C.1/model_1.0/working_speed_limit_15/best_model.zip"
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/working_train_in_oct/best_model.zip"
 # import model parameter
 model_par_path = (
         "../../../data/system_identification/identified_parameters/"

@@ -62,7 +62,7 @@ elif robot == "acrobot":
     design = "design_C.1"
     model = "model_1.0"
     load_path = "../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/"
-    warm_start_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/actually_works/best_model.zip"
+    warm_start_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/candidate_2/best_model.zip"
     # define para for quadratic reward
     Q = np.zeros((4, 4))
     Q[0, 0] = 100.0
@@ -108,7 +108,7 @@ n_envs = 100 # we found n_envs > 50 has very little improvement in training spee
 training_steps = 4e7 # default = 1e6
 verbose = 1
 # reward_threshold = -0.01
-reward_threshold = 3e7
+reward_threshold = 1e10
 eval_freq=2500
 n_eval_episodes=10
 learning_rate=0.01
