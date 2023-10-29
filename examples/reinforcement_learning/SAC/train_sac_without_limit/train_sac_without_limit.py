@@ -29,19 +29,19 @@ if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 
 # robot setup definition
-robot = "acrobot"
-# robot = "pendubot"
+# robot = "acrobot"
+robot = "pendubot"
 
 # model and reward parameter setting
 max_velocity = 20
-warm_start = False
+warm_start = True
 if robot == "pendubot":
     torque_limit = [5.0, 0.0]
     design = "design_C.1"
     model = "model_1.0"
     load_path = "../../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/"
     # load_path = "lqr_data/pendubot/lqr/roa"
-    warm_start_path = ""
+    warm_start_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/train_sac_without_limit/saved_model/pendubot/working_2e7_new/best_model.zip"
     # define para for quadratic reward
     Q = np.zeros((4, 4))
     Q[0, 0] = 100.0
@@ -104,7 +104,7 @@ termination = False
 
 # define tuning parameters for training
 n_envs = 100 # we found n_envs > 50 has very little improvement in training speed.
-training_steps = 2e7 # default = 1e6
+training_steps = 3e7 # default = 1e6
 verbose = 1
 reward_threshold = 1e10
 eval_freq=5000
@@ -337,8 +337,8 @@ agent = SAC(
 
 # warm start training
 
-# warm_start = True
-warm_start = False
+warm_start = True
+# warm_start = False
 if warm_start:
     agent.set_parameters(load_path_or_dict=warm_start_path)
 

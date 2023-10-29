@@ -66,7 +66,7 @@ elif robot == "acrobot":
     # define para for quadratic reward
     Q = np.zeros((4, 4))
     Q[0, 0] = 100.0
-    Q[1, 1] = 110.0
+    Q[1, 1] = 105.0
     Q[2, 2] = 1.0
     Q[3, 3] = 1.0
     R = np.array([[0.01]])

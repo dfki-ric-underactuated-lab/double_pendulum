@@ -19,8 +19,8 @@ from double_pendulum.simulation.gym_env import (
 
 # hyperparameters
 stabilization = "lqr"
-# robot = "pendubot"
-robot = "acrobot"
+robot = "pendubot"
+# robot = "acrobot"
 
 if robot == "pendubot":
     ## case design_A.0 model_2.0
@@ -42,7 +42,8 @@ if robot == "pendubot":
     ## gymnasium versionq
     # design C.1
     # model_path = "../../../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip"
-    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/train_sac_without_limit/saved_model/pendubot/working_2e7_new/best_model.zip"
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/train_sac_without_limit/saved_model/pendubot/working_2e7_new/best_model.zip"
+    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/train_sac_without_limit/log_data_designC.1/SAC_training/best_model/best_model.zip"
 elif robot == "acrobot":
     ## case design_C.0 model_3.0
     # design = "design_C.0"

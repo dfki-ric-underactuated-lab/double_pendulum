@@ -26,8 +26,14 @@ if robot == "pendubot":
     model = "model_1.0"
     torque_limit = [5.0, 0.5]
     active_act = 0
+    scaling_state = False
     load_path = ("../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/")
-    model_path = "../../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip" # about 40% success rate
+    # model_path = "../../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip" # about 40% success rate
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/train_sac_without_limit/saved_model/pendubot/working_2e7_new/best_model.zip"
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/train_sac_without_limit/log_data_designC.1/SAC_training/best_model/best_model.zip"
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/real/pendubot/works_50%/best_model.zip"
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/real/pendubot/works/best_model.zip"
+    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/real/pendubot/works_80%/best_model.zip"
 elif robot == "acrobot":
     # design = "design_C.0"
     # model = "model_3.0"
@@ -35,6 +41,7 @@ elif robot == "acrobot":
     model = "model_1.0"
     torque_limit = [0.5, 5.0]
     active_act = 1
+    scaling_state = True
     load_path = ("../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/")
     model_path = ""
 
@@ -141,7 +148,7 @@ controller1 = SACController(
     model_path = model_path,
     dynamics_func=dynamics_func,
     dt=dt,
-    scaling=False
+    scaling=scaling_state
 )
 
 # initialize lqr controller
@@ -157,7 +164,7 @@ controller = CombinedController(
     controller2=controller2,
     condition1=condition1,
     condition2=condition2,
-    compute_both=False
+    compute_both=scaling_state
 )
 
 controller.set_filter_args(filt=meas_noise_vfilter, x0=goal, dt=dt, plant=plant,
