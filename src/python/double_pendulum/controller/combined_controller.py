@@ -32,11 +32,13 @@ class CombinedController(AbstractController):
         condition2,
         compute_both=False,
         verbose=False,
+        dof=2
     ):
-        super().__init__()
+        super().__init__(dof=dof)
 
         self.controllers = [controller1, controller2]
         self.active = 0
+        self.active_list = []
 
         self.conditions = [condition1, condition2]
 
@@ -107,6 +109,7 @@ class CombinedController(AbstractController):
         """
         Reset controllers.
         """
+        self.active_list = []
         self.controllers[0].reset_()
         self.controllers[1].reset_()
 
@@ -139,10 +142,12 @@ class CombinedController(AbstractController):
         if self.conditions[inactive](t, x):
             self.active = 1 - self.active
             if self.verbose:
-                print("Switching to Controller ", self.active + 1)
+                print("Switching to Controller ", self.active + 1, 'at x=', x, 't=', t)
 
         if self.compute_both:
             _ = self.controllers[inactive].get_control_output_(x, t)
+
+        self.active_list.append(self.active)
 
         return self.controllers[self.active].get_control_output_(x, t)
 
