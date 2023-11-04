@@ -20,8 +20,8 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.wrap_angles import wrap_angles_diff
 
 # setting log path for the training
-# log_dir = "./log_data/SAC_training"
-log_dir = "./log_data_designC.1/SAC_training"
+log_dir = "./log_data/SAC_training"
+# log_dir = "./log_data_designC.1/SAC_training"
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 
@@ -33,12 +33,12 @@ robot = "acrobot"
 max_velocity = 20
 if robot == "pendubot":
     torque_limit = [5.0, 0.0]
-    design = "design_C.1"
-    model = "model_1.0"
-    load_path = "../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/"
-    warm_start_path = ""
-    # define para for quadratic reward
-    Q = np.zeros((4, 4))
+    # design A.0
+    # design = "design_A.0"
+    # model = "model_2.0"
+    # load_path = "../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/"
+    # warm_start_path = ""
+    # Q = np.zeros((4, 4))
     # Q[0, 0] = 8.0
     # Q[1, 1] = 5.0
     # Q[2, 2] = 0.1
@@ -47,6 +47,14 @@ if robot == "pendubot":
     # r_line = 500
     # r_vel = 0
     # r_lqr = 1e4
+
+    # design C.1
+    design = "design_C.1"
+    model = "model_1.0"
+    load_path = "../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/"
+    warm_start_path = ""
+    # define para for quadratic reward
+    Q = np.zeros((4, 4))
     Q[0, 0] = 100.0
     Q[1, 1] = 100.0
     Q[2, 2] = 1.0
@@ -59,20 +67,37 @@ if robot == "pendubot":
 
 elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
-    design = "design_C.1"
-    model = "model_1.0"
-    load_path = "../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/"
-    warm_start_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/candidate_2/best_model.zip"
-    # define para for quadratic reward
+    # design C.0
+    design = "design_C.0"
+    model = "model_3.0"
+    # load_path = "../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/"
+    load_path = "/home/chi/Github/double_pendulum/data/controller_parameters/design_C.0/acrobot/lqr/roa"
+    warm_start_path = "/home/chi/Github/double_pendulum/data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model.zip"
     Q = np.zeros((4, 4))
-    Q[0, 0] = 100.0
-    Q[1, 1] = 105.0
-    Q[2, 2] = 1.0
-    Q[3, 3] = 1.0
-    R = np.array([[0.01]])
-    r_line = 1e3
+    Q[0, 0] = 10.0
+    Q[1, 1] = 10.0
+    Q[2, 2] = 0.2
+    Q[3, 3] = 0.2
+    R = np.array([[0.0001]])
+    r_line = 500
     r_vel = 1e4
-    r_lqr = 1e5
+    r_lqr = 1e4
+
+    # design C.1
+    # design = "design_C.1"
+    # model = "model_1.0"
+    # load_path = "../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/"
+    # warm_start_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/candidate_2/best_model.zip"
+    # # define para for quadratic reward
+    # Q = np.zeros((4, 4))
+    # Q[0, 0] = 100.0
+    # Q[1, 1] = 105.0
+    # Q[2, 2] = 1.0
+    # Q[3, 3] = 1.0
+    # R = np.array([[0.01]])
+    # r_line = 1e3
+    # r_vel = 1e4
+    # r_lqr = 1e5
 
 model_par_path = (
         "../../../data/system_identification/identified_parameters/"
@@ -105,7 +130,7 @@ termination = False
 
 #tuning parameter
 n_envs = 100 # we found n_envs > 50 has very little improvement in training speed.
-training_steps = 4e7 # default = 1e6
+training_steps = 2e7 # default = 1e6
 verbose = 1
 # reward_threshold = -0.01
 reward_threshold = 1e10
@@ -296,8 +321,8 @@ agent = SAC(
     learning_rate=learning_rate,
 )
 
-# warm_start = True
-warm_start = False
+warm_start = True
+# warm_start = False
 if warm_start:
     agent.set_parameters(load_path_or_dict=warm_start_path)
 

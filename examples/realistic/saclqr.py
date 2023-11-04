@@ -31,9 +31,9 @@ if robot == "pendubot":
     # model_path = "../../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip" # about 40% success rate
     # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/train_sac_without_limit/saved_model/pendubot/working_2e7_new/best_model.zip"
     # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/train_sac_without_limit/log_data_designC.1/SAC_training/best_model/best_model.zip"
-    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/real/pendubot/works_50%/best_model.zip"
+    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/real/pendubot/works_50%/best_model.zip"
     # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/real/pendubot/works/best_model.zip"
-    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/real/pendubot/works_80%/best_model.zip"
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/real/pendubot/works_80%/best_model.zip"
 elif robot == "acrobot":
     # design = "design_C.0"
     # model = "model_3.0"

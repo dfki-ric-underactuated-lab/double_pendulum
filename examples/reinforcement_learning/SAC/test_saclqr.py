@@ -19,20 +19,22 @@ from double_pendulum.simulation.gym_env import (
 
 # hyperparameters
 stabilization = "lqr"
-robot = "pendubot"
-# robot = "acrobot"
+# robot = "pendubot"
+robot = "acrobot"
 
 if robot == "pendubot":
     ## case design_A.0 model_2.0
-    # design = "design_A.0"
-    # model = "model_2.0"
-    # load_path = ""
+    design = "design_A.0"
+    model = "model_2.0"
+    load_path = "../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/"
+    scaling_state = True
 
     ## case design_C.1 model_1.0
-    design = "design_C.1"
-    model = "model_1.0"
-    load_path = ("../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/")
-    scaling_state = False
+    # design = "design_C.1"
+    # model = "model_1.0"
+    # load_path = ("../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/")
+    # scaling_state = False
+
     torque_limit = [5.0, 0.0]
     active_act = 0
 
@@ -40,22 +42,25 @@ if robot == "pendubot":
     # design A.0
     # model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model"
     ## gymnasium versionq
+    # design A.0
+    model_path = "/home/chi/Github/double_pendulum/data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model.zip"
     # design C.1
     # model_path = "../../../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip"
     # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/train_sac_without_limit/saved_model/pendubot/working_2e7_new/best_model.zip"
-    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/train_sac_without_limit/log_data_designC.1/SAC_training/best_model/best_model.zip"
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/train_sac_without_limit/log_data_designC.1/SAC_training/best_model/best_model.zip"
 elif robot == "acrobot":
     ## case design_C.0 model_3.0
-    # design = "design_C.0"
-    # model = "model_3.0"
-    # scaling_state = False
-    # load_path = ""
+    design = "design_C.0"
+    model = "model_3.0"
+    scaling_state = True
+    # load_path = "../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/"
+    load_path = "/home/chi/Github/double_pendulum/data/controller_parameters/design_C.0/acrobot/lqr/roa"
 
     ## case design_C.1 model_1.0
-    design = "design_C.1"
-    model = "model_1.0"
-    load_path = ("../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/")
-    scaling_state = True
+    # design = "design_C.1"
+    # model = "model_1.0"
+    # load_path = ("../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/")
+    # scaling_state = True
 
     torque_limit = [0.0, 5.0]
     active_act = 1
@@ -63,14 +68,17 @@ elif robot == "acrobot":
     # gym version
     # model_path = "../../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model"
     # gymnasirum version
-    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/saved_models/acrobot/design_C.0/model_3.0/gymnasium_3e7/best_model.zip"
+    # design C.0
+    # model_path = "/home/chi/Github/double_pendulum/data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model.zip"
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/best_model/best_model.zip"
+    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/design_C.0/a_working_model_warm_started_from_gym_version/best_model.zip"
+    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/design_C.0/a_interesting_model/best_model.zip"
 
-    # for testing
-    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data_designC.1/SAC_training/best_model/best_model.zip"
-    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/candidate_2/best_model.zip"
+    #design C.1
     # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/actually_works/best_model.zip"
-    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/another_working/best_model.zip"
     # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/working_train_in_oct/best_model.zip"
+
+
 # import model parameter
 model_par_path = (
         "../../../data/system_identification/identified_parameters/"
@@ -106,8 +114,10 @@ flag = False
 
 # LQR parameters
 lqr_pars = np.loadtxt(os.path.join(load_path, "controller_par.csv"))
-Q = np.diag(lqr_pars[:4])
-R = np.diag([lqr_pars[4], lqr_pars[4]])
+# Q = np.diag(lqr_pars[:4])
+# R = np.diag([lqr_pars[4], lqr_pars[4]])
+Q = np.diag((0.97, 0.93, 0.39, 0.26))
+R = np.diag((0.11, 0.11))
 
 def condition1(t, x):
     return False
