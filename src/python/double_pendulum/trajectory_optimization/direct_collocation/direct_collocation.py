@@ -1,205 +1,232 @@
 import os
 from pathlib import Path
+
 import numpy as np
-from pydrake.systems.trajectory_optimization import DirectCollocation
-from pydrake.trajectories import PiecewisePolynomial
-from pydrake.all import Solve  # pydrake.all should be replaced by real path
+
+import pydrake.math as pm
+from pydrake.solvers import MathematicalProgram, SnoptSolver
+from pydrake.autodiffutils import AutoDiffXd
+
 
 from double_pendulum.trajectory_optimization.direct_collocation import dircol_utils
 from double_pendulum.utils.urdfs import generate_urdf
 
+from scipy.interpolate import CubicHermiteSpline, interp1d
 
-class dircol_calculator():
-    """dircol_calculator
-    Class to calculate a trajectory for the double pendulum, acrobot or
-    pendubot with the direct collocation method. Implementation uses drake.
-
-    Parameters
-    ----------
-    urdf_path : string or path object
-        path to urdf file
-    robot : string
-        robot which is used, Options:
-            - "double_pendulum"
-            - "acrobot"
-            - "pendubot"
-    model_pars : model_parameters object
-        object of the model_parameters class
-    save_dir : string
-        path to directory where log data can be stored
-        (necessary for temporary generated urdf)
-        (Default value=".")
+class DirCol():
+    """This class formulates and solves the mathematical program for trajectory optimization
+    via direct collocation. It uses drake for parsing the plant from a urdf as well as formulating
+    and solving the optimization problem. The drake-internal direct collocation class is avoided for
+    better control over the problem formulation. The class also implements resampling of the 
+    found trajectory
     """
-    def __init__(self,
-                 urdf_path,
-                 robot,
-                 model_pars,
-                 save_dir="."):
-        self.urdf_path = os.path.join(save_dir, robot + ".urdf")
-        generate_urdf(urdf_path, self.urdf_path, model_pars=model_pars)
-        self.system_name = robot
+    def __init__(self,urdfPath,RobotType,modelPars,saveDir=".",nx=4,nu=2):
+        """Class constructor
 
-        meshes_path = os.path.join(Path(urdf_path).parent, "meshes")
-        os.system(f"cp -r {meshes_path} {save_dir}")
-
-        self.plant, self.context, self.scene_graph = dircol_utils.create_plant_from_urdf(self.urdf_path)
-
-    def compute_trajectory(self,
-                           n,
-                           tau_limit,
-                           initial_state,
-                           final_state,
-                           theta_limit,
-                           speed_limit,
-                           R,
-                           time_penalization,
-                           init_traj_time_interval,
-                           minimum_timestep,
-                           maximum_timestep):
-        """compute_trajectory.
-
-        Parameters
-        ----------
-        n : int
-            number of knot points for the trajectory
-        tau_limit : float
-            torque limit, unit=[Nm]
-        initial_state : array_like
-            shape=(4,)
-            initial_state for the trajectory
-        final_state : array_like
-            shape=(4,)
-            final_state for the trajectory
-        theta_limit : float
-            position limit
-        speed_limit : float
-            velocity limit
-        R : float
-            control/motor torque cost
-        time_penalization : float
-            cost for trajectory length
-        init_traj_time_interval : list
-            shape=(2,)
-            initial time interval for trajectory
-        minimum_timestep : float
-            minimum timestep size, unit=[s]
-        maximum_timestep : float
-            maximum timestep size, unit=[s]
-
-        Raises
-        ------
-        AssertionError
-            If the optmization is not successful
+        Args:
+            urdfPath (string): Path to the URDF-file
+            RobotType (string): "acrobot", "pendubot" or "double_pendulum"
+            modelPars (model_parameters()): parameters from system identification
+            saveDir (str, optional): Path to save results into. Defaults to ".".
+            nx (int, optional): Length of state vektor. Defaults to 4.
+            nu (int, optional): Length of control input vector. Defaults to 2.
         """
-        self.dircol = DirectCollocation(
-                self.plant,
-                self.context,
-                num_time_samples=n,
-                minimum_timestep=minimum_timestep,
-                maximum_timestep=maximum_timestep,
-                input_port_index=self.plant.get_actuation_input_port().get_index())
+        self.urdf_path = os.path.join(saveDir, RobotType + ".urdf")
+        generate_urdf(urdfPath, self.urdf_path, model_pars=modelPars)
+        self.RobotType = RobotType
 
-        # Add equal time interval constraint
-        self.dircol.AddEqualTimeIntervalsConstraints()
+        meshes_path = os.path.join(Path(urdfPath).parent, "meshes")
+        os.system(f"cp -r {meshes_path} {saveDir}")
 
-        # Add initial torque condition
-        torque_limit = tau_limit  # N*m
-        u_init = self.dircol.input(0)
-        self.dircol.AddConstraintToAllKnotPoints(u_init[0] == 0)
+        self.plant, self.context, self. scene_graph = dircol_utils.create_plant_from_urdf(urdfPath)
+        self.plant_ad = self.plant.ToAutoDiffXd()
+        self.context_ad = self.plant_ad.CreateDefaultContext()
+        self.prog = MathematicalProgram()
+        self.nx = nx
+        self.nu = nu
 
-        # Add torque limit
-        u = self.dircol.input()
-        # Cost on input "effort"
-        if self.plant.num_actuators() > 1:
-            self.dircol.AddConstraintToAllKnotPoints(-torque_limit <= u[0])
-            self.dircol.AddConstraintToAllKnotPoints(u[0] <= torque_limit)
-            self.dircol.AddConstraintToAllKnotPoints(-torque_limit <= u[1])
-            self.dircol.AddConstraintToAllKnotPoints(u[1] <= torque_limit)
-            self.dircol.AddRunningCost(R * u[0] ** 2)
-            self.dircol.AddRunningCost(R * u[1] ** 2)
+        if self.RobotType == "acrobot":
+            self.B = np.array([[0., 1.], [0., 0.]])
+        elif self.RobotType == "pendubot": 
+            self.B = np.array([[1., 0.], [0., 0.]])
         else:
-            self.dircol.AddRunningCost(R * u[0] ** 2)
-            self.dircol.AddConstraintToAllKnotPoints(-torque_limit <= u[0])
-            self.dircol.AddConstraintToAllKnotPoints(u[0] <= torque_limit)
+            self.B = np.array([[1., 0.], [0., 1.]])
 
-        # Initial state constraint
-        self.dircol.prog().AddBoundingBoxConstraint(initial_state,
-                                        initial_state,
-                                        self.dircol.initial_state())
+    def EquationOfMotion(self,x,u,plant,context):
+        """Computes the plant dynamics based on current state and input. Uses drake to extract matrices
 
-        # Angular velocity constraints
-        state = self.dircol.state()
-        self.dircol.AddConstraintToAllKnotPoints(state[2] <= speed_limit)
-        self.dircol.AddConstraintToAllKnotPoints(-speed_limit <= state[2])
-        self.dircol.AddConstraintToAllKnotPoints(state[3] <= speed_limit)
-        self.dircol.AddConstraintToAllKnotPoints(-speed_limit <= state[3])
+        Args:
+            x (array): current state. x.shape=(nx,)
+            u (array): current input. u.shape=(nu,)
+            plant (pydrake.plant): plant
+            context (pydrake.context): plant context
 
-        # Add constraint on elbow position
-        self.dircol.AddConstraintToAllKnotPoints(state[1] <= theta_limit)
-        self.dircol.AddConstraintToAllKnotPoints(-theta_limit <= state[1])
-
-        # Final state constraint
-        self.dircol.prog().AddBoundingBoxConstraint(final_state, final_state, self.dircol.final_state())
-
-        # Add a final cost equal to the total duration.
-        self.dircol.AddFinalCost(self.dircol.time() * time_penalization)
-        initial_x_trajectory = PiecewisePolynomial.FirstOrderHold(
-            init_traj_time_interval,
-            np.column_stack((initial_state, final_state)))
-        self.dircol.SetInitialTrajectory(PiecewisePolynomial(), initial_x_trajectory)
-        self.result = Solve(self.dircol.prog())
-        assert self.result.is_success()
-        #return result, self.dircol
-        (self.x_traj,
-         self.acc_traj,
-         self.jerk_traj,
-         self.u_traj) = dircol_utils.construct_trajectories(self.dircol, self.result)
-
-    def get_trajectory(self, freq):
+        Returns:
+            array: system dynamics xdot=(qd,qdd)
         """
-        Get the trajectory found by the optimization.
+        q = x[0:2]
+        qd = x[2:4]
 
-        Parameters
-        ----------
-        freq : float
-            frequency with which the trajectory is sampled
+        plant.SetPositions(context,q)
+        plant.SetVelocities(context,qd)
 
-        Returns
-        -------
-        numpy_array
-            time points, unit=[s]
-            shape=(N,)
-        numpy_array
-            shape=(N, 4)
-            states, units=[rad, rad, rad/s, rad/s]
-            order=[angle1, angle2, velocity1, velocity2]
-        numpy_array
-            shape=(N, 2)
-            actuations/motor torques
-            order=[u1, u2],
-            units=[Nm]
+        M = plant.CalcMassMatrixViaInverseDynamics(context)
+        Cv = plant.CalcBiasTerm(context)
+        tauG = plant.CalcGravityGeneralizedForces(context)
+
+        qdd = np.dot(pm.inv(M),tauG + self.B.dot(u) - Cv)
+        
+        return np.concatenate((qd,qdd))
+
+
+    def CollocationConstraint(self,vars):
+        """Helper function to compute collocation constraint. Adds support for 
+        calls of plant within constraints
         """
-        X, T = dircol_utils.extract_data_from_polynomial(self.x_traj, freq)
+        assert vars.size == 3 * self.nx + 3*self.nu + 1
+        split_at = [
+            self.nx,
+            2 * self.nx,
+            3 * self.nx,
+            3 * self.nx + self.nu,
+            3 * self.nx + 2 * self.nu,
+            3 * self.nx + 3 * self.nu,
+        ]
+        xk,xk1,xk_half,uk,uk1,uk_half,h = np.split(vars, split_at)
+        
+        plant = (
+            self.plant_ad if isinstance(vars[0], AutoDiffXd) else self.plant
+        )
+        context = (
+            self.context_ad if isinstance(vars[0], AutoDiffXd) else self.context
+        )
 
-        if self.system_name == 'acrobot':
-            u2_traj, _ = dircol_utils.extract_data_from_polynomial(self.u_traj, freq)
-            u1_traj = np.zeros((u2_traj.size))
-        elif self.system_name == 'pendubot':
-            u1_traj, _ = dircol_utils.extract_data_from_polynomial(self.u_traj, freq)
-            u2_traj = np.zeros((u1_traj.size))
-        elif self.system_name == 'double_pendulum':
-            torques, _ = dircol_utils.extract_data_from_polynomial(self.u_traj, freq)
-            u1_traj = torques[0, :].reshape(T.size).T
-            u2_traj = torques[1, :].reshape(T.size).T
-
-        T = np.asarray(T).flatten()
-        X = np.asarray(X).T
-        U = np.asarray([u1_traj.flatten(), u2_traj.flatten()]).T
-        return T, X, U
-
-    def animate_trajectory(self):
+        return xk1 - xk - h/6 * (self.EquationOfMotion(xk,uk,plant,context) + 4 * self.EquationOfMotion(xk_half,uk_half,plant,context) + self.EquationOfMotion(xk1,uk1,plant,context))
+    
+    def InterpolationConstraint(self,vars):
+        """Helper function to compute interpolation constraint. Adds support for 
+        calls of plant within constraints
         """
-        Animate the trajectory, found by the optimization, with the drake
-        meshcat viewer in a browser window.
+        assert vars.size == 3 * self.nx + 2 * self.nu + 1
+        split_at = [
+            self.nx,
+            2 * self.nx,
+            3 * self.nx,
+            3 * self.nx + self.nu,
+            3 * self.nx + 2 * self.nu,
+        ]
+        xk,xk1,xk_half,uk,uk1,h = np.split(vars,split_at)
+
+        plant = (
+            self.plant_ad if isinstance(vars[0], AutoDiffXd) else self.plant
+        )
+        context = (
+            self.context_ad if isinstance(vars[0], AutoDiffXd) else self.context
+        )
+
+        return 0.5 * (xk + xk1) + h/8 * (self.EquationOfMotion(xk,uk,plant,context) - self.EquationOfMotion(xk1,uk1,plant,context)) - xk_half
+
+
+    def MathematicalProgram(self,N,Q,R,wh,h_min,h_max,x0,xf,torque_limit,X_initial,U_initial,h_initial):
+        """Constructs the mathematical program and solves it using SNOPT from drake.
+        Problem formulation done as described in paper by Matthew Kelly(2017), DOI:10.1137/16M1062569
+        Stores solutions as class variables
+
+        Args:
+            N (int): Number of knot points
+            Q (array): weighting matrix of state
+            R (_type_): weighting matrix of input
+            wh (_type_): weighting factor of time step length
+            h_min (_type_): lower bound time step length
+            h_max (_type_): upper bound time step length
+            x0 (_type_): initial state
+            xf (_type_): final state
+            torque_limit (_type_): lower and upper bound input torque [Nm]
+            X_initial (_type_): initial guess state trajectory
+            U_initial (_type_): initial guess control trajectory
+            h_initial (_type_): initial guess time step length
         """
-        dircol_utils.animation(self.plant, self.scene_graph, self.x_traj)
+        self.N = N
+        X = self.prog.NewContinuousVariables(self.nx,N,"X") # knot points state
+        U = self.prog.NewContinuousVariables(self.nu,N,"U") # knot points control input
+        X_half = self.prog.NewContinuousVariables(self.nx,N-1,"X_half") # collocation points state
+        U_half = self.prog.NewContinuousVariables(self.nu,N-1,"U_half") # collocation points control inputs
+        h = self.prog.NewContinuousVariables(1,"h") # distances between knot points 
+        for i in range(0,N-1):
+            self.prog.AddCost(np.dot((X[:,i]-xf).T,Q.dot(X[:,i]-xf)) + np.dot(U[:,i].T,R.dot(U[:,i]))+wh*h[0]**2)
+            # collocation constraint
+            vars_coll = np.concatenate((
+                X[:,i],
+                X[:,i+1],
+                X_half[:,i],
+                U[:,i],
+                U[:,i+1],
+                U_half[:,i],
+                np.array(h[0],ndmin=1) #force h to be 1d
+            ))
+            self.prog.AddConstraint(
+                self.CollocationConstraint, lb=[0] * self.nx, ub = [0]*self.nx, vars = vars_coll
+            )
+            # interpolation constraint
+            vars_interpol = np.concatenate((
+                X[:,i],
+                X[:,i+1],
+                X_half[:,i],
+                U[:,i],
+                U[:,i+1],
+                np.array(h[0],ndmin=1) #force h to be 1d
+            ))
+            self.prog.AddConstraint(
+                self.InterpolationConstraint, lb = [0] * self.nx, ub = [0] * self.nx, vars = vars_interpol
+            )
+            #torque limits
+            self.prog.AddBoundingBoxConstraint(-torque_limit, torque_limit, U[:,i]) #not for all states here?
+
+        #time step limits
+        self.prog.AddBoundingBoxConstraint(h_min, h_max, h)
+        #initial and final conditions
+        self.prog.AddBoundingBoxConstraint(x0,x0,X[:,0])
+        self.prog.AddBoundingBoxConstraint(xf,xf,X[:,-1])
+        self.prog.AddBoundingBoxConstraint(np.zeros(2),np.zeros(2),U[:,-1])
+        #initial guess
+        self.prog.SetInitialGuess(X, X_initial)
+        self.prog.SetInitialGuess(X_half, np.zeros_like(X_half))
+        self.prog.SetInitialGuess(U,U_initial)
+        self.prog.SetInitialGuess(U_half, np.zeros_like(U_half))
+        self.prog.SetInitialGuess(h[0], h_initial)
+        #solve programm
+        solver = SnoptSolver()
+        self.result = solver.Solve(self.prog)
+        print(f"Solution found? {self.result.is_success()}.")
+        #save solutions
+        self.X_sol = self.result.GetSolution(X)
+        self.X_half_sol = self.result.GetSolution(X_half)
+        self.U_sol = self.result.GetSolution(U)
+        self.U_half_sol = self.result.GetSolution(U_half)
+        self.h_sol = self.result.GetSolution(h)
+    
+
+    def ComputeTrajectory(self,freq):
+        """Resamples trajectories using scipy CubicHermiteSpline for state trajectory and 1st order hold
+        for input trajectory
+
+        Args:
+            freq (float64): sampling frequency
+
+        Returns:
+            t (array): time vector
+            x (array): resampled state trajectory
+            u (array): resampled input trajectory
+        """
+        T = np.array([i*self.h_sol[0] for i in range(self.N)])
+        f = np.array([self.EquationOfMotion(x=self.X_sol[:,i],u=self.U_sol[:,i],plant=self.plant,context=self.context) for i in range(self.N)])
+        x_interp = CubicHermiteSpline(x=T, y=self.X_sol.T,dydx=f)
+        u_shoulder_interp = interp1d(x=T,y=self.U_sol.T[:,0])
+        u_ellbow_interp = interp1d(x=T,y=self.U_sol.T[:,1])
+        
+        n = int(T[-1] * freq)
+        t = np.linspace(start=0,stop=T[-1],num=n)
+        x = x_interp(t)
+        u = np.column_stack((u_shoulder_interp(t),u_ellbow_interp(t)))
+
+        return t,x,u
