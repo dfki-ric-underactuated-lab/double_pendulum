@@ -23,61 +23,40 @@ stabilization = "lqr"
 robot = "acrobot"
 
 if robot == "pendubot":
-    ## case design_A.0 model_2.0
-    design = "design_A.0"
-    model = "model_2.0"
-    load_path = "../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/"
-    scaling_state = True
-
-    ## case design_C.1 model_1.0
-    # design = "design_C.1"
-    # model = "model_1.0"
-    # load_path = ("../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/")
-    # scaling_state = False
-
     torque_limit = [5.0, 0.0]
     active_act = 0
 
-    ## gym version
-    # design A.0
-    # model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model"
-    ## gymnasium versionq
-    # design A.0
-    model_path = "/home/chi/Github/double_pendulum/data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model.zip"
-    # design C.1
-    # model_path = "../../../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip"
-    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/train_sac_without_limit/saved_model/pendubot/working_2e7_new/best_model.zip"
-    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/train_sac_without_limit/log_data_designC.1/SAC_training/best_model/best_model.zip"
-elif robot == "acrobot":
-    ## case design_C.0 model_3.0
-    design = "design_C.0"
-    model = "model_3.0"
-    scaling_state = True
-    # load_path = "../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/"
-    load_path = "/home/chi/Github/double_pendulum/data/controller_parameters/design_C.0/acrobot/lqr/roa"
-
-    ## case design_C.1 model_1.0
-    # design = "design_C.1"
-    # model = "model_1.0"
-    # load_path = ("../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/")
+    ## case design_A.0 model_2.0
+    # design = "design_A.0"
+    # model = "model_2.0"
+    # load_path = "../../../data/controller_parameters/design_A.0/pendubot/lqr/roa"
+    # model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model.zip"
     # scaling_state = True
 
+    ## case design_C.1 model_1.0
+    design = "design_C.1"
+    model = "model_1.0"
+    load_path = ("../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/")
+    model_path = "../../../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip"
+    scaling_state = False
+
+elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
     active_act = 1
 
-    # gym version
+    ## case design_C.0 model_3.0
+    # design = "design_C.0"
+    # model = "model_3.0"
+    # scaling_state = True
+    # load_path = "../../../data/controller_parameters/design_C.0/acrobot/lqr/roa"
     # model_path = "../../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model"
-    # gymnasirum version
-    # design C.0
-    # model_path = "/home/chi/Github/double_pendulum/data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model.zip"
-    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/best_model/best_model.zip"
-    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/design_C.0/a_working_model_warm_started_from_gym_version/best_model.zip"
-    model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/design_C.0/a_interesting_model/best_model.zip"
 
-    #design C.1
-    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/actually_works/best_model.zip"
-    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_model/acrobot/working_train_in_oct/best_model.zip"
-
+    ## case design_C.1 model_1.0
+    design = "design_C.1"
+    model = "model_1.0"
+    load_path = ("../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/")
+    model_path = "../../../data/policies/design_C.1/model_1.0/acrobot/SAC_not_working_on_hardware/best_model.zip"
+    scaling_state = True
 
 # import model parameter
 model_par_path = (
@@ -114,10 +93,8 @@ flag = False
 
 # LQR parameters
 lqr_pars = np.loadtxt(os.path.join(load_path, "controller_par.csv"))
-# Q = np.diag(lqr_pars[:4])
-# R = np.diag([lqr_pars[4], lqr_pars[4]])
-Q = np.diag((0.97, 0.93, 0.39, 0.26))
-R = np.diag((0.11, 0.11))
+Q = np.diag(lqr_pars[:4])
+R = np.diag([lqr_pars[4], lqr_pars[4]])
 
 def condition1(t, x):
     return False

@@ -33,14 +33,30 @@ friction_compensation = True
 max_velocity = 20
 if robot == "pendubot":
     torque_limit = [5.0, 0.0]
+    # design A.0
+    # design = "design_A.0"
+    # model = "model_2.0"
+    # load_path = "../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/"
+    # warm_start_path = ""
+    # Q = np.zeros((4, 4))
+    # Q[0, 0] = 8.0
+    # Q[1, 1] = 5.0
+    # Q[2, 2] = 0.1
+    # Q[3, 3] = 0.1
+    # R = np.array([[0.0001]])
+    # r_line = 500
+    # r_vel = 0
+    # r_lqr = 1e4
+
+    # design C.1
     design = "design_C.1"
     model = "model_1.0"
-    load_path = "lqr_data/design_C.1/model_1.1/pendubot/lqr"
-    # warm_start_path = ""
+    load_path = "../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/"
+    warm_start_path = ""
     # define para for quadratic reward
     Q = np.zeros((4, 4))
-    Q[0, 0] = 100
-    Q[1, 1] = 100
+    Q[0, 0] = 100.0
+    Q[1, 1] = 100.0
     Q[2, 2] = 1.0
     Q[3, 3] = 1.0
     R = np.array([[0.01]])
@@ -51,22 +67,37 @@ if robot == "pendubot":
 
 elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
-    design = "design_C.1"
-    model = "model_1.0"
+
+    # design C.0
     # design = "design_C.0"
     # model = "model_3.0"
-    load_path = "lqr_data/design_C.1/model_1.1/acrobot/lqr"
-    warm_start_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/saved_models/acrobot/design_C.1/model_1.0/working/best_model.zip"
+    # load_path = "../../../data/controller_parameters/design_C.0/acrobot/lqr/roa"
+    # warm_start_path = ""
+    # Q = np.zeros((4, 4))
+    # Q[0, 0] = 10.0
+    # Q[1, 1] = 10.0
+    # Q[2, 2] = 0.2
+    # Q[3, 3] = 0.2
+    # R = np.array([[0.0001]])
+    # r_line = 500
+    # r_vel = 1e4
+    # r_lqr = 1e4
+
+    # design C.1
+    design = "design_C.1"
+    model = "model_1.0"
+    load_path = "../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/"
+    warm_start_path = ""
     # define para for quadratic reward
     Q = np.zeros((4, 4))
-    Q[0, 0] = 10.0
-    Q[1, 1] = 10.0
-    Q[2, 2] = 0.2
-    Q[3, 3] = 0.2
-    R = np.array([[0.0001]])
-    r_line = 500
+    Q[0, 0] = 100.0
+    Q[1, 1] = 105.0
+    Q[2, 2] = 1.0
+    Q[3, 3] = 1.0
+    R = np.array([[0.01]])
+    r_line = 1e3
     r_vel = 1e4
-    r_lqr = 1e4
+    r_lqr = 1e5
 
 #tuning parameter
 n_envs = 100 # we found n_envs > 50 has very little improvement in training speed.
