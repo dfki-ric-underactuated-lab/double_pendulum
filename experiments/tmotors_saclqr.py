@@ -8,7 +8,6 @@ from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.controller.combined_controller import CombinedController
 from double_pendulum.experiments.hardware_control_loop_tmotors import run_experiment
 from double_pendulum.utils.wrap_angles import wrap_angles_top,wrap_angles_diff
-# from double_pendulum.controller.SAC.SAC_controller import SACController
 from double_pendulum.controller.SAC.SAC_controller import SACController
 from double_pendulum.simulation.gym_env import (
    double_pendulum_dynamics_func,
@@ -27,8 +26,8 @@ if robot == "pendubot":
     torque_limit = [5.0, 0.5]
     torque_limit_con = [5.0, 0.0]
     active_act = 0
+    scaling = False
     load_path = "../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr"
-    # gymnasium version
     model_path = "../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip"
 
 elif robot == "acrobot":
@@ -36,17 +35,15 @@ elif robot == "acrobot":
     model = "model_1.0"
     torque_limit = [0.5, 5.0]
     active_act = 1
-    load_path = "../data_con/lqr_data/design_C.1/model_1.1/acrobot/lqr"
-
-    # gymnasium version
-    # model_path = ""
+    scaling = True
+    load_path = "../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr"
+    model_path = "../data/policies/design_C.1/model_1.0/acrobot/SAC_not_working_on_hardware/best_model.zip"
 
 ## set model and controller parameters
-model_par_path = "../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
+model_par_path = "model_data/model_parameters.yml"
 mpar = model_parameters(filepath=model_par_path)
 
 mpar_con = model_parameters(filepath=model_par_path)
-
 
 # the controller must react to the without-friction-compensation model
 if friction_compensation:
@@ -64,17 +61,18 @@ dt = 0.0025
 t_final = 10.0
 integrator = "runge_kutta"
 goal = [np.pi, 0., 0., 0.]
-print("control frequency is", 1/dt)
+print("control frequency is", 1 / dt)
 
 # switching conditions between sac and lqr
+lqr_pars = np.loadtxt(os.path.join(load_path, "controller_par.csv"))
 rho = np.loadtxt(os.path.join(load_path, "rho"))
 vol = np.loadtxt(os.path.join(load_path, "vol"))
 S = np.loadtxt(os.path.join(load_path, "Smatrix"))
 
-lqr_pars = np.loadtxt(os.path.join(load_path, "controller_par.csv"))
 Q = np.diag(lqr_pars[:4])
 R = np.diag([lqr_pars[4], lqr_pars[4]])
 flag = False
+
 
 def check_if_state_in_roa(S, rho, x):
     # print(x)
@@ -83,12 +81,14 @@ def check_if_state_in_roa(S, rho, x):
     print(rad, rho)
     return rad < 1.0 * rho, rad
 
+
 def condition1(t, x):
     return False
 
+
 def condition2(t, x):
     y = wrap_angles_diff(x)
-    flag,rad = check_if_state_in_roa(S,rho,y)
+    flag, rad = check_if_state_in_roa(S, rho, y)
     print(t)
     print(y)
     # print(rad,rho)
@@ -98,7 +98,8 @@ def condition2(t, x):
         print(flag)
         return True
     else:
-    	return False
+        return False
+
 
 ## initialize sac controller
 # initialize double pendulum dynamics
@@ -111,14 +112,14 @@ dynamics_func = double_pendulum_dynamics_func(
     integrator=integrator,
     robot=robot,
     state_representation=2,
+    scaling= scaling
 )
 
 # initialize controller 1
 controller1 = SACController(
-    model_path = model_path,
+    model_path=model_path,
     dynamics_func=dynamics_func,
     dt=dt,
-    scaling=False
 )
 
 ## initialize lqr controller
@@ -126,7 +127,7 @@ controller2 = LQRController(model_pars=mpar_con)
 controller2.set_goal(goal)
 controller2.set_cost_matrices(Q=Q, R=R)
 controller2.set_parameters(failure_value=0.0,
-                          cost_to_go_cut=100000)
+                           cost_to_go_cut=100000)
 
 ## initialize combined controller
 controller = CombinedController(
@@ -138,7 +139,7 @@ controller = CombinedController(
 )
 
 controller.set_filter_args(
-    filt=meas_noise_vfilter, 
+    filt=meas_noise_vfilter,
     velocity_cut=meas_noise_cut,
     filter_kwargs=filter_kwargs
 )
@@ -156,8 +157,10 @@ run_experiment(controller=controller,
                can_port="can0",
                motor_ids=[1, 2],
                tau_limit=torque_limit,
-               save_dir=os.path.join("data_con", design, robot, "tmotors/sac_lqr_results")
+               # save_dir=os.path.join("data_con", design, robot, "tmotors/sac_lqr_results")
+               save_dir=os.path.join("~/ten_runs_pendubot_best_working_now")
                )
+
 
 
 
