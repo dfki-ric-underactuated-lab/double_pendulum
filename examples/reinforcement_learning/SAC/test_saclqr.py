@@ -10,7 +10,7 @@ from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.controller.combined_controller import CombinedController
 from double_pendulum.utils.plotting import plot_timeseries
-from double_pendulum.utils.wrap_angles import wrap_angles_top
+from double_pendulum.utils.wrap_angles import wrap_angles_top,wrap_angles_diff
 
 from double_pendulum.controller.SAC.SAC_controller import SACController
 from double_pendulum.simulation.gym_env import (
@@ -19,48 +19,44 @@ from double_pendulum.simulation.gym_env import (
 
 # hyperparameters
 stabilization = "lqr"
-robot = "pendubot"
-# robot = "acrobot"
+# robot = "pendubot"
+robot = "acrobot"
 
 if robot == "pendubot":
+    torque_limit = [5.0, 0.0]
+    active_act = 0
+
     ## case design_A.0 model_2.0
     # design = "design_A.0"
     # model = "model_2.0"
-    # load_path = ""
+    # load_path = "../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr"
+    # model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model.zip"
+    # scaling_state = True
 
     ## case design_C.1 model_1.0
     design = "design_C.1"
     model = "model_1.0"
     load_path = ("../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/")
-    torque_limit = [5.0, 0.0]
-    active_act = 0
-
-    ## gym version
-    # design A.0
-    # model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model"
-    ## gymnasium version
-    # design C.1
     model_path = "../../../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip"
+    scaling_state = False
+
 elif robot == "acrobot":
-    ## case design_C.0 model_3.0
-    design = "design_C.0"
-    model = "model_3.0"
-    load_path = ""
-
-    ## case design_C.1 model_1.0
-    # design = "design_C.1"
-    # model = "model_1.0"
-    # load_path = ("../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/")
-
     torque_limit = [0.0, 5.0]
     active_act = 1
 
-    # gym version
-    # model_path = "../../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model"
-    # gymnasirum version
-    # model_path = "/home/chi/Github/double_pendulum/examples/reinforcement_learning/SAC/log_data/SAC_training/saved_models/acrobot/design_C.0/model_3.0/gymnasium_3e7/best_model.zip"
+    ## case design_C.0 model_3.0
+    # design = "design_C.0"
+    # model = "model_3.0"
+    # scaling_state = True
+    # load_path = ("../../../data/controller_parameters/design_C.0/model_3.0/acrobot/lqr/roa")
+    # model_path = "../../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model.zip"
 
-    model_path = "../../../data/policies/design_C.0/model_3.0/SAC/sac_model.zip"
+    ## case design_C.1 model_1.0
+    design = "design_C.1"
+    model = "model_1.0"
+    load_path = ("../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/")
+    model_path = "../../../data/policies/design_C.1/model_1.0/acrobot/SAC/sac_model.zip"
+    scaling_state = True
 
 # import model parameter
 model_par_path = (
@@ -80,7 +76,7 @@ mpar.set_cfric([0.0, 0.0])
 mpar.set_torque_limit(torque_limit)
 
 # simulation parameters
-dt = 0.002
+dt = 0.0025
 t_final = 10.0
 integrator = "runge_kutta"
 goal = [np.pi, 0.0, 0.0, 0.0]
@@ -112,8 +108,8 @@ def check_if_state_in_roa(S, rho, x):
 
 def condition2(t, x):
     # print("x=",x)
-    y = wrap_angles_top(x)
-    # y = wrap_angles_top()
+    # y = wrap_angles_top(x)
+    y = wrap_angles_diff(x)
     # print("y=",y)
     flag,rad = check_if_state_in_roa(S,rho,y)
     print(rad,rho)
@@ -134,7 +130,7 @@ dynamics_func = double_pendulum_dynamics_func(
     integrator=integrator,
     robot=robot,
     state_representation=2,
-    scaling = False
+    scaling = scaling_state
 )
 
 # initialize sac controller
@@ -142,7 +138,7 @@ controller1 = SACController(
     model_path = model_path,
     dynamics_func=dynamics_func,
     dt=dt,
-    scaling = False
+    scaling = scaling_state
 )
 
 # initialize lqr controller
@@ -150,7 +146,7 @@ controller2 = LQRController(model_pars=mpar)
 controller2.set_goal(goal)
 controller2.set_cost_matrices(Q=Q, R=R)
 controller2.set_parameters(failure_value=0.0,
-                          cost_to_go_cut=15)
+                          cost_to_go_cut=1000)
 
 # initialize combined controller
 controller = CombinedController(
@@ -170,7 +166,7 @@ T, X, U = sim.simulate_and_animate(
     dt=dt,
     controller=controller,
     integrator=integrator,
-    save_video=False,
+    # save_video=False,
 )
 
 # plot timeseries

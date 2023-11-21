@@ -22,21 +22,38 @@ friction_compensation = True
 stabilization = "lqr"
 
 if robot == "pendubot":
+    # design = "design_A.0"
+    # model = "model_2.0"
+    # load_path = "../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr"
+    # model_path = "../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model.zip"
+    # scaling_state = True
+    # torque_limit = [5.0, 0.5]
+    # active_act = 0
+
     design = "design_C.1"
     model = "model_1.0"
+    scaling_state = False
     torque_limit = [5.0, 0.5]
     active_act = 0
     load_path = ("../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr/")
     model_path = "../../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip" # about 40% success rate
+
 elif robot == "acrobot":
     # design = "design_C.0"
     # model = "model_3.0"
+    # load_path = "../../data/controller_parameters/design_C.0/acrobot/lqr/roa"
+    # model_path = "../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model.zip"
+    # scaling_state = True
+    # torque_limit = [0.5, 5.0]
+    # active_act = 1
+
     design = "design_C.1"
     model = "model_1.0"
     torque_limit = [0.5, 5.0]
     active_act = 1
+    scaling_state = True
     load_path = ("../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/")
-    model_path = ""
+    model_path = "../../data/policies/design_C.1/model_1.0/acrobot/SAC/sac_model.zip"
 
 # import model
 model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
@@ -67,7 +84,7 @@ delay_mode = "None"
 delay = 0.015
 u_noise_sigmas = [0., 0.]
 # u_responsiveness = 1.0
-u_responsiveness = 0.95
+u_responsiveness = 0.85
 perturbation_times = []
 perturbation_taus = []
 
@@ -141,7 +158,7 @@ controller1 = SACController(
     model_path = model_path,
     dynamics_func=dynamics_func,
     dt=dt,
-    scaling=False
+    scaling=scaling_state
 )
 
 # initialize lqr controller
@@ -157,7 +174,7 @@ controller = CombinedController(
     controller2=controller2,
     condition1=condition1,
     condition2=condition2,
-    compute_both=False
+    compute_both=scaling_state
 )
 
 controller.set_filter_args(filt=meas_noise_vfilter, x0=goal, dt=dt, plant=plant,
