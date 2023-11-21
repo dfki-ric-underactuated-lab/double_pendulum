@@ -49,7 +49,7 @@ elif robot == "acrobot":
     design = "design_C.1"
     model = "model_1.0"
     scaling_state = True
-    model_path = "../../../data/policies/design_C.1/model_1.0/acrobot/SAC_not_working_on_hardware/best_model.zip"
+    model_path = "../../../data/policies/design_C.1/model_1.0/acrobot/SAC/sac_model.zip"
 
 # import model parameter
 model_par_path = (

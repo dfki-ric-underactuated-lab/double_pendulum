@@ -37,10 +37,16 @@ elif robot == "acrobot":
     active_act = 1
     scaling = True
     load_path = "../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr"
-    model_path = "../data/policies/design_C.1/model_1.0/acrobot/SAC_not_working_on_hardware/best_model.zip"
+    model_path = "../data/policies/design_C.1/model_1.0/acrobot/SAC/sac_model.zip"
 
 ## set model and controller parameters
-model_par_path = "model_data/model_parameters.yml"
+model_par_path = (
+        "../data/system_identification/identified_parameters/"
+        + design
+        + "/"
+        + model
+        + "/model_parameters.yml"
+)
 mpar = model_parameters(filepath=model_par_path)
 
 mpar_con = model_parameters(filepath=model_par_path)

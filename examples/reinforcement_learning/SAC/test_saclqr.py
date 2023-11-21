@@ -29,7 +29,7 @@ if robot == "pendubot":
     ## case design_A.0 model_2.0
     # design = "design_A.0"
     # model = "model_2.0"
-    # load_path = "../../../data/controller_parameters/design_A.0/pendubot/lqr/roa"
+    # load_path = "../../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr"
     # model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model.zip"
     # scaling_state = True
 
@@ -48,14 +48,14 @@ elif robot == "acrobot":
     # design = "design_C.0"
     # model = "model_3.0"
     # scaling_state = True
-    # load_path = "../../../data/controller_parameters/design_C.0/acrobot/lqr/roa"
-    # model_path = "../../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model"
+    # load_path = ("../../../data/controller_parameters/design_C.0/model_3.0/acrobot/lqr/roa")
+    # model_path = "../../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model.zip"
 
     ## case design_C.1 model_1.0
     design = "design_C.1"
     model = "model_1.0"
     load_path = ("../../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr/")
-    model_path = "../../../data/policies/design_C.1/model_1.0/acrobot/SAC_not_working_on_hardware/best_model.zip"
+    model_path = "../../../data/policies/design_C.1/model_1.0/acrobot/SAC/sac_model.zip"
     scaling_state = True
 
 # import model parameter
