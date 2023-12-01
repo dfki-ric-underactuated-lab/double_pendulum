@@ -44,7 +44,7 @@
     <child link="Link1" />
     <axis xyz="1 0 0" />
     <limit lower="-3.1415926" upper="3.1415926" effort="0.0" velocity="20" />
-    <dynamics damping="0.0" friction="0.0" />
+    <dynamics damping="0.081" friction="0.093" />
   </joint>
 
   <link name="Link2">
@@ -69,8 +69,8 @@
     <parent link="Link1" />
     <child link="Link2" />
     <axis xyz="1 0 0" />
-    <limit lower="-3.1415926" upper="3.1415926" effort="6.0" velocity="20" />
-    <dynamics damping="0.0" friction="0.0" />
+    <limit lower="-3.1415926" upper="3.1415926" effort="10.0" velocity="20" />
+    <dynamics damping="0.0" friction="0.186" />
   </joint>
 
   <link name="Weight">

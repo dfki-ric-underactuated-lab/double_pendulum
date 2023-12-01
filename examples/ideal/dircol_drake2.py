@@ -14,26 +14,19 @@ from double_pendulum.controller.trajectory_following.trajectory_controller impor
 
 # model parameters
 design = "design_A.0"
-model = "model_1.0"
+model = "model_1.2"
 robot = "acrobot"
 
-urdf_path = "././data/urdfs/design_A.0/model_1.0/"+robot+".urdf"
+urdf_path = "../../data/urdfs/design_A.0/model_1.0/"+robot+".urdf"
 
-torque_limit_active = 6.0
-if robot == "acrobot":
-    torque_limit = np.array([0.0, torque_limit_active])
-if robot == "pendubot":
-    torque_limit = np.array([torque_limit_active, 0.0])
-if robot == "double_pendulum":
-    torque_limit = np.array([torque_limit_active, torque_limit_active])
+torque_limit = 6.0
 
-model_par_path = "././data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
-mpar = model_parameters()
-mpar.load_yaml(model_par_path)
-mpar.set_motor_inertia(0.)
-mpar.set_damping([0., 0.])
-mpar.set_cfric([0., 0.])
-mpar.set_torque_limit(torque_limit)
+mpar = model_parameters(
+    torque_limit = [torque_limit]*2,
+    model_design=design,
+    model_id=model,
+    robot=robot
+    )
 
 
 # Trajectory parameters
@@ -62,7 +55,7 @@ Q = np.diag([1,1,20,20])
 wh = 20
 # saving
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", design, model, robot, "dircol", "trajopt", timestamp)
+save_dir = os.path.join("data/trajectories", design, model, robot, "dircol", "trajopt", timestamp)
 os.makedirs(save_dir)
 
 
@@ -96,7 +89,7 @@ save_trajectory(csv_path=traj_file,
 plot_timeseries(T, X, U, None,
                 plot_energy=False,
                 pos_y_lines=[0.0, np.pi],
-                tau_y_lines=[-torque_limit_active, torque_limit_active],
+                tau_y_lines=[-torque_limit, torque_limit],
                 save_to=os.path.join(save_dir, "timeseries"))
 
 ## animate TODO: currently not supported
