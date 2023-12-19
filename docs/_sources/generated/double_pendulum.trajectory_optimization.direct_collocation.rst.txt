@@ -17,10 +17,18 @@ double\_pendulum.trajectory\_optimization.direct\_collocation.dircol\_utils
    :undoc-members:
    :show-inheritance:
 
-double\_pendulum.trajectory\_optimization.direct\_collocation.direct\_collocation
-----------------------------------------------------------------------------------------
+double\_pendulum.trajectory\_optimization.direct\_collocation.direct\_collocation\_drake
+-----------------------------------------------------------------------------------------------
 
-.. automodule:: double_pendulum.trajectory_optimization.direct_collocation.direct_collocation
+.. automodule:: double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.trajectory\_optimization.direct\_collocation.direct\_collocation\_drake2
+------------------------------------------------------------------------------------------------
+
+.. automodule:: double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2
    :members:
    :undoc-members:
    :show-inheritance:

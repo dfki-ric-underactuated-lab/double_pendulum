@@ -202,8 +202,215 @@ time trajectory</p>
 </dd></dl>
 
 </section>
-<section id="double-pendulum-trajectory-optimization-direct-collocation-direct-collocation">
-<h2>double_pendulum.trajectory_optimization.direct_collocation.direct_collocation<a class="headerlink" href="#double-pendulum-trajectory-optimization-direct-collocation-direct-collocation" title="Permalink to this heading"></a></h2>
+<section id="module-double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake">
+<span id="double-pendulum-trajectory-optimization-direct-collocation-direct-collocation-drake"></span><h2>double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake<a class="headerlink" href="#module-double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake.dircol_calculator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake.</span></span><span class="sig-name descname"><span class="pre">dircol_calculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">urdf_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake.dircol_calculator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to calculate a trajectory for the double pendulum, acrobot or
+pendubot with the direct collocation method. Implementation uses drake.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>urdf_path</strong><span class="classifier">string or path object</span></dt><dd><p>path to urdf file</p>
+</dd>
+<dt><strong>robot</strong><span class="classifier">string</span></dt><dd><dl class="simple">
+<dt>robot which is used, Options:</dt><dd><ul class="simple">
+<li><p>“double_pendulum”</p></li>
+<li><p>“acrobot”</p></li>
+<li><p>“pendubot”</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt><strong>model_pars</strong><span class="classifier">model_parameters object</span></dt><dd><p>object of the model_parameters class</p>
+</dd>
+<dt><strong>save_dir</strong><span class="classifier">string</span></dt><dd><p>path to directory where log data can be stored
+(necessary for temporary generated urdf)
+(Default value=”.”)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake.dircol_calculator.animate_trajectory">
+<span class="sig-name descname"><span class="pre">animate_trajectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake.dircol_calculator.animate_trajectory" title="Permalink to this definition"></a></dt>
+<dd><p>Animate the trajectory, found by the optimization, with the drake
+meshcat viewer in a browser window.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake.dircol_calculator.compute_trajectory">
+<span class="sig-name descname"><span class="pre">compute_trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_penalization</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_traj_time_interval</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake.dircol_calculator.compute_trajectory" title="Permalink to this definition"></a></dt>
+<dd><p>compute_trajectory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>n</strong><span class="classifier">int</span></dt><dd><p>number of knot points for the trajectory</p>
+</dd>
+<dt><strong>tau_limit</strong><span class="classifier">float</span></dt><dd><p>torque limit, unit=[Nm]</p>
+</dd>
+<dt><strong>initial_state</strong><span class="classifier">array_like</span></dt><dd><p>shape=(4,)
+initial_state for the trajectory</p>
+</dd>
+<dt><strong>final_state</strong><span class="classifier">array_like</span></dt><dd><p>shape=(4,)
+final_state for the trajectory</p>
+</dd>
+<dt><strong>theta_limit</strong><span class="classifier">float</span></dt><dd><p>position limit</p>
+</dd>
+<dt><strong>speed_limit</strong><span class="classifier">float</span></dt><dd><p>velocity limit</p>
+</dd>
+<dt><strong>R</strong><span class="classifier">float</span></dt><dd><p>control/motor torque cost</p>
+</dd>
+<dt><strong>time_penalization</strong><span class="classifier">float</span></dt><dd><p>cost for trajectory length</p>
+</dd>
+<dt><strong>init_traj_time_interval</strong><span class="classifier">list</span></dt><dd><p>shape=(2,)
+initial time interval for trajectory</p>
+</dd>
+<dt><strong>minimum_timestep</strong><span class="classifier">float</span></dt><dd><p>minimum timestep size, unit=[s]</p>
+</dd>
+<dt><strong>maximum_timestep</strong><span class="classifier">float</span></dt><dd><p>maximum timestep size, unit=[s]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>AssertionError</dt><dd><p>If the optmization is not successful</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake.dircol_calculator.get_trajectory">
+<span class="sig-name descname"><span class="pre">get_trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake.dircol_calculator.get_trajectory" title="Permalink to this definition"></a></dt>
+<dd><p>Get the trajectory found by the optimization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>freq</strong><span class="classifier">float</span></dt><dd><p>frequency with which the trajectory is sampled</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy_array</dt><dd><p>time points, unit=[s]
+shape=(N,)</p>
+</dd>
+<dt>numpy_array</dt><dd><p>shape=(N, 4)
+states, units=[rad, rad, rad/s, rad/s]
+order=[angle1, angle2, velocity1, velocity2]</p>
+</dd>
+<dt>numpy_array</dt><dd><p>shape=(N, 2)
+actuations/motor torques
+order=[u1, u2],
+units=[Nm]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2">
+<span id="double-pendulum-trajectory-optimization-direct-collocation-direct-collocation-drake2"></span><h2>double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2<a class="headerlink" href="#module-double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2.DirCol">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2.</span></span><span class="sig-name descname"><span class="pre">DirCol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">urdfPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RobotType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveDir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2.DirCol" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class formulates and solves the mathematical program for trajectory optimization
+via direct collocation. It uses drake for parsing the plant from a urdf as well as formulating
+and solving the optimization problem. The drake-internal direct collocation class is avoided for
+better control over the problem formulation. The class also implements resampling of the
+found trajectory</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2.DirCol.CollocationConstraint">
+<span class="sig-name descname"><span class="pre">CollocationConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2.DirCol.CollocationConstraint" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function to compute collocation constraint. Adds support for
+calls of plant within constraints</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2.DirCol.ComputeTrajectory">
+<span class="sig-name descname"><span class="pre">ComputeTrajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2.DirCol.ComputeTrajectory" title="Permalink to this definition"></a></dt>
+<dd><p>Resamples trajectories using scipy CubicHermiteSpline for state trajectory and 1st order hold
+for input trajectory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>freq</strong> (<em>float64</em>) – sampling frequency</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>time vector
+x (array): resampled state trajectory
+u (array): resampled input trajectory</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>t (array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2.DirCol.EquationOfMotion">
+<span class="sig-name descname"><span class="pre">EquationOfMotion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plant</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2.DirCol.EquationOfMotion" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the plant dynamics based on current state and input. Uses drake to extract matrices</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array</em>) – current state. x.shape=(nx,)</p></li>
+<li><p><strong>u</strong> (<em>array</em>) – current input. u.shape=(nu,)</p></li>
+<li><p><strong>plant</strong> (<em>pydrake.plant</em>) – plant</p></li>
+<li><p><strong>context</strong> (<em>pydrake.context</em>) – plant context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>system dynamics xdot=(qd,qdd)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2.DirCol.InterpolationConstraint">
+<span class="sig-name descname"><span class="pre">InterpolationConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2.DirCol.InterpolationConstraint" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function to compute interpolation constraint. Adds support for
+calls of plant within constraints</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2.DirCol.MathematicalProgram">
+<span class="sig-name descname"><span class="pre">MathematicalProgram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">N</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_initial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_initial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_initial</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake2.DirCol.MathematicalProgram" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs the mathematical program and solves it using SNOPT from drake.
+Problem formulation done as described in paper by Matthew Kelly(2017), DOI:10.1137/16M1062569
+Stores solutions as class variables</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>N</strong> (<em>int</em>) – Number of knot points</p></li>
+<li><p><strong>Q</strong> (<em>array</em>) – weighting matrix of state</p></li>
+<li><p><strong>R</strong> (<em>_type_</em>) – weighting matrix of input</p></li>
+<li><p><strong>wh</strong> (<em>_type_</em>) – weighting factor of time step length</p></li>
+<li><p><strong>h_min</strong> (<em>_type_</em>) – lower bound time step length</p></li>
+<li><p><strong>h_max</strong> (<em>_type_</em>) – upper bound time step length</p></li>
+<li><p><strong>x0</strong> (<em>_type_</em>) – initial state</p></li>
+<li><p><strong>xf</strong> (<em>_type_</em>) – final state</p></li>
+<li><p><strong>torque_limit</strong> (<em>_type_</em>) – lower and upper bound input torque [Nm]</p></li>
+<li><p><strong>X_initial</strong> (<em>_type_</em>) – initial guess state trajectory</p></li>
+<li><p><strong>U_initial</strong> (<em>_type_</em>) – initial guess control trajectory</p></li>
+<li><p><strong>h_initial</strong> (<em>_type_</em>) – initial guess time step length</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 
