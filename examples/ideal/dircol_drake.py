@@ -3,7 +3,7 @@ from datetime import datetime
 import os
 import numpy as np
 
-from double_pendulum.trajectory_optimization.direct_collocation.direct_collocation import dircol_calculator
+from double_pendulum.trajectory_optimization.direct_collocation.direct_collocation_drake import dircol_calculator
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
