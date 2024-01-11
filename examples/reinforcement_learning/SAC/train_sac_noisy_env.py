@@ -20,14 +20,14 @@ from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.wrap_angles import wrap_angles_diff
 
 # setting log path for the training
-log_dir = "./log_data/SAC_training"
-# log_dir = "./log_data_designC.1/SAC_training"
+log_dir = "./log_data_sim2real/SAC_training"
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 
 # define robot variation
-robot = "acrobot"
-# robot = "pendubot"
+# robot = "acrobot"
+robot = "pendubot"
+friction_compensation = True
 
 # model and reward parameter
 max_velocity = 20
@@ -99,35 +99,6 @@ elif robot == "acrobot":
     r_vel = 1e4
     r_lqr = 1e5
 
-model_par_path = (
-        "../../../data/system_identification/identified_parameters/"
-        + design
-        + "/"
-        + model
-        + "/model_parameters.yml"
-)
-
-mpar = model_parameters(filepath=model_par_path)
-mpar.set_motor_inertia(0.0)
-mpar.set_damping([0.0, 0.0])
-mpar.set_cfric([0.0, 0.0])
-mpar.set_torque_limit(torque_limit)
-dt = 0.01
-integrator = "runge_kutta"
-
-plant = SymbolicDoublePendulum(model_pars=mpar)
-simulator = Simulator(plant=plant)
-
-# learning environment parameters
-state_representation = 2
-obs_space = gym.spaces.Box(
-    np.array([-1.0, -1.0, -1.0, -1.0]), np.array([1.0, 1.0, 1.0, 1.0])
-)
-act_space = gym.spaces.Box(np.array([-1]), np.array([1]))
-max_steps = 1000
-termination = False
-############################################################################
-
 #tuning parameter
 n_envs = 100 # we found n_envs > 50 has very little improvement in training speed.
 training_steps = 3e7 # default = 1e6
@@ -137,31 +108,98 @@ reward_threshold = 1e10
 eval_freq=2500
 n_eval_episodes=10
 learning_rate=0.01
-##############################################################################
-# initialize double pendulum dynamics
-dynamics_func = double_pendulum_dynamics_func(
-    simulator=simulator,
-    dt=dt,
-    integrator=integrator,
-    robot=robot,
-    state_representation=state_representation,
+
+# simulation parameters
+dt = 0.01
+t_final = 10.0
+integrator = "runge_kutta"
+goal = [np.pi, 0.0, 0.0, 0.0]
+
+## noise
+process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
+meas_noise_sigmas = [0.0, 0.0, 0.5, 0.5]
+delay_mode = "None"
+delay = 0.015
+u_noise_sigmas = [0., 0.]
+# u_responsiveness = 1.0
+u_responsiveness = 0.9
+perturbation_times = []
+perturbation_taus = []
+
+## filter args
+meas_noise_vfilter = "lowpass"
+meas_noise_cut = 0.1
+filter_kwargs = {"lowpass_alpha": [1., 1., 0.2, 0.2],
+                 "kalman_xlin": goal,
+                 "kalman_ulin": [0., 0.],
+                 "kalman_process_noise_sigmas": process_noise_sigmas,
+                 "kalman_meas_noise_sigmas": meas_noise_sigmas,
+                 "ukalman_integrator": integrator,
+                 "ukalman_process_noise_sigmas": process_noise_sigmas,
+                 "ukalman_meas_noise_sigmas": meas_noise_sigmas}
+##########################################################################################################
+# import model
+model_par_path = (
+        "../../../data/system_identification/identified_parameters/"
+        + design
+        + "/"
+        + model
+        + "/model_parameters.yml"
 )
 
-# import lqr parameters
+# model for simulation
+mpar = model_parameters(filepath=model_par_path)
+mpar.set_motor_inertia(0.0)
+mpar.set_damping([0.0, 0.0])
+mpar.set_cfric([0.0, 0.0])
+mpar.set_torque_limit(torque_limit)
+
+plant = SymbolicDoublePendulum(model_pars=mpar)
+sim = Simulator(plant=plant)
+
+sim.set_process_noise(process_noise_sigmas=process_noise_sigmas)
+sim.set_measurement_parameters(meas_noise_sigmas=meas_noise_sigmas,
+                               delay=delay,
+                               delay_mode=delay_mode)
+sim.set_motor_parameters(u_noise_sigmas=u_noise_sigmas,
+                         u_responsiveness=u_responsiveness)
+
+# switching conditions
 rho = np.loadtxt(os.path.join(load_path, "rho"))
 vol = np.loadtxt(os.path.join(load_path, "vol"))
 S = np.loadtxt(os.path.join(load_path, "Smatrix"))
+flag = False
 
 def check_if_state_in_roa(S, rho, x):
+    # print(x)
     xdiff = x - np.array([np.pi, 0.0, 0.0, 0.0])
     rad = np.einsum("i,ij,j", xdiff, S, xdiff)
-    return rad < rho, rad
+    print(rad, rho)
+    return rad < 1.0*rho, rad
+
+# learning environment parameters
+state_representation = 2
+obs_space = gym.spaces.Box(
+    np.array([-1.0, -1.0, -1.0, -1.0]), np.array([1.0, 1.0, 1.0, 1.0])
+)
+act_space = gym.spaces.Box(np.array([-1]), np.array([1]))
+max_steps = 1000
+termination = False
+
+# initialize double pendulum dynamics
+dynamics_func = double_pendulum_dynamics_func(
+    simulator=sim,
+    dt=dt,
+    integrator=integrator,
+    robot=robot,
+    state_representation=2,
+)
+
 
 def reward_func(observation, action):
     # define reward para according to robot type
     control_line = 0.4
     v_thresh = 8.0
-    # v_thresh = 10.0
     vflag = False
     flag = False
     bonus = False
@@ -180,7 +218,12 @@ def reward_func(observation, action):
 
     goal = [np.pi, 0., 0., 0.]
 
+    # y = wrap_angles_top(s)
     y = wrap_angles_diff(s)
+    # print(action)
+    # print("obs=",observation)
+    # print("s=",s)
+    # print("y=",y)
 
     # criterion 1: control line
     p1 = y[0]
@@ -213,9 +256,7 @@ def reward_func(observation, action):
 
     ## stage2: control line reward
     if flag:
-        print("stage1 reward=",reward)
         reward += r_line
-        print("stage2 reward=", reward)
         ## stage 3: roa reward
         if bonus:
             # roa method
@@ -327,5 +368,3 @@ if warm_start:
     agent.set_parameters(load_path_or_dict=warm_start_path)
 
 agent.learn(total_timesteps=training_steps, callback=eval_callback)
-
-

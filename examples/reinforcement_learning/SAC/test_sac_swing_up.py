@@ -20,27 +20,36 @@ This testing script is purely for testing the behaviour of SAC controller in swi
 
 
 # hyperparameters
-robot = "pendubot"
-# robot = "acrobot"
+# robot = "pendubot"
+robot = "acrobot"
 
 if robot == "pendubot":
     torque_limit = [5.0, 0.0]
     active_act = 0
-    # design = "design_A.0"
-    # model = "model_2.0"
-    design = "design_C.1"
-    model = "model_1.0"
-    # model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model"
-    model_path = "../../../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip"
+
+    design = "design_A.0"
+    model = "model_2.0"
+    model_path = "../../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model"
+    scaling_state = True
+
+    # design = "design_C.1"
+    # model = "model_1.0"
+    # model_path = "../../../data/policies/design_C.1/model_1.0/pendubot/SAC/sac_model.zip"
+    # scaling_state = False
 
 elif robot == "acrobot":
     torque_limit = [0.0, 5.0]
     active_act = 1
+
     # design = "design_C.0"
     # model = "model_3.0"
+    # model_path = "../../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model.zip"
+    # scaling_state = True
+
     design = "design_C.1"
     model = "model_1.0"
-    model_path = ""
+    scaling_state = True
+    model_path = "../../../data/policies/design_C.1/model_1.0/acrobot/SAC/sac_model.zip"
 
 # import model parameter
 model_par_path = (
@@ -58,7 +67,7 @@ mpar.set_cfric([0.0, 0.0])
 mpar.set_torque_limit(torque_limit)
 
 # simulation parameters
-dt = 0.002
+dt = 0.0025
 t_final = 10.0
 integrator = "runge_kutta"
 goal = [np.pi, 0.0, 0.0, 0.0]
@@ -74,7 +83,7 @@ dynamics_func = double_pendulum_dynamics_func(
     integrator=integrator,
     robot=robot,
     state_representation=2,
-    scaling=False
+    scaling=scaling_state
 )
 
 # initialize sac controller
@@ -82,7 +91,7 @@ controller = SACController(
     model_path = model_path,
     dynamics_func=dynamics_func,
     dt=dt,
-    scaling=False
+    scaling=scaling_state
 )
 controller.init()
 

@@ -34,7 +34,7 @@ def create_plant_from_urdf(urdf_path):
     scene_graph = SceneGraph()
     plant.RegisterAsSourceForSceneGraph(scene_graph)
     parser = Parser(plant)
-    parser.AddModelFromFile(urdf_path)
+    parser.AddModels(urdf_path)
     plant.Finalize()
     context = plant.CreateDefaultContext()
     return plant, context, scene_graph

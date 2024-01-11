@@ -470,6 +470,9 @@ class model_parameters():
             self.b = [0., 0.]
             self.cf = [0., 0.]
             self.Ir = 0.
+        elif model_id[-2:] == ".2":
+            self.cf = [0., 0.]
+            self.Ir = 0.
 
         if robot == "acrobot":
             self.tl[0] = 0.

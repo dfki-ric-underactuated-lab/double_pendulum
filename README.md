@@ -209,12 +209,15 @@ follow each individual license agreement.
 
 ## Citation
 
-1. Wiebe F., Kumar S., Shala L., Vyas S., Javadi M., Kirchner F., (2023). An Open Source Dual Purpose Acrobot and Pendubot Platform for Benchmarking Control Algorithms for Underactuated Robotics. In: IEEE Robotics and Automation Magazine (RAM), 2023, under review.
+1. F. Wiebe, S. Kumar, L. J. Shala, S. Vyas, M. Javadi and F. Kirchner, "Open Source Dual-Purpose Acrobot and Pendubot Platform: Benchmarking Control Algorithms for Underactuated Robotics," in IEEE Robotics & Automation Magazine, doi: 10.1109/MRA.2023.3341257.
 ```bibtex
-@ARTICLE{2023_ram_wiebe_double_pendulum,
-  author={Wiebe, Felix and Kumar, Shivesh and Shala, Lasse and Vyas, Shubham and Javadi, Mahdi and Kirchner, Frank},
-  journal={IEEE Robotics and Automation Magazine}, 
-  title={An Open Source Dual Purpose Acrobot and Pendubot Platform for Benchmarking Control Algorithms for Underactuated Robotics}, 
+@ARTICLE{10375556,
+  author={Wiebe, Felix and Kumar, Shivesh and Shala, Lasse J. and Vyas, Shubham and Javadi, Mahdi and Kirchner, Frank},
+  journal={IEEE Robotics & Automation Magazine}, 
+  title={Open Source Dual-Purpose Acrobot and Pendubot Platform: Benchmarking Control Algorithms for Underactuated Robotics}, 
   year={2023},
-  note={under review}}
+  volume={},
+  number={},
+  pages={2-13},
+  doi={10.1109/MRA.2023.3341257}}
 ```

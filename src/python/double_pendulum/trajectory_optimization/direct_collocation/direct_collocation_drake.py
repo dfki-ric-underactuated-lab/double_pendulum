@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
 import numpy as np
-from pydrake.systems.trajectory_optimization import DirectCollocation
+
+from pydrake.planning import DirectCollocation
 from pydrake.trajectories import PiecewisePolynomial
 from pydrake.all import Solve  # pydrake.all should be replaced by real path
 
