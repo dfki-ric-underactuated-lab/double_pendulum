@@ -1,7 +1,6 @@
 import os
 import argparse
 import pandas
-import pathlib
 
 from double_pendulum.analysis.leaderboard import leaderboard_scores
 
@@ -45,6 +44,9 @@ save_to = parser.parse_args().save_to
 recompute_leaderboard = parser.parse_args().recompute
 link_base = parser.parse_args().link
 
+if not os.path.exists(save_to):
+    recompute_leaderboard = True
+
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
 
@@ -52,9 +54,6 @@ existing_list = os.listdir(data_dir)
 for con in existing_list:
     if not os.path.exists(os.path.join(data_dir, con, "data_paths.csv")):
         existing_list.remove(con)
-
-if not os.path.exists(save_to):
-    recompute_leaderboard = True
 
 if recompute_leaderboard:
     src_dir = "."
@@ -65,7 +64,9 @@ if recompute_leaderboard:
             paths = []
             for exp_dir in os.listdir(os.path.join(data_dir, con_dir)):
                 if exp_dir[:10] == "experiment":
-                    paths.append(os.path.join(data_dir, con_dir, exp_dir, "trajectory.csv"))
+                    paths.append(
+                        os.path.join(data_dir, con_dir, exp_dir, "trajectory.csv")
+                    )
             with open(os.path.join(data_dir, con_dir, "name.txt"), "r") as file:
                 name = file.read().replace("\n", "")
             with open(os.path.join(data_dir, con_dir, "username.txt"), "r") as file:
@@ -108,5 +109,7 @@ if recompute_leaderboard:
     df = pandas.read_csv(save_to)
     df = df.drop(df.columns[1], axis=1)
     print(
-        df.sort_values(by=["Average RealAI Score"], ascending=False).to_markdown(index=False)
+        df.sort_values(by=["Average RealAI Score"], ascending=False).to_markdown(
+            index=False
+        )
     )

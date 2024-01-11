@@ -4,14 +4,8 @@ import argparse
 import pandas
 import numpy as np
 
-from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
-from double_pendulum.model.model_parameters import model_parameters
-
-# from double_pendulum.analysis.leaderboard_utils import compute_leaderboard
-from double_pendulum.analysis.leaderboard import leaderboard_scores
 from double_pendulum.analysis.benchmark_scores import get_scores
 
-from sim_parameters import mpar, dt, t_final, t0, x0, goal, integrator
 from benchmark_controller import benchmark_controller
 
 
@@ -24,14 +18,20 @@ parser.add_argument(
     required=False,
 )
 parser.add_argument(
+    "--save_to",
+    dest="save_to",
+    help="Path for saving the leaderbaord csv file.",
+    default="leaderboard.csv",
+    required=False,
+)
+parser.add_argument(
     "--force-recompute",
     dest="recompute",
     help="Whether to force the recomputation of the leaderboard even without new data.",
     default=False,
     required=False,
-    type=bool,
+    type=int,
 )
-
 parser.add_argument(
     "--link-base",
     dest="link",
@@ -41,8 +41,12 @@ parser.add_argument(
 )
 
 data_dir = parser.parse_args().data_dir
-recompute_leaderboard = parser.parse_args().recompute
+save_to = parser.parse_args().save_to
+recompute_leaderboard = bool(parser.parse_args().recompute)
 link_base = parser.parse_args().link
+
+if not os.path.exists(save_to):
+    recompute_leaderboard = True
 
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
@@ -74,7 +78,6 @@ for file in os.listdir("."):
 
 if recompute_leaderboard:
     src_dir = "."
-    save_to = os.path.join(data_dir, "leaderboard.csv")
 
     leaderboard_data = []
 
@@ -83,10 +86,16 @@ if recompute_leaderboard:
             mod = importlib.import_module(f[:-3])
             if hasattr(mod, "leaderboard_config"):
                 conf = mod.leaderboard_config
-                if os.path.exists(os.path.join(data_dir, conf["name"], "benchmark_results.pkl")):
-                    print(f"Found leaderboard_config and data for {mod.leaderboard_config['name']}")
+                if os.path.exists(
+                    os.path.join(data_dir, conf["name"], "benchmark_results.pkl")
+                ):
+                    print(
+                        f"Found leaderboard_config and data for {mod.leaderboard_config['name']}"
+                    )
 
-                    scores = get_scores(os.path.join(data_dir, conf["name"]), "benchmark_results.pkl")
+                    scores = get_scores(
+                        os.path.join(data_dir, conf["name"]), "benchmark_results.pkl"
+                    )
 
                     final_score = (
                         0.2 * scores["model"]
@@ -98,11 +107,11 @@ if recompute_leaderboard:
 
                     if link_base != "":
                         if "simple_name" in conf.keys():
-                            name_with_link = (
-                                f"[{conf['simple_name']}]({link_base}{conf['name']}/README.md)"
-                            )
+                            name_with_link = f"[{conf['simple_name']}]({link_base}{conf['name']}/README.md)"
                         else:
-                            name_with_link = f"[{conf['name']}]({link_base}{conf['name']}/README.md)"
+                            name_with_link = (
+                                f"[{conf['name']}]({link_base}{conf['name']}/README.md)"
+                            )
                     else:
                         if "simple_name" in conf.keys():
                             name_with_link = conf["simple_name"]
@@ -112,16 +121,18 @@ if recompute_leaderboard:
                     append_data = [
                         name_with_link,
                         conf["short_description"],
-                        "{:.1f}".format(100*scores["model"]),
-                        "{:.1f}".format(100*scores["measurement_noise"]),
-                        "{:.1f}".format(100*scores["u_noise"]),
-                        "{:.1f}".format(100*scores["u_responsiveness"]),
-                        "{:.1f}".format(100*scores["delay"]),
+                        "{:.1f}".format(100 * scores["model"]),
+                        "{:.1f}".format(100 * scores["measurement_noise"]),
+                        "{:.1f}".format(100 * scores["u_noise"]),
+                        "{:.1f}".format(100 * scores["u_responsiveness"]),
+                        "{:.1f}".format(100 * scores["delay"]),
                         "{:.3f}".format(final_score),
                         conf["username"],
                     ]
                     if link_base != "":
-                        append_data.append("[Data and Plots](" + link_base + conf["name"] + ")")
+                        append_data.append(
+                            "[Data and Plots](" + link_base + conf["name"] + ")"
+                        )
 
                     leaderboard_data.append(append_data)
 
@@ -140,4 +151,8 @@ if recompute_leaderboard:
     )
     df = pandas.read_csv(save_to)
     df = df.drop(df.columns[1], axis=1)
-    print(df.sort_values(by=["Overall Robustness Score"], ascending=False).to_markdown(index=False))
+    print(
+        df.sort_values(by=["Overall Robustness Score"], ascending=False).to_markdown(
+            index=False
+        )
+    )
