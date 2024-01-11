@@ -28,7 +28,7 @@ parser.add_argument(
     help="Whether to force the recomputation of the leaderboard even without new data.",
     default=False,
     required=False,
-    type=bool,
+    type=int,
 )
 parser.add_argument(
     "--link-base",
@@ -41,7 +41,7 @@ parser.add_argument(
 
 data_dir = parser.parse_args().data_dir
 save_to = parser.parse_args().save_to
-recompute_leaderboard = parser.parse_args().recompute
+recompute_leaderboard = bool(parser.parse_args().recompute)
 link_base = parser.parse_args().link
 
 if not os.path.exists(save_to):
