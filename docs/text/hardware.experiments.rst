@@ -1,24 +1,7 @@
-Hardware Experiment Guide
-=========================
-
-.. toctree::
-   :maxdepth: 3
-
-.. raw:: html
-
-   <div align="center">
-
-.. raw:: html
-
-   </div>
-
-
-
 Safety Notes
-------------
+============
 
-
-When working with a real system be careful and mind the following safety
+When working with a real system, be careful and mind the following safety
 measures:
 
 - Brushless motors can be very powerful, moving with tremendous force and

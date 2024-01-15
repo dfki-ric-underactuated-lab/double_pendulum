@@ -1,13 +1,15 @@
 Hardware
 ========
 
-This repository is tightly coupled to the real hardware which can be operated
-with this software. This page gived information and instructions on how to
+This pages in this section give information and instructions on how to
 construct and operate the physical double pendulum system.
 
 .. toctree::
    :maxdepth: 1
 
-   hardware.motors.rst
    hardware.testbench.rst
+   hardware.bom.rst
+   hardware.motors.rst
+   hardware.assembly.rst
+   hardware.electrical.rst
    hardware.experiments.rst
