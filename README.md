@@ -173,12 +173,12 @@ This repository features three
 [RealAIGym leaderboards](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/)
 to compare control methods:
 
-    - Simulation Leaderboard ([Acrobot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_performance_leaderboard.html), [Pendubot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/pendubot_simulation_performance_leaderboard.html))
-    - Robustness Leaderboard ([Acrobot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_robustness_leaderboard.html), [Pendubot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/pendubot_simulation_robustness_leaderboard.html))
-    - Real Hardware Leaderboard ([Acrobot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_real_system_leaderboard.html), [Pendubot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/pendubot_real_system_leaderboard.html))
+* Simulation Leaderboard ([Acrobot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_performance_leaderboard.html), [Pendubot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/pendubot_simulation_performance_leaderboard.html))
+* Robustness Leaderboard ([Acrobot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_robustness_leaderboard.html), [Pendubot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/pendubot_simulation_robustness_leaderboard.html))
+* Real Hardware Leaderboard ([Acrobot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_real_system_leaderboard.html), [Pendubot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/pendubot_real_system_leaderboard.html))
 
 Have a look at the
-[instructions](https://dfki-ric-underactuated-lab.github.io/double_pendulum/leaderboard.html)
+[instructions](https://dfki-ric-underactuated-lab.github.io/double_pendulum/leaderboard.html),
 if you want to submit a controller to the leaderboards.
 
 
@@ -235,7 +235,9 @@ follow each individual license agreement.
 
 ## Citation
 
-1. F. Wiebe, S. Kumar, L. J. Shala, S. Vyas, M. Javadi and F. Kirchner, "Open Source Dual-Purpose Acrobot and Pendubot Platform: Benchmarking Control Algorithms for Underactuated Robotics," in IEEE Robotics & Automation Magazine, doi: 10.1109/MRA.2023.3341257.
+1. F. Wiebe, S. Kumar, L. J. Shala, S. Vyas, M. Javadi and F. Kirchner,
+   "Open Source Dual-Purpose Acrobot and Pendubot Platform: Benchmarking Control Algorithms for Underactuated Robotics",
+   in IEEE Robotics & Automation Magazine, doi: 10.1109/MRA.2023.3341257.
 ```bibtex
 @ARTICLE{10375556,
   author={Wiebe, Felix and Kumar, Shivesh and Shala, Lasse J. and Vyas, Shubham and Javadi, Mahdi and Kirchner, Frank},
