@@ -20,7 +20,9 @@
         <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Model Predictive Control (MPC)" href="control.mpc.html" />
+    <link rel="prev" title="Soft Actor Critic (SAC)" href="control.policy.sac.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,13 +46,28 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="dynamics.html"> Double Pendulum Dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="software_structure.html"> Repository Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hardware.html"> Hardware</a></li>
-<li class="toctree-l1"><a class="reference internal" href="control.html"> Control Methods</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="control.html"> Control Methods</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="control.trajopt.html">Trajectory Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.trajstab.html">Trajectory Stabilization</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="control.policy.html">Policy-based Control</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="control.policy.lqr.html">Linear Quadratic Regulator (LQR)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="control.policy.pfl.html">Partial Feedback Linearization (PFL)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="control.policy.sac.html">Soft Actor Critic (SAC)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Deep-Q Learning (DQN)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="control.mpc.html">Model Predictive Control (MPC)</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="leaderboard.html"> Leaderboards</a></li>
 </ul>
 
@@ -68,6 +85,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
+          <li class="breadcrumb-item"><a href="control.html">Control Methods</a></li>
+          <li class="breadcrumb-item"><a href="control.policy.html">Policy-based Control</a></li>
       <li class="breadcrumb-item active">Deep-Q Learning (DQN)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/control.policy.dqn.rst.txt" rel="nofollow"> View page source</a>
@@ -111,7 +131,10 @@ ture, vol. 518, no. 7540, pp. 529–533, 2015.</p></li>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="control.policy.sac.html" class="btn btn-neutral float-left" title="Soft Actor Critic (SAC)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="control.mpc.html" class="btn btn-neutral float-right" title="Model Predictive Control (MPC)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

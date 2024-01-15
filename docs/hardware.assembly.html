@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MJBots &mdash; Double Pendulum 1.0.0 documentation</title>
+  <title>Hardware Assembly &mdash; Double Pendulum 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -21,8 +21,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Hardware Assembly" href="hardware.assembly.html" />
-    <link rel="prev" title="T-Motor (AK-80-6)" href="hardware.motors.tmotors.html" /> 
+    <link rel="next" title="Electrical Setup" href="hardware.electrical.html" />
+    <link rel="prev" title="MJBots" href="hardware.motors.mjbots.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -54,16 +54,8 @@
 <li class="toctree-l1 current"><a class="reference internal" href="hardware.html"> Hardware</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="hardware.testbench.html">Testbench Description</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hardware.bom.html">Bill of Materials</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="hardware.motors.html">Motors</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="hardware.motors.tmotors.html">T-Motor (AK-80-6)</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">MJBots</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#initial-setup">Initial Setup</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#communication">Communication</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="hardware.assembly.html">Hardware Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.motors.html">Motors</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Hardware Assembly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hardware.electrical.html">Electrical Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hardware.experiments.html">Safety Notes</a></li>
 </ul>
@@ -88,10 +80,9 @@
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
           <li class="breadcrumb-item"><a href="hardware.html">Hardware</a></li>
-          <li class="breadcrumb-item"><a href="hardware.motors.html">Motors</a></li>
-      <li class="breadcrumb-item active">MJBots</li>
+      <li class="breadcrumb-item active">Hardware Assembly</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/hardware.motors.mjbots.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/hardware.assembly.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -99,22 +90,58 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="mjbots">
-<h1>MJBots<a class="headerlink" href="#mjbots" title="Permalink to this heading"></a></h1>
-<section id="initial-setup">
-<h2>Initial Setup<a class="headerlink" href="#initial-setup" title="Permalink to this heading"></a></h2>
-</section>
-<section id="communication">
-<h2>Communication<a class="headerlink" href="#communication" title="Permalink to this heading"></a></h2>
-</section>
+  <section id="hardware-assembly">
+<h1>Hardware Assembly<a class="headerlink" href="#hardware-assembly" title="Permalink to this heading"></a></h1>
+<p>For assembling the hardware follow these steps:</p>
+<ol class="arabic simple">
+<li><p>For the physical assembly of the double pendulum start by mounting the motor
+mount on a robust horizontal surface (e.g a table). If suffices to fix the
+motor mount with one or two screw clamps. Make sure that the swinging plane
+of the double pendulum is free. Mount the first motor to the motor mount.</p></li>
+<li><p>Mount the second motor to the end of the first link.</p></li>
+<li><p>Attach the first link to the mounted motor (to the motor shaft).</p></li>
+<li><p>Attach the weight fixation to the weight.</p></li>
+<li><p>Attach the weight to the end of the second link.</p></li>
+<li><p>Mount the second link to the second motor shaft.</p></li>
+</ol>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><img alt="im_step1" src="_images/step1_hardware_assembly_mount_motor1.jpg" /> (a) Step 1</p></td>
+<td><p><img alt="im_step2" src="_images/step2_hardware_assembly_motor2.jpg" /> (b) Step 2</p></td>
+<td><p><img alt="im_step3" src="_images/step3_hardware_assembly_mount_link1.jpg" /> (c) Step 3</p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="im_step4" src="_images/step4_hardware_assembly_weightfixation.jpg" /> (c) Step 4</p></td>
+<td><p><img alt="im_step5" src="_images/step5_hardware_assembly_link2_weight.jpg" /> (e) Step 5</p></td>
+<td><p><img alt="im_step6" src="_images/step6_hardware_assembly_link2_motor2.jpg" /> (f) Step 6</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since the motors do not offer a hollow shaft, the cables (power and can) to
+the second motor need to come from the front.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the second link is longer than the first link, the first link needs to be
+extended in the opposite direction with a U-shaped aluminium piece to
+prevent windup of cables. The U-shape is attached between the first motor
+and the first link.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the width of the weight does not allow an inward facing position (as in
+figure (f)) because it would collide with the first link, the weight can
+also be mounted facing outside.</p>
+</div>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="hardware.motors.tmotors.html" class="btn btn-neutral float-left" title="T-Motor (AK-80-6)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="hardware.assembly.html" class="btn btn-neutral float-right" title="Hardware Assembly" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="hardware.motors.mjbots.html" class="btn btn-neutral float-left" title="MJBots" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hardware.electrical.html" class="btn btn-neutral float-right" title="Electrical Setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

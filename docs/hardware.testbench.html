@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hardware &amp; Testbench Description &mdash; Double Pendulum 1.0.0 documentation</title>
+  <title>Testbench Description &mdash; Double Pendulum 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -18,12 +18,11 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=af2ce170"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=4825356b"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Hardware Experiment Guide" href="hardware.experiments.html" />
-    <link rel="prev" title="MJBots" href="hardware.motors.mjbots.html" /> 
+    <link rel="next" title="Bill of Materials" href="hardware.bom.html" />
+    <link rel="prev" title="Hardware" href="hardware.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -53,18 +52,15 @@
 <li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="software_structure.html"> Repository Structure</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="hardware.html"> Hardware</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Testbench Description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Testbench Description</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.bom.html">Bill of Materials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hardware.motors.html">Motors</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Hardware &amp; Testbench Description</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#testbench-description">Testbench Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#assembly-instructions">Assembly Instructions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#electrical-setup">Electrical Setup</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#wiring">Wiring</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#backemf">backEMF</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="hardware.experiments.html">Hardware Experiment Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.assembly.html">Hardware Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.electrical.html">Electrical Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.experiments.html">Safety Notes</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="control.html"> Control Methods</a></li>
@@ -87,7 +83,7 @@
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
           <li class="breadcrumb-item"><a href="hardware.html">Hardware</a></li>
-      <li class="breadcrumb-item active">Hardware &amp; Testbench Description</li>
+      <li class="breadcrumb-item active">Testbench Description</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/hardware.testbench.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -97,8 +93,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="hardware-testbench-description">
-<h1>Hardware &amp; Testbench Description<a class="headerlink" href="#hardware-testbench-description" title="Permalink to this heading"></a></h1>
+  <section id="testbench-description">
+<h1>Testbench Description<a class="headerlink" href="#testbench-description" title="Permalink to this heading"></a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">/hardware</span></code> directory contains all information about the hardware
 that is used to built the double pednulum test bench, including a bill
 of materials, step files of the CAD model along with wiring diagrams for
@@ -106,146 +102,18 @@ the complete set up as well as the CAN bus.
 The documentation here covers assembly instructions and and instructions
 for the electrical setup.</p>
 <a class="reference internal image-reference" href="_images/double_pendulum_CAD.png"><img alt="_images/double_pendulum_CAD.png" class="align-center" src="_images/double_pendulum_CAD.png" style="width: 100%;" /></a>
-<section id="testbench-description">
-<h2>Testbench Description<a class="headerlink" href="#testbench-description" title="Permalink to this heading"></a></h2>
+<section id="id1">
+<h2>Testbench Description<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
 <p>The mechanical design consists of a shoulder motor mounting bracket built with
-folded aluminum, and two light-weight links which are built with laser cut 1 mm
+folded aluminum, and two light-weight links which are built either with laser cut 1 mm
 thick sandwich aluminum plates with a laminate of 15 mm PVC rigid foam board
-(Airex) in between. By using sandwich materials, the weight of the pendulum
+(Airex) in between or with 3d printed carbon fiber.
+By using these materials, the weight of the pendulum
 arms can be kept very low in relation to the drives and the end effector
 weight. The end of the first link contains the elbow motor housing and the end
 of second link mounts the weight.  Since, the used motors do not provide a
 hollow shaft, the first link is mechanically extended in the opposite direction
 to prevent windup of cables.</p>
-</section>
-<section id="assembly-instructions">
-<h2>Assembly Instructions<a class="headerlink" href="#assembly-instructions" title="Permalink to this heading"></a></h2>
-<ol class="arabic simple">
-<li><p>For the physical assembly of the double pendulum start by mounting the motor
-mount on a robust horizontal surface (e.g a table). If suffices to fix the
-motor mount with one or two screw clamps. Make sure that the swinging plane
-of the double pendulum is free.</p></li>
-<li><p>Mount the first motor to the motor mount.</p></li>
-<li><p>Mount the second motor to the end of the first link.</p></li>
-<li><p>Attach the first link to the mounted motor (to the motor shaft).</p></li>
-<li><p>Attach the weight fixation to the weight.</p></li>
-<li><p>Attach the weight to the end of the second link.</p></li>
-<li><p>Mount the second link to the second motor shaft.</p></li>
-</ol>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Since the motors do not offer a hollow shaft, the cables (power and can) to
-the second motor need to come from the front.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If the second link is longer than the first link, the first link needs to be
-extended in the opposite direction with a U-shaped aluminium piece to
-prevent windup of cables. The U-shape is attached between the first motor
-and the first link.</p>
-</div>
-</section>
-<section id="electrical-setup">
-<h2>Electrical Setup<a class="headerlink" href="#electrical-setup" title="Permalink to this heading"></a></h2>
-<section id="wiring">
-<h3>Wiring<a class="headerlink" href="#wiring" title="Permalink to this heading"></a></h3>
-<p><strong>Note:</strong> We do not give any safety warranties on the electrical wiring.
-All experiments and reproductions of our test bed are at your own risk.</p>
-<p>The wiring diagram below shows how the double pendulum testbench is set
-up. A main PC is connected to a motor controller board
-(<strong>CubeMars_AK_V1.1</strong>) mounted on the actuator (<strong>AK80-6 from
-T-Motor</strong>). The communication takes place on a CAN bus with a maximum
-signal frequency of 1Mbit/sec with the ‘classical’ CAN protocol.
-Furthermore, a USB to CAN interface is needed, if the main pc doesn’t
-have a PCI CAN card. Two different devices are used in our setup: the
-<strong>R-LINK module</strong> from T-Motor and the <strong>PCAN-USB adapter from PEAK
-systems</strong>. The former has CAN and UART connectors at the output, but
-only works with Windows. The latter only features CAN connection, but
-also works with Linux. The UART connector of the R-LINK module is
-usefull to configure and calibrate the AK80-6.</p>
-<p>The actuator requires an input voltage of <span class="math notranslate nohighlight">\(\small{24\,V}\)</span> and
-consumes up to <span class="math notranslate nohighlight">\(\small{24\,A}\)</span> under full load. A power
-supply that is able to deliver both and which is used in our test setup
-is the <strong>EA-PS 9032-40</strong> from Elektro-Automatik. A capacitor filters the
-backEMF coming from the actuator and therefore protects the power supply
-from high voltage peaks. This wouldn’t be necessary if the actuator is
-powered from a battery pack, as in this case backEMF simply recharges
-the batteries. The capacitor we use is made of <strong>10x single 2.7V-400 F
-capacitor cells</strong> connected in series resulting a total capacity of
-<span class="math notranslate nohighlight">\(\small{40\,F}\)</span> and is wired in parallel to the motor. A
-emergency stop button serves as additional safety measure. It
-disconnects the actuator from power supply and capacitor, if only the
-power supply gets diconnected the actuator will keep running with the
-energy stored in the capacitor.</p>
-<a class="reference internal image-reference" href="_images/wiring-diagram.png"><img alt="_images/wiring-diagram.png" class="align-center" src="_images/wiring-diagram.png" style="width: 80%;" /></a>
-<p><strong>Fig. 1:</strong> actuator = AK80-6, controller board = CubeMars_AK_V1.1,
-power supply = EA-PS 9032-40, capacitor = 10x 2.7V-400F cells connected
-in series, USB-CAN interfaces = R-LINK module and PCAN-USB adapter.</p>
-</section>
-<section id="backemf">
-<h3>backEMF<a class="headerlink" href="#backemf" title="Permalink to this heading"></a></h3>
-<p>The reverse current resulting from switching motor speeds from high to
-low is called backEMF (Electro Magnetic Force). When the motor speed
-decreases the motor works as a generator, which converts mechanical
-energy into electrical energy and hence the additional current needs
-some path to flow. The energy recycled back into the input power supply
-causes a voltage spike and potential risk. It is necessary to add enough
-input capacitance to absorb this energy. A sufficiently large input
-capacitance is important in the desgin of the electric curcuit. It is
-beneficial to have more bulk capacitance, but the disadvantages are
-increased cost and physical size.</p>
-<p>If the power source were a perfect battery, then energy would flow back
-into the battery and be recycled. However, in our case the power source
-is a DC power supply. Especially power supplies with an inverse-polarity
-protection diode can only source current and cannot sink current, hence
-the only place the energy can go is into the bulk capacitor. The amount
-of energy stored in the bulk capacitor can be calculated with</p>
-<div class="math notranslate nohighlight">
-\[\small{E = \frac{1}{2} \cdot C \cdot (V_{max}^2 - V_{nom}^2)},\]</div>
-<p>where <span class="math notranslate nohighlight">\(C\)</span> is the capacitance and <span class="math notranslate nohighlight">\(V\)</span> is the voltage. In the case
-of a Simple Pendulum max. backEMF can be estimated from the kinetic
-energy of the pendulum</p>
-<div class="math notranslate nohighlight">
-\[\newcommand{\vect}[1]{\boldsymbol{#1}}
-\newcommand{\dvect}[1]{\dot{\boldsymbol{#1}}}
-\newcommand{\ddvect}[1]{\ddot{\boldsymbol{#1}}}
-\newcommand{\mat}[1]{\boldsymbol{#1}}
-E_{kin} = \dot{\vect{q}}^T \mat{M} \dot{\vect{q}}\]</div>
-<p>where <span class="math notranslate nohighlight">\(M\)</span> is the mass matrix and <span class="math notranslate nohighlight">\(\dot{vect{q}}\)</span> the
-angular velocities of the joints. The voltage across the capacitor increases as
-energy flows into it, so the capacitor should be sized accordingly to
-the specific application requirements. Nevertheless tuning a capacitor
-to the acceptable min. capacity is tricky, because it depends on many
-factors including:</p>
-<ul class="simple">
-<li><p>External load</p></li>
-<li><p>Capacitance of the power supply to source current</p></li>
-<li><p>Motor braking method, output short brake or current polarity reversing brake.</p></li>
-<li><p>Amount of parasitic inductance between power supply and motor system, which
-limits the current change rate from the power supply. The larger the input
-capacitance, the more stable the motor voltage and higher current can be
-quickly supplied.</p></li>
-<li><p>The maximum supply voltage limit and acceptable voltage ripples</p></li>
-</ul>
-<p>If the used capacitor is too small for your specific apllication it
-introduces the risk of burning the capacitor. The voltage rating for the
-bulk capacitors should be higher than the typical operating voltage and
-provide some safty margin. In our case we supply the AK80-6 with
-<span class="math notranslate nohighlight">\(\small{24\,V}\)</span>, whereas the capacitor can take up to
-<span class="math notranslate nohighlight">\(\small{27\,V}\)</span>. Therefore we have <span class="math notranslate nohighlight">\(\small{3\,V}\)</span>
-buffer, combined with a large capacity of <span class="math notranslate nohighlight">\(\small{40\,F}\)</span>, we
-ensure that during voltage spikes the capacitor never gets fully
-charged. If you don’t want to buy a huge and expensive capacitor you may
-instead use a <strong>break resistor</strong>, which normally is cheaper to purchase.
-A guidance on this topic is provided
-<a class="reference external" href="https://community.simplefoc.com/t/external-brake-resistor/973">here</a>.
-One drawback using brake resistors is that they quickly heat up, if the
-motor frequently brakes and regenerates energy. Another option to
-prevent the bus voltage from spiking too high are <strong>resistive shunt
-regulators</strong>, e.g. like this one from
-<a class="reference external" href="https://www.pololu.com/product/3775">polulu</a>, but they can’t
-dissipate much power and high-power versions also get expensive.</p>
-</section>
 </section>
 </section>
 
@@ -253,8 +121,8 @@ dissipate much power and high-power versions also get expensive.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="hardware.motors.mjbots.html" class="btn btn-neutral float-left" title="MJBots" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="hardware.experiments.html" class="btn btn-neutral float-right" title="Hardware Experiment Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="hardware.html" class="btn btn-neutral float-left" title="Hardware" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hardware.bom.html" class="btn btn-neutral float-right" title="Bill of Materials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -6,7 +6,7 @@ Here, we categorised them in
 
 - Trajectory Optimization
 - Trajectory Stabilization
-- Policy-based
+- Policy-based Control
 - Model Predictive Control
 
 even though the methods can build upon each other. E.g. a trajectory can be

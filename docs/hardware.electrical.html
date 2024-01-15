@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electrical Setup &mdash; Double Pendulum 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=af2ce170"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Safety Notes" href="hardware.experiments.html" />
+    <link rel="prev" title="Hardware Assembly" href="hardware.assembly.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Double Pendulum
+              <img src="_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dynamics.html"> Double Pendulum Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software_structure.html"> Repository Structure</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="hardware.html"> Hardware</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hardware.testbench.html">Testbench Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.bom.html">Bill of Materials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.motors.html">Motors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.assembly.html">Hardware Assembly</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Electrical Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#wiring">Wiring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#steps-for-setting-up-the-wiring">Steps for setting up the wiring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#backemf">backEMF</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.experiments.html">Safety Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="control.html"> Control Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="leaderboard.html"> Leaderboards</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Double Pendulum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
+          <li class="breadcrumb-item"><a href="hardware.html">Hardware</a></li>
+      <li class="breadcrumb-item active">Electrical Setup</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/hardware.electrical.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="electrical-setup">
+<h1>Electrical Setup<a class="headerlink" href="#electrical-setup" title="Permalink to this heading"></a></h1>
+<section id="wiring">
+<h2>Wiring<a class="headerlink" href="#wiring" title="Permalink to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We do not give any safety warranties on the electrical wiring.
+All experiments and reproductions of our testbench are at your own risk.</p>
+</div>
+<p>The wiring diagram below shows how the double pendulum testbench is set
+up. A main PC is connected to a motor controller board
+(<strong>CubeMars_AK_V1.1</strong>) mounted on the actuator (<strong>AK80-6 from
+T-Motor</strong>). The communication takes place on a CAN bus with a maximum
+signal frequency of 1Mbit/sec with the ‘classical’ CAN protocol.
+Furthermore, a USB to CAN interface is needed, if the main pc doesn’t
+have a PCI CAN card. Two different devices are used in our setup: the
+<strong>R-LINK module</strong> from T-Motor and the <strong>PCAN-USB adapter from PEAK
+systems</strong>. The former has CAN and UART connectors at the output, but
+only works with Windows. The latter only features CAN connection, but
+also works with Linux. The UART connector of the R-LINK module is
+useful to configure and calibrate the AK80-6.</p>
+<p>The actuator requires an input voltage of <span class="math notranslate nohighlight">\(\small{24\,V}\)</span> and
+consumes up to <span class="math notranslate nohighlight">\(\small{24\,A}\)</span> under full load. A power
+supply that is able to deliver both and which is used in our test setup
+is the <strong>EA-PS 9032-40</strong> from Elektro-Automatik. A capacitor filters the
+backEMF coming from the actuator and therefore protects the power supply
+from high voltage peaks. This wouldn’t be necessary if the actuator is
+powered from a battery pack, as in this case backEMF simply recharges
+the batteries. The capacitor we use is made of <strong>10x single 2.7V-400 F
+capacitor cells</strong> connected in series resulting a total capacity of
+<span class="math notranslate nohighlight">\(\small{40\,F}\)</span> and is wired in parallel to the motor. A
+emergency stop button serves as additional safety measure. It
+disconnects the actuator from power supply and capacitor, if only the
+power supply gets disconnected the actuator will keep running with the
+energy stored in the capacitor.</p>
+<a class="reference internal image-reference" href="_images/wiring-diagram.png"><img alt="_images/wiring-diagram.png" class="align-center" src="_images/wiring-diagram.png" style="width: 80%;" /></a>
+<p><strong>Fig. 1:</strong> actuator = AK80-6, controller board = CubeMars_AK_V1.1,
+power supply = EA-PS 9032-40, capacitor = 10x 2.7V-400F cells connected
+in series, USB-CAN interfaces = R-LINK module and PCAN-USB adapter.</p>
+</section>
+<section id="steps-for-setting-up-the-wiring">
+<h2>Steps for setting up the wiring<a class="headerlink" href="#steps-for-setting-up-the-wiring" title="Permalink to this heading"></a></h2>
+<p>For setting up the CAN and power connections follow these steps:</p>
+<ol class="arabic simple">
+<li><p>Connect the emergency stop power cables to the power supply</p></li>
+<li><p>Connect the capacitor in parallel to the power supply</p></li>
+<li><p>Connect the emergency switch with power cables to the motors</p></li>
+<li><p>Use the CAN cable to connect the motors with the CAN USB interface</p></li>
+<li><p>Connect the CAN USB interface with the PC via USB</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Make sure that no cables hang in range of the motion of the double pendulum!</p>
+</div>
+</section>
+<section id="backemf">
+<h2>backEMF<a class="headerlink" href="#backemf" title="Permalink to this heading"></a></h2>
+<p>The reverse current resulting from switching motor speeds from high to
+low is called backEMF (Electro Magnetic Force). When the motor speed
+decreases the motor works as a generator, which converts mechanical
+energy into electrical energy and hence the additional current needs
+some path to flow. The energy recycled back into the input power supply
+causes a voltage spike and potential risk. It is necessary to add enough
+input capacitance to absorb this energy. A sufficiently large input
+capacitance is important in the desgin of the electric curcuit. It is
+beneficial to have more bulk capacitance, but the disadvantages are
+increased cost and physical size.</p>
+<p>If the power source were a perfect battery, then energy would flow back
+into the battery and be recycled. However, in our case the power source
+is a DC power supply. Especially power supplies with an inverse-polarity
+protection diode can only source current and cannot sink current, hence
+the only place the energy can go is into the bulk capacitor. The amount
+of energy stored in the bulk capacitor can be calculated with</p>
+<div class="math notranslate nohighlight">
+\[\small{E = \frac{1}{2} \cdot C \cdot (V_{max}^2 - V_{nom}^2)},\]</div>
+<p>where <span class="math notranslate nohighlight">\(C\)</span> is the capacitance and <span class="math notranslate nohighlight">\(V\)</span> is the voltage. In the case
+of a Simple Pendulum max. backEMF can be estimated from the kinetic
+energy of the pendulum</p>
+<div class="math notranslate nohighlight">
+\[\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\dvect}[1]{\dot{\boldsymbol{#1}}}
+\newcommand{\ddvect}[1]{\ddot{\boldsymbol{#1}}}
+\newcommand{\mat}[1]{\boldsymbol{#1}}
+E_{kin} = \dot{\vect{q}}^T \mat{M} \dot{\vect{q}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(M\)</span> is the mass matrix and <span class="math notranslate nohighlight">\(\dot{vect{q}}\)</span> the
+angular velocities of the joints. The voltage across the capacitor increases as
+energy flows into it, so the capacitor should be sized accordingly to
+the specific application requirements. Nevertheless tuning a capacitor
+to the acceptable min. capacity is tricky, because it depends on many
+factors including:</p>
+<ul class="simple">
+<li><p>External load</p></li>
+<li><p>Capacitance of the power supply to source current</p></li>
+<li><p>Motor braking method, output short brake or current polarity reversing brake.</p></li>
+<li><p>Amount of parasitic inductance between power supply and motor system, which
+limits the current change rate from the power supply. The larger the input
+capacitance, the more stable the motor voltage and higher current can be
+quickly supplied.</p></li>
+<li><p>The maximum supply voltage limit and acceptable voltage ripples</p></li>
+</ul>
+<p>If the used capacitor is too small for your specific apllication it
+introduces the risk of burning the capacitor. The voltage rating for the
+bulk capacitors should be higher than the typical operating voltage and
+provide some safty margin. In our case we supply the AK80-6 with
+<span class="math notranslate nohighlight">\(\small{24\,V}\)</span>, whereas the capacitor can take up to
+<span class="math notranslate nohighlight">\(\small{27\,V}\)</span>. Therefore we have <span class="math notranslate nohighlight">\(\small{3\,V}\)</span>
+buffer, combined with a large capacity of <span class="math notranslate nohighlight">\(\small{40\,F}\)</span>, we
+ensure that during voltage spikes the capacitor never gets fully
+charged. If you don’t want to buy a huge and expensive capacitor you may
+instead use a <strong>break resistor</strong>, which normally is cheaper to purchase.
+A guidance on this topic is provided
+<a class="reference external" href="https://community.simplefoc.com/t/external-brake-resistor/973">here</a>.
+One drawback using brake resistors is that they quickly heat up, if the
+motor frequently brakes and regenerates energy. Another option to
+prevent the bus voltage from spiking too high are <strong>resistive shunt
+regulators</strong>, e.g. like this one from
+<a class="reference external" href="https://www.pololu.com/product/3775">polulu</a>, but they can’t
+dissipate much power and high-power versions also get expensive.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="hardware.assembly.html" class="btn btn-neutral float-left" title="Hardware Assembly" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hardware.experiments.html" class="btn btn-neutral float-right" title="Safety Notes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Underactuated Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MJBots &mdash; Double Pendulum 1.0.0 documentation</title>
+  <title>Trajectory data &mdash; Double Pendulum 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -21,8 +21,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Hardware Assembly" href="hardware.assembly.html" />
-    <link rel="prev" title="T-Motor (AK-80-6)" href="hardware.motors.tmotors.html" /> 
+    <link rel="next" title="Controller Class" href="software_structure.controller.html" />
+    <link rel="prev" title="Model Parameters" href="software_structure.modelparameters.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,24 +50,17 @@
 <li class="toctree-l1"><a class="reference internal" href="dynamics.html"> Double Pendulum Dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="software_structure.html"> Repository Structure</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="hardware.html"> Hardware</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="hardware.testbench.html">Testbench Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hardware.bom.html">Bill of Materials</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="hardware.motors.html">Motors</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="hardware.motors.tmotors.html">T-Motor (AK-80-6)</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">MJBots</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#initial-setup">Initial Setup</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#communication">Communication</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="software_structure.html"> Repository Structure</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="software_structure.html#programming-language">Programming Language</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="software_structure.html#repository-overview">Repository Overview</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="software_structure.modelparameters.html">Model Parameters</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Trajectory data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="software_structure.controller.html">Controller Class</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="hardware.assembly.html">Hardware Assembly</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hardware.electrical.html">Electrical Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hardware.experiments.html">Safety Notes</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html"> Hardware</a></li>
 <li class="toctree-l1"><a class="reference internal" href="control.html"> Control Methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="leaderboard.html"> Leaderboards</a></li>
 </ul>
@@ -87,11 +80,10 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
-          <li class="breadcrumb-item"><a href="hardware.html">Hardware</a></li>
-          <li class="breadcrumb-item"><a href="hardware.motors.html">Motors</a></li>
-      <li class="breadcrumb-item active">MJBots</li>
+          <li class="breadcrumb-item"><a href="software_structure.html">Repository Structure</a></li>
+      <li class="breadcrumb-item active">Trajectory data</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/hardware.motors.mjbots.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/software_structure.trajectorydata.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -99,22 +91,53 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="mjbots">
-<h1>MJBots<a class="headerlink" href="#mjbots" title="Permalink to this heading"></a></h1>
-<section id="initial-setup">
-<h2>Initial Setup<a class="headerlink" href="#initial-setup" title="Permalink to this heading"></a></h2>
-</section>
-<section id="communication">
-<h2>Communication<a class="headerlink" href="#communication" title="Permalink to this heading"></a></h2>
-</section>
+  <section id="trajectory-data">
+<h1>Trajectory data<a class="headerlink" href="#trajectory-data" title="Permalink to this heading"></a></h1>
+<p>Trajectories can be computed with trajectory optimization methods such as
+direct collocation and iterative LQR. For the execution zhe trajectories can
+later be loaded by a stabilizing controller such as time varying LQR of a model
+predictive controller.
+The computed trajectories are stored in a csv file. The first line of the csv
+file is reserved for the header defining the data type in the corresponding
+column. The headers used are:</p>
+<ul class="simple">
+<li><p>time</p></li>
+<li><p>pos1,pos2,vel1,vel2,</p></li>
+<li><p>acc1,acc2</p></li>
+<li><p>pos_meas1,pos_meas2,vel_meas1,vel_meas2</p></li>
+<li><p>pos_filt1,pos_filt2,vel_filt1,vel_filt2</p></li>
+<li><p>pos_des1,pos_des2,vel_des1,vel_des2</p></li>
+<li><p>tau_con1,tau_con2</p></li>
+<li><p>tau_fric1,tau_fric2</p></li>
+<li><p>tau_meas1,tau_meas2</p></li>
+<li><p>tau_des1,tau_des2</p></li>
+<li><p>K11,K12,K13,K14,K21,K22,K23,K24</p></li>
+<li><p>k1,k2</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Not all headers/columns have to used.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There should be no space after the separating comma.</p>
+</div>
+<p>The easiest way to stay consistent with this format is to use the functions</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">save_trajectory</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">load_trajectory</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">load_trajectory_full</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>in double_pendulum.utils.csv_trajectory. These functions use the panda library
+to save/load the data. Missing header labels are skipped.</p>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="hardware.motors.tmotors.html" class="btn btn-neutral float-left" title="T-Motor (AK-80-6)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="hardware.assembly.html" class="btn btn-neutral float-right" title="Hardware Assembly" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="software_structure.modelparameters.html" class="btn btn-neutral float-left" title="Model Parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="software_structure.controller.html" class="btn btn-neutral float-right" title="Controller Class" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
