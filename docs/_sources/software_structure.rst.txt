@@ -26,7 +26,7 @@ modules. The interplay of the modules is visualized in the figure below:
 There are standardized interfaces and file formats for the communication
 between the modules which are explained in the following.
 
-For more detail on the controller class see
+For more details see also:
 
 .. toctree::
    :maxdepth: 1

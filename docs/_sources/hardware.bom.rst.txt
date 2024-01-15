@@ -51,13 +51,19 @@ The hardware setup is build from the following components:
 .. |im_ushape| image:: ../figures/hardware_parts/hardware_parts_l_aluminumUshape.jpg
 
 
-+-------------------------------------------+-----------------------------------+-------------------------------------+----------------------------------+
-| |im_motors| (a) Motors                    | |im_motormount| (b) Motor mount   | |im_links| (c) Links                | |im_weight| (d) Weight           |
-+-------------------------------------------+-----------------------------------+-------------------------------------+----------------------------------+
-| |im_weightfixation| (e) Weight fixation   | |im_powersupply| (f) Power supply | |im_capacitor| (g) Capacitor        | |im_powercable| (h) Power cable  |
-+-------------------------------------------+-----------------------------------+-------------------------------------+----------------------------------+
-| |im_emergencyswitch| (i) Emergency switch | |im_cancable| (j) CAN cable       | |im_links| (k) USB-to-CAN interface | |im_ushape| (l) Aluminum U shape |
-+-------------------------------------------+-----------------------------------+-------------------------------------+----------------------------------+
++-----------------------+-------------------+--------------------------+----------------------+
+| |im_motors|           | |im_motormount|   | |im_links|               | |im_weight|          |
++-----------------------+-------------------+--------------------------+----------------------+
+| Motors                | Motor mount       | Links                    | Weight               |
++-----------------------+-------------------+--------------------------+----------------------+
+| |im_weightfixation|   | |im_powersupply|  | |im_capacitor|           | |im_powercable|      |
++-----------------------+-------------------+--------------------------+----------------------+
+| Weight fixation       | Power supply      | Capacitor                | Power cable          |
++-----------------------+-------------------+--------------------------+----------------------+
+| |im_emergencyswitch|  | |im_cancable|     | |im_links|               | |im_ushape|          |
++-----------------------+-------------------+--------------------------+----------------------+
+| Emergency switch      | CAN cable         | USB-to-CAN interface     | Aluminum U shape     |
++-----------------------+-------------------+--------------------------+----------------------+
 
 Links
 ~~~~~
@@ -71,6 +77,8 @@ The assembly is the same for both link types.
 
 .. |im_links2| image:: ../figures/hardware_parts/hardware_parts_c_links_carbon.jpg
 
-+-----------------------+------------------------------+
-| |im_links| (a) Airex  | |im_links2| (b) Carbon fiber |
-+-----------------------+------------------------------+
++------------+--------------+
+| |im_links| | |im_links2|  |
++------------+--------------+
+| Airex      | Carbon fiber |
++------------+--------------+
