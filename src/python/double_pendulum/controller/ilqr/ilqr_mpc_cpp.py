@@ -9,7 +9,7 @@ import cppilqr
 
 
 class ILQRMPCCPPController(AbstractController):
-    """ ILQR Controller
+    """ILQR Controller
 
     iLQR MPC controller
     This controller uses the python bindings of the Cpp ilqr optimizer.
@@ -56,17 +56,19 @@ class ILQRMPCCPPController(AbstractController):
         the other provided parameters
         (Default value=None)
     """
-    def __init__(self,
-                 mass=[0.608, 0.630],
-                 length=[0.3, 0.2],
-                 com=[0.275, 0.166],
-                 damping=[0.081, 0.0],
-                 coulomb_fric=[0.093, 0.186],
-                 gravity=9.81,
-                 inertia=[0.05472, 0.02522],
-                 torque_limit=[0.0, 6.0],
-                 model_pars=None):
 
+    def __init__(
+        self,
+        mass=[0.608, 0.630],
+        length=[0.3, 0.2],
+        com=[0.275, 0.166],
+        damping=[0.081, 0.0],
+        coulomb_fric=[0.093, 0.186],
+        gravity=9.81,
+        inertia=[0.05472, 0.02522],
+        torque_limit=[0.0, 6.0],
+        model_pars=None,
+    ):
         super().__init__()
 
         # n_x = 4
@@ -106,7 +108,7 @@ class ILQRMPCCPPController(AbstractController):
         self.set_cost_parameters()
         self.set_final_cost_parameters()
 
-    def set_start(self, x=[0., 0., 0., 0.]):
+    def set_start(self, x=[0.0, 0.0, 0.0, 0.0]):
         """set_start
         Set start state for the controller.
 
@@ -120,7 +122,7 @@ class ILQRMPCCPPController(AbstractController):
         """
         self.start = np.asarray(x)
 
-    def set_goal(self, x=[np.pi, 0., 0., 0.]):
+    def set_goal(self, x=[np.pi, 0.0, 0.0, 0.0]):
         """set_goal.
         Set goal for the controller.
 
@@ -134,17 +136,19 @@ class ILQRMPCCPPController(AbstractController):
         """
         self.goal = np.asarray(x)
 
-    def set_parameters(self,
-                       N=1000,
-                       dt=0.005,
-                       max_iter=1,
-                       regu_init=1.,
-                       max_regu=10000.,
-                       min_regu=0.01,
-                       break_cost_redu=1e-6,
-                       integrator="runge_kutta",
-                       trajectory_stabilization=True,
-                       shifting=1):
+    def set_parameters(
+        self,
+        N=1000,
+        dt=0.005,
+        max_iter=1,
+        regu_init=1.0,
+        max_regu=10000.0,
+        min_regu=0.01,
+        break_cost_redu=1e-6,
+        integrator="runge_kutta",
+        trajectory_stabilization=True,
+        shifting=1,
+    ):
         """
 
         Parameters
@@ -207,15 +211,16 @@ class ILQRMPCCPPController(AbstractController):
         self.v1_init_traj = np.zeros(self.N_init)
         self.v2_init_traj = np.zeros(self.N_init)
 
-
-    def set_cost_parameters(self,
-                            sCu=[0.005, 0.005],
-                            sCp=[0., 0.],
-                            sCv=[0., 0.],
-                            sCen=0.,
-                            fCp=[1000., 1000.],
-                            fCv=[10., 10.],
-                            fCen=0.):
+    def set_cost_parameters(
+        self,
+        sCu=[0.005, 0.005],
+        sCp=[0.0, 0.0],
+        sCv=[0.0, 0.0],
+        sCen=0.0,
+        fCp=[1000.0, 1000.0],
+        fCv=[10.0, 10.0],
+        fCen=0.0,
+    ):
         """
         Set cost parameters used for optimization.
 
@@ -265,14 +270,16 @@ class ILQRMPCCPPController(AbstractController):
         self.f_fCv = fCv
         self.f_fCen = fCen
 
-    def set_final_cost_parameters(self,
-                                  sCu=[0.005, 0.005],
-                                  sCp=[0., 0.],
-                                  sCv=[0., 0.],
-                                  sCen=0.,
-                                  fCp=[1000., 1000.],
-                                  fCv=[10., 10.],
-                                  fCen=0.):
+    def set_final_cost_parameters(
+        self,
+        sCu=[0.005, 0.005],
+        sCp=[0.0, 0.0],
+        sCv=[0.0, 0.0],
+        sCen=0.0,
+        fCp=[1000.0, 1000.0],
+        fCv=[10.0, 10.0],
+        fCen=0.0,
+    ):
         """
         Set cost parameters used for optimization for the stabilization of the
         final state of the trajectory.
@@ -314,12 +321,9 @@ class ILQRMPCCPPController(AbstractController):
         self.f_fCv = fCv
         self.f_fCen = fCen
 
-    def set_cost_parameters_(self,
-                             pars=[0.005,
-                                   0., 0.,
-                                   0., 0.,
-                                   1000., 1000.,
-                                   10., 10.]):
+    def set_cost_parameters_(
+        self, pars=[0.005, 0.0, 0.0, 0.0, 0.0, 1000.0, 1000.0, 10.0, 10.0]
+    ):
         """
         Set cost parameters used for optimization in form of a list.
         (used for parameter optimization)
@@ -339,22 +343,24 @@ class ILQRMPCCPPController(AbstractController):
         self.fCv = [pars[7], pars[8]]
         self.fCen = 0.0
 
-    def compute_init_traj(self,
-                          N=1000,
-                          dt=0.005,
-                          max_iter=100,
-                          regu_init=100,
-                          max_regu=10000.,
-                          min_regu=0.01,
-                          break_cost_redu=1e-6,
-                          sCu=[0.005, 0.005],
-                          sCp=[0., 0.],
-                          sCv=[0., 0.],
-                          sCen=0.,
-                          fCp=[1000., 1000.],
-                          fCv=[10., 10.],
-                          fCen=0.,
-                          integrator="runge_kutta"):
+    def compute_init_traj(
+        self,
+        N=1000,
+        dt=0.005,
+        max_iter=100,
+        regu_init=100.0,
+        max_regu=10000.0,
+        min_regu=0.01,
+        break_cost_redu=1e-6,
+        sCu=[0.005, 0.005],
+        sCp=[0.0, 0.0],
+        sCv=[0.0, 0.0],
+        sCen=0.0,
+        fCp=[1000.0, 1000.0],
+        fCv=[10.0, 10.0],
+        fCen=0.0,
+        integrator="runge_kutta",
+    ):
         """
 
         Compute an initial trajectory.
@@ -424,28 +430,40 @@ class ILQRMPCCPPController(AbstractController):
 
         il = cppilqr.cppilqr(N)
         il.set_parameters(integrator_int, dt)
-        il.set_start(self.start[0], self.start[1],
-                     self.start[2], self.start[3])
+        il.set_start(self.start[0], self.start[1], self.start[2], self.start[3])
         il.set_model_parameters(
-            self.mass[0], self.mass[1],
-            self.length[0], self.length[1],
-            self.com[0], self.com[1],
-            self.inertia[0], self.inertia[1],
-            self.damping[0], self.damping[1],
-            self.coulomb_fric[0], self.coulomb_fric[1],
+            self.mass[0],
+            self.mass[1],
+            self.length[0],
+            self.length[1],
+            self.com[0],
+            self.com[1],
+            self.inertia[0],
+            self.inertia[1],
+            self.damping[0],
+            self.damping[1],
+            self.coulomb_fric[0],
+            self.coulomb_fric[1],
             self.gravity,
-            self.torque_limit[0], self.torque_limit[1])
-        il.set_cost_parameters(sCu[0], sCu[1],
-                               sCp[0], sCp[1],
-                               sCv[0], sCv[1],
-                               sCen,
-                               fCp[0], fCp[1],
-                               fCv[0], fCv[1],
-                               fCen)
-        il.set_goal(self.goal[0], self.goal[1],
-                    self.goal[2], self.goal[3])
-        il.run_ilqr(max_iter, break_cost_redu, regu_init,
-                    max_regu, min_regu)
+            self.torque_limit[0],
+            self.torque_limit[1],
+        )
+        il.set_cost_parameters(
+            sCu[0],
+            sCu[1],
+            sCp[0],
+            sCp[1],
+            sCv[0],
+            sCv[1],
+            sCen,
+            fCp[0],
+            fCp[1],
+            fCv[0],
+            fCv[1],
+            fCen,
+        )
+        il.set_goal(self.goal[0], self.goal[1], self.goal[2], self.goal[3])
+        il.run_ilqr(max_iter, break_cost_redu, regu_init, max_regu, min_regu)
 
         self.u1_init_traj = il.get_u1_traj()
         self.u2_init_traj = il.get_u2_traj()
@@ -454,10 +472,7 @@ class ILQRMPCCPPController(AbstractController):
         self.v1_init_traj = il.get_v1_traj()
         self.v2_init_traj = il.get_v2_traj()
 
-    def load_init_traj(self,
-                       csv_path,
-                       num_break=40,
-                       poly_degree=3):
+    def load_init_traj(self, csv_path, num_break=40, poly_degree=3):
         """
         Load initial trajectory from csv file.
 
@@ -473,9 +488,7 @@ class ILQRMPCCPPController(AbstractController):
             degree of polynomials used for interpolation
             (Default value = 3)
         """
-        T, X, U = load_trajectory(
-                        csv_path=csv_path,
-                        with_tau=True)
+        T, X, U = load_trajectory(csv_path=csv_path, with_tau=True)
 
         T, X, U = ResampleTrajectory(T, X, U, self.dt, num_break, poly_degree)
 
@@ -487,50 +500,76 @@ class ILQRMPCCPPController(AbstractController):
         self.v1_init_traj = np.ascontiguousarray(X.T[2])
         self.v2_init_traj = np.ascontiguousarray(X.T[3])
 
-
     def init_(self):
         """
         Initalize the controller.
         """
         self.ilmpc = cppilqr.cppilqrmpc(self.N, self.N_init)
-        self.ilmpc.set_parameters(self.integrator_int,
-                                  self.dt,
-                                  self.max_iter,
-                                  self.break_cost_redu,
-                                  self.regu_init,
-                                  self.max_regu,
-                                  self.min_regu,
-                                  self.shifting)
-        self.ilmpc.set_goal(self.goal[0], self.goal[1],
-                            self.goal[2], self.goal[3])
+        self.ilmpc.set_parameters(
+            self.integrator_int,
+            self.dt,
+            self.max_iter,
+            self.break_cost_redu,
+            self.regu_init,
+            self.max_regu,
+            self.min_regu,
+            self.shifting,
+        )
+        self.ilmpc.set_goal(self.goal[0], self.goal[1], self.goal[2], self.goal[3])
         self.ilmpc.set_model_parameters(
-            self.mass[0], self.mass[1],
-            self.length[0], self.length[1],
-            self.com[0], self.com[1],
-            self.inertia[0], self.inertia[1],
-            self.damping[0], self.damping[1],
-            self.coulomb_fric[0], self.coulomb_fric[1],
+            self.mass[0],
+            self.mass[1],
+            self.length[0],
+            self.length[1],
+            self.com[0],
+            self.com[1],
+            self.inertia[0],
+            self.inertia[1],
+            self.damping[0],
+            self.damping[1],
+            self.coulomb_fric[0],
+            self.coulomb_fric[1],
             self.gravity,
-            self.torque_limit[0], self.torque_limit[1])
-        self.ilmpc.set_cost_parameters(self.sCu[0], self.sCu[1],
-                                       self.sCp[0], self.sCp[1],
-                                       self.sCv[0], self.sCv[1],
-                                       self.sCen,
-                                       self.fCp[0], self.fCp[1],
-                                       self.fCv[0], self.fCv[1],
-                                       self.fCen)
-        self.ilmpc.set_final_cost_parameters(self.f_sCu[0], self.f_sCu[1],
-                                             self.f_sCp[0], self.f_sCp[1],
-                                             self.f_sCv[0], self.f_sCv[1],
-                                             self.f_sCen,
-                                             self.f_fCp[0], self.f_fCp[1],
-                                             self.f_fCv[0], self.f_fCv[1],
-                                             self.f_fCen)
+            self.torque_limit[0],
+            self.torque_limit[1],
+        )
+        self.ilmpc.set_cost_parameters(
+            self.sCu[0],
+            self.sCu[1],
+            self.sCp[0],
+            self.sCp[1],
+            self.sCv[0],
+            self.sCv[1],
+            self.sCen,
+            self.fCp[0],
+            self.fCp[1],
+            self.fCv[0],
+            self.fCv[1],
+            self.fCen,
+        )
+        self.ilmpc.set_final_cost_parameters(
+            self.f_sCu[0],
+            self.f_sCu[1],
+            self.f_sCp[0],
+            self.f_sCp[1],
+            self.f_sCv[0],
+            self.f_sCv[1],
+            self.f_sCen,
+            self.f_fCp[0],
+            self.f_fCp[1],
+            self.f_fCv[0],
+            self.f_fCv[1],
+            self.f_fCen,
+        )
         # self.il.set_start(x[0], x[1], x[2], x[3])
         self.ilmpc.set_u_init_traj(self.u1_init_traj, self.u2_init_traj)
-        self.ilmpc.set_x_init_traj(self.p1_init_traj, self.p2_init_traj,
-                                   self.v1_init_traj, self.v2_init_traj,
-                                   self.traj_stab)
+        self.ilmpc.set_x_init_traj(
+            self.p1_init_traj,
+            self.p2_init_traj,
+            self.v1_init_traj,
+            self.v2_init_traj,
+            self.traj_stab,
+        )
 
     def get_control_output_(self, x, t=None):
         """
@@ -596,7 +635,7 @@ class ILQRMPCCPPController(AbstractController):
         v2_traj = self.v2_init_traj
 
         n = len(p1_traj)
-        T = np.linspace(0, n*self.dt, n)
+        T = np.linspace(0, n * self.dt, n)
         X = np.asarray([p1_traj, p2_traj, v1_traj, v2_traj]).T
         U = np.asarray([u1_traj, u2_traj]).T
 
@@ -626,7 +665,7 @@ class ILQRMPCCPPController(AbstractController):
         v1_traj = self.ilmpc.get_v1_traj()
         v2_traj = self.ilmpc.get_v2_traj()
 
-        T = np.linspace(0, self.N*self.dt, self.N)
+        T = np.linspace(0, self.N * self.dt, self.N)
         X = np.asarray([p1_traj, p2_traj, v1_traj, v2_traj]).T
         U = np.asarray([u1_traj, u2_traj]).T
 
@@ -643,50 +682,52 @@ class ILQRMPCCPPController(AbstractController):
         """
 
         par_dict = {
-                "mass1" : self.mass[0],
-                "mass2" : self.mass[1],
-                "length1" : self.length[0],
-                "length2" : self.length[1],
-                "com1" : self.com[0],
-                "com2" : self.com[1],
-                "damping1" : self.damping[0],
-                "damping2" : self.damping[1],
-                "gravity" : self.gravity,
-                "inertia1" : self.inertia[0],
-                "inertia2" : self.inertia[1],
-                "torque_limit1" : self.torque_limit[0],
-                "torque_limit2" : self.torque_limit[1],
-                "dt": self.dt,
-                "integrator_int": self.integrator_int,
-                "start_pos1": float(self.start[0]),
-                "start_pos2": float(self.start[1]),
-                "start_vel1": float(self.start[2]),
-                "start_vel2": float(self.start[3]),
-                "goal_pos1": float(self.goal[0]),
-                "goal_pos2": float(self.goal[1]),
-                "goal_vel1": float(self.goal[2]),
-                "goal_vel2": float(self.goal[3]),
-                "N": self.N,
-                "N_init": self.N_init,
-                "max_iter": self.max_iter,
-                "regu_init": self.regu_init,
-                "max_regu": self.max_regu,
-                "min_regu": self.min_regu,
-                "break_cost_redu": self.break_cost_redu,
-                "trajectory_stabilization": self.traj_stab,
-                "sCu1": self.sCu[0],
-                "sCu2": self.sCu[1],
-                "sCp1": self.sCp[0],
-                "sCp2": self.sCp[1],
-                "sCv1": self.sCv[0],
-                "sCv2": self.sCv[1],
-                "sCen": self.sCen,
-                "fCp1": self.fCp[0],
-                "fCp2": self.fCp[1],
-                "fCv1": self.fCv[0],
-                "fCv2": self.fCv[1],
-                "fCen": self.fCen
+            "mass1": self.mass[0],
+            "mass2": self.mass[1],
+            "length1": self.length[0],
+            "length2": self.length[1],
+            "com1": self.com[0],
+            "com2": self.com[1],
+            "damping1": self.damping[0],
+            "damping2": self.damping[1],
+            "gravity": self.gravity,
+            "inertia1": self.inertia[0],
+            "inertia2": self.inertia[1],
+            "torque_limit1": self.torque_limit[0],
+            "torque_limit2": self.torque_limit[1],
+            "dt": self.dt,
+            "integrator_int": self.integrator_int,
+            "start_pos1": float(self.start[0]),
+            "start_pos2": float(self.start[1]),
+            "start_vel1": float(self.start[2]),
+            "start_vel2": float(self.start[3]),
+            "goal_pos1": float(self.goal[0]),
+            "goal_pos2": float(self.goal[1]),
+            "goal_vel1": float(self.goal[2]),
+            "goal_vel2": float(self.goal[3]),
+            "N": self.N,
+            "N_init": self.N_init,
+            "max_iter": self.max_iter,
+            "regu_init": self.regu_init,
+            "max_regu": self.max_regu,
+            "min_regu": self.min_regu,
+            "break_cost_redu": self.break_cost_redu,
+            "trajectory_stabilization": self.traj_stab,
+            "sCu1": self.sCu[0],
+            "sCu2": self.sCu[1],
+            "sCp1": self.sCp[0],
+            "sCp2": self.sCp[1],
+            "sCv1": self.sCv[0],
+            "sCv2": self.sCv[1],
+            "sCen": self.sCen,
+            "fCp1": self.fCp[0],
+            "fCp2": self.fCp[1],
+            "fCv1": self.fCv[0],
+            "fCv2": self.fCv[1],
+            "fCen": self.fCen,
         }
 
-        with open(os.path.join(save_dir, "controller_ilqr_mpc_parameters.yml"), 'w') as f:
+        with open(
+            os.path.join(save_dir, "controller_ilqr_mpc_parameters.yml"), "w"
+        ) as f:
             yaml.dump(par_dict, f)

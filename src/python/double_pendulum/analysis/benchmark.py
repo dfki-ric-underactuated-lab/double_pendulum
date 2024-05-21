@@ -435,13 +435,17 @@ class benchmarker:
         repetitions=10,
         meas_noise_mode="vel",
         meas_noise_sigma_list=[],
-        meas_noise_cut=0.0,
-        meas_noise_vfilters=["None"],
-        meas_noise_vfilter_args={"lowpass_alpha": 0.3},
+        # meas_noise_cut=0.0,
+        # meas_noise_vfilters=["None"],
+        # meas_noise_vfilter_args={"lowpass_alpha": 0.3},
     ):
         # maybe add noise frequency
         # (on the real system noise frequency seems so be higher than
         # control frequency -> no frequency neccessary here)
+
+        # leave for now for consitency with older data
+        meas_noise_vfilters = ["None"]
+
         n_sims = repetitions * len(meas_noise_sigma_list) * len(meas_noise_vfilters)
         print(f"Computing noise robustness ({n_sims} simulations)")
 
@@ -459,15 +463,15 @@ class benchmarker:
                 rep_C_tf = []
                 rep_SUCC = []
                 for _ in range(repetitions):
-                    self.controller.set_filter_args(
-                        filt=nf,
-                        x0=self.goal,
-                        dt=self.dt,
-                        plant=self.plant,
-                        simulator=self.simulator,
-                        velocity_cut=meas_noise_cut,
-                        filter_kwargs=meas_noise_vfilter_args,
-                    )
+                    # self.controller.set_filter_args(
+                    #     filt=nf,
+                    #     x0=self.goal,
+                    #     dt=self.dt,
+                    #     plant=self.plant,
+                    #     simulator=self.simulator,
+                    #     velocity_cut=meas_noise_cut,
+                    #     filter_kwargs=meas_noise_vfilter_args,
+                    # )
 
                     self.controller.reset()
                     if self.friction_compensation:
@@ -513,7 +517,7 @@ class benchmarker:
                 res_dict[nf]["following_costs"] = C_tf
             res_dict[nf]["successes"] = SUCC
             res_dict[nf]["noise_mode"] = meas_noise_mode
-            res_dict[nf]["noise_cut"] = meas_noise_cut
+            # res_dict[nf]["noise_cut"] = meas_noise_cut
             # res_dict[nf]["noise_vfilter"] = nf
             # res_dict[nf]["noise_vfilter_args"] = meas_noise_vfilter_args
             print("")
@@ -685,9 +689,9 @@ class benchmarker:
         repetitions=10,
         meas_noise_mode="vel",
         meas_noise_sigma_list=[0.1, 0.3, 0.5],
-        meas_noise_cut=0.5,
-        meas_noise_vfilters=["None"],
-        meas_noise_vfilter_args={"alpha": 0.3},
+        # meas_noise_cut=0.5,
+        # meas_noise_vfilters=["None"],
+        # meas_noise_vfilter_args={"alpha": 0.3},
         u_noise_sigma_list=[0.1, 0.5, 1.0],
         u_responses=[1.0, 1.1, 1.2, 1.3, 1.4, 1.5],
         delay_mode="vel",
@@ -696,7 +700,7 @@ class benchmarker:
         n_sims = 0
         for k in modelpar_var_lists.keys():
             n_sims += len(modelpar_var_lists[k])
-        n_sims += repetitions * len(meas_noise_sigma_list) * len(meas_noise_vfilters)
+        n_sims += repetitions * len(meas_noise_sigma_list)
         n_sims += repetitions * len(u_noise_sigma_list)
         n_sims += len(u_responses)
         n_sims += len(delays)
@@ -715,9 +719,9 @@ class benchmarker:
                 repetitions=repetitions,
                 meas_noise_mode=meas_noise_mode,
                 meas_noise_sigma_list=meas_noise_sigma_list,
-                meas_noise_cut=meas_noise_cut,
-                meas_noise_vfilters=meas_noise_vfilters,
-                meas_noise_vfilter_args=meas_noise_vfilter_args,
+                # meas_noise_cut=meas_noise_cut,
+                # meas_noise_vfilters=meas_noise_vfilters,
+                # meas_noise_vfilter_args=meas_noise_vfilter_args,
             )
             res["meas_noise_robustness"] = res_noise
         if compute_unoise_robustness:

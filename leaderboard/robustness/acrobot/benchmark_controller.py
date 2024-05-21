@@ -88,9 +88,6 @@ def benchmark_controller(controller, save_dir, controller_name=""):
 
     meas_noise_mode = "vel"
     meas_noise_sigma_list = np.linspace(0.0, 0.5, N_var)
-    meas_noise_cut = 0.0
-    meas_noise_vfilters = ["None"]
-    meas_noise_vfilter_args = {}
 
     u_noise_sigma_list = np.linspace(0.0, 1.1, N_var)
 
@@ -123,15 +120,12 @@ def benchmark_controller(controller, save_dir, controller_name=""):
         modelpar_var_lists=modelpar_var_lists,
         meas_noise_mode=meas_noise_mode,
         meas_noise_sigma_list=meas_noise_sigma_list,
-        meas_noise_cut=meas_noise_cut,
-        meas_noise_vfilters=meas_noise_vfilters,
-        meas_noise_vfilter_args=meas_noise_vfilter_args,
         u_noise_sigma_list=u_noise_sigma_list,
         u_responses=u_responses,
         delay_mode=delay_mode,
         delays=delays,
     )
-    #pprint.pprint(res)
+    # pprint.pprint(res)
 
     # saving
     f = open(os.path.join(save_dir, "benchmark_results.pkl"), "wb")
@@ -140,7 +134,15 @@ def benchmark_controller(controller, save_dir, controller_name=""):
 
     mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
 
-    plot_benchmark_results(save_dir, "benchmark_results.pkl", costlim=[0, 5], show=False, save=True, file_format="png", scale=0.5)
+    plot_benchmark_results(
+        save_dir,
+        "benchmark_results.pkl",
+        costlim=[0, 5],
+        show=False,
+        save=True,
+        file_format="png",
+        scale=0.5,
+    )
     scores = get_scores(save_dir, "benchmark_results.pkl")
 
     with open(os.path.join(save_dir, "scores.yml"), "w") as f:

@@ -7,13 +7,16 @@ from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.controller.combined_controller import CombinedController
 from double_pendulum.experiments.hardware_control_loop_tmotors import run_experiment
-from double_pendulum.utils.wrap_angles import wrap_angles_top,wrap_angles_diff
+from double_pendulum.utils.wrap_angles import wrap_angles_top, wrap_angles_diff
 from double_pendulum.controller.SAC.SAC_controller import SACController
 from double_pendulum.simulation.gym_env import (
-   double_pendulum_dynamics_func,
+    double_pendulum_dynamics_func,
 )
+from double_pendulum.filter.lowpass import lowpass_filter
 
 ## model parameters
+design = "design_C.1"
+model = "model_1.0"
 robot = "pendubot"
 # robot = "acrobot"
 
@@ -21,8 +24,6 @@ friction_compensation = True
 stabilization = "lqr"
 
 if robot == "pendubot":
-    design = "design_C.1"
-    model = "model_1.0"
     torque_limit = [5.0, 0.5]
     torque_limit_con = [5.0, 0.0]
     active_act = 0
@@ -31,8 +32,6 @@ if robot == "pendubot":
     model_path = "../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip"
 
 elif robot == "acrobot":
-    design = "design_C.1"
-    model = "model_1.0"
     torque_limit = [0.5, 5.0]
     active_act = 1
     scaling = True
@@ -41,11 +40,11 @@ elif robot == "acrobot":
 
 ## set model and controller parameters
 model_par_path = (
-        "../data/system_identification/identified_parameters/"
-        + design
-        + "/"
-        + model
-        + "/model_parameters.yml"
+    "../data/system_identification/identified_parameters/"
+    + design
+    + "/"
+    + model
+    + "/model_parameters.yml"
 )
 mpar = model_parameters(filepath=model_par_path)
 
@@ -58,15 +57,14 @@ if friction_compensation:
 mpar_con.set_torque_limit(torque_limit_con)
 
 # measurement filter
-meas_noise_cut = 0.1
-meas_noise_vfilter = "lowpass"
-filter_kwargs = {"lowpass_alpha": [1.0, 1.0, 0.2, 0.2]}
+lowpass_alpha = [1.0, 1.0, 0.2, 0.2]
+filter_velocity_cut = 0.1
 
 # control parameter
 dt = 0.0025
 t_final = 10.0
 integrator = "runge_kutta"
-goal = [np.pi, 0., 0., 0.]
+goal = [np.pi, 0.0, 0.0, 0.0]
 print("control frequency is", 1 / dt)
 
 # switching conditions between sac and lqr
@@ -107,10 +105,14 @@ def condition2(t, x):
         return False
 
 
-## initialize sac controller
-# initialize double pendulum dynamics
+# plant
 plant = SymbolicDoublePendulum(model_pars=mpar_con)
+
+# simulator
 sim = Simulator(plant=plant)
+
+# filter
+filter = lowpass_filter(lowpass_alpha, x0, filter_velocity_cut)
 
 dynamics_func = double_pendulum_dynamics_func(
     simulator=sim,
@@ -118,7 +120,7 @@ dynamics_func = double_pendulum_dynamics_func(
     integrator=integrator,
     robot=robot,
     state_representation=2,
-    scaling= scaling
+    scaling=scaling,
 )
 
 # initialize controller 1
@@ -132,8 +134,7 @@ controller1 = SACController(
 controller2 = LQRController(model_pars=mpar_con)
 controller2.set_goal(goal)
 controller2.set_cost_matrices(Q=Q, R=R)
-controller2.set_parameters(failure_value=0.0,
-                           cost_to_go_cut=100000)
+controller2.set_parameters(failure_value=0.0, cost_to_go_cut=100000)
 
 ## initialize combined controller
 controller = CombinedController(
@@ -143,12 +144,7 @@ controller = CombinedController(
     condition2=condition2,
     compute_both=False,
 )
-
-controller.set_filter_args(
-    filt=meas_noise_vfilter,
-    velocity_cut=meas_noise_cut,
-    filter_kwargs=filter_kwargs
-)
+controller.set_filter(filter)
 
 # setup friction compensation for combined controller
 if friction_compensation:
@@ -157,18 +153,12 @@ if friction_compensation:
     )
 controller.init()
 
-run_experiment(controller=controller,
-               dt=dt,
-               t_final=t_final,
-               can_port="can0",
-               motor_ids=[1, 2],
-               tau_limit=torque_limit,
-               # save_dir=os.path.join("data_con", design, robot, "tmotors/sac_lqr_results")
-               save_dir=os.path.join("~/ten_runs_pendubot_best_working_now")
-               )
-
-
-
-
-
-
+run_experiment(
+    controller=controller,
+    dt=dt,
+    t_final=t_final,
+    can_port="can0",
+    motor_ids=[1, 2],
+    tau_limit=torque_limit,
+    save_dir=os.path.join("data", design, robot, "tmotors/sac_lqr_results"),
+)

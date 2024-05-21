@@ -5,11 +5,14 @@ from double_pendulum.controller.trajectory_following.feed_forward import (
     FeedForwardController,
 )
 from double_pendulum.experiments.hardware_control_loop_tmotors import run_experiment
-from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
-from double_pendulum.model.model_parameters import model_parameters
+
+# from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
+# from double_pendulum.model.model_parameters import model_parameters
+# from double_pendulum.filter.lowpass import lowpass_filter
+from double_pendulum.filter.identity import identity_filter
 
 
-design = "design_C.0"
+design = "design_A.0"
 torque_limit = [0.0, 0.0]
 
 # trajectory
@@ -22,18 +25,17 @@ u2 = np.zeros(N + 1)
 U_des = np.array([u1, u2]).T
 
 # measurement filter
-meas_noise_cut = 0.0
-meas_noise_vfilter = "None"
-filter_kwargs = {"lowpass_alpha": [1.0, 1.0, 0.2, 0.2]}
+# lowpass_alpha = [1.0, 1.0, 0.2, 0.2]
+filter_velocity_cut = 0.0
+
+# filter
+filter = identity_filter(filter_velocity_cut)
 
 # controller
 controller = FeedForwardController(
     T=T_des, U=U_des, torque_limit=[0.0, 0.0], num_break=40
 )
-
-controller.set_filter_args(
-    filt=meas_noise_vfilter, velocity_cut=meas_noise_cut, filter_kwargs=filter_kwargs
-)
+controller.set_filter(filter)
 
 
 # gravity and friction compensation

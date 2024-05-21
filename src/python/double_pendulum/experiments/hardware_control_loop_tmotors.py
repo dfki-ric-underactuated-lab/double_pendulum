@@ -9,6 +9,7 @@ from double_pendulum.utils.csv_trajectory import save_trajectory
 from double_pendulum.utils.plotting import plot_timeseries, plot_figures
 from double_pendulum.experiments.video_recording import VideoWriterWidget
 
+
 def run_experiment(
     controller,
     dt=0.01,
@@ -18,7 +19,7 @@ def run_experiment(
     motor_type="AK80_6_V1p1",
     tau_limit=[6.0, 6.0],
     save_dir=".",
-    record_video=True,
+    record_video=False,
 ):
     """run_experiment.
     Hardware control loop for tmotor system.
@@ -186,10 +187,10 @@ def run_experiment(
                 # store the measured sensor data of
                 # position, velocity and torque in each time step
                 pos_meas1[index] = shoulder_pos
-                #vel_meas1[index] = shoulder_vel
+                # vel_meas1[index] = shoulder_vel
                 tau_meas1[index] = shoulder_tau
                 pos_meas2[index] = elbow_pos
-                #vel_meas2[index] = elbow_vel
+                # vel_meas2[index] = elbow_vel
                 tau_meas2[index] = elbow_tau
 
                 # wait to enforce the demanded control frequency
@@ -237,11 +238,11 @@ def run_experiment(
                             0.0, 0.0, 0.0, 1.0, 0.0
                         )
                     print("Safety conditions violated! Stopping experiment.")
-                    print("The measured state violating the limits was ({}, {}, {}, {})".format(
-                          shoulder_pos,
-                          elbow_pos,
-                          shoulder_vel,
-                          elbow_vel))
+                    print(
+                        "The measured state violating the limits was ({}, {}, {}, {})".format(
+                            shoulder_pos, elbow_pos, shoulder_vel, elbow_vel
+                        )
+                    )
                     break
 
             try:
@@ -369,36 +370,48 @@ def run_experiment(
                 X_filt=np.asarray(controller.x_filt_hist)[: index - 1],
                 U_con=np.asarray(controller.u_hist)[1 : index - 1],
                 U_friccomp=np.asarray(controller.u_fric_hist)[: index - 1],
-                pos_y_lines=[-safety_position_limit, -np.pi, 0.0, np.pi, safety_position_limit],
+                pos_y_lines=[
+                    -safety_position_limit,
+                    -np.pi,
+                    0.0,
+                    np.pi,
+                    safety_position_limit,
+                ],
                 vel_y_lines=[-safety_velocity_limit, 0.0, safety_velocity_limit],
-                tau_y_lines=[-tau_limit[0], -tau_limit[1], 0.0, tau_limit[0], tau_limit[1]],
+                tau_y_lines=[
+                    -tau_limit[0],
+                    -tau_limit[1],
+                    0.0,
+                    tau_limit[0],
+                    tau_limit[1],
+                ],
                 save_to=os.path.join(save_dir_time, "timeseries"),
                 show=True,
             )
 
-            plot_figures(
-                save_dir=save_dir_time,
-                index=index - 1,
-                meas_time=meas_time,
-                shoulder_meas_pos=pos_meas1,
-                shoulder_meas_vel=vel_meas1,
-                shoulder_meas_tau=tau_meas1,
-                elbow_meas_pos=pos_meas2,
-                elbow_meas_vel=vel_meas2,
-                elbow_meas_tau=tau_meas2,
-                shoulder_tau_controller=np.asarray(controller.u_hist[1:]).T[0],
-                elbow_tau_controller=np.asarray(controller.u_hist[1:]).T[1],
-                shoulder_des_time=T_des,
-                shoulder_des_pos=shoulder_des_pos,
-                shoulder_des_vel=shoulder_des_vel,
-                shoulder_des_tau=shoulder_des_tau,
-                elbow_des_time=T_des,
-                elbow_des_pos=elbow_des_pos,
-                elbow_des_vel=elbow_des_vel,
-                elbow_des_tau=elbow_des_tau,
-                error=None,
-                show=False,
-            )
+            # plot_figures(
+            #     save_dir=save_dir_time,
+            #     index=index - 1,
+            #     meas_time=meas_time,
+            #     shoulder_meas_pos=pos_meas1,
+            #     shoulder_meas_vel=vel_meas1,
+            #     shoulder_meas_tau=tau_meas1,
+            #     elbow_meas_pos=pos_meas2,
+            #     elbow_meas_vel=vel_meas2,
+            #     elbow_meas_tau=tau_meas2,
+            #     shoulder_tau_controller=np.asarray(controller.u_hist[1:]).T[0],
+            #     elbow_tau_controller=np.asarray(controller.u_hist[1:]).T[1],
+            #     shoulder_des_time=T_des,
+            #     shoulder_des_pos=shoulder_des_pos,
+            #     shoulder_des_vel=shoulder_des_vel,
+            #     shoulder_des_tau=shoulder_des_tau,
+            #     elbow_des_time=T_des,
+            #     elbow_des_pos=elbow_des_pos,
+            #     elbow_des_vel=elbow_des_vel,
+            #     elbow_des_tau=elbow_des_tau,
+            #     error=None,
+            #     show=False,
+            # )
     else:
         print("Disabling Motors...")
 

@@ -14,7 +14,13 @@ model = "model_1.0"
 robot = "double_pendulum"
 torque_limit = [5.0, 5.0]
 
-model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
+model_par_path = (
+    "../../data/system_identification/identified_parameters/"
+    + design
+    + "/"
+    + model
+    + "/model_parameters.yml"
+)
 mpar = model_parameters()
 mpar.load_yaml(model_par_path)
 mpar.set_torque_limit(torque_limit)
@@ -23,12 +29,12 @@ mpar.set_torque_limit(torque_limit)
 dt = 0.002
 t_final = 4.0
 integrator = "runge_kutta"
-x0 = [np.pi-0.5, 0.2, 0., 0.2]
-goal = [np.pi, 0., 0., 0.]
+x0 = [np.pi - 0.5, 0.2, 0.0, 0.2]
+goal = [np.pi, 0.0, 0.0, 0.0]
 
 # controller parameters
-Kp = 10.
-Ki = 0.
+Kp = 10.0
+Ki = 0.0
 Kd = 0.1
 
 # setup savedir
@@ -41,22 +47,26 @@ plant = SymbolicDoublePendulum(model_pars=mpar)
 
 sim = Simulator(plant=plant)
 
-controller = PointPIDController(
-        torque_limit=torque_limit,
-        dt=dt)
-controller.set_parameters(
-        Kp=Kp,
-        Ki=Ki,
-        Kd=Kd)
+controller = PointPIDController(torque_limit=torque_limit, dt=dt)
+controller.set_parameters(Kp=Kp, Ki=Ki, Kd=Kd)
 controller.set_goal(goal)
 controller.init()
-T, X, U = sim.simulate_and_animate(t0=0.0, x0=x0,
-                                   tf=t_final, dt=dt, controller=controller,
-                                   integrator=integrator,
-                                   save_video=False,
-                                   video_name=os.path.join(save_dir, "simulation"))
+T, X, U = sim.simulate_and_animate(
+    t0=0.0,
+    x0=x0,
+    tf=t_final,
+    dt=dt,
+    controller=controller,
+    integrator=integrator,
+    save_video=False,
+    video_name=os.path.join(save_dir, "simulation"),
+)
 
-plot_timeseries(T, X, U,
-                pos_y_lines=[0.0, np.pi],
-                tau_y_lines=[-torque_limit[1], torque_limit[1]],
-                save_to=os.path.join(save_dir, "time_series"))
+plot_timeseries(
+    T,
+    X,
+    U,
+    pos_y_lines=[0.0, np.pi],
+    tau_y_lines=[-torque_limit[1], torque_limit[1]],
+    save_to=os.path.join(save_dir, "time_series"),
+)

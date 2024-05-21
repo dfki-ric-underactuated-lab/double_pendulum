@@ -20,3 +20,6 @@ Note: A complete run can take >30h (of course depending on the computer).
 
 Note: The scripts with names starting with 'experiment_' are the scripts used
 in the hardware experiments. They are not included in the "run" script.
+
+Note: Run this code with release
+[0.1.1](https://github.com/dfki-ric-underactuated-lab/double_pendulum/releases/tag/v0.1.1).

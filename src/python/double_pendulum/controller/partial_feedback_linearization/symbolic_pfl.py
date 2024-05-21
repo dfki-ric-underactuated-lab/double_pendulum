@@ -333,14 +333,17 @@ class SymbolicPFLController(AbstractController):
             u_out = self.u_out_la(pos[0], pos[1], vel[0], vel[1])
 
         # print(u_out, self.active_motor_ind)
-        u_out = np.clip(
-            u_out,
-            -self.torque_limit[self.active_motor_ind],
-            self.torque_limit[self.active_motor_ind],
-        )
+        # u_out = np.clip(
+        #     u_out,
+        #     -self.torque_limit[self.active_motor_ind],
+        #     self.torque_limit[self.active_motor_ind],
+        # )
         u = [0.0, 0.0]
         u[self.active_motor_ind] = u_out
         # print(x, u)
+        #
+        u[0] = np.clip(u[0], -self.torque_limit[0], self.torque_limit[0])
+        u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
 
         # for logging only:
         energy = self.plant.total_energy(x)
