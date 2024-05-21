@@ -15,6 +15,7 @@ Subpackages
    double_pendulum.analysis
    double_pendulum.controller
    double_pendulum.experiments
+   double_pendulum.filter
    double_pendulum.model
    double_pendulum.simulation
    double_pendulum.system_identification

@@ -6,14 +6,6 @@ double\_pendulum.utils
    :undoc-members:
    :show-inheritance:
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 1
-
-   double_pendulum.utils.filters
-
 Submodules
 ----------
 

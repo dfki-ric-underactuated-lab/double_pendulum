@@ -60,6 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.experiments.html">double_pendulum.experiments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="double_pendulum.filter.html">double_pendulum.filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.model.html">double_pendulum.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.simulation.html">double_pendulum.simulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.system_identification.html">double_pendulum.system_identification</a></li>
@@ -107,178 +108,17 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-double_pendulum.controller.DQN.DQN_controller">
-<span id="double-pendulum-controller-dqn-dqn-controller"></span><h2>double_pendulum.controller.DQN.DQN_controller<a class="headerlink" href="#module-double_pendulum.controller.DQN.DQN_controller" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.DQN_controller.DQNController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.DQN.DQN_controller.</span></span><span class="sig-name descname"><span class="pre">DQNController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">experiment_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamics_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.DQN.DQN_controller.DQNController" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController" title="double_pendulum.controller.abstract_controller.AbstractController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractController</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.DQN_controller.DQNController.get_control_output_">
-<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.DQN.DQN_controller.DQNController.get_control_output_" title="Permalink to this definition"></a></dt>
-<dd><p>The function to compute the control input for the double pendulum’s
-actuator(s).
-Supposed to be overwritten by actual controllers. The API of this
-method should not be changed. Unused inputs/outputs can be set to None.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
-order=[angle1, angle2, velocity1, velocity2],
-units=[rad, rad, rad/s, rad/s]</p>
-</dd>
-<dt><strong>t</strong><span class="classifier">float, optional</span></dt><dd><p>time, unit=[s]
-(Default value=None)</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>array_like</dt><dd><p>shape=(2,), dtype=float
-actuation input/motor torque,
-order=[u1, u2],
-units=[Nm]</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<section id="double-pendulum-controller-dqn-dqn-controller">
+<h2>double_pendulum.controller.DQN.DQN_controller<a class="headerlink" href="#double-pendulum-controller-dqn-dqn-controller" title="Permalink to this heading"></a></h2>
 </section>
 <section id="double-pendulum-controller-dqn-environment">
 <h2>double_pendulum.controller.DQN.environment<a class="headerlink" href="#double-pendulum-controller-dqn-environment" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-double_pendulum.controller.DQN.exploration">
-<span id="double-pendulum-controller-dqn-exploration"></span><h2>double_pendulum.controller.DQN.exploration<a class="headerlink" href="#module-double_pendulum.controller.DQN.exploration" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.exploration.EpsilonGreedySchedule">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.DQN.exploration.</span></span><span class="sig-name descname"><span class="pre">EpsilonGreedySchedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">starting_eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ending_eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PRNGKeyArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_exploration_step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.DQN.exploration.EpsilonGreedySchedule" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.exploration.EpsilonGreedySchedule.explore">
-<span class="sig-name descname"><span class="pre">explore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.exploration.EpsilonGreedySchedule.explore" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.exploration.EpsilonGreedySchedule.explore_">
-<span class="sig-name descname"><span class="pre">explore_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exploration_step</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.DQN.exploration.EpsilonGreedySchedule.explore_" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<section id="double-pendulum-controller-dqn-exploration">
+<h2>double_pendulum.controller.DQN.exploration<a class="headerlink" href="#double-pendulum-controller-dqn-exploration" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-double_pendulum.controller.DQN.networks">
-<span id="double-pendulum-controller-dqn-networks"></span><h2>double_pendulum.controller.DQN.networks<a class="headerlink" href="#module-double_pendulum.controller.DQN.networks" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.BaseQ">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.DQN.networks.</span></span><span class="sig-name descname"><span class="pre">BaseQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PRNGKeyArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_training_steps_per_online_update</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.BaseQ" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.BaseQ.best_action">
-<span class="sig-name descname"><span class="pre">best_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PRNGKey</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int8</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.BaseQ.best_action" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.BaseQ.compute_target">
-<span class="sig-name descname"><span class="pre">compute_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Array</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.BaseQ.compute_target" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.BaseQ.learn_on_batch">
-<span class="sig-name descname"><span class="pre">learn_on_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">FrozenDict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FrozenDict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float32</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.BaseQ.learn_on_batch" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.BaseQ.loss">
-<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float32</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.BaseQ.loss" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.BaseQ.metric">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float32</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.BaseQ.metric" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.BaseQ.random_action">
-<span class="sig-name descname"><span class="pre">random_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PRNGKeyArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int8</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.BaseQ.random_action" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.BaseQ.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.BaseQ.save" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.BaseQ.update_online_params">
-<span class="sig-name descname"><span class="pre">update_online_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replay_buffer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer" title="double_pendulum.controller.DQN.replay_buffer.ReplayBuffer"><span class="pre">ReplayBuffer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PRNGKeyArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float32</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.BaseQ.update_online_params" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.BaseQ.update_target_params">
-<span class="sig-name descname"><span class="pre">update_target_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.BaseQ.update_target_params" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.DQN">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.DQN.networks.</span></span><span class="sig-name descname"><span class="pre">DQN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PRNGKeyArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_training_steps_per_online_update</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_training_steps_per_target_update</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.DQN" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#double_pendulum.controller.DQN.networks.BaseQ" title="double_pendulum.controller.DQN.networks.BaseQ"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseQ</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.DQN.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Array</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.DQN.apply" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.DQN.best_action">
-<span class="sig-name descname"><span class="pre">best_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PRNGKey</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int8</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.DQN.best_action" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.DQN.compute_target">
-<span class="sig-name descname"><span class="pre">compute_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Array</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.DQN.compute_target" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.DQN.loss">
-<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FrozenDict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float32</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.DQN.loss" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.DQN.update_target_params">
-<span class="sig-name descname"><span class="pre">update_target_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.DQN.update_target_params" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.MLP">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.DQN.networks.</span></span><span class="sig-name descname"><span class="pre">MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">features:</span> <span class="pre">Sequence[int],</span> <span class="pre">parent:</span> <span class="pre">Union[Type[flax.linen.module.Module],</span> <span class="pre">Type[flax.core.scope.Scope],</span> <span class="pre">Type[flax.linen.module._Sentinel],</span> <span class="pre">NoneType]</span> <span class="pre">=</span> <span class="pre">&lt;flax.linen.module._Sentinel</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f26cf9bef40&gt;,</span> <span class="pre">name:</span> <span class="pre">Union[str,</span> <span class="pre">NoneType]</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.DQN.networks.MLP" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.MLP.features">
-<span class="sig-name descname"><span class="pre">features</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#double_pendulum.controller.DQN.networks.MLP.features" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.MLP.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#double_pendulum.controller.DQN.networks.MLP.name" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.MLP.parent">
-<span class="sig-name descname"><span class="pre">parent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">Module</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">Scope</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">_Sentinel</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#double_pendulum.controller.DQN.networks.MLP.parent" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.networks.MLP.scope">
-<span class="sig-name descname"><span class="pre">scope</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Scope</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#double_pendulum.controller.DQN.networks.MLP.scope" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<section id="double-pendulum-controller-dqn-networks">
+<h2>double_pendulum.controller.DQN.networks<a class="headerlink" href="#double-pendulum-controller-dqn-networks" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-double_pendulum.controller.DQN.replay_buffer">
 <span id="double-pendulum-controller-dqn-replay-buffer"></span><h2>double_pendulum.controller.DQN.replay_buffer<a class="headerlink" href="#module-double_pendulum.controller.DQN.replay_buffer" title="Permalink to this heading"></a></h2>
@@ -319,13 +159,8 @@ units=[Nm]</p>
 </dd></dl>
 
 </section>
-<section id="module-double_pendulum.controller.DQN.simulate">
-<span id="double-pendulum-controller-dqn-simulate"></span><h2>double_pendulum.controller.DQN.simulate<a class="headerlink" href="#module-double_pendulum.controller.DQN.simulate" title="Permalink to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.simulate.simulate">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.DQN.simulate.</span></span><span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">experiment_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.DQN.simulate.simulate" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
+<section id="double-pendulum-controller-dqn-simulate">
+<h2>double_pendulum.controller.DQN.simulate<a class="headerlink" href="#double-pendulum-controller-dqn-simulate" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-double_pendulum.controller.DQN.utils">
 <span id="double-pendulum-controller-dqn-utils"></span><h2>double_pendulum.controller.DQN.utils<a class="headerlink" href="#module-double_pendulum.controller.DQN.utils" title="Permalink to this heading"></a></h2>

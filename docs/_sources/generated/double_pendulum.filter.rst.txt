@@ -1,0 +1,66 @@
+double\_pendulum.filter
+===============================
+
+.. automodule:: double_pendulum.filter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.filter.abstract\_filter
+-----------------------------------------------
+
+.. automodule:: double_pendulum.filter.abstract_filter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.filter.butterworth
+------------------------------------------
+
+.. automodule:: double_pendulum.filter.butterworth
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.filter.identity
+---------------------------------------
+
+.. automodule:: double_pendulum.filter.identity
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.filter.kalman
+-------------------------------------
+
+.. automodule:: double_pendulum.filter.kalman
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.filter.lowpass
+--------------------------------------
+
+.. automodule:: double_pendulum.filter.lowpass
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.filter.running\_mean
+--------------------------------------------
+
+.. automodule:: double_pendulum.filter.running_mean
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.filter.unscented\_kalman
+------------------------------------------------
+
+.. automodule:: double_pendulum.filter.unscented_kalman
+   :members:
+   :undoc-members:
+   :show-inheritance:
