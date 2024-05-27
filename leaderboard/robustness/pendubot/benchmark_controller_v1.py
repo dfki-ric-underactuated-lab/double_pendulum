@@ -2,9 +2,10 @@ import os
 import argparse
 import importlib
 import numpy as np
-import pickle
-import pprint
 import yaml
+
+# import pickle
+# import pprint
 
 from double_pendulum.analysis.benchmark import benchmarker
 from double_pendulum.analysis.utils import get_par_list
@@ -15,13 +16,13 @@ from sim_parameters import (
     mpar,
     dt,
     t_final,
-    t0,
     x0,
     goal,
     integrator,
-    design,
-    model,
-    robot,
+    # t0,
+    # design,
+    # model,
+    # robot,
 )
 
 
@@ -105,7 +106,6 @@ def benchmark_controller(controller, save_dir, controller_name=""):
         epsilon=eps,
         check_only_final_state=check_only_final_state,
         integrator=integrator,
-        save_dir=save_dir,
     )
     ben.set_model_parameter(model_pars=mpar)
     ben.set_cost_par(Q=Q, R=R, Qf=Qf)
@@ -116,6 +116,7 @@ def benchmark_controller(controller, save_dir, controller_name=""):
         compute_unoise_robustness=True,
         compute_uresponsiveness_robustness=True,
         compute_delay_robustness=True,
+        compute_perturbation_robustness=False,
         mpar_vars=mpar_vars,
         modelpar_var_lists=modelpar_var_lists,
         meas_noise_mode=meas_noise_mode,
@@ -127,12 +128,9 @@ def benchmark_controller(controller, save_dir, controller_name=""):
     )
     # pprint.pprint(res)
 
-    # saving
-    f = open(os.path.join(save_dir, "benchmark_results.pkl"), "wb")
-    pickle.dump(res, f)
-    f.close()
-
     mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
+    controller.save(save_dir)
+    ben.save(save_dir)
 
     plot_benchmark_results(
         save_dir,

@@ -6,7 +6,7 @@ import numpy as np
 
 from double_pendulum.analysis.benchmark_scores import get_scores
 
-from benchmark_controller import benchmark_controller
+from benchmark_controller_v1 import benchmark_controller
 
 
 parser = argparse.ArgumentParser()
@@ -21,7 +21,7 @@ parser.add_argument(
     "--save_to",
     dest="save_to",
     help="Path for saving the leaderbaord csv file.",
-    default="leaderboard.csv",
+    default="leaderboard_v1.csv",
     required=False,
 )
 parser.add_argument(

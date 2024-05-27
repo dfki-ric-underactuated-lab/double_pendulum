@@ -10,6 +10,11 @@ from double_pendulum.controller.ilqr.ilqr_mpc_cpp import ILQRMPCCPPController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory
 from double_pendulum.filter.lowpass import lowpass_filter
+from double_pendulum.simulation.perturbations import (
+    get_gaussian_perturbation_array,
+    get_random_gauss_perturbation_array,
+    plot_perturbation_array,
+)
 
 SAVE = "save" in sys.argv
 PLOT = "plot" in sys.argv
@@ -57,13 +62,15 @@ integrator = "runge_kutta"
 
 # noise
 process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
-meas_noise_sigmas = [0.0, 0.0, 0.1, 0.1]
+meas_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
 delay_mode = "posvel"
-delay = 0.01
-u_noise_sigmas = [0.01, 0.01]
+delay = 0.0
+u_noise_sigmas = [0.0, 0.0]
 u_responsiveness = 1.0
-perturbation_times = []
-perturbation_taus = []
+perturbation_array, _, _, _ = get_random_gauss_perturbation_array(
+    t_final, dt, 3, 1.0, [0.01, 0.05], [0.1, 1.0]
+)
+plot_perturbation_array(t_final, dt, perturbation_array)
 
 # filter args
 lowpass_alpha = [1.0, 1.0, 0.3, 0.3]
@@ -84,7 +91,7 @@ shifting = 1
 
 # trajectory parameters
 init_csv_path = os.path.join(
-    "../../data/trajectories", design, traj_model, robot, "ilqr_2/trajectory.csv"
+    "../../data/trajectories", design, traj_model, robot, "ilqr_1/trajectory.csv"
 )
 
 if robot == "acrobot":
@@ -163,6 +170,7 @@ sim.set_measurement_parameters(
 sim.set_motor_parameters(
     u_noise_sigmas=u_noise_sigmas, u_responsiveness=u_responsiveness
 )
+sim.set_disturbances(perturbation_array)
 
 # filter
 filter = lowpass_filter(lowpass_alpha, start, filter_velocity_cut)

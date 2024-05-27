@@ -9,6 +9,7 @@ from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.controller.tvlqr.tvlqr_controller_drake import TVLQRController
 from double_pendulum.analysis.benchmark import benchmarker
 from double_pendulum.analysis.utils import get_par_list
+from double_pendulum.filter.lowpass import lowpass_filter
 
 
 # model parameters
@@ -20,8 +21,10 @@ urdf_path = "../../data/urdfs/design_A.0/model_1.0/" + robot + ".urdf"
 
 if robot == "acrobot":
     torque_limit = [0.0, 6.0]
-if robot == "pendubot":
+elif robot == "pendubot":
     torque_limit = [6.0, 0.0]
+else:
+    torque_limit = [6.0, 6.0]
 
 model_par_path = (
     "../../data/system_identification/identified_parameters/"
@@ -37,19 +40,25 @@ mpar.set_damping([0.0, 0.0])
 mpar.set_cfric([0.0, 0.0])
 mpar.set_torque_limit(torque_limit)
 
-# simulation parameter
-dt = 0.005
-t_final = 6.0  # 4.985
-integrator = "runge_kutta"
+# swingup parameters
+start = [0.0, 0.0, 0.0, 0.0]
+goal = [np.pi, 0.0, 0.0, 0.0]
 
 # init trajectory
 init_csv_path = os.path.join(
     "../../data/trajectories", design, model, robot, "ilqr_1/trajectory.csv"
 )
 
-# swingup parameters
-start = [0.0, 0.0, 0.0, 0.0]
-goal = [np.pi, 0.0, 0.0, 0.0]
+# simulation parameter
+dt = 0.005
+t_final = 6.0  # 4.985
+integrator = "runge_kutta"
+
+# filter args
+# lowpass_alpha = [1.0, 1.0, 0.3, 0.3]
+# filter_velocity_cut = 0.1
+lowpass_alpha = [1.0, 1.0, 1.0, 1.0]
+filter_velocity_cut = 0.0
 
 # acrobot good par
 Q = np.diag([0.64, 0.56, 0.13, 0.037])
@@ -103,6 +112,13 @@ compute_delay_robustness = True
 delay_mode = "posvel"
 delays = np.linspace(0.0, 0.04, N_var)  # [0.0, dt, 2*dt, 5*dt, 10*dt]
 
+compute_perturbation_robustness = True
+perturbation_repetitions = 50
+perturbations_per_joint = 3
+perturbation_min_t_dist = 1.0
+perturbation_sigma_minmax = [0.5, 1.0]
+perturbation_amp_minmax = [1.0, 3.0]
+
 # create save directory
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
 save_dir = os.path.join(
@@ -110,7 +126,10 @@ save_dir = os.path.join(
 )
 os.makedirs(save_dir)
 
-# construct simulation objects
+# filter
+filter = lowpass_filter(lowpass_alpha, start, filter_velocity_cut)
+
+# controller
 controller = TVLQRController(
     csv_path=init_csv_path,
     urdf_path=urdf_path,
@@ -120,6 +139,7 @@ controller = TVLQRController(
     save_dir=save_dir,
 )
 controller.set_cost_parameters(Q=Q, R=R, Qf=Qf)
+controller.set_filter(filter)
 controller.init()
 
 ben = benchmarker(
@@ -131,7 +151,6 @@ ben = benchmarker(
     epsilon=eps,
     check_only_final_state=check_only_final_state,
     integrator=integrator,
-    save_dir=save_dir,
 )
 ben.set_model_parameter(model_pars=mpar)
 ben.set_init_traj(init_csv_path)
@@ -143,6 +162,7 @@ res = ben.benchmark(
     compute_unoise_robustness=compute_unoise_robustness,
     compute_uresponsiveness_robustness=compute_uresponsiveness_robustness,
     compute_delay_robustness=compute_delay_robustness,
+    compute_perturbation_robustness=compute_perturbation_robustness,
     mpar_vars=mpar_vars,
     modelpar_var_lists=modelpar_var_lists,
     meas_noise_mode=meas_noise_mode,
@@ -151,42 +171,16 @@ res = ben.benchmark(
     u_responses=u_responses,
     delay_mode=delay_mode,
     delays=delays,
+    perturbation_repetitions=perturbation_repetitions,
+    perturbations_per_joint=perturbations_per_joint,
+    perturbation_min_t_dist=perturbation_min_t_dist,
+    perturbation_sigma_minmax=perturbation_sigma_minmax,
+    perturbation_amp_minmax=perturbation_amp_minmax,
 )
 pprint.pprint(res)
 
 # saving
-f = open(os.path.join(save_dir, "results.pkl"), "wb")
-pickle.dump(res, f)
-f.close()
-
 os.system(f"cp {init_csv_path} " + os.path.join(save_dir, "init_trajectory.csv"))
 mpar.save_dict(os.path.join(save_dir, "model_parameters.yml"))
-
-par_dict = {
-    "dt": dt,
-    "t_final": t_final,
-    "integrator": integrator,
-    "start_pos1": start[0],
-    "start_pos2": start[1],
-    "start_vel1": start[2],
-    "start_vel2": start[3],
-    "goal_pos1": goal[0],
-    "goal_pos2": goal[1],
-    "goal_vel1": goal[2],
-    "goal_vel2": goal[3],
-    "sCu1": R[0],
-    "sCu2": R[0],
-    "sCp1": Q[0][0],
-    "sCp2": Q[1][1],
-    "sCv1": Q[2][2],
-    "sCv2": Q[3][3],
-    "fCp1": Qf[0][0],
-    "fCp2": Qf[1][1],
-    "fCv1": Qf[2][2],
-    "fCv2": Qf[3][3],
-    "epsilon": eps,
-    "check_only_final_state": check_only_final_state,
-}
-
-with open(os.path.join(save_dir, "parameters.yml"), "w") as f:
-    yaml.dump(par_dict, f)
+controller.save(save_dir)
+ben.save(save_dir)

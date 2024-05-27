@@ -53,8 +53,11 @@ def plot_benchmark_results(
         norm_cost_free = 1.0
         norm_cost_follow = 1.0
 
+    crits = []
+
     # model robustness
     if "model_robustness" in res_dict.keys():
+        crits.append("model")
         mpar = model_parameters()
         mpar.load_yaml(os.path.join(results_dir, "model_parameters.yml"))
         mpar_dict = mpar.get_dict()
@@ -138,6 +141,7 @@ def plot_benchmark_results(
 
     # noise robustness
     if "meas_noise_robustness" in res_dict.keys():
+        crits.append(r"$\dot{q}$ noise")
         n_subplots = len(res_dict["meas_noise_robustness"].keys())
         fig_nr, ax_nr = plt.subplots(
             n_subplots,
@@ -204,6 +208,7 @@ def plot_benchmark_results(
 
     # unoise robustness
     if "u_noise_robustness" in res_dict.keys():
+        crits.append(r"$\tau$ noise")
         ymax = 0.0
         # plt.figure(fig_counter, figsize=(16, 9))
         fig_unr, ax_unr = plt.subplots(
@@ -259,6 +264,7 @@ def plot_benchmark_results(
 
     # u responsiveness robustness
     if "u_responsiveness_robustness" in res_dict.keys():
+        crits.append(r"$\tau$ response")
         ymax = 0.0
         # plt.figure(fig_counter, figsize=(16, 9))
         fig_urr, ax_urr = plt.subplots(
@@ -313,6 +319,7 @@ def plot_benchmark_results(
 
     # delay robustness
     if "delay_robustness" in res_dict.keys():
+        crits.append("delay")
         ymax = 0.0
         fig_dr, ax_dr = plt.subplots(
             1, 1, figsize=(16 * scale, 9 * scale), num=fig_counter
@@ -361,26 +368,38 @@ def plot_benchmark_results(
         if save:
             plt.savefig(os.path.join(results_dir, "delay_robustness." + file_format))
         fig_counter += 1
+    if "perturbation_robustness" in res_dict.keys():
+        crits.append("pert.")
+        fig_counter += 1
 
     # bar plot
     fig_bar, ax_bar = plt.subplots(
-        1, 1, figsize=(8 * scale, 6 * scale), num=fig_counter
+        1, 1, figsize=(10 * scale, 6 * scale), num=fig_counter
     )
     scores = get_scores(results_dir, filename)
-    crits = ["model", r"$\dot{q}$ noise", r"$\tau$ noise", r"$\tau$ response", "delay"]
-    numbers = [
-        scores["model"],
-        scores["measurement_noise"],
-        scores["u_noise"],
-        scores["u_responsiveness"],
-        scores["delay"],
-    ]
+    # crits = [
+    #     "model",
+    #     r"$\dot{q}$ noise",
+    #     r"$\tau$ noise",
+    #     r"$\tau$ response",
+    #     "delay",
+    #     "pert.",
+    # ]
+    # numbers = [
+    #     scores["model"],
+    #     scores["measurement_noise"],
+    #     scores["u_noise"],
+    #     scores["u_responsiveness"],
+    #     scores["delay"],
+    #     scores["perturbation"],
+    # ]
+    numbers = []
+    for k in scores.keys():
+        numbers.append(scores[k])
     bars = ax_bar.bar(crits, numbers)
-    bars[0].set_color("red")
-    bars[1].set_color("blue")
-    bars[2].set_color("green")
-    bars[3].set_color("purple")
-    bars[4].set_color("orange")
+    colors = ["red", "blue", "green", "purple", "orange", "magenta"]
+    for i in range(fig_counter):
+        bars[i].set_color(colors[i])
     ax_bar.set_ylim(0, 1)
     ax_bar.set_xlabel("Robustness Criteria")
     ax_bar.set_ylabel("Success Score")

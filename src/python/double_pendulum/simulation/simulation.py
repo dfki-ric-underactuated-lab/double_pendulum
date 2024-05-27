@@ -69,7 +69,6 @@ class Simulator:
         self.tau_values = []
 
         self.meas_x_values = []
-        # self.filt_x_values = []
         self.con_u_values = []
 
     def record_data(self, t, x, tau=None):
@@ -176,38 +175,6 @@ class Simulator:
         self.delay = delay
         self.delay_mode = delay_mode
 
-    # def set_filter_parameters(
-    #     self,
-    #     meas_noise_cut=0.0,
-    #     meas_noise_vfilter="None",
-    #     meas_noise_vfilter_args={"alpha": [1.0, 1.0, 1.0, 1.0]},
-    # ):
-    #     """
-    #     Set filter parameters for filtering raw measurments
-    #
-    #     Parameters
-    #     ----------
-    #     meas_noise_cut : float
-    #         measurements smaller than this value will be set to 0.
-    #         (they are assumed to be noise)
-    #         For meas_noise_cut==0.0, the measurement is not cut
-    #         (Default value = 0.0)
-    #     meas_noise_vfilter : string
-    #         string determining the velocity noise filter
-    #         "None": No filter
-    #         "lowpass": lowpass filter
-    #         "kalman": kalman filter
-    #         "unscented_kalman": unscented kalman filter
-    #         (Default value = "None")
-    #     meas_noise_vfilter_args : dict
-    #         dictionary containing parameters for the velocity filter
-    #         (Default value = {"alpha": [1., 1., 1., 1.]})
-    #     """
-    #
-    #     self.meas_noise_cut = meas_noise_cut
-    #     self.meas_noise_vfilter = meas_noise_vfilter
-    #     self.meas_noise_vfilter_args = meas_noise_vfilter_args
-
     def set_motor_parameters(self, u_noise_sigmas=[0.0, 0.0], u_responsiveness=1.0):
         """
         Set parameters for the motors
@@ -231,20 +198,22 @@ class Simulator:
         self.u_noise_sigmas = u_noise_sigmas
         self.u_responsiveness = u_responsiveness
 
-    def set_disturbances(self, perturbation_times=[], perturbation_taus=[]):
+    def set_disturbances(self, perturbation_array=[[], []]):
         """
         Set disturbances (hits) happening during the simulation.
         (Not yet implemented)
 
         Parameters
         ----------
-        perturbation_times : array_like
-             (Default value = [])
-        perturbation_taus : array_like
-             (Default value = [])
+        perturbation_array : array_like
+             (Default value = [[], []])
+             List of two lists.
+             First list: Perturbations on first joint,
+             Second list: Perturbations on second joint
+             The lists should contain the torque pertubations for the two
+             joints for every timestep.
         """
-        self.perturbation_times = perturbation_times
-        self.perturbation_taus = perturbation_taus
+        self.perturbation_array = perturbation_array
 
     def reset(self):
         """
@@ -266,75 +235,12 @@ class Simulator:
         self.delay = 0.0
         self.delay_mode = "None"
 
-        # self.meas_noise_cut = 0.0
-        # self.meas_noise_vfilter = "None"
-        # self.meas_noise_vfilter_args = {"alpha": [1.0, 1.0, 1.0, 1.0]}
-
         self.u_noise_sigmas = [0.0, 0.0]
         self.u_responsiveness = 1.0
 
-        self.perturbation_times = []
-        self.perturbation_taus = []
+        self.perturbation_array = [[], []]
 
-        # self.filter = None
         self.reset_data_recorder()
-
-    # def init_filter(self, x0, dt, integrator):
-    #     """
-    #     Initialize the filter
-    #
-    #     Parameters
-    #     ----------
-    #     x0 : array_like, shape=(4,), dtype=float,
-    #         reference state if a linearization is needed (Kalman filter),
-    #         order=[angle1, angle2, velocity1, velocity2],
-    #         units=[rad, rad, rad/s, rad/s]
-    #     dt : float
-    #         timestep, unit=[s]
-    #     integrator : string
-    #         string determining the integration method
-    #         "euler" : Euler integrator
-    #         "runge_kutta" : Runge Kutta integrator
-    #     """
-    #     if self.meas_noise_vfilter == "lowpass":
-    #         dof = self.plant.dof
-    #
-    #         self.filter = lowpass_filter_rt(
-    #             dim_x=2 * dof, alpha=self.meas_noise_vfilter_args["alpha"], x0=x0
-    #         )
-    #
-    #     elif self.meas_noise_vfilter == "kalman":
-    #         dof = self.plant.dof
-    #
-    #         A, B = self.plant.linear_matrices(
-    #             self.meas_noise_vfilter_args["kalman"]["x_lin"],
-    #             self.meas_noise_vfilter_args["kalman"]["u_lin"],
-    #         )
-    #
-    #         self.filter = kalman_filter_rt(
-    #             A=A,
-    #             B=B,
-    #             dim_x=2 * dof,
-    #             dim_u=self.plant.n_actuators,
-    #             x0=x0,
-    #             dt=dt,
-    #             process_noise=self.process_noise_sigmas,
-    #             measurement_noise=self.meas_noise_sigmas,
-    #         )
-    #     elif self.meas_noise_vfilter == "unscented_kalman":
-    #         dof = self.plant.dof
-    #         if integrator == "euler":
-    #             fx = self.euler_integrator
-    #         elif integrator == "runge_kutta":
-    #             fx = self.runge_integrator
-    #         self.filter = unscented_kalman_filter_rt(
-    #             dim_x=2 * dof,
-    #             x0=x0,
-    #             dt=dt,
-    #             process_noise=self.process_noise_sigmas,
-    #             measurement_noise=self.meas_noise_sigmas,
-    #             fx=fx,
-    #         )
 
     def euler_integrator(self, y, dt, t, tau):
         """
@@ -418,11 +324,11 @@ class Simulator:
             "runge_kutta" : Runge Kutta integrator
              (Default value = "runge_kutta")
         """
-        tau = np.clip(
-            tau,
-            -np.asarray(self.plant.torque_limit),
-            np.asarray(self.plant.torque_limit),
-        )
+        # tau = np.clip(
+        #     tau,
+        #     -np.asarray(self.plant.torque_limit),
+        #     np.asarray(self.plant.torque_limit),
+        # )
 
         if integrator == "runge_kutta":
             self.x = np.add(
@@ -538,43 +444,7 @@ class Simulator:
         self.meas_x_values.append(np.copy(x_meas))
         return x_meas
 
-    # def filter_measurement(self, x):
-    #     """
-    #     Filter a measured state.
-    #
-    #     (parameters set in set_filter_parameters)
-    #
-    #     Parameters
-    #     ----------
-    #     x : array_like, shape=(4,), dtype=float,
-    #         state of the double pendulum,
-    #         order=[angle1, angle2, velocity1, velocity2],
-    #         units=[rad, rad, rad/s, rad/s]
-    #
-    #     Returns
-    #     -------
-    #     numpy_array
-    #         shape=(4,), dtype=float,
-    #         filters state of the double pendulum,
-    #         order=[angle1, angle2, velocity1, velocity2],
-    #         units=[rad, rad, rad/s, rad/s]
-    #     """
-    #     x_filt = np.copy(x)
-    #
-    #     # velocity cut
-    #     if self.meas_noise_cut > 0.0:
-    #         x_filt[2] = np.where(np.abs(x_filt[2]) < self.meas_noise_cut, 0, x_filt[2])
-    #         x_filt[3] = np.where(np.abs(x_filt[3]) < self.meas_noise_cut, 0, x_filt[3])
-    #
-    #     # filter
-    #     if not self.filter is None:
-    #         if len(self.con_u_values) > 0:
-    #             x_filt = self.filter(x, self.con_u_values[-1])
-    #
-    #     self.filt_x_values.append(np.copy(x_filt))
-    #     return x_filt
-
-    def get_real_applied_u(self, u):
+    def get_real_applied_u(self, u, t, dt):
         """
         Get the torque that the motor actually applies.
 
@@ -591,7 +461,10 @@ class Simulator:
             desired actuation input/motor torque,
             order=[u1, u2],
             units=[Nm]
-
+        t : float,
+            start time, units=[s]
+        dt : float
+            timestep, unit=[s]
 
         Returns
         -------
@@ -613,23 +486,23 @@ class Simulator:
 
         # tau noise (unoise)
         nu = np.random.normal(nu, self.u_noise_sigmas, np.shape(nu))
-        # for i, tau in enumerate(nu):
-        #     if np.abs(tau) > 0:
-        #         # nu[i] = tau + np.random.uniform(-self.unoise_amplitude,
-        #         #                                 self.unoise_amplitude,
-        #         #                                 1)
-        #         nu[i] = tau + np.random.normal(0,
-        #                                        self.unoise_sigmas[i],
-        #                                        1)
+
         nu[0] = np.clip(nu[0], -self.plant.torque_limit[0], self.plant.torque_limit[0])
         nu[1] = np.clip(nu[1], -self.plant.torque_limit[1], self.plant.torque_limit[1])
+        # perturbance
+        # (can exceed joint limits)
+        pert_index = int(t / dt)
+        if pert_index < len(self.perturbation_array[0]):
+            nu[0] += self.perturbation_array[0][pert_index]
+        if pert_index < len(self.perturbation_array[1]):
+            nu[1] += self.perturbation_array[1][pert_index]
+
         return nu
 
     def controller_step(self, dt, controller=None, integrator="runge_kutta"):
         """
         Perform a full simulation step including
             - get measurement
-            - (filter measurement)
             - get controller signal
             - calculate actual applied torques
             - integrate the eom
@@ -657,11 +530,8 @@ class Simulator:
         """
 
         x_meas = self.get_measurement(dt)
-        # x_meas = self.meas_x_values[-1]
-        # x_filt = self.filter_measurement(x_meas)
-
         u, realtime = self.get_control_u(controller, x_meas, self.t, dt)
-        nu = self.get_real_applied_u(u)
+        nu = self.get_real_applied_u(u, self.t, dt)
 
         self.step(nu, dt, integrator=integrator)
 

@@ -6,6 +6,11 @@ import numpy as np
 from double_pendulum.model.plant import DoublePendulumPlant
 from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.simulation.simulation import Simulator
+from double_pendulum.simulation.perturbations import (
+    get_gaussian_perturbation_array,
+    get_random_gauss_perturbation_array,
+    plot_perturbation_array,
+)
 from double_pendulum.controller.lqr.lqr_controller import LQRController
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory
@@ -57,13 +62,19 @@ goal = [np.pi, 0.0, 0.0, 0.0]
 
 # noise
 process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
-meas_noise_sigmas = [0.0, 0.0, 0.05, 0.05]
+meas_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
 delay_mode = "posvel"
-delay = 0.01
+delay = 0.0
 u_noise_sigmas = [0.0, 0.0]
 u_responsiveness = 1.0
-perturbation_times = []
-perturbation_taus = []
+# mu = [[1.0, 4.0, 7.0], [2.0, 6.0, 8.0]]
+# sigma = [[0.05, 0.01, 0.05], [0.05, 0.01, 0.05]]
+# amplitude = [[0.25, -0.5, 1.0], [0.25, -0.5, 1.0]]
+# perturbation_array = get_gaussian_perturbation_array(t_final, dt, mu, sigma, amplitude)
+perturbation_array, _, _, _ = get_random_gauss_perturbation_array(
+    t_final, dt, 3, 1.0, [0.01, 0.05], [0.1, 1.0]
+)
+plot_perturbation_array(t_final, dt, perturbation_array)
 
 # filter args
 lowpass_alpha = [1.0, 1.0, 0.2, 0.2]
@@ -101,6 +112,7 @@ sim.set_measurement_parameters(
 sim.set_motor_parameters(
     u_noise_sigmas=u_noise_sigmas, u_responsiveness=u_responsiveness
 )
+sim.set_disturbances(perturbation_array)
 
 # filter
 filter = lowpass_filter(lowpass_alpha, x0, filter_velocity_cut)

@@ -6,7 +6,7 @@ import numpy as np
 
 from double_pendulum.analysis.benchmark_scores import get_scores
 
-from benchmark_controller import benchmark_controller
+from benchmark_controller_v1 import benchmark_controller
 
 
 parser = argparse.ArgumentParser()
@@ -21,7 +21,7 @@ parser.add_argument(
     "--save_to",
     dest="save_to",
     help="Path for saving the leaderbaord csv file.",
-    default="leaderboard.csv",
+    default="leaderboard_v1.csv",
     required=False,
 )
 parser.add_argument(
@@ -149,10 +149,9 @@ if recompute_leaderboard:
         fmt="%s",
         comments="",
     )
-    df = pandas.read_csv(save_to)
-    df = df.drop(df.columns[1], axis=1)
+
     print(
-        df.sort_values(by=["Overall Robustness Score"], ascending=False).to_markdown(
-            index=False
-        )
+        pandas.read_csv(save_to)
+        .sort_values(by=["Overall Robustness Score"], ascending=False)
+        .to_markdown(index=False)
     )

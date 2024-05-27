@@ -16,6 +16,11 @@ from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 from double_pendulum.filter.lowpass import lowpass_filter
+from double_pendulum.simulation.perturbations import (
+    get_gaussian_perturbation_array,
+    get_random_gauss_perturbation_array,
+    plot_perturbation_array,
+)
 
 SAVE = "save" in sys.argv
 PLOT = "plot" in sys.argv
@@ -81,8 +86,10 @@ delay_mode = "None"
 delay = 0.0
 u_noise_sigmas = [0.0, 0.0]
 u_responsiveness = 1.0
-perturbation_times = []
-perturbation_taus = []
+perturbation_array, _, _, _ = get_random_gauss_perturbation_array(
+    t_final, dt, 3, 1.0, [0.05, 0.1], [1.0, 3.0]
+)
+plot_perturbation_array(t_final, dt, perturbation_array)
 
 ## filter args
 lowpass_alpha = [1.0, 1.0, 0.2, 0.2]
@@ -182,6 +189,7 @@ sim.set_measurement_parameters(
 sim.set_motor_parameters(
     u_noise_sigmas=u_noise_sigmas, u_responsiveness=u_responsiveness
 )
+sim.set_disturbances(perturbation_array)
 
 # filter
 filter = lowpass_filter(lowpass_alpha, x0, filter_velocity_cut)
@@ -281,5 +289,5 @@ if PLOT or SAVE:
         U_friccomp=controller.u_fric_hist,
         pos_y_lines=[0.0, np.pi],
         tau_y_lines=[-torque_limit[active_act], torque_limit[active_act]],
-        save_to=os.path.join(save_dir, "timeseries"),
+        save_to=save_plot_to,
     )

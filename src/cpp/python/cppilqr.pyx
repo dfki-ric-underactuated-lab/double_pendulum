@@ -4,7 +4,7 @@
 
 import numpy as np
 #from eigency.core cimport *
-from cpython cimport PyObject, Py_INCREF
+from cpython cimport PyObject, Py_INCREF#, PyArray_SetBaseObject
 from libcpp.vector cimport vector
 from libc.stdlib cimport free
 
