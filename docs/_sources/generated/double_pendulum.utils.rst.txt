@@ -25,6 +25,14 @@ double\_pendulum.utils.csv\_trajectory
    :undoc-members:
    :show-inheritance:
 
+double\_pendulum.utils.lists
+-----------------------------------
+
+.. automodule:: double_pendulum.utils.lists
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 double\_pendulum.utils.optimization
 ------------------------------------------
 

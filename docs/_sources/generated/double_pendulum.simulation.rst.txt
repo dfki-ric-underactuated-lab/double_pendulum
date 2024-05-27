@@ -17,6 +17,14 @@ double\_pendulum.simulation.gym\_env
    :undoc-members:
    :show-inheritance:
 
+double\_pendulum.simulation.perturbations
+------------------------------------------------
+
+.. automodule:: double_pendulum.simulation.perturbations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 double\_pendulum.simulation.simulation
 ---------------------------------------------
 

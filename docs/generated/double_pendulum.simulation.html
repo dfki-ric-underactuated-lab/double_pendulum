@@ -59,6 +59,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">double_pendulum.simulation</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.simulation.gym_env">double_pendulum.simulation.gym_env</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.simulation.perturbations">double_pendulum.simulation.perturbations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.simulation.simulation">double_pendulum.simulation.simulation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.simulation.visualization">double_pendulum.simulation.visualization</a></li>
 </ul>
@@ -287,6 +288,24 @@ a certain timelimit was exceeded, or the physics simulation has entered an inval
 </dd></dl>
 
 </section>
+<section id="module-double_pendulum.simulation.perturbations">
+<span id="double-pendulum-simulation-perturbations"></span><h2>double_pendulum.simulation.perturbations<a class="headerlink" href="#module-double_pendulum.simulation.perturbations" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.simulation.perturbations.get_gaussian_perturbation_array">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.simulation.perturbations.</span></span><span class="sig-name descname"><span class="pre">get_gaussian_perturbation_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[],</span> <span class="pre">[]]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[],</span> <span class="pre">[]]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amplitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[],</span> <span class="pre">[]]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.perturbations.get_gaussian_perturbation_array" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.simulation.perturbations.get_random_gauss_perturbation_array">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.simulation.perturbations.</span></span><span class="sig-name descname"><span class="pre">get_random_gauss_perturbation_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_per_joint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_t_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.01,</span> <span class="pre">0.05]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amplitude_min_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">1.0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.perturbations.get_random_gauss_perturbation_array" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="double_pendulum.simulation.perturbations.plot_perturbation_array">
+<span class="sig-prename descclassname"><span class="pre">double_pendulum.simulation.perturbations.</span></span><span class="sig-name descname"><span class="pre">plot_perturbation_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_array</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.perturbations.plot_perturbation_array" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
 <section id="module-double_pendulum.simulation.simulation">
 <span id="double-pendulum-simulation-simulation"></span><h2>double_pendulum.simulation.simulation<a class="headerlink" href="#module-double_pendulum.simulation.simulation" title="Permalink to this heading"></a></h2>
 <dl class="py class">
@@ -311,7 +330,6 @@ double pendulum</p>
 <dd><dl class="simple">
 <dt>Perform a full simulation step including</dt><dd><ul class="simple">
 <li><p>get measurement</p></li>
-<li><p>(filter measurement)</p></li>
 <li><p>get controller signal</p></li>
 <li><p>calculate actual applied torques</p></li>
 <li><p>integrate the eom</p></li>
@@ -446,7 +464,7 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.get_real_applied_u">
-<span class="sig-name descname"><span class="pre">get_real_applied_u</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.get_real_applied_u" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_real_applied_u</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.get_real_applied_u" title="Permalink to this definition"></a></dt>
 <dd><p>Get the torque that the motor actually applies.</p>
 <p>The applied motor torque (u_out) is related to the commanded torque
 (u) and the last torque output (u_last) via</p>
@@ -458,6 +476,10 @@ units=[rad, rad, rad/s, rad/s]</p>
 <dt><strong>tau</strong><span class="classifier">array_like, shape=(2,), dtype=float</span></dt><dd><p>desired actuation input/motor torque,
 order=[u1, u2],
 units=[Nm]</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">float,</span></dt><dd><p>start time, units=[s]</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>timestep, unit=[s]</p>
 </dd>
 </dl>
 </dd>
@@ -596,15 +618,18 @@ units=[rad, rad, rad/s, rad/s]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="double_pendulum.simulation.simulation.Simulator.set_disturbances">
-<span class="sig-name descname"><span class="pre">set_disturbances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">perturbation_times</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_taus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.set_disturbances" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_disturbances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">perturbation_array</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[],</span> <span class="pre">[]]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.simulation.simulation.Simulator.set_disturbances" title="Permalink to this definition"></a></dt>
 <dd><p>Set disturbances (hits) happening during the simulation.
 (Not yet implemented)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>perturbation_times</strong><span class="classifier">array_like</span></dt><dd><p>(Default value = [])</p>
-</dd>
-<dt><strong>perturbation_taus</strong><span class="classifier">array_like</span></dt><dd><p>(Default value = [])</p>
+<dt><strong>perturbation_array</strong><span class="classifier">array_like</span></dt><dd><p>(Default value = [[], []])
+List of two lists.
+First list: Perturbations on first joint,
+Second list: Perturbations on second joint
+The lists should contain the torque pertubations for the two
+joints for every timestep.</p>
 </dd>
 </dl>
 </dd>
