@@ -1,1 +1,0 @@
-Swing-up with an RL Policy learned with SAC. Stabilization with LQR.

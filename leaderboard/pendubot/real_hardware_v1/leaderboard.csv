@@ -1,0 +1,4 @@
+Controller,Short Controller Description,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Best RealAI Score,Average RealAI Score,Username
+MC-PILCO,Controller trained with the Model-Based Reinforcement Learning algorithm MC-PILCO for swing-up and stabilization around the unstable equilibrium of the Pendubot.,10/10,1.37,11.66,4.99,3.72,8.93,0.54,84.61,0.843,0.839,turcato-niccolo
+ilqr_tvlqr_lqr,Stabilization of iLQR trajectory with time-varying LQR.,8/10,4.12,34.02,5.0,19.06,51.88,0.643,242.34,0.695,0.547,fwiebe
+sac_lqr,Swing-up with an RL Policy learned with SAC. Stabilization with LQR.,4/10,0.67,37.12,5.0,24.87,78.7,0.774,114.04,0.767,0.298,chiniklas
