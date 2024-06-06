@@ -22,6 +22,8 @@ class benchmarker:
         goal,
         epsilon=[0.1, 0.1, 1.0, 1.0],
         check_only_final_state=False,
+        goal_check_method="epsilon",
+        goal_check_method_height=0.9,
         integrator="runge_kutta",
     ):
         self.controller = controller
@@ -31,6 +33,8 @@ class benchmarker:
         self.goal = np.asarray(goal)
         self.epsilon = epsilon
         self.check_only_final_state = check_only_final_state
+        self.goal_check_method = goal_check_method
+        self.goal_check_method_height = goal_check_method_height
         self.integrator = integrator
 
         self.mass = None
@@ -151,24 +155,39 @@ class benchmarker:
             )
 
     def check_goal_success(self, x_traj):
-        if self.check_only_final_state:
-            lp = wrap_angles_top(x_traj[-1])
-            pos1_succ = np.abs(lp[0] - self.goal[0]) < self.epsilon[0]
-            pos2_succ = np.abs(lp[1] - self.goal[1]) < self.epsilon[1]
-            vel1_succ = np.abs(lp[2] - self.goal[2]) < self.epsilon[2]
-            vel2_succ = np.abs(lp[3] - self.goal[3]) < self.epsilon[3]
-            succ = pos1_succ and pos2_succ and vel1_succ and vel2_succ
-        else:
-            succ = False
-            for x in x_traj:
-                lp = wrap_angles_top(x)
+        if self.goal_check_method == "epsilon":
+            if self.check_only_final_state:
+                lp = wrap_angles_top(x_traj[-1])
                 pos1_succ = np.abs(lp[0] - self.goal[0]) < self.epsilon[0]
                 pos2_succ = np.abs(lp[1] - self.goal[1]) < self.epsilon[1]
                 vel1_succ = np.abs(lp[2] - self.goal[2]) < self.epsilon[2]
                 vel2_succ = np.abs(lp[3] - self.goal[3]) < self.epsilon[3]
                 succ = pos1_succ and pos2_succ and vel1_succ and vel2_succ
-                if succ:
-                    break
+            else:
+                succ = False
+                for x in x_traj:
+                    lp = wrap_angles_top(x)
+                    pos1_succ = np.abs(lp[0] - self.goal[0]) < self.epsilon[0]
+                    pos2_succ = np.abs(lp[1] - self.goal[1]) < self.epsilon[1]
+                    vel1_succ = np.abs(lp[2] - self.goal[2]) < self.epsilon[2]
+                    vel2_succ = np.abs(lp[3] - self.goal[3]) < self.epsilon[3]
+                    succ = pos1_succ and pos2_succ and vel1_succ and vel2_succ
+                    if succ:
+                        break
+        elif self.goal_check_method == "height":
+            fk = self.plant.forward_kinematics(x_traj.T[:2])
+            ee_pos_y = fk[1][1]
+
+            goal_height = self.goal_check_method_height * (
+                self.length[0] + self.length[1]
+            )
+
+            up = np.where(ee_pos_y > goal_height, True, False)
+
+            if self.check_only_final_state:
+                succ = True in up
+            else:
+                succ = up[-1]
 
         return succ
 
@@ -829,6 +848,8 @@ class benchmarker:
             "goal": obj_to_list(self.goal),
             "epsilon": list(self.epsilon),
             "check_only_final_state": self.check_only_final_state,
+            "goal_check_method": self.goal_check_method,
+            "goal_check_method_height": self.goal_check_method_height,
             "integrator": self.integrator,
             "Q": obj_to_list(self.Q),
             "Qf": obj_to_list(self.Qf),

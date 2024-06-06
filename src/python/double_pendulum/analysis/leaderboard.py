@@ -16,6 +16,7 @@ def leaderboard_scores(
         "integ_tau": 0.1,
         "tau_cost": 0.0,
         "tau_smoothness": 0.6,
+        "velocity_cost": 0.2,
     },
     normalize={
         "swingup_time": 10.0,
@@ -24,9 +25,11 @@ def leaderboard_scores(
         "integ_tau": 10.0,
         "tau_cost": 10.0,
         "tau_smoothness": 1.0,
+        "velocity_cost": 1000,
     },
     link_base="",
     simulation=True,
+    score_version="v1",
 ):
     """leaderboard_scores.
     Compute leaderboard scores from data_dictionaries which will be loaded from
@@ -71,9 +74,18 @@ def leaderboard_scores(
         whether to load the simulaition trajectory data
     link_base : string
         base-link for hosting data. Not needed for local execution
+    score_version : string
+        which equation should be used for the score calculation
+        if set to something else than "v1", "v2" will be used
+        default: "v1"
     """
 
     leaderboard_data = []
+
+    nonzero_weigths = 0
+    for w in weights.keys():
+        if weights[w] != 0.0:
+            nonzero_weigths += 1
 
     for key in data_paths:
         d = data_paths[key]
@@ -112,45 +124,110 @@ def leaderboard_scores(
 
             successes.append(int(swingup_times[-1] < T[-1]))
 
-            score = successes[-1] * (
-                1.0
-                - (
-                    weights["swingup_time"]
-                    * swingup_times[-1]
-                    / normalize["swingup_time"]
-                    + weights["max_tau"] * max_taus[-1] / normalize["max_tau"]
-                    + weights["energy"] * energies[-1] / normalize["energy"]
-                    + weights["integ_tau"] * integ_taus[-1] / normalize["integ_tau"]
-                    + weights["tau_cost"] * tau_costs[-1] / normalize["tau_cost"]
-                    + weights["tau_smoothness"]
-                    * tau_smoothnesses[-1]
-                    / normalize["tau_smoothness"]
-                    + weights["velocity_cost"]
-                    * velocity_costs[-1]
-                    / normalize["velocity_cost"]
+            if score_version == "v1":
+                score = successes[-1] * (
+                    1.0
+                    - (
+                        weights["swingup_time"]
+                        * swingup_times[-1]
+                        / normalize["swingup_time"]
+                        + weights["max_tau"] * max_taus[-1] / normalize["max_tau"]
+                        + weights["energy"] * energies[-1] / normalize["energy"]
+                        + weights["integ_tau"] * integ_taus[-1] / normalize["integ_tau"]
+                        + weights["tau_cost"] * tau_costs[-1] / normalize["tau_cost"]
+                        + weights["tau_smoothness"]
+                        * tau_smoothnesses[-1]
+                        / normalize["tau_smoothness"]
+                        + weights["velocity_cost"]
+                        * velocity_costs[-1]
+                        / normalize["velocity_cost"]
+                    )
                 )
-            )
+            else:
+                score = successes[-1] * (
+                    1.0
+                    - 1.0
+                    / nonzero_weigths
+                    * (
+                        np.tanh(
+                            np.pi
+                            * weights["swingup_time"]
+                            * swingup_times[-1]
+                            / normalize["swingup_time"]
+                        )
+                        + np.tanh(
+                            np.pi
+                            * weights["max_tau"]
+                            * max_taus[-1]
+                            / normalize["max_tau"]
+                        )
+                        + np.tanh(
+                            np.pi
+                            * weights["energy"]
+                            * energies[-1]
+                            / normalize["energy"]
+                        )
+                        + np.tanh(
+                            np.pi
+                            * weights["integ_tau"]
+                            * integ_taus[-1]
+                            / normalize["integ_tau"]
+                        )
+                        + np.tanh(
+                            np.pi
+                            * weights["tau_cost"]
+                            * tau_costs[-1]
+                            / normalize["tau_cost"]
+                        )
+                        + np.tanh(
+                            np.pi
+                            * weights["tau_smoothness"]
+                            * tau_smoothnesses[-1]
+                            / normalize["tau_smoothness"]
+                        )
+                        + np.tanh(
+                            np.pi
+                            * weights["velocity_cost"]
+                            * velocity_costs[-1]
+                            / normalize["velocity_cost"]
+                        )
+                    )
+                )
 
             scores.append(score)
 
-            results = np.array(
-                [
-                    [successes[-1]],
-                    [swingup_times[-1]],
-                    [energies[-1]],
-                    [max_taus[-1]],
-                    [integ_taus[-1]],
-                    [tau_costs[-1]],
-                    [tau_smoothnesses[-1]],
-                    [velocity_costs[-1]],
-                    [score],
-                ]
-            ).T
+            header = "Swingup Success,"
+            results = []
+            results.append([successes[-1]])
+            if weights["swingup_time"] != 0.0:
+                results.append([swingup_times[-1]])
+                header += "Swingup Time [s],"
+            if weights["energy"] != 0.0:
+                results.append([energies[-1]])
+                header += "Energy [J],"
+            if weights["max_tau"] != 0.0:
+                results.append([max_taus[-1]])
+                header += "Max. Torque [Nm],"
+            if weights["integ_tau"] != 0.0:
+                results.append([integ_taus[-1]])
+                header += "Integrated Torque [Nms],"
+            if weights["tau_cost"] != 0.0:
+                results.append([tau_costs[-1]])
+                header += "Torque Cost[N²m²],"
+            if weights["tau_smoothness"] != 0.0:
+                results.append([tau_smoothnesses[-1]])
+                header += "Torque Smoothness [Nm],"
+            if weights["velocity_cost"] != 0.0:
+                results.append([velocity_costs[-1]])
+                header += "Velocity Cost [m²/s²],"
+            results.append([score])
+            header += "RealAI Score"
+            results = np.asarray(results).T
 
             np.savetxt(
                 os.path.join(os.path.dirname(path), "scores.csv"),
                 results,
-                header="Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],RealAI Score",
+                header=header,
                 delimiter=",",
                 fmt="%s",
                 comments="",
@@ -181,47 +258,43 @@ def leaderboard_scores(
             else:
                 name_with_link = d["name"]
 
+        append_data = [
+            name_with_link,
+            d["short_description"],
+            str(int(success)) + "/" + str(len(csv_paths)),
+        ]
+        if weights["swingup_time"] != 0.0:
+            append_data.append(str(round(swingup_time, 2)))
+        if weights["energy"] != 0.0:
+            append_data.append(str(round(energy, 2)))
+        if weights["max_tau"] != 0.0:
+            append_data.append(str(round(max_tau, 2)))
+        if weights["integ_tau"] != 0.0:
+            append_data.append(str(round(integ_tau, 2)))
+        if weights["tau_cost"] != 0.0:
+            append_data.append(str(round(tau_cost, 2)))
+        if weights["tau_smoothness"] != 0.0:
+            append_data.append(str(round(tau_smoothness, 3)))
+        if weights["velocity_cost"] != 0.0:
+            append_data.append(str(round(velocity_cost, 2)))
+
         if simulation:
-            append_data = [
-                name_with_link,
-                d["short_description"],
-                str(int(success)) + "/" + str(len(csv_paths)),
-                str(round(swingup_time, 2)),
-                str(round(energy, 2)),
-                str(round(max_tau, 2)),
-                str(round(integ_tau, 2)),
-                str(round(tau_cost, 2)),
-                str(round(tau_smoothness, 3)),
-                str(round(velocity_cost, 2)),
-                str(round(score, 3)),
-                d["username"],
-            ]
-        else:
-            append_data = [
-                name_with_link,
-                d["short_description"],
-                str(int(success)) + "/" + str(len(csv_paths)),
-                str(round(swingup_time, 2)),
-                str(round(energy, 2)),
-                str(round(max_tau, 2)),
-                str(round(integ_tau, 2)),
-                str(round(tau_cost, 2)),
-                str(round(tau_smoothness, 3)),
-                str(round(velocity_cost, 2)),
-                str(round(best_score, 3)),
-                str(round(score, 3)),
-                d["username"],
-            ]
+            append_data.append(str(round(score, 3)))
+            append_data.append(d["username"])
 
-        if link_base != "":
-            controller_link = link_base + d["name"]
+            if link_base != "":
+                controller_link = link_base + d["name"]
 
-            if simulation:
                 data_link = "[data](" + controller_link + "/sim_swingup.csv)"
                 plot_link = "[plot](" + controller_link + "/timeseries.png)"
                 video_link = "[video](" + controller_link + "/sim_video.gif)"
                 append_data.append(data_link + " " + plot_link + " " + video_link)
-            else:
+        else:
+            append_data.append(str(round(best_score, 3)))
+            append_data.append(str(round(score, 3)))
+            append_data.append(d["username"])
+            if link_base != "":
+                controller_link = link_base + d["name"]
                 data_link = (
                     "[data]("
                     + controller_link
@@ -243,16 +316,36 @@ def leaderboard_scores(
                     + str(best + 1).zfill(2)
                     + "/video.gif)"
                 )
-                # link = "[data plots videos](" + controller_link + ")"
-                # append_data.append(link)
                 append_data.append(data_link + " " + plot_link + " " + video_link)
 
         leaderboard_data.append(append_data)
 
+    header = "Controller,"
+    header += "Short Controller Description,"
+    header += "Swingup Success,"
+    if weights["swingup_time"] != 0.0:
+        header += "Swingup Time [s],"
+    if weights["energy"] != 0.0:
+        header += "Energy [J],"
+    if weights["max_tau"] != 0.0:
+        header += "Max. Torque [Nm],"
+    if weights["integ_tau"] != 0.0:
+        header += "Integrated Torque [Nms],"
+    if weights["tau_cost"] != 0.0:
+        header += "Torque Cost[N²m²],"
+    if weights["tau_smoothness"] != 0.0:
+        header += "Torque Smoothness [Nm],"
+    if weights["velocity_cost"] != 0.0:
+        header += "Velocity Cost [m²/s²],"
+
     if simulation:
-        header = "Controller,Short Controller Description,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],RealAI Score,Username"
+        header += "RealAI Score,"
+        header += "Username"
     else:
-        header = "Controller,Short Controller Description,Swingup Success,Swingup Time [s],Energy [J],Max. Torque [Nm],Integrated Torque [Nms],Torque Cost[N²m²],Torque Smoothness [Nm],Velocity Cost [m²/s²],Best RealAI Score,Average RealAI Score,Username"
+        header += "Best RealAI Score,"
+        header += "Average RealAI Score,"
+        header += "Username"
+
     if link_base != "":
         header += ",Data"
 

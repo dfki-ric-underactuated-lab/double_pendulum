@@ -27,6 +27,10 @@ leaderboard/pendubot/simulation_v1/data/*
 leaderboard/pendubot/robustness_v1/data/*
 leaderboard/pendubot/real_hardware_v1/data/*
 leaderboard/pendubot/real_hardware_v1/src_data/*
+leaderboard/acrobot/simulation_v2/data/*
+leaderboard/acrobot/robustness_v2/data/*
+leaderboard/pendubot/simulation_v2/data/*
+leaderboard/pendubot/robustness_v2/data/*
 data/experiment_records/*
 *local*
 
