@@ -622,6 +622,21 @@ class Simulator:
             self.animation_ax.add_patch(arc)
             self.animation_ax.add_patch(head)
 
+        if self.plot_perturbations:
+            for link in range(self.plant.n_links):
+                arc, head = get_arrow(
+                    radius=0.001,
+                    centX=0,
+                    centY=0,
+                    angle_=110,
+                    theta2_=320,
+                    color_="purple",
+                )
+                self.tau_arrowarcs.append(arc)
+                self.tau_arrowheads.append(head)
+                self.animation_ax.add_patch(arc)
+                self.animation_ax.add_patch(head)
+
         dt = self.par_dict["dt"]
         x0 = self.par_dict["x0"]
         integrator = self.par_dict["integrator"]
@@ -634,21 +649,21 @@ class Simulator:
     def _animation_step(self, par_dict):
         """simulation of a single step which also updates the animation plot"""
         dt = par_dict["dt"]
-        # x0 = par_dict["x0"]
         t0 = par_dict["t0"]
         controller = par_dict["controller"]
         integrator = par_dict["integrator"]
-        # imperfections = par_dict["imperfections"]
         anim_dt = par_dict["anim_dt"]
         trail_len = 25  # length of the trails
         sim_steps = int(anim_dt / dt)
+        dt_index = int(self.t / dt)
 
         realtime = True
         for _ in range(sim_steps):
             rt = self.controller_step(dt, controller, integrator)
             if not rt:
                 realtime = False
-        tau = self.tau_values[-1]
+        # tau = self.tau_values[-1]
+        tau = self.con_u_values[-1]
         ee_pos = self.plant.forward_kinematics(self.x[: self.plant.dof])
         ee_pos.insert(0, self.plant.base)
 
@@ -695,10 +710,20 @@ class Simulator:
             set_arrow_properties(
                 self.tau_arrowarcs[link],
                 self.tau_arrowheads[link],
-                tau[link],
+                tau[link] / 5.0,
                 ee_pos[link][0],
                 ee_pos[link][1],
             )
+
+        if self.plot_perturbations:
+            for link in range(self.plant.n_links):
+                set_arrow_properties(
+                    self.tau_arrowarcs[self.plant.dof + link],
+                    self.tau_arrowheads[self.plant.dof + link],
+                    self.perturbation_array[link][dt_index] / 5.0,
+                    ee_pos[link][0],
+                    ee_pos[link][1],
+                )
 
         if self.plot_inittraj:
             T, X, U = controller.get_init_trajectory()
@@ -751,6 +776,7 @@ class Simulator:
         plot_forecast=False,
         plot_trail=True,
         phase_plot=False,
+        plot_perturbations=False,
         save_video=False,
         video_name="pendulum_swingup.mp4",
         anim_dt=0.02,
@@ -829,6 +855,7 @@ class Simulator:
         self.plot_trail = plot_trail
         self.plot_horizontal_line = plot_horizontal_line
         self.horizontal_line_height = horizontal_line_height
+        self.plot_perturbations = plot_perturbations
         # self.set_state(t0, x0)
         # self.reset_data_recorder()
         # self.record_data(t0, np.copy(x0), None)
@@ -854,6 +881,7 @@ class Simulator:
             [], [], "s", markersize=25.0 * scale, color="black"
         )
         self.animation_plots.append(base_plot)
+
         for link in range(self.plant.n_links):
             (ee_plot,) = self.animation_ax.plot(
                 [],
@@ -903,7 +931,6 @@ class Simulator:
         self.par_dict["anim_dt"] = anim_dt
         self.par_dict["controller"] = controller
         self.par_dict["integrator"] = integrator
-        # self.par_dict["imperfections"] = imperfections
         frames = num_steps * [self.par_dict]
 
         animation = FuncAnimation(
