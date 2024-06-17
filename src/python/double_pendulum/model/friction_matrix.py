@@ -21,16 +21,13 @@ def yb_friction_matrix(dq_vec):
         shape=(2,4)
         friction matrix
     """
-    if len(dq_vec) == 2:
 
-        y_11 = math.atan(100*dq_vec[0])
-        y_12 = dq_vec[0]
+    y_11 = math.atan(100*dq_vec[0])
+    y_12 = dq_vec[0]
 
-        y_23 = math.atan(100*dq_vec[1])
-        y_24 = dq_vec[1]
+    y_23 = math.atan(100*dq_vec[1])
+    y_24 = dq_vec[1]
 
-        yb_fric = np.array([[y_11, y_12, 0, 0],
-                            [0, 0, y_23, y_24]])
-        return yb_fric
-    else:
-        return np.array([[math.atan(100*dq_vec[0]), dq_vec[0]]])
+    yb_fric = np.array([[y_11, y_12, 0, 0],
+                        [0, 0, y_23, y_24]])
+    return yb_fric

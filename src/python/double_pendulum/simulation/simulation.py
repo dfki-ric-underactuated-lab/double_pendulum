@@ -5,11 +5,6 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.animation as mplanimation
 
 from double_pendulum.simulation.visualization import get_arrow, set_arrow_properties
-from double_pendulum.utils.filters.low_pass import lowpass_filter_rt
-from double_pendulum.utils.filters.kalman_filter import kalman_filter_rt
-from double_pendulum.utils.filters.unscented_kalman_filter import (
-    unscented_kalman_filter_rt,
-)
 
 
 class Simulator:
@@ -23,14 +18,10 @@ class Simulator:
     plant : SymbolicDoublePendulum or DoublePendulumPlant object
         A plant object containing the kinematics and dynamics of the
         double pendulum
-
-    integrator_name : Name of integration function
     """
 
-    def __init__(self, plant, integrator_name='odeint'):
+    def __init__(self, plant):
         self.plant = plant
-
-        self.integrator_name = integrator_name
 
         self.x = np.zeros(2 * self.plant.dof)  # position, velocity
         self.t = 0.0  # time
@@ -78,7 +69,6 @@ class Simulator:
         self.tau_values = []
 
         self.meas_x_values = []
-        self.filt_x_values = []
         self.con_u_values = []
 
     def record_data(self, t, x, tau=None):
@@ -129,7 +119,7 @@ class Simulator:
         U = np.asarray(self.tau_values)
         return T, X, U
 
-    def set_process_noise(self, process_noise_sigmas=None):
+    def set_process_noise(self, process_noise_sigmas=[0.0, 0.0, 0.0, 0.0]):
         """
         Set parameters for process noise (Gaussian)
 
@@ -141,15 +131,13 @@ class Simulator:
             Each entry in the list corresponds to a state variable.
             (Default value = [0., 0., 0., 0.])
         """
-        if process_noise_sigmas is None:
-            process_noise_sigmas = [0.0] * 2 * self.plant.dof
         self.process_noise_sigmas = process_noise_sigmas
 
     def set_measurement_parameters(
         self,
-        C=None,
-        D=None,
-        meas_noise_sigmas=None,
+        C=np.eye(4),
+        D=np.zeros((4, 2)),
+        meas_noise_sigmas=[0.0, 0.0, 0.0, 0.0],
         delay=0.0,
         delay_mode="None",
     ):
@@ -181,50 +169,11 @@ class Simulator:
             "posvel": position and velocity measurements are delayed
              (Default value = "None")
         """
-        if C is None:
-            C = np.eye(2*self.plant.dof)
-        if D is None:
-            D = np.zeros((2*self.plant.dof, self.plant.dof))
-        if meas_noise_sigmas is None:
-            meas_noise_sigmas = [0.0] * 2 * self.plant.dof
-
         self.meas_C = C
         self.meas_D = D
         self.meas_noise_sigmas = meas_noise_sigmas
         self.delay = delay
         self.delay_mode = delay_mode
-
-    def set_filter_parameters(
-        self,
-        meas_noise_cut=0.0,
-        meas_noise_vfilter="None",
-        meas_noise_vfilter_args={"alpha": [1.0, 1.0, 1.0, 1.0]},
-    ):
-        """
-        Set filter parameters for filtering raw measurments
-
-        Parameters
-        ----------
-        meas_noise_cut : float
-            measurements smaller than this value will be set to 0.
-            (they are assumed to be noise)
-            For meas_noise_cut==0.0, the measurement is not cut
-            (Default value = 0.0)
-        meas_noise_vfilter : string
-            string determining the velocity noise filter
-            "None": No filter
-            "lowpass": lowpass filter
-            "kalman": kalman filter
-            "unscented_kalman": unscented kalman filter
-            (Default value = "None")
-        meas_noise_vfilter_args : dict
-            dictionary containing parameters for the velocity filter
-            (Default value = {"alpha": [1., 1., 1., 1.]})
-        """
-
-        self.meas_noise_cut = meas_noise_cut
-        self.meas_noise_vfilter = meas_noise_vfilter
-        self.meas_noise_vfilter_args = meas_noise_vfilter_args
 
     def set_motor_parameters(self, u_noise_sigmas=[0.0, 0.0], u_responsiveness=1.0):
         """
@@ -246,25 +195,25 @@ class Simulator:
             resonsiveness of the motors
             (Default value = 1.)
         """
-        if u_noise_sigmas is None:
-            u_noise_sigmas = [0.0] * self.plant.dof
         self.u_noise_sigmas = u_noise_sigmas
         self.u_responsiveness = u_responsiveness
 
-    def set_disturbances(self, perturbation_times=[], perturbation_taus=[]):
+    def set_disturbances(self, perturbation_array=[[], []]):
         """
         Set disturbances (hits) happening during the simulation.
         (Not yet implemented)
 
         Parameters
         ----------
-        perturbation_times : array_like
-             (Default value = [])
-        perturbation_taus : array_like
-             (Default value = [])
+        perturbation_array : array_like
+             (Default value = [[], []])
+             List of two lists.
+             First list: Perturbations on first joint,
+             Second list: Perturbations on second joint
+             The lists should contain the torque pertubations for the two
+             joints for every timestep.
         """
-        self.perturbation_times = perturbation_times
-        self.perturbation_taus = perturbation_taus
+        self.perturbation_array = perturbation_array
 
     def reset(self):
         """
@@ -278,83 +227,20 @@ class Simulator:
             - perturbations
         """
 
-        self.process_noise_sigmas = [0.0] * self.plant.dof * 2
+        self.process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
 
-        self.meas_C = np.eye(self.plant.dof * 2)
-        self.meas_D = np.zeros((self.plant.dof * 2, self.plant.dof))
-        self.meas_noise_sigmas = [0.0] * self.plant.dof * 2
+        self.meas_C = np.eye(4)
+        self.meas_D = np.zeros((4, 2))
+        self.meas_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
         self.delay = 0.0
         self.delay_mode = "None"
-
-        self.meas_noise_cut = 0.0
-        self.meas_noise_vfilter = "None"
-        self.meas_noise_vfilter_args = {"alpha": [1.0, 1.0, 1.0, 1.0]}
 
         self.u_noise_sigmas = [0.0, 0.0]
         self.u_responsiveness = 1.0
 
-        self.perturbation_times = []
-        self.perturbation_taus = []
+        self.perturbation_array = [[], []]
 
-        self.filter = None
         self.reset_data_recorder()
-
-    def init_filter(self, x0, dt, integrator):
-        """
-        Initialize the filter
-
-        Parameters
-        ----------
-        x0 : array_like, shape=(4,), dtype=float,
-            reference state if a linearization is needed (Kalman filter),
-            order=[angle1, angle2, velocity1, velocity2],
-            units=[rad, rad, rad/s, rad/s]
-        dt : float
-            timestep, unit=[s]
-        integrator : string
-            string determining the integration method
-            "euler" : Euler integrator
-            "runge_kutta" : Runge Kutta integrator
-        """
-        if self.meas_noise_vfilter == "lowpass":
-            dof = self.plant.dof
-
-            self.filter = lowpass_filter_rt(
-                dim_x=2 * dof, alpha=self.meas_noise_vfilter_args["alpha"], x0=x0
-            )
-
-        elif self.meas_noise_vfilter == "kalman":
-            dof = self.plant.dof
-
-            A, B = self.plant.linear_matrices(
-                self.meas_noise_vfilter_args["kalman"]["x_lin"],
-                self.meas_noise_vfilter_args["kalman"]["u_lin"],
-            )
-
-            self.filter = kalman_filter_rt(
-                A=A,
-                B=B,
-                dim_x=2 * dof,
-                dim_u=self.plant.n_actuators,
-                x0=x0,
-                dt=dt,
-                process_noise=self.process_noise_sigmas,
-                measurement_noise=self.meas_noise_sigmas,
-            )
-        elif self.meas_noise_vfilter == "unscented_kalman":
-            dof = self.plant.dof
-            if integrator == "euler":
-                fx = self.euler_integrator
-            elif integrator == "runge_kutta":
-                fx = self.runge_integrator
-            self.filter = unscented_kalman_filter_rt(
-                dim_x=2 * dof,
-                x0=x0,
-                dt=dt,
-                process_noise=self.process_noise_sigmas,
-                measurement_noise=self.meas_noise_sigmas,
-                fx=fx,
-            )
 
     def euler_integrator(self, y, dt, t, tau):
         """
@@ -418,12 +304,6 @@ class Simulator:
         k4 = self.plant.rhs(t + dt, y + dt * k3, tau)
         return (k1 + 2.0 * (k2 + k3) + k4) / 6.0
 
-    def odeint_integrator(self, y, dt, t, tau):
-        # print('odeint t', t)
-        plant_rhs = lambda y_, t_, u_: self.plant.rhs(t_, y_, u_)
-        odeint_out = odeint(plant_rhs, y, [t, t + dt], args=(tau,))
-        return odeint_out[1]
-
     def step(self, tau, dt, integrator="runge_kutta"):
         """
         Performs a simulation step with the specified integrator.
@@ -444,11 +324,11 @@ class Simulator:
             "runge_kutta" : Runge Kutta integrator
              (Default value = "runge_kutta")
         """
-        tau = np.clip(
-            tau,
-            -np.asarray(self.plant.torque_limit),
-            np.asarray(self.plant.torque_limit),
-        )
+        # tau = np.clip(
+        #     tau,
+        #     -np.asarray(self.plant.torque_limit),
+        #     np.asarray(self.plant.torque_limit),
+        # )
 
         if integrator == "runge_kutta":
             self.x = np.add(
@@ -464,14 +344,12 @@ class Simulator:
                 casting="unsafe",
             )
             # self.x += dt * self.euler_integrator(self.x, dt, self.t, tau)
-        elif integrator == "odeint":
-            self.x = self.odeint_integrator(self.x, dt, self.t, tau)
         else:
             raise NotImplementedError(
                 f"Sorry, the integrator {integrator} is not implemented."
             )
         # process noise
-        self.x = np.random.normal(self.x, self.process_noise_sigmas)#, np.shape(self.x))
+        self.x = np.random.normal(self.x, self.process_noise_sigmas, np.shape(self.x))
 
         self.t += dt
         self.record_data(self.t, self.x.copy(), tau)
@@ -566,43 +444,7 @@ class Simulator:
         self.meas_x_values.append(np.copy(x_meas))
         return x_meas
 
-    def filter_measurement(self, x):
-        """
-        Filter a measured state.
-
-        (parameters set in set_filter_parameters)
-
-        Parameters
-        ----------
-        x : array_like, shape=(4,), dtype=float,
-            state of the double pendulum,
-            order=[angle1, angle2, velocity1, velocity2],
-            units=[rad, rad, rad/s, rad/s]
-
-        Returns
-        -------
-        numpy_array
-            shape=(4,), dtype=float,
-            filters state of the double pendulum,
-            order=[angle1, angle2, velocity1, velocity2],
-            units=[rad, rad, rad/s, rad/s]
-        """
-        x_filt = np.copy(x)
-
-        # velocity cut
-        if self.meas_noise_cut > 0.0:
-            x_filt[2] = np.where(np.abs(x_filt[2]) < self.meas_noise_cut, 0, x_filt[2])
-            x_filt[3] = np.where(np.abs(x_filt[3]) < self.meas_noise_cut, 0, x_filt[3])
-
-        # filter
-        if not self.filter is None:
-            if len(self.con_u_values) > 0:
-                x_filt = self.filter(x, self.con_u_values[-1])
-
-        self.filt_x_values.append(np.copy(x_filt))
-        return x_filt
-
-    def get_real_applied_u(self, u):
+    def get_real_applied_u(self, u, t, dt):
         """
         Get the torque that the motor actually applies.
 
@@ -619,7 +461,10 @@ class Simulator:
             desired actuation input/motor torque,
             order=[u1, u2],
             units=[Nm]
-
+        t : float,
+            start time, units=[s]
+        dt : float
+            timestep, unit=[s]
 
         Returns
         -------
@@ -641,23 +486,23 @@ class Simulator:
 
         # tau noise (unoise)
         nu = np.random.normal(nu, self.u_noise_sigmas, np.shape(nu))
-        # for i, tau in enumerate(nu):
-        #     if np.abs(tau) > 0:
-        #         # nu[i] = tau + np.random.uniform(-self.unoise_amplitude,
-        #         #                                 self.unoise_amplitude,
-        #         #                                 1)
-        #         nu[i] = tau + np.random.normal(0,
-        #                                        self.unoise_sigmas[i],
-        #                                        1)
+
         nu[0] = np.clip(nu[0], -self.plant.torque_limit[0], self.plant.torque_limit[0])
         nu[1] = np.clip(nu[1], -self.plant.torque_limit[1], self.plant.torque_limit[1])
+        # perturbance
+        # (can exceed joint limits)
+        pert_index = int(t / dt)
+        if pert_index < len(self.perturbation_array[0]):
+            nu[0] += self.perturbation_array[0][pert_index]
+        if pert_index < len(self.perturbation_array[1]):
+            nu[1] += self.perturbation_array[1][pert_index]
+
         return nu
 
     def controller_step(self, dt, controller=None, integrator="runge_kutta"):
         """
         Perform a full simulation step including
             - get measurement
-            - filter measurement
             - get controller signal
             - calculate actual applied torques
             - integrate the eom
@@ -685,17 +530,14 @@ class Simulator:
         """
 
         x_meas = self.get_measurement(dt)
-        # x_meas = self.meas_x_values[-1]
-        x_filt = self.filter_measurement(x_meas)
-
-        u, realtime = self.get_control_u(controller, x_filt, self.t, dt)
-        nu = self.get_real_applied_u(u)
+        u, realtime = self.get_control_u(controller, x_meas, self.t, dt)
+        nu = self.get_real_applied_u(u, self.t, dt)
 
         self.step(nu, dt, integrator=integrator)
 
         return realtime
 
-    def simulate(self, t0, x0, tf, dt, controller=None, integrator=None):
+    def simulate(self, t0, x0, tf, dt, controller=None, integrator="runge_kutta"):
         """
         Simulate the double pendulum for a time period under the control of a
         controller
@@ -737,15 +579,12 @@ class Simulator:
             order=[u1, u2],
             units=[Nm]
         """
-        if integrator is None:
-            integrator = self.integrator_name
-
         self.set_state(t0, x0)
         self.reset_data_recorder()
         self.record_data(t0, np.copy(x0), None)
         # self.meas_x_values.append(np.copy(x0))
 
-        self.init_filter(x0, dt, integrator)
+        # self.init_filter(x0, dt, integrator)
 
         N = 0
         while self.t < tf:
@@ -753,20 +592,6 @@ class Simulator:
             N += 1
 
         return self.t_values, self.x_values, self.tau_values
-
-    def rollout(self, x0, policy, T, dt, noise, animate=False):
-        self.set_state(0, x0)
-        self.reset_data_recorder()
-        self.record_data(0, np.copy(x0), None)
-        # self.meas_x_values.append(np.copy(x0))
-        self.init_filter(x0, dt, self.integrator_name)
-        self.set_measurement_parameters(meas_noise_sigmas=noise)
-        if animate:
-            self.simulate_and_animate(0, x0, T, dt, policy)
-        else:
-            self.simulate(0, x0, T, dt, policy)
-
-        return np.asarray(self.t_values), np.asarray(self.meas_x_values), np.asarray(self.tau_values), np.asarray(self.x_values)[:-1,:]
 
     def _animation_init(self):
         """init of the animation plot"""
@@ -797,33 +622,48 @@ class Simulator:
             self.animation_ax.add_patch(arc)
             self.animation_ax.add_patch(head)
 
+        if self.plot_perturbations:
+            for link in range(self.plant.n_links):
+                arc, head = get_arrow(
+                    radius=0.001,
+                    centX=0,
+                    centY=0,
+                    angle_=110,
+                    theta2_=320,
+                    color_="purple",
+                )
+                self.tau_arrowarcs.append(arc)
+                self.tau_arrowheads.append(head)
+                self.animation_ax.add_patch(arc)
+                self.animation_ax.add_patch(head)
+
         dt = self.par_dict["dt"]
         x0 = self.par_dict["x0"]
         integrator = self.par_dict["integrator"]
         # imperfections = self.par_dict["imperfections"]
         # if imperfections:
-        self.init_filter(x0, dt, integrator)
+        # self.init_filter(x0, dt, integrator)
 
         return self.animation_plots + self.tau_arrowarcs + self.tau_arrowheads
 
     def _animation_step(self, par_dict):
         """simulation of a single step which also updates the animation plot"""
         dt = par_dict["dt"]
-        # x0 = par_dict["x0"]
         t0 = par_dict["t0"]
         controller = par_dict["controller"]
         integrator = par_dict["integrator"]
-        # imperfections = par_dict["imperfections"]
         anim_dt = par_dict["anim_dt"]
         trail_len = 25  # length of the trails
         sim_steps = int(anim_dt / dt)
+        dt_index = int(self.t / dt)
 
         realtime = True
         for _ in range(sim_steps):
             rt = self.controller_step(dt, controller, integrator)
             if not rt:
                 realtime = False
-        tau = self.tau_values[-1]
+        # tau = self.tau_values[-1]
+        tau = self.con_u_values[-1]
         ee_pos = self.plant.forward_kinematics(self.x[: self.plant.dof])
         ee_pos.insert(0, self.plant.base)
 
@@ -870,10 +710,20 @@ class Simulator:
             set_arrow_properties(
                 self.tau_arrowarcs[link],
                 self.tau_arrowheads[link],
-                tau[link],
+                tau[link] / 5.0,
                 ee_pos[link][0],
                 ee_pos[link][1],
             )
+
+        if self.plot_perturbations:
+            for link in range(self.plant.n_links):
+                set_arrow_properties(
+                    self.tau_arrowarcs[self.plant.dof + link],
+                    self.tau_arrowheads[self.plant.dof + link],
+                    self.perturbation_array[link][dt_index] / 5.0,
+                    ee_pos[link][0],
+                    ee_pos[link][1],
+                )
 
         if self.plot_inittraj:
             T, X, U = controller.get_init_trajectory()
@@ -926,6 +776,7 @@ class Simulator:
         plot_forecast=False,
         plot_trail=True,
         phase_plot=False,
+        plot_perturbations=False,
         save_video=False,
         video_name="pendulum_swingup.mp4",
         anim_dt=0.02,
@@ -1004,6 +855,7 @@ class Simulator:
         self.plot_trail = plot_trail
         self.plot_horizontal_line = plot_horizontal_line
         self.horizontal_line_height = horizontal_line_height
+        self.plot_perturbations = plot_perturbations
         # self.set_state(t0, x0)
         # self.reset_data_recorder()
         # self.record_data(t0, np.copy(x0), None)
@@ -1017,7 +869,9 @@ class Simulator:
         colors_trails = ["#d2eeff", "#ffebd8"]
 
         if self.plot_horizontal_line:
-            (vl_plot,) = self.animation_ax.plot([], [], "--", lw=2 * scale, color="black")
+            (vl_plot,) = self.animation_ax.plot(
+                [], [], "--", lw=2 * scale, color="black"
+            )
             self.animation_plots.append(vl_plot)
         for link in range(self.plant.n_links):
             (bar_plot,) = self.animation_ax.plot([], [], "-", lw=10 * scale, color="k")
@@ -1027,6 +881,7 @@ class Simulator:
             [], [], "s", markersize=25.0 * scale, color="black"
         )
         self.animation_plots.append(base_plot)
+
         for link in range(self.plant.n_links):
             (ee_plot,) = self.animation_ax.plot(
                 [],
@@ -1076,7 +931,6 @@ class Simulator:
         self.par_dict["anim_dt"] = anim_dt
         self.par_dict["controller"] = controller
         self.par_dict["integrator"] = integrator
-        # self.par_dict["imperfections"] = imperfections
         frames = num_steps * [self.par_dict]
 
         animation = FuncAnimation(
@@ -1089,6 +943,10 @@ class Simulator:
             interval=dt * 1000,
         )
 
+        self.set_state(t0, x0)
+        self.reset_data_recorder()
+        self.record_data(t0, np.copy(x0), None)
+        self.meas_x_values.append(x0)
         if save_video:
             print(f"Saving video to {video_name}")
             Writer = mplanimation.writers["ffmpeg"]
@@ -1096,10 +954,6 @@ class Simulator:
             animation.save(video_name, writer=writer)
             print("Saving video done.")
         else:
-            self.set_state(t0, x0)
-            self.reset_data_recorder()
-            self.record_data(t0, np.copy(x0), None)
-            # self.meas_x_values.append(x0)
             plt.show()
         plt.close()
 

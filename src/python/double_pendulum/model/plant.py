@@ -1,17 +1,4 @@
 import numpy as np
-import torch
-
-robots = {'pendubot': {'design': "design_A.0", 'model': "model_2.0"},
-          'acrobot': {'design': "design_C.0", 'model': "model_3.0"},
-          'experimental_double_pend': {'design': 'design_C.1', 'model': 'model_1.0'}}
-for robot_name in robots.keys():
-    robots[robot_name]['model_par_path'] = (
-            "data/system_identification/identified_parameters/"
-            + robots[robot_name]['design']
-            + "/"
-            + robots[robot_name]['model']
-            + "/model_parameters.yml"
-    )
 
 
 class DoublePendulumPlant():
@@ -72,7 +59,6 @@ class DoublePendulumPlant():
         If provided, the model_pars parameters overwrite
         the other provided parameters
     """
-
     def __init__(self,
                  mass=[1.0, 1.0],
                  length=[0.5, 0.5],
@@ -99,7 +85,7 @@ class DoublePendulumPlant():
 
         for i in range(len(inertia)):
             if inertia[i] is None:
-                self.I.append(mass[i] * com[i] * com[i])
+                self.I.append(mass[i]*com[i]*com[i])
             else:
                 self.I.append(inertia[i])
 
@@ -119,8 +105,8 @@ class DoublePendulumPlant():
         self.n_actuators = 2
         self.base = [0, 0]
         self.n_links = 2
-        self.workspace_range = [[-1.2 * np.sum(self.l), 1.2 * np.sum(self.l)],
-                                [-1.2 * np.sum(self.l), 1.2 * np.sum(self.l)]]
+        self.workspace_range = [[-1.2*np.sum(self.l), 1.2*np.sum(self.l)],
+                                [-1.2*np.sum(self.l), 1.2*np.sum(self.l)]]
 
         if torque_limit[0] == 0:
             self.B = np.array([[0, 0], [0, 1]])
@@ -149,10 +135,10 @@ class DoublePendulumPlant():
             units=[m]
         """
         ee1_pos_x = self.l[0] * np.sin(pos[0])
-        ee1_pos_y = -self.l[0] * np.cos(pos[0])
+        ee1_pos_y = -self.l[0]*np.cos(pos[0])
 
-        ee2_pos_x = ee1_pos_x + self.l[1] * np.sin(pos[0] + pos[1])
-        ee2_pos_y = ee1_pos_y - self.l[1] * np.cos(pos[0] + pos[1])
+        ee2_pos_x = ee1_pos_x + self.l[1]*np.sin(pos[0]+pos[1])
+        ee2_pos_y = ee1_pos_y - self.l[1]*np.cos(pos[0]+pos[1])
 
         return [[ee1_pos_x, ee1_pos_y], [ee2_pos_x, ee2_pos_y]]
 
@@ -176,24 +162,24 @@ class DoublePendulumPlant():
         # vel = np.copy(x[self.dof:])
 
         if self.formulas == "UnderactuatedLecture":
-            m00 = self.I[0] + self.I[1] + self.m[1] * self.l[0] ** 2.0 + \
-                  2 * self.m[1] * self.l[0] * self.com[1] * np.cos(pos[1]) + \
-                  self.gr ** 2.0 * self.Ir + self.Ir
-            m01 = self.I[1] + self.m[1] * self.l[0] * self.com[1] * np.cos(pos[1]) - \
-                  self.gr * self.Ir
-            m10 = self.I[1] + self.m[1] * self.l[0] * self.com[1] * np.cos(pos[1]) - \
-                  self.gr * self.Ir
-            m11 = self.I[1] + self.gr ** 2.0 * self.Ir
+            m00 = self.I[0] + self.I[1] + self.m[1]*self.l[0]**2.0 + \
+                    2*self.m[1]*self.l[0]*self.com[1]*np.cos(pos[1]) + \
+                    self.gr**2.0*self.Ir + self.Ir
+            m01 = self.I[1] + self.m[1]*self.l[0]*self.com[1]*np.cos(pos[1]) - \
+                    self.gr*self.Ir
+            m10 = self.I[1] + self.m[1]*self.l[0]*self.com[1]*np.cos(pos[1]) - \
+                    self.gr*self.Ir
+            m11 = self.I[1] + self.gr**2.0*self.Ir
             M = np.array([[m00, m01], [m10, m11]])
 
         elif self.formulas == "Spong":
-            pos[0] -= 0.5 * np.pi  # Spong uses different 0 position
-            m00 = self.I[0] + self.I[1] + self.m[0] * self.com[0] ** 2.0 + \
-                  self.m[1] * (self.l[0] ** 2.0 + self.com[1] ** 2.0 +
-                               2 * self.l[0] * self.com[1] * np.cos(pos[1]))
-            m01 = self.I[1] + self.m[1] * (self.com[1] ** 2.0 + self.l[0] * self.com[1] * np.cos(pos[1]))
-            m10 = self.I[1] + self.m[1] * (self.com[1] ** 2.0 + self.l[0] * self.com[1] * np.cos(pos[1]))
-            m11 = self.I[1] + self.m[1] * self.com[1] ** 2.0
+            pos[0] -= 0.5*np.pi  # Spong uses different 0 position
+            m00 = self.I[0] + self.I[1] + self.m[0]*self.com[0]**2.0 + \
+                self.m[1]*(self.l[0]**2.0 + self.com[1]**2.0 +
+                           2*self.l[0]*self.com[1]*np.cos(pos[1]))
+            m01 = self.I[1] + self.m[1]*(self.com[1]**2.0 + self.l[0]*self.com[1]*np.cos(pos[1]))
+            m10 = self.I[1] + self.m[1]*(self.com[1]**2.0 + self.l[0]*self.com[1]*np.cos(pos[1]))
+            m11 = self.I[1] + self.m[1]*self.com[1]**2.0
             M = np.array([[m00, m01], [m10, m11]])
         return M
 
@@ -219,17 +205,17 @@ class DoublePendulumPlant():
 
         # equal
         if self.formulas == "UnderactuatedLecture":
-            C00 = -2 * self.m[1] * self.l[0] * self.com[1] * np.sin(pos[1]) * vel[1]
-            C01 = -self.m[1] * self.l[0] * self.com[1] * np.sin(pos[1]) * vel[1]
-            C10 = self.m[1] * self.l[0] * self.com[1] * np.sin(pos[1]) * vel[0]
+            C00 = -2*self.m[1]*self.l[0]*self.com[1]*np.sin(pos[1])*vel[1]
+            C01 = -self.m[1]*self.l[0]*self.com[1]*np.sin(pos[1])*vel[1]
+            C10 = self.m[1]*self.l[0]*self.com[1]*np.sin(pos[1])*vel[0]
             C11 = 0
             C = np.array([[C00, C01], [C10, C11]])
 
         elif self.formulas == "Spong":  # same as UnderacteadLecture
-            pos[0] -= 0.5 * np.pi  # Spong uses different 0 position
-            C00 = -2 * self.m[1] * self.l[0] * self.com[1] * np.sin(pos[1]) * vel[1]
-            C01 = -self.m[1] * self.l[0] * self.com[1] * np.sin(pos[1]) * vel[1]
-            C10 = self.m[1] * self.l[0] * self.com[1] * np.sin(pos[1]) * vel[0]
+            pos[0] -= 0.5*np.pi  # Spong uses different 0 position
+            C00 = -2*self.m[1]*self.l[0]*self.com[1]*np.sin(pos[1])*vel[1]
+            C01 = -self.m[1]*self.l[0]*self.com[1]*np.sin(pos[1])*vel[1]
+            C10 = self.m[1]*self.l[0]*self.com[1]*np.sin(pos[1])*vel[0]
             C11 = 0
             C = np.array([[C00, C01], [C10, C11]])
 
@@ -255,17 +241,17 @@ class DoublePendulumPlant():
         # vel = np.copy(x[self.dof:])
 
         if self.formulas == "UnderactuatedLecture":
-            G0 = -self.m[0] * self.g * self.com[0] * np.sin(pos[0]) - \
-                 self.m[1] * self.g * (self.l[0] * np.sin(pos[0]) +
-                                       self.com[1] * np.sin(pos[0] + pos[1]))
-            G1 = -self.m[1] * self.g * self.com[1] * np.sin(pos[0] + pos[1])
+            G0 = -self.m[0]*self.g*self.com[0]*np.sin(pos[0]) - \
+                 self.m[1]*self.g*(self.l[0]*np.sin(pos[0]) +
+                                   self.com[1]*np.sin(pos[0]+pos[1]))
+            G1 = -self.m[1]*self.g*self.com[1]*np.sin(pos[0]+pos[1])
             G = np.array([G0, G1])
         elif self.formulas == "Spong":
-            pos[0] -= 0.5 * np.pi  # Spong uses different 0 position,
+            pos[0] -= 0.5*np.pi  # Spong uses different 0 position,
             # in the end the formulas are equal bc. sin(x) = cos(x-0.5pi)
-            G0 = -(self.m[0] * self.com[0] + self.m[1] * self.l[0]) * self.g * np.cos(pos[0]) - \
-                 self.m[1] * self.com[1] * self.g * np.cos(pos[0] + pos[1])
-            G1 = -self.m[1] * self.com[1] * self.g * np.cos(pos[0] + pos[1])
+            G0 = -(self.m[0]*self.com[0] + self.m[1]*self.l[0])*self.g*np.cos(pos[0]) - \
+                self.m[1]*self.com[1]*self.g*np.cos(pos[0]+pos[1])
+            G1 = -self.m[1]*self.com[1]*self.g*np.cos(pos[0]+pos[1])
             G = np.array([G0, G1])
         return G
 
@@ -291,7 +277,7 @@ class DoublePendulumPlant():
 
         F = np.zeros(self.dof)
         for i in range(self.dof):
-            F[i] = self.b[i] * vel[i] + self.coulomb_fric[i] * np.arctan(100 * vel[i])
+            F[i] = self.b[i]*vel[i] + self.coulomb_fric[i]*np.arctan(100*vel[i])
         return F
 
     def kinetic_energy(self, x):
@@ -314,7 +300,7 @@ class DoublePendulumPlant():
         vel = np.copy(x[self.dof:])
         M = self.mass_matrix(x)
         kin = M.dot(vel)
-        kin = 0.5 * np.dot(vel, kin)
+        kin = 0.5*np.dot(vel, kin)
         return kin
 
     def potential_energy(self, x):
@@ -337,9 +323,9 @@ class DoublePendulumPlant():
         # vel = np.copy(x[self.dof:])
 
         # 0 level at hinge
-        y1 = -self.com[0] * np.cos(pos[0])  # + self.l[0] + self.l[1]
-        y2 = -self.l[0] * np.cos(pos[0]) - self.com[1] * np.cos(pos[1] + pos[0])  # + self.l[0] + self.l[1]
-        pot = self.m[0] * self.g * y1 + self.m[1] * self.g * y2
+        y1 = -self.com[0]*np.cos(pos[0])  # + self.l[0] + self.l[1]
+        y2 = -self.l[0]*np.cos(pos[0]) - self.com[1]*np.cos(pos[1]+pos[0])  # + self.l[0] + self.l[1]
+        pot = self.m[0]*self.g*y1 + self.m[1]*self.g*y2
         return pot
 
     def total_energy(self, x):
@@ -392,7 +378,7 @@ class DoublePendulumPlant():
         Minv = np.linalg.inv(M)
 
         force = G + self.B.dot(tau) - C.dot(vel)
-        # friction = np.where(np.abs(F) > np.abs(force), force*np.sign(F), F)
+        #friction = np.where(np.abs(F) > np.abs(force), force*np.sign(F), F)
         friction = F
 
         accn = Minv.dot(force - friction)
@@ -425,7 +411,7 @@ class DoublePendulumPlant():
         accn = self.forward_dynamics(state, tau)
 
         # Next state
-        res = np.zeros(2 * self.dof)
+        res = np.zeros(2*self.dof)
         res[0] = state[2]
         res[1] = state[3]
         res[2] = accn[0]
@@ -456,10 +442,10 @@ class DoublePendulumPlant():
             derivative of mass matrix,
             Mx[i]=del(M)/del(x_i)
         """
-        Mx = np.zeros((2 * self.dof, self.dof, self.dof))
-        Mx[1, 0, 0] = -2 * self.l[0] * self.m[1] * self.com[1] * np.sin(x[1])
-        Mx[1, 0, 1] = -self.l[0] * self.m[1] * self.com[1] * np.sin(x[1])
-        Mx[1, 1, 0] = -self.l[0] * self.m[1] * self.com[1] * np.sin(x[1])
+        Mx = np.zeros((2*self.dof, self.dof, self.dof))
+        Mx[1, 0, 0] = -2*self.l[0]*self.m[1]*self.com[1]*np.sin(x[1])
+        Mx[1, 0, 1] = -self.l[0]*self.m[1]*self.com[1]*np.sin(x[1])
+        Mx[1, 1, 0] = -self.l[0]*self.m[1]*self.com[1]*np.sin(x[1])
         Mx[1, 1, 1] = 0
         return Mx
 
@@ -487,21 +473,21 @@ class DoublePendulumPlant():
             derivative of inverse mass matrix,
             Minvx[i]=del(Minv)/del(x_i)
         """
-        Minvx = np.zeros((2 * self.dof, self.dof, self.dof))
+        Minvx = np.zeros((2*self.dof, self.dof, self.dof))
 
-        den = -self.I[0] * self.I[1] - self.I[1] * self.l[0] ** 2. * self.m[1] + \
-              (self.l[0] * self.m[1] * self.com[1] * np.cos(x[1])) ** 2.
+        den = -self.I[0]*self.I[1] - self.I[1]*self.l[0]**2.*self.m[1] + \
+                (self.l[0]*self.m[1]*self.com[1]*np.cos(x[1]))**2.
 
-        h1 = self.l[0] * self.m[1] * self.com[1]
+        h1 = self.l[0]*self.m[1]*self.com[1]
 
-        Minvx[1, 0, 0] = -2. * self.I[1] * h1 ** 2. * np.sin(x[1]) * np.cos(x[1]) / den ** 2.
-        Minvx[1, 0, 1] = 2 * h1 ** 2. * (self.I[1] + h1 * np.cos(x[1])) * np.cos(x[1]) * np.sin(x[1]) / den ** 2. - \
-                         h1 * np.sin(x[1]) / den
-        Minvx[1, 1, 0] = 2 * h1 ** 2. * (self.I[1] + h1 * np.cos(x[1])) * np.cos(x[1]) * np.sin(x[1]) / den ** 2. - \
-                         h1 * np.sin(x[1]) / den
-        Minvx[1, 1, 1] = 2 * h1 ** 2 * (-self.I[0] - self.I[1] - self.l[0] ** 2. * self.m[1]
-                                        - 2 * h1 * np.cos(x[1])) * np.cos(x[1]) * np.sin(x[1]) / den ** 2. + \
-                         2 * h1 * np.sin(x[1]) / den
+        Minvx[1, 0, 0] = -2.*self.I[1]*h1**2.*np.sin(x[1])*np.cos(x[1]) / den**2.
+        Minvx[1, 0, 1] = 2*h1**2.*(self.I[1] + h1*np.cos(x[1]))*np.cos(x[1])*np.sin(x[1]) / den**2. - \
+                h1*np.sin(x[1]) / den
+        Minvx[1, 1, 0] = 2*h1**2.*(self.I[1] + h1*np.cos(x[1]))*np.cos(x[1])*np.sin(x[1]) / den**2. - \
+                h1*np.sin(x[1]) / den
+        Minvx[1, 1, 1] = 2*h1**2*(-self.I[0]-self.I[1]-self.l[0]**2.*self.m[1]
+                                  -2*h1*np.cos(x[1]))*np.cos(x[1])*np.sin(x[1]) / den**2. + \
+                2*h1*np.sin(x[1])/den
         return Minvx
 
     def get_Cx(self, x, tau):
@@ -528,18 +514,18 @@ class DoublePendulumPlant():
             derivative of coriolis matrix,
             Cx[i]=del(C)/del(x_i)
         """
-        Cx = np.zeros((2 * self.dof, self.dof, self.dof))
+        Cx = np.zeros((2*self.dof, self.dof, self.dof))
 
-        h1 = self.l[0] * self.m[1] * self.com[1]
+        h1 = self.l[0]*self.m[1]*self.com[1]
 
-        Cx[1, 0, 0] = -2. * h1 * np.cos(x[1]) * x[3]
-        Cx[1, 0, 1] = -h1 * np.cos(x[1]) * x[3]
-        Cx[1, 1, 0] = h1 * np.cos(x[1]) * x[2]
+        Cx[1, 0, 0] = -2.*h1*np.cos(x[1])*x[3]
+        Cx[1, 0, 1] = -h1*np.cos(x[1])*x[3]
+        Cx[1, 1, 0] = h1*np.cos(x[1])*x[2]
 
-        Cx[2, 1, 0] = h1 * np.sin(x[1])
+        Cx[2, 1, 0] = h1*np.sin(x[1])
 
-        Cx[3, 0, 0] = -2 * h1 * np.sin(x[1])
-        Cx[3, 0, 1] = -h1 * np.sin(x[1])
+        Cx[3, 0, 0] = -2*h1*np.sin(x[1])
+        Cx[3, 0, 1] = -h1*np.sin(x[1])
 
         return Cx
 
@@ -567,14 +553,14 @@ class DoublePendulumPlant():
             derivative of gravity vector,
             Gx[:, i]=del(G)/del(x_i)
         """
-        Gx = np.zeros((self.dof, 2 * self.dof))
+        Gx = np.zeros((self.dof, 2*self.dof))
 
-        Gx[0, 0] = -self.g * self.m[0] * self.com[0] * np.cos(x[0]) - \
-                   self.g * self.m[1] * (self.l[0] * np.cos(x[0]) + self.com[1] * np.cos(x[0] + x[1]))
-        Gx[0, 1] = -self.g * self.m[1] * self.com[1] * np.cos(x[0] + x[1])
+        Gx[0, 0] = -self.g*self.m[0]*self.com[0]*np.cos(x[0]) - \
+                    self.g*self.m[1]*(self.l[0]*np.cos(x[0]) + self.com[1]*np.cos(x[0]+x[1]))
+        Gx[0, 1] = -self.g*self.m[1]*self.com[1]*np.cos(x[0]+x[1])
 
-        Gx[1, 0] = -self.g * self.m[1] * self.com[1] * np.cos(x[0] + x[1])
-        Gx[1, 1] = -self.g * self.m[1] * self.com[1] * np.cos(x[0] + x[1])
+        Gx[1, 0] = -self.g*self.m[1]*self.com[1]*np.cos(x[0]+x[1])
+        Gx[1, 1] = -self.g*self.m[1]*self.com[1]*np.cos(x[0]+x[1])
 
         return Gx
 
@@ -603,10 +589,10 @@ class DoublePendulumPlant():
             Fx[:, i]=del(F)/del(x_i)
 
         """
-        Fx = np.zeros((self.dof, 2 * self.dof))
+        Fx = np.zeros((self.dof, 2*self.dof))
 
-        Fx[0, 2] = self.b[0] + 100 * self.coulomb_fric[0] / (1 + (100 * x[2]) ** 2)
-        Fx[1, 3] = self.b[1] + 100 * self.coulomb_fric[1] / (1 + (100 * x[3]) ** 2)
+        Fx[0, 2] = self.b[0] + 100*self.coulomb_fric[0] / (1+(100*x[2])**2)
+        Fx[1, 3] = self.b[1] + 100*self.coulomb_fric[1] / (1+(100*x[3])**2)
         return Fx
 
     def get_Alin(self, x, u):
@@ -639,17 +625,17 @@ class DoublePendulumPlant():
 
         Minv = np.linalg.inv(M)
 
-        # Mx = self.get_Mx(x, u)
+        #Mx = self.get_Mx(x, u)
         Minvx = self.get_Minvx(x, u)
         Cx = self.get_Cx(x, u)
         Gx = self.get_Gx(x, u)
         Fx = self.get_Fx(x, u)
 
-        Alin = np.zeros((2 * self.dof, 2 * self.dof))
+        Alin = np.zeros((2*self.dof, 2*self.dof))
         Alin[0, 2] = 1.
         Alin[1, 3] = 1.
 
-        qddx = np.zeros((self.dof, 2 * self.dof))
+        qddx = np.zeros((self.dof, 2*self.dof))
         qddx[0, 2] = 1.
         qddx[1, 3] = 1.
 
@@ -682,7 +668,7 @@ class DoublePendulumPlant():
             B-matrix
 
         """
-        Blin = np.zeros((2 * self.dof, self.dof))
+        Blin = np.zeros((2*self.dof, self.dof))
         M = self.mass_matrix(x)
         Minv = np.linalg.inv(M)
         Blin[2:, :] = np.dot(Minv, self.B)
@@ -718,173 +704,3 @@ class DoublePendulumPlant():
         Alin = self.get_Alin(x0, u0)
         Blin = self.get_Blin(x0, u0)
         return Alin, Blin
-
-    def forward_dynamics_torch(self, x, tau):
-        vel = x[:, self.dof:]
-        if self.torque_limit[0] == 0:
-            tau = torch.cat([torch.zeros_like(tau), tau], dim=1)
-        elif self.torque_limit[1] == 0:
-            tau = torch.cat([tau, torch.zeros_like(tau)], dim=1)
-        M = self.mass_matrix_torch(x)
-        C = self.coriolis_matrix_torch(x)
-        G = self.gravity_vector_torch(x)
-        F = self.coulomb_vector_torch(x)
-
-        Minv = torch.inverse(M)
-        B = torch.tensor(self.B, device=x.device, dtype=x.dtype).repeat(x.size(dim=0), 1, 1)
-        force = G.unsqueeze(-1) + torch.bmm(B, tau.unsqueeze(-1)) - torch.bmm(C, vel.unsqueeze(-1))
-        friction = F.unsqueeze(-1)
-        accn = torch.bmm(Minv, (force - friction)).squeeze(-1)
-
-        return accn
-
-    def forward_dynamics_torch_closed_form(self, x, tau, joint_index=-1):
-        """
-            if joint_index is set (0 or 1) computes only the forward dynamics for the selected joint
-        """
-        vel = x[:, self.dof:]
-
-        if self.torque_limit[0] == 0:
-            tau = torch.cat([torch.zeros_like(tau), tau], dim=1)
-        elif self.torque_limit[1] == 0:
-            tau = torch.cat([tau, torch.zeros_like(tau)], dim=1)
-        M = self.mass_matrix_torch(x)
-        C = self.coriolis_matrix_torch(x)
-        G = self.gravity_vector_torch(x)
-        F = self.coulomb_vector_torch(x)
-        dets = (torch.mul(M[:, 0, 0], M[:, 1, 1]) - torch.mul(M[:, 0, 1], M[:, 1, 0]))
-        inv_dets = 1 / dets
-        inv_dets = inv_dets.unsqueeze(1)
-
-        if joint_index < 0:
-            Minv = torch.zeros_like(M)
-            Minv[:, 0, 0] = M[:, 1, 1]
-            Minv[:, 0, 1] = -M[:, 0, 1]
-            Minv[:, 1, 0] = -M[:, 1, 0]
-            Minv[:, 1, 1] = M[:, 0, 0]
-        else:
-            Minv = torch.zeros((M.size(0), 1, self.dof), device=M.device, dtype=M.dtype)
-            if joint_index == 0:
-                Minv[:, 0, 0] = M[:, 1, 1]
-                Minv[:, 0, 1] = -M[:, 0, 1]
-            else:  # joint_index == 1
-                Minv[:, 0, 0] = -M[:, 1, 0]
-                Minv[:, 0, 1] = M[:, 0, 0]
-
-        Minv = inv_dets[:, :, None] * Minv
-
-        if torch.isnan(Minv).any():
-            print('Minv is nan')
-
-        B = torch.tensor(self.B, device=x.device, dtype=x.dtype).repeat(x.size(dim=0), 1, 1)
-        if torch.isnan(B).any():
-            print('B is nan')
-        # print('B:', B.size())
-        # print('tau:', tau.size())
-        # print('C:', C.size())
-        # print('vel:', vel.size())
-        force = G.unsqueeze(-1) + torch.bmm(B, tau.unsqueeze(-1)) - torch.bmm(C, vel.unsqueeze(-1))
-        if torch.isnan(force).any():
-            print('force is nan')
-            print('G nan: ', torch.isnan(G).any())
-            print('tau nan: ', torch.isnan(tau).any())
-            print('C nan: ', torch.isnan(C).any())
-            print('vel nan: ', torch.isnan(vel).any())
-
-        friction = F.unsqueeze(-1)
-        if torch.isnan(friction).any():
-            print('friction is nan')
-
-        accn = torch.bmm(Minv, (force - friction)).squeeze()
-        if torch.isnan(accn).any():
-            print('Minv', Minv[torch.isnan(accn), :, :])
-            print('force', force[torch.isnan(accn), :])
-            print('frict', friction[torch.isnan(accn), :])
-            print('G.unsqueeze(-1) ', G[torch.isnan(accn), :])
-            print('tau ', tau[torch.isnan(accn), :])
-            print('C ', C[torch.isnan(accn), :])
-            print('vel ', vel[torch.isnan(accn), :])
-            print('\n')
-
-        return accn
-
-    def mass_matrix_torch(self, x):
-        pos = x[:, :self.dof]
-
-        if self.formulas == "UnderactuatedLecture":
-            m00 = self.I[0] + self.I[1] + self.m[1] * self.l[0] ** 2.0 + \
-                  2 * self.m[1] * self.l[0] * self.com[1] * torch.cos(pos[:, 1]) + \
-                  self.gr ** 2.0 * self.Ir + self.Ir
-            m01 = self.I[1] + self.m[1] * self.l[0] * self.com[1] * torch.cos(pos[:, 1]) - \
-                  self.gr * self.Ir
-            m10 = self.I[1] + self.m[1] * self.l[0] * self.com[1] * torch.cos(pos[:, 1]) - \
-                  self.gr * self.Ir
-            m11 = self.I[1] + self.gr ** 2.0 * self.Ir
-            M = torch.zeros(x.size(dim=0), 2, 2, device=x.device, dtype=x.dtype)
-            M[:, 0, 0] = m00
-            M[:, 0, 1] = m01
-            M[:, 1, 0] = m10
-            M[:, 1, 1] = m11
-
-        elif self.formulas == "Spong":
-            pos[:, 0] -= 0.5 * torch.pi  # Spong uses different 0 position
-            m00 = self.I[0] + self.I[1] + self.m[0] * self.com[0] ** 2.0 + \
-                  self.m[1] * (self.l[0] ** 2.0 + self.com[1] ** 2.0 +
-                               2 * self.l[0] * self.com[1] * torch.cos(pos[:, 1]))
-            m01 = self.I[1] + self.m[1] * (self.com[1] ** 2.0 + self.l[0] * self.com[1] * torch.cos(pos[:, 1]))
-            m10 = self.I[1] + self.m[1] * (self.com[1] ** 2.0 + self.l[0] * self.com[1] * torch.cos(pos[:, 1]))
-            m11 = self.I[1] + self.m[1] * self.com[1] ** 2.0
-            M = torch.zeros(x.size(dim=0), 2, 2, device=x.device, dtype=x.dtype)
-            M[:, 0, 0] = m00
-            M[:, 0, 1] = m01
-            M[:, 1, 0] = m10
-            M[:, 1, 1] = m11
-
-        return M
-
-    def coriolis_matrix_torch(self, x):
-        pos = x[:, :self.dof]
-        vel = x[:, self.dof:]
-
-        C = None
-
-        if self.formulas == "Spong":
-            # same as UnderacteadLecture
-            pos[:, 0] -= 0.5 * torch.pi  # Spong uses different 0 position
-
-        if self.formulas == "UnderactuatedLecture":
-            C00 = -2 * self.m[1] * self.l[0] * self.com[1] * torch.sin(pos[:, 1]) * vel[:, 1]
-            C01 = -self.m[1] * self.l[0] * self.com[1] * torch.sin(pos[:, 1]) * vel[:, 1]
-            C10 = self.m[1] * self.l[0] * self.com[1] * torch.sin(pos[:, 1]) * vel[:, 0]
-            C = torch.zeros(x.size(dim=0), 2, 2, device=x.device, dtype=x.dtype)
-            C[:, 0, 0] = C00
-            C[:, 0, 1] = C01
-            C[:, 1, 0] = C10
-
-        return C
-
-    def gravity_vector_torch(self, x):
-        pos = x[:, :self.dof]
-        G0 = -self.m[0] * self.g * self.com[0] * torch.sin(pos[:, 0]) - \
-             self.m[1] * self.g * (self.l[0] * torch.sin(pos[:, 0]) +
-                                   self.com[1] * torch.sin(pos[:, 0] + pos[:, 1]))
-        G1 = -self.m[1] * self.g * self.com[1] * torch.sin(pos[:, 0] + pos[:, 1])
-        G = torch.zeros(x.size(dim=0), 2, device=x.device, dtype=x.dtype)
-        G[:, 0] = G0
-        G[:, 1] = G1
-
-        return G
-
-    def coulomb_vector_torch(self, x):
-
-        vel = x[:, self.dof:]
-        # F = torch.zeros(x.size(dim=0), self.dof, device=x.device, dtype=x.dtype)
-        # for i in range(self.dof):
-        #     F[:, i] = self.b[i]*vel[:, i] + self.coulomb_fric[i]*torch.arctan(100*vel[:, i])
-
-        F = (torch.einsum('ji,i->ji', vel, torch.tensor(self.b, device=x.device, dtype=x.dtype)) +
-             torch.einsum('ji,i->ji', torch.arctan(100 * vel),
-                          torch.tensor(self.coulomb_fric, device=x.device, dtype=x.dtype)))
-
-        return F
-
