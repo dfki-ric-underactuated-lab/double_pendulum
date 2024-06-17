@@ -69,11 +69,11 @@ def vector_mult(vec1, vec2):
     """
     v = 0
     for i in range(len(vec1)):
-        v += vec1[i]*vec2[i]
+        v += vec1[i] * vec2[i]
     return v
 
 
-class SymbolicDoublePendulum():
+class SymbolicDoublePendulum:
     """
     Symbolic double pendulum plant
     The double pendulum plant class calculates:
@@ -151,7 +151,8 @@ class SymbolicDoublePendulum():
 
     # state space variables
     q1, q2, qd1, qd2, qdd1, qdd2 = smp.symbols(
-        "q1 q2 \dot{q}_1 \dot{q}_2 \ddot{q}_1 \ddot{q}_2")
+        "q1 q2 \dot{q}_1 \dot{q}_2 \ddot{q}_1 \ddot{q}_2"
+    )
 
     q = smp.Matrix([q1, q2])
     qd = smp.Matrix([qd1, qd2])
@@ -164,24 +165,27 @@ class SymbolicDoublePendulum():
 
     # definition of linearization point
     q01, q02, q0d1, q0d2 = smp.symbols(
-            "\hat{q}_1 \hat{q}_2 \hat{\dot{q}}_1 \hat{\dot{q}}_2")
+        "\hat{q}_1 \hat{q}_2 \hat{\dot{q}}_1 \hat{\dot{q}}_2"
+    )
     x0 = smp.Matrix([q01, q02, q0d1, q0d2])
 
     u01, u02 = smp.symbols("\hat{u}_1 \hat{u}_2")
     u0 = smp.Matrix([u01, u02])
 
-    def __init__(self,
-                 mass=[1.0, 1.0],
-                 length=[0.5, 0.5],
-                 com=[0.5, 0.5],
-                 damping=[0.1, 0.1],
-                 gravity=9.81,
-                 coulomb_fric=[0.0, 0.0],
-                 inertia=[None, None],
-                 motor_inertia=0.,
-                 gear_ratio=6,
-                 torque_limit=[np.inf, np.inf],
-                 model_pars=None):
+    def __init__(
+        self,
+        mass=[1.0, 1.0],
+        length=[0.5, 0.5],
+        com=[0.5, 0.5],
+        damping=[0.1, 0.1],
+        gravity=9.81,
+        coulomb_fric=[0.0, 0.0],
+        inertia=[None, None],
+        motor_inertia=0.0,
+        gear_ratio=6,
+        torque_limit=[np.inf, np.inf],
+        model_pars=None,
+    ):
         self.m = mass
         self.l = length
         self.com = com
@@ -194,7 +198,7 @@ class SymbolicDoublePendulum():
         self.torque_limit = torque_limit
         for i in range(len(inertia)):
             if inertia[i] is None:
-                self.I.append(mass[i]*com[i]*com[i])
+                self.I.append(mass[i] * com[i] * com[i])
             else:
                 self.I.append(inertia[i])
 
@@ -222,8 +226,10 @@ class SymbolicDoublePendulum():
             self.B = np.array([[1, 0], [0, 1]])
 
         # needed for plotting
-        self.workspace_range = [[-1.2*np.sum(self.l), 1.2*np.sum(self.l)],
-                                [-1.2*np.sum(self.l), 1.2*np.sum(self.l)]]
+        self.workspace_range = [
+            [-1.2 * np.sum(self.l), 1.2 * np.sum(self.l)],
+            [-1.2 * np.sum(self.l), 1.2 * np.sum(self.l)],
+        ]
 
         self.formulas = "UnderactuatedLecture"
         # self.formulas = "Spong"
@@ -259,24 +265,44 @@ class SymbolicDoublePendulum():
         # Guess: The axes for the inertias I1, I2 are defined different
         # Underactuated: center at rotation point, Spong: at com
         if self.formulas == "UnderactuatedLecture":
-            M11 = self.I1 + self.I2 + self.m2*self.l1**2.0 + \
-                2*self.m2*self.l1*self.r2*smp.cos(self.q2) + \
-                self.gr_sym**2.0*self.Ir_sym + self.Ir_sym
-            M12 = self.I2 + self.m2*self.l1*self.r2*smp.cos(self.q2) - \
-                    self.gr_sym*self.Ir_sym
-            M21 = self.I2 + self.m2*self.l1*self.r2*smp.cos(self.q2) - \
-                    self.gr_sym*self.Ir_sym
-            M22 = self.I2 + self.gr_sym**2.0*self.Ir_sym
+            M11 = (
+                self.I1
+                + self.I2
+                + self.m2 * self.l1**2.0
+                + 2 * self.m2 * self.l1 * self.r2 * smp.cos(self.q2)
+                + self.gr_sym**2.0 * self.Ir_sym
+                + self.Ir_sym
+            )
+            M12 = (
+                self.I2
+                + self.m2 * self.l1 * self.r2 * smp.cos(self.q2)
+                - self.gr_sym * self.Ir_sym
+            )
+            M21 = (
+                self.I2
+                + self.m2 * self.l1 * self.r2 * smp.cos(self.q2)
+                - self.gr_sym * self.Ir_sym
+            )
+            M22 = self.I2 + self.gr_sym**2.0 * self.Ir_sym
         elif self.formulas == "Spong":
-            M11 = self.I1 + self.I2 + self.m1*self.r1**2.0 + \
-                  self.m2*(self.l1**2.0
-                           + self.r2**2.0
-                           + 2*self.l1*self.r2*smp.cos(self.q2))
-            M12 = self.I2 + self.m2*(self.r2**2.0
-                                     + self.l1*self.r2*smp.cos(self.q2))
-            M21 = self.I2 + self.m2*(self.r2**2.0
-                                     + self.l1*self.r2*smp.cos(self.q2))
-            M22 = self.I2 + self.m2*self.r2**2.0
+            M11 = (
+                self.I1
+                + self.I2
+                + self.m1 * self.r1**2.0
+                + self.m2
+                * (
+                    self.l1**2.0
+                    + self.r2**2.0
+                    + 2 * self.l1 * self.r2 * smp.cos(self.q2)
+                )
+            )
+            M12 = self.I2 + self.m2 * (
+                self.r2**2.0 + self.l1 * self.r2 * smp.cos(self.q2)
+            )
+            M21 = self.I2 + self.m2 * (
+                self.r2**2.0 + self.l1 * self.r2 * smp.cos(self.q2)
+            )
+            M22 = self.I2 + self.m2 * self.r2**2.0
         M = smp.Matrix([[M11, M12], [M21, M22]])
         return M
 
@@ -292,15 +318,15 @@ class SymbolicDoublePendulum():
         """
         # equal
         if self.formulas == "UnderactuatedLecture":
-            C11 = -2*self.m2*self.l1*self.r2*smp.sin(self.q2)*self.qd2
-            C12 = -self.m2*self.l1*self.r2*smp.sin(self.q2)*self.qd2
-            C21 = self.m2*self.l1*self.r2*smp.sin(self.q2)*self.qd1
+            C11 = -2 * self.m2 * self.l1 * self.r2 * smp.sin(self.q2) * self.qd2
+            C12 = -self.m2 * self.l1 * self.r2 * smp.sin(self.q2) * self.qd2
+            C21 = self.m2 * self.l1 * self.r2 * smp.sin(self.q2) * self.qd1
             C22 = 0
             C = smp.Matrix([[C11, C12], [C21, C22]])
         elif self.formulas == "Spong":
-            C11 = -2*self.m2*self.l1*self.r2*smp.sin(self.q2)*self.qd2
-            C12 = -self.m2*self.l1*self.r2*smp.sin(self.q2)*self.qd2
-            C21 = self.m2*self.l1*self.r2*smp.sin(self.q2)*self.qd1
+            C11 = -2 * self.m2 * self.l1 * self.r2 * smp.sin(self.q2) * self.qd2
+            C12 = -self.m2 * self.l1 * self.r2 * smp.sin(self.q2) * self.qd2
+            C21 = self.m2 * self.l1 * self.r2 * smp.sin(self.q2) * self.qd1
             C22 = 0
             C = smp.Matrix([[C11, C12], [C21, C22]])
         return C
@@ -317,14 +343,24 @@ class SymbolicDoublePendulum():
         """
         # equivalent
         if self.formulas == "UnderactuatedLecture":
-            G1 = (-self.m1*self.g_sym*self.r1*smp.sin(self.q1)
-                  - self.m2*self.g_sym*(self.l1*smp.sin(self.q1)
-                                        + self.r2*smp.sin(self.q1+self.q2)))
-            G2 = -self.m2*self.g_sym*self.r2*smp.sin(self.q1+self.q2)
+            G1 = -self.m1 * self.g_sym * self.r1 * smp.sin(
+                self.q1
+            ) - self.m2 * self.g_sym * (
+                self.l1 * smp.sin(self.q1) + self.r2 * smp.sin(self.q1 + self.q2)
+            )
+            G2 = -self.m2 * self.g_sym * self.r2 * smp.sin(self.q1 + self.q2)
         elif self.formulas == "Spong":
-            G1 = -(self.m1*self.r1 + self.m2*self.l1)*self.g_sym*smp.cos(self.q1-0.5*np.pi) - \
-                  self.m2*self.r2*self.g_sym*smp.cos(self.q1-0.5*np.pi+self.q2)
-            G2 = -self.m2*self.r2*self.g_sym*smp.cos(self.q1-0.5*np.pi+self.q2)
+            G1 = -(self.m1 * self.r1 + self.m2 * self.l1) * self.g_sym * smp.cos(
+                self.q1 - 0.5 * np.pi
+            ) - self.m2 * self.r2 * self.g_sym * smp.cos(
+                self.q1 - 0.5 * np.pi + self.q2
+            )
+            G2 = (
+                -self.m2
+                * self.r2
+                * self.g_sym
+                * smp.cos(self.q1 - 0.5 * np.pi + self.q2)
+            )
         G = smp.Matrix([[G1], [G2]])
         return G
 
@@ -338,8 +374,8 @@ class SymbolicDoublePendulum():
             shape=(1,2)
             coulomb vector
         """
-        F1 = self.b1*self.qd1 + self.cf1*smp.atan(100*self.qd1)
-        F2 = self.b2*self.qd2 + self.cf2*smp.atan(100*self.qd2)
+        F1 = self.b1 * self.qd1 + self.cf1 * smp.atan(100 * self.qd1)
+        F2 = self.b2 * self.qd2 + self.cf2 * smp.atan(100 * self.qd2)
         F = smp.Matrix([[F1], [F2]])
         return F
 
@@ -347,16 +383,16 @@ class SymbolicDoublePendulum():
         """
         symbolic kinetic energy of the double pendulum
         """
-        Ekin = 0.5*vector_mult(self.qd.T, self.M*self.qd)
+        Ekin = 0.5 * vector_mult(self.qd.T, self.M * self.qd)
         return Ekin
 
     def symbolic_potential_energy(self):
         """
         symbolic potential energy of the double pendulum
         """
-        h1 = -self.r1*smp.cos(self.q1)
-        h2 = -self.l1*smp.cos(self.q1) - self.r2*smp.cos(self.q1+self.q2)
-        Epot = self.m1*self.g_sym*h1 + self.m2*self.g_sym*h2
+        h1 = -self.r1 * smp.cos(self.q1)
+        h2 = -self.l1 * smp.cos(self.q1) - self.r2 * smp.cos(self.q1 + self.q2)
+        Epot = self.m1 * self.g_sym * h1 + self.m2 * self.g_sym * h2
         return Epot
 
     def symbolic_total_energy(self):
@@ -481,11 +517,11 @@ class SymbolicDoublePendulum():
             # eom = (self.M*self.qdd
             #        + self.C*self.qd
             #        - self.G - self.B_sym*self.u + self.F)
-            eom = Minv*(-self.C*self.qd + self.G + self.B_sym*self.u - self.F)
+            eom = Minv * (-self.C * self.qd + self.G + self.B_sym * self.u - self.F)
             return eom
         elif order == "1st":
             f1 = self.qd
-            f2 = Minv*(-self.C*self.qd + self.G + self.B_sym*self.u - self.F)
+            f2 = Minv * (-self.C * self.qd + self.G + self.B_sym * self.u - self.F)
             f = smp.Matrix([f1, f2])
             return f
 
@@ -600,8 +636,8 @@ class SymbolicDoublePendulum():
             B-matrix
         """
         Alin, Blin = self.linear_matrices(x0, u0)
-        Alin_disc = np.identity(np.shape(Alin)[0]) + dt*Alin
-        Blin_disc = Blin*dt
+        Alin_disc = np.identity(np.shape(Alin)[0]) + dt * Alin
+        Blin_disc = Blin * dt
 
         return np.asarray(Alin_disc, dtype=float), np.asarray(Blin_disc, dtype=float)
 
@@ -676,11 +712,11 @@ class SymbolicDoublePendulum():
             cartesian coordinates of the link end points
             units=[m]
         """
-        ee1_pos_x = self.l[0]*np.sin(pos[0])
-        ee1_pos_y = -self.l[0]*np.cos(pos[0])
+        ee1_pos_x = self.l[0] * np.sin(pos[0])
+        ee1_pos_y = -self.l[0] * np.cos(pos[0])
 
-        ee2_pos_x = ee1_pos_x + self.l[1]*np.sin(pos[0]+pos[1])
-        ee2_pos_y = ee1_pos_y - self.l[1]*np.cos(pos[0]+pos[1])
+        ee2_pos_x = ee1_pos_x + self.l[1] * np.sin(pos[0] + pos[1])
+        ee2_pos_y = ee1_pos_y - self.l[1] * np.cos(pos[0] + pos[1])
 
         return [[ee1_pos_x, ee1_pos_y], [ee2_pos_x, ee2_pos_y]]
 
@@ -703,13 +739,17 @@ class SymbolicDoublePendulum():
             cartesian coordinates of the center of mass, units=[m]
 
         """
-        pre = 1. / (self.m[0] + self.m[1])
-        cx = pre * (self.m[0]*self.com[0]*np.cos(pos[0]) +
-                    self.m[1]*self.l[0]*np.cos(pos[0]) +
-                    self.m[1]*self.com[1]*np.cos(pos[0]+pos[1]))
-        cy = pre * (self.m[0]*self.r1*np.sin(pos[0]) +
-                    self.m[1]*self.l[0]*np.sin(pos[0]) +
-                    self.m[1]*self.com[1]*np.sin(pos[0]+pos[1]))
+        pre = 1.0 / (self.m[0] + self.m[1])
+        cx = pre * (
+            self.m[0] * self.com[0] * np.cos(pos[0])
+            + self.m[1] * self.l[0] * np.cos(pos[0])
+            + self.m[1] * self.com[1] * np.cos(pos[0] + pos[1])
+        )
+        cy = pre * (
+            self.m[0] * self.r1 * np.sin(pos[0])
+            + self.m[1] * self.l[0] * np.sin(pos[0])
+            + self.m[1] * self.com[1] * np.sin(pos[0] + pos[1])
+        )
         return [cx, cy]
 
     def com_dot(self, x):
@@ -731,13 +771,17 @@ class SymbolicDoublePendulum():
             center of mass time derivative, units=[m/s]
 
         """
-        pre = 1. / (self.m[0] + self.m[1])
-        cx = pre * (-self.m[0]*self.com[0]*x[2]*np.sin(x[0]) +
-                    -self.m[1]*self.l[0]*x[2]*np.sin(x[0]) +
-                    -self.m[1]*self.com[1]*(x[2]+x[3])*np.sin(x[0]+x[1]))
-        cy = pre * (self.m[0]*self.r1*x[2]*np.cos(x[0]) +
-                    self.m[1]*self.l[0]*x[2]*np.cos(x[0]) +
-                    self.m[1]*self.com[1]*(x[2]+x[3])*np.cos(x[0]+x[1]))
+        pre = 1.0 / (self.m[0] + self.m[1])
+        cx = pre * (
+            -self.m[0] * self.com[0] * x[2] * np.sin(x[0])
+            + -self.m[1] * self.l[0] * x[2] * np.sin(x[0])
+            + -self.m[1] * self.com[1] * (x[2] + x[3]) * np.sin(x[0] + x[1])
+        )
+        cy = pre * (
+            self.m[0] * self.r1 * x[2] * np.cos(x[0])
+            + self.m[1] * self.l[0] * x[2] * np.cos(x[0])
+            + self.m[1] * self.com[1] * (x[2] + x[3]) * np.cos(x[0] + x[1])
+        )
         return [cx, cy]
 
     def angular_momentum_base(self, x):
@@ -758,7 +802,7 @@ class SymbolicDoublePendulum():
 
         """
         M = self.mass_matrix(x)
-        L = M[0,0]*x[2] + M[0,1]*x[3]
+        L = M[0, 0] * x[2] + M[0, 1] * x[3]
         return L
 
     def angular_momentum_dot_base(self, x):
@@ -779,7 +823,7 @@ class SymbolicDoublePendulum():
 
         """
         cx = self.center_of_mass(x[:2])[0]
-        Ld = -(self.m[0]+self.m[1])*self.g*cx
+        Ld = -(self.m[0] + self.m[1]) * self.g * cx
         return Ld
 
     def angular_momentum_ddot_base(self, x):
@@ -800,7 +844,7 @@ class SymbolicDoublePendulum():
 
         """
         cx_dot = self.com_dot(x)[0]
-        Ldd = -(self.m[0]+self.m[1])*self.g*cx_dot
+        Ldd = -(self.m[0] + self.m[1]) * self.g * cx_dot
         return Ldd
 
     def forward_dynamics(self, x, u):
@@ -824,7 +868,7 @@ class SymbolicDoublePendulum():
             joint acceleration, [acc1, acc2], units=[m/s²]
         """
         # pos = np.copy(x[:self.dof])
-        vel = np.copy(x[self.dof:])
+        vel = np.copy(x[self.dof :])
 
         M = self.mass_matrix(x)
         C = self.coriolis_matrix(x)
@@ -862,7 +906,7 @@ class SymbolicDoublePendulum():
 
         """
 
-        vel = np.copy(x[self.dof:])
+        vel = np.copy(x[self.dof :])
 
         M = self.mass_matrix(x)
         C = self.coriolis_matrix(x)
@@ -899,7 +943,7 @@ class SymbolicDoublePendulum():
         accn = self.forward_dynamics(x, u)
 
         # Next state
-        res = np.zeros(2*self.dof)
+        res = np.zeros(2 * self.dof)
         res[0] = x[2]
         res[1] = x[3]
         res[2] = accn[0]

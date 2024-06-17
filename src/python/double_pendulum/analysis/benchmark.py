@@ -1,10 +1,15 @@
+import os
+import pickle
+import yaml
 import numpy as np
 
-from double_pendulum.utils.wrap_angles import wrap_angles_top
-from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
+# from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.model.plant import DoublePendulumPlant
+from double_pendulum.utils.wrap_angles import wrap_angles_top
 from double_pendulum.simulation.simulation import Simulator
+from double_pendulum.simulation.perturbations import get_random_gauss_perturbation_array
 from double_pendulum.utils.csv_trajectory import load_trajectory
+from double_pendulum.utils.lists import obj_to_list
 
 
 class benchmarker:
@@ -17,9 +22,9 @@ class benchmarker:
         goal,
         epsilon=[0.1, 0.1, 1.0, 1.0],
         check_only_final_state=False,
-        friction_compensation=True,
+        goal_check_method="epsilon",
+        goal_check_method_height=0.9,
         integrator="runge_kutta",
-        save_dir="benchmark",
     ):
         self.controller = controller
         self.x0 = np.asarray(x0)
@@ -28,9 +33,9 @@ class benchmarker:
         self.goal = np.asarray(goal)
         self.epsilon = epsilon
         self.check_only_final_state = check_only_final_state
-        self.friction_compensation = friction_compensation
+        self.goal_check_method = goal_check_method
+        self.goal_check_method_height = goal_check_method_height
         self.integrator = integrator
-        self.save_dir = save_dir
 
         self.mass = None
         self.length = None
@@ -46,9 +51,9 @@ class benchmarker:
         self.simulator = None
         self.ref_trajectory = None
 
-        self.Q = None
-        self.R = None
-        self.Qf = None
+        self.Q = np.zeros((4, 4))
+        self.R = np.zeros((2, 2))
+        self.Qf = np.zeros((4, 4))
 
         self.traj_following = False
         self.t_traj = None
@@ -93,7 +98,8 @@ class benchmarker:
             # self.gr = model_pars.gr
             self.torque_limit = model_pars.tl
 
-        self.plant = SymbolicDoublePendulum(
+        # self.plant = SymbolicDoublePendulum(
+        self.plant = DoublePendulumPlant(
             mass=self.mass,
             length=self.length,
             com=self.com,
@@ -149,24 +155,39 @@ class benchmarker:
             )
 
     def check_goal_success(self, x_traj):
-        if self.check_only_final_state:
-            lp = wrap_angles_top(x_traj[-1])
-            pos1_succ = np.abs(lp[0] - self.goal[0]) < self.epsilon[0]
-            pos2_succ = np.abs(lp[1] - self.goal[1]) < self.epsilon[1]
-            vel1_succ = np.abs(lp[2] - self.goal[2]) < self.epsilon[2]
-            vel2_succ = np.abs(lp[3] - self.goal[3]) < self.epsilon[3]
-            succ = pos1_succ and pos2_succ and vel1_succ and vel2_succ
-        else:
-            succ = False
-            for x in x_traj:
-                lp = wrap_angles_top(x)
+        if self.goal_check_method == "epsilon":
+            if self.check_only_final_state:
+                lp = wrap_angles_top(x_traj[-1])
                 pos1_succ = np.abs(lp[0] - self.goal[0]) < self.epsilon[0]
                 pos2_succ = np.abs(lp[1] - self.goal[1]) < self.epsilon[1]
                 vel1_succ = np.abs(lp[2] - self.goal[2]) < self.epsilon[2]
                 vel2_succ = np.abs(lp[3] - self.goal[3]) < self.epsilon[3]
                 succ = pos1_succ and pos2_succ and vel1_succ and vel2_succ
-                if succ:
-                    break
+            else:
+                succ = False
+                for x in x_traj:
+                    lp = wrap_angles_top(x)
+                    pos1_succ = np.abs(lp[0] - self.goal[0]) < self.epsilon[0]
+                    pos2_succ = np.abs(lp[1] - self.goal[1]) < self.epsilon[1]
+                    vel1_succ = np.abs(lp[2] - self.goal[2]) < self.epsilon[2]
+                    vel2_succ = np.abs(lp[3] - self.goal[3]) < self.epsilon[3]
+                    succ = pos1_succ and pos2_succ and vel1_succ and vel2_succ
+                    if succ:
+                        break
+        elif self.goal_check_method == "height":
+            fk = self.plant.forward_kinematics(x_traj.T[:2])
+            ee_pos_y = fk[1][1]
+
+            goal_height = self.goal_check_method_height * (
+                self.length[0] + self.length[1]
+            )
+
+            up = np.where(ee_pos_y > goal_height, True, False)
+
+            if self.check_only_final_state:
+                succ = True in up
+            else:
+                succ = up[-1]
 
         return succ
 
@@ -208,10 +229,6 @@ class benchmarker:
 
         simulator = Simulator(plant=plant)
         self.controller.reset()
-        if self.friction_compensation:
-            self.controller.set_friction_compensation(
-                damping=self.damping, coulomb_fric=self.cfric
-            )
         self.controller.init()
 
         T, X, U = simulator.simulate(
@@ -427,21 +444,86 @@ class benchmarker:
             print("")
         return res_dict
 
-    def check_perturbation_robustness(self, time_stamps=[], tau_perts=[]):
-        pass
+    def check_perturbation_robustness(
+        self,
+        repetitions=20,
+        n_pert_per_joint=3,
+        min_t_dist=1.0,
+        sigma_minmax=[0.01, 0.05],
+        amplitude_min_max=[0.1, 1.0],
+    ):
+        n_sims = repetitions
+        print(f"Computing pertubation robustness ({n_sims} simulations)")
+
+        counter = 0
+        res_dict = {}
+        C_free = []
+        C_tf = []
+        SUCC = []
+        mus = []
+        sigmas = []
+        amplitudes = []
+        print(f"{counter}/{n_sims}", end="")
+        for _ in range(repetitions):
+            self.controller.reset()
+            self.controller.init()
+            (
+                perturbation_array,
+                mu,
+                sigma,
+                amplitude,
+            ) = get_random_gauss_perturbation_array(
+                self.t_final,
+                self.dt,
+                n_pert_per_joint,
+                min_t_dist,
+                sigma_minmax,
+                amplitude_min_max,
+            )
+            self.simulator.set_disturbances(perturbation_array)
+            T, X, U = self.simulator.simulate(
+                t0=0.0,
+                tf=self.t_final,
+                dt=self.dt,
+                x0=self.x0,
+                controller=self.controller,
+                integrator=self.integrator,
+            )
+            self.simulator.reset()
+
+            cost_free, cost_tf, succ = self.compute_success_measure(X, U)
+            mus.append(list(mu))
+            sigmas.append(list(sigma))
+            amplitudes.append(list(amplitude))
+            C_free.append(cost_free)
+            C_tf.append(cost_tf)
+            SUCC.append(succ)
+            counter += 1
+            print("\r", end="")
+            print(f"{counter}/{n_sims}", end="")
+        res_dict["mu_list"] = mus
+        res_dict["sigma_list"] = sigmas
+        res_dict["amplitudes_list"] = amplitudes
+        res_dict["free_costs"] = C_free
+        if self.traj_following:
+            res_dict["following_costs"] = C_tf
+        res_dict["successes"] = SUCC
+        print("")
+        return res_dict
 
     def check_meas_noise_robustness(
         self,
         repetitions=10,
         meas_noise_mode="vel",
         meas_noise_sigma_list=[],
-        meas_noise_cut=0.0,
-        meas_noise_vfilters=["None"],
-        meas_noise_vfilter_args={"lowpass_alpha": 0.3},
     ):
         # maybe add noise frequency
         # (on the real system noise frequency seems so be higher than
         # control frequency -> no frequency neccessary here)
+
+        # leave for now for consitency with older data
+        meas_noise_vfilters = ["None"]
+
         n_sims = repetitions * len(meas_noise_sigma_list) * len(meas_noise_vfilters)
         print(f"Computing noise robustness ({n_sims} simulations)")
 
@@ -449,7 +531,7 @@ class benchmarker:
         for nf in meas_noise_vfilters:
             counter = 0
             nn_sims = repetitions * len(meas_noise_sigma_list)
-            print("  Using Noise filter: ", nf, f"({nn_sims} simulations)")
+            # print("  Using Noise filter: ", nf, f"({nn_sims} simulations)")
             print(f"  {counter}/{n_sims}", end="")
             C_free = []
             C_tf = []
@@ -459,21 +541,7 @@ class benchmarker:
                 rep_C_tf = []
                 rep_SUCC = []
                 for _ in range(repetitions):
-                    self.controller.set_filter_args(
-                        filt=nf,
-                        x0=self.goal,
-                        dt=self.dt,
-                        plant=self.plant,
-                        simulator=self.simulator,
-                        velocity_cut=meas_noise_cut,
-                        filter_kwargs=meas_noise_vfilter_args,
-                    )
-
                     self.controller.reset()
-                    if self.friction_compensation:
-                        self.controller.set_friction_compensation(
-                            damping=self.damping, coulomb_fric=self.cfric
-                        )
                     self.controller.init()
                     if meas_noise_mode == "posvel":
                         meas_noise_sigmas = [na, na, na, na]
@@ -513,7 +581,7 @@ class benchmarker:
                 res_dict[nf]["following_costs"] = C_tf
             res_dict[nf]["successes"] = SUCC
             res_dict[nf]["noise_mode"] = meas_noise_mode
-            res_dict[nf]["noise_cut"] = meas_noise_cut
+            # res_dict[nf]["noise_cut"] = meas_noise_cut
             # res_dict[nf]["noise_vfilter"] = nf
             # res_dict[nf]["noise_vfilter_args"] = meas_noise_vfilter_args
             print("")
@@ -536,10 +604,6 @@ class benchmarker:
             rep_SUCC = []
             for _ in range(repetitions):
                 self.controller.reset()
-                if self.friction_compensation:
-                    self.controller.set_friction_compensation(
-                        damping=self.damping, coulomb_fric=self.cfric
-                    )
                 self.controller.init()
                 u_noise_sigmas = np.zeros(len(self.torque_limit))
                 for i in range(len(self.torque_limit)):
@@ -587,10 +651,6 @@ class benchmarker:
         print(f"{counter}/{n_sims}", end="")
         for ur in u_responses:
             self.controller.reset()
-            if self.friction_compensation:
-                self.controller.set_friction_compensation(
-                    damping=self.damping, coulomb_fric=self.cfric
-                )
             self.controller.init()
             self.simulator.set_motor_parameters(u_responsiveness=ur)
             T, X, U = self.simulator.simulate(
@@ -630,10 +690,6 @@ class benchmarker:
         print(f"{counter}/{n_sims}", end="")
         for de in delays:
             self.controller.reset()
-            if self.friction_compensation:
-                self.controller.set_friction_compensation(
-                    damping=self.damping, coulomb_fric=self.cfric
-                )
             self.controller.init()
             self.simulator.set_measurement_parameters(delay=de, delay_mode=delay_mode)
             T, X, U = self.simulator.simulate(
@@ -669,6 +725,7 @@ class benchmarker:
         compute_unoise_robustness=True,
         compute_uresponsiveness_robustness=True,
         compute_delay_robustness=True,
+        compute_perturbation_robustness=False,
         mpar_vars=["Ir", "m1r1", "I1", "b1", "cf1", "m2r2", "m2", "I2", "b2", "cf2"],
         modelpar_var_lists={
             "Ir": [],
@@ -685,52 +742,140 @@ class benchmarker:
         repetitions=10,
         meas_noise_mode="vel",
         meas_noise_sigma_list=[0.1, 0.3, 0.5],
-        meas_noise_cut=0.5,
-        meas_noise_vfilters=["None"],
-        meas_noise_vfilter_args={"alpha": 0.3},
         u_noise_sigma_list=[0.1, 0.5, 1.0],
         u_responses=[1.0, 1.1, 1.2, 1.3, 1.4, 1.5],
         delay_mode="vel",
         delays=[0.01, 0.02, 0.05, 0.1],
+        perturbation_repetitions=50,
+        perturbations_per_joint=3,
+        perturbation_min_t_dist=1.0,
+        perturbation_sigma_minmax=[0.01, 0.05],
+        perturbation_amp_minmax=[0.1, 1.0],
     ):
+        self.compute_model_robustness = compute_model_robustness
+        self.compute_noise_robustness = compute_noise_robustness
+        self.compute_unoise_robustness = compute_unoise_robustness
+        self.compute_uresponsiveness_robustness = compute_uresponsiveness_robustness
+        self.compute_delay_robustness = compute_delay_robustness
+        self.compute_perturbation_robustness = compute_perturbation_robustness
+        self.mpar_vars = mpar_vars
+        self.modelpar_var_lists = modelpar_var_lists
+        self.repetitions = repetitions
+        self.meas_noise_mode = meas_noise_mode
+        self.meas_noise_sigma_list = meas_noise_sigma_list
+        self.u_noise_sigma_list = u_noise_sigma_list
+        self.u_responses = u_responses
+        self.delay_mode = delay_mode
+        self.delays = delays
+        self.perturbation_repetitions = perturbation_repetitions
+        self.perturbations_per_joint = perturbations_per_joint
+        self.perturbation_min_t_dist = perturbation_min_t_dist
+        self.perturbation_sigma_minmax = perturbation_sigma_minmax
+        self.perturbation_amp_minmax = perturbation_amp_minmax
+
         n_sims = 0
-        for k in modelpar_var_lists.keys():
-            n_sims += len(modelpar_var_lists[k])
-        n_sims += repetitions * len(meas_noise_sigma_list) * len(meas_noise_vfilters)
-        n_sims += repetitions * len(u_noise_sigma_list)
-        n_sims += len(u_responses)
-        n_sims += len(delays)
+        if compute_model_robustness:
+            for k in modelpar_var_lists.keys():
+                n_sims += len(modelpar_var_lists[k])
+        if compute_noise_robustness:
+            n_sims += repetitions * len(meas_noise_sigma_list)
+        if compute_unoise_robustness:
+            n_sims += repetitions * len(u_noise_sigma_list)
+        if compute_uresponsiveness_robustness:
+            n_sims += len(u_responses)
+        if compute_delay_robustness:
+            n_sims += len(delays)
+        if compute_perturbation_robustness:
+            n_sims += perturbation_repetitions
         print(
             f"\nWill in total compute {n_sims} simulations for testing the robustness of the controller\n"
         )
 
-        res = {}
+        self.res = {}
         if compute_model_robustness:
             res_model = self.check_modelpar_robustness(
                 mpar_vars=mpar_vars, var_lists=modelpar_var_lists
             )
-            res["model_robustness"] = res_model
+            self.res["model_robustness"] = res_model
         if compute_noise_robustness:
             res_noise = self.check_meas_noise_robustness(
                 repetitions=repetitions,
                 meas_noise_mode=meas_noise_mode,
                 meas_noise_sigma_list=meas_noise_sigma_list,
-                meas_noise_cut=meas_noise_cut,
-                meas_noise_vfilters=meas_noise_vfilters,
-                meas_noise_vfilter_args=meas_noise_vfilter_args,
+                # meas_noise_cut=meas_noise_cut,
+                # meas_noise_vfilters=meas_noise_vfilters,
+                # meas_noise_vfilter_args=meas_noise_vfilter_args,
             )
-            res["meas_noise_robustness"] = res_noise
+            self.res["meas_noise_robustness"] = res_noise
         if compute_unoise_robustness:
             res_unoise = self.check_unoise_robustness(
                 u_noise_sigma_list=u_noise_sigma_list
             )
-            res["u_noise_robustness"] = res_unoise
+            self.res["u_noise_robustness"] = res_unoise
         if compute_uresponsiveness_robustness:
             res_uresp = self.check_uresponsiveness_robustness(u_responses=u_responses)
-            res["u_responsiveness_robustness"] = res_uresp
+            self.res["u_responsiveness_robustness"] = res_uresp
         if compute_delay_robustness:
             res_delay = self.check_delay_robustness(
                 delay_mode=delay_mode, delays=delays
             )
-            res["delay_robustness"] = res_delay
-        return res
+            self.res["delay_robustness"] = res_delay
+        if compute_perturbation_robustness:
+            res_pertub = self.check_perturbation_robustness(
+                repetitions=perturbation_repetitions,
+                n_pert_per_joint=perturbations_per_joint,
+                min_t_dist=perturbation_min_t_dist,
+                sigma_minmax=perturbation_sigma_minmax,
+                amplitude_min_max=perturbation_amp_minmax,
+            )
+            self.res["perturbation_robustness"] = res_pertub
+        return self.res
+
+    def save(self, save_dir="."):
+        f = open(os.path.join(save_dir, "benchmark_results.pkl"), "wb")
+        pickle.dump(self.res, f)
+        f.close()
+
+        modelpar_var_lists_save = self.modelpar_var_lists
+
+        for key in modelpar_var_lists_save.keys():
+            modelpar_var_lists_save[key] = obj_to_list(modelpar_var_lists_save[key])
+
+        par_dict = {
+            "x0": obj_to_list(self.x0),
+            "dt": self.dt,
+            "t_final": self.t_final,
+            "goal": obj_to_list(self.goal),
+            "epsilon": list(self.epsilon),
+            "check_only_final_state": self.check_only_final_state,
+            "goal_check_method": self.goal_check_method,
+            "goal_check_method_height": self.goal_check_method_height,
+            "integrator": self.integrator,
+            "Q": obj_to_list(self.Q),
+            "Qf": obj_to_list(self.Qf),
+            "R": obj_to_list(self.R),
+            "traj_following": self.traj_following,
+            "compute_model_robustness": self.compute_model_robustness,
+            "compute_noise_robustness": self.compute_noise_robustness,
+            "compute_unoise_robustness": self.compute_unoise_robustness,
+            "compute_uresponsiveness_robustness": self.compute_uresponsiveness_robustness,
+            "compute_delay_robustness": self.compute_delay_robustness,
+            "compute_perturbation_robustness": self.compute_perturbation_robustness,
+            "mpar_vars": self.mpar_vars,
+            "modelpar_var_lists": modelpar_var_lists_save,
+            "repetitions": self.repetitions,
+            "meas_noise_mode": self.meas_noise_mode,
+            "meas_noise_sigma_list": obj_to_list(self.meas_noise_sigma_list),
+            "u_noise_sigma_list": obj_to_list(self.u_noise_sigma_list),
+            "u_responses": obj_to_list(self.u_responses),
+            "delay_mode": self.delay_mode,
+            "delays": obj_to_list(self.delays),
+            "perturbation_repetitions": self.perturbation_repetitions,
+            "perturbations_per_joint": self.perturbations_per_joint,
+            "perturbation_min_t_dist": self.perturbation_min_t_dist,
+            "perturbation_sigma_minmax": list(self.perturbation_sigma_minmax),
+            "perturbation_amp_minmax": list(self.perturbation_amp_minmax),
+        }
+
+        with open(os.path.join(save_dir, "benchmark_parameters.yml"), "w") as f:
+            yaml.dump(par_dict, f)

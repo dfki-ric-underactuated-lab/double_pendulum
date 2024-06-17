@@ -54,17 +54,19 @@ class LQRController(AbstractController):
         If provided, the model_pars parameters overwrite
         the other provided parameters
     """
-    def __init__(self,
-                 mass=[0.5, 0.6],
-                 length=[0.3, 0.2],
-                 com=[0.3, 0.2],
-                 damping=[0.1, 0.1],
-                 coulomb_fric=[0.0, 0.0],
-                 gravity=9.81,
-                 inertia=[None, None],
-                 torque_limit=[0.0, 1.0],
-                 model_pars=None):
 
+    def __init__(
+        self,
+        mass=[0.5, 0.6],
+        length=[0.3, 0.2],
+        com=[0.3, 0.2],
+        damping=[0.1, 0.1],
+        coulomb_fric=[0.0, 0.0],
+        gravity=9.81,
+        inertia=[None, None],
+        torque_limit=[0.0, 1.0],
+        model_pars=None,
+    ):
         super().__init__()
 
         self.mass = mass
@@ -88,22 +90,23 @@ class LQRController(AbstractController):
             # self.gr = model_pars.gr
             self.torque_limit = model_pars.tl
 
-        self.splant = SymbolicDoublePendulum(mass=self.mass,
-                                             length=self.length,
-                                             com=self.com,
-                                             damping=self.damping,
-                                             gravity=self.gravity,
-                                             coulomb_fric=self.cfric,
-                                             inertia=self.inertia,
-                                             torque_limit=self.torque_limit)
+        self.splant = SymbolicDoublePendulum(
+            mass=self.mass,
+            length=self.length,
+            com=self.com,
+            damping=self.damping,
+            gravity=self.gravity,
+            coulomb_fric=self.cfric,
+            inertia=self.inertia,
+            torque_limit=self.torque_limit,
+        )
 
         # set default parameters
         self.set_goal()
         self.set_parameters()
         self.set_cost_parameters()
-        self.set_filter_args()
 
-    def set_goal(self, x=[np.pi, 0., 0., 0.]):
+    def set_goal(self, x=[np.pi, 0.0, 0.0, 0.0]):
         """set_goal.
         Set goal for the controller.
 
@@ -117,12 +120,11 @@ class LQRController(AbstractController):
         """
 
         y = x.copy()
-        y[0] = y[0] % (2*np.pi)
-        y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi
+        y[0] = y[0] % (2 * np.pi)
+        y[1] = (y[1] + np.pi) % (2 * np.pi) - np.pi
         self.xd = np.asarray(y)
 
-    def set_parameters(self, failure_value=np.nan,
-                       cost_to_go_cut=15.):
+    def set_parameters(self, failure_value=np.nan, cost_to_go_cut=15.0):
         """set_parameters.
         Set parameters for this controller.
 
@@ -139,20 +141,22 @@ class LQRController(AbstractController):
         self.failure_value = failure_value
         self.cost_to_go_cut = cost_to_go_cut
 
-    def set_cost_parameters(self,
-                            p1p1_cost=1.,     # 1000., 0.001
-                            p2p2_cost=1.,     # 1000., 0.001
-                            v1v1_cost=1.,     # 1000.
-                            v2v2_cost=1.,     # 1000.
-                            p1p2_cost=0.,     # -500
-                            v1v2_cost=0.,     # -500
-                            p1v1_cost=0.,
-                            p1v2_cost=0.,
-                            p2v1_cost=0.,
-                            p2v2_cost=0.,
-                            u1u1_cost=0.01,    # 100., 0.01
-                            u2u2_cost=0.01,    # 100., 0.01
-                            u1u2_cost=0.):
+    def set_cost_parameters(
+        self,
+        p1p1_cost=1.0,  # 1000., 0.001
+        p2p2_cost=1.0,  # 1000., 0.001
+        v1v1_cost=1.0,  # 1000.
+        v2v2_cost=1.0,  # 1000.
+        p1p2_cost=0.0,  # -500
+        v1v2_cost=0.0,  # -500
+        p1v1_cost=0.0,
+        p1v2_cost=0.0,
+        p2v1_cost=0.0,
+        p2v2_cost=0.0,
+        u1u1_cost=0.01,  # 100., 0.01
+        u2u2_cost=0.01,  # 100., 0.01
+        u1u2_cost=0.0,
+    ):
         """set_cost_parameters.
         Parameters of Q and R matrices. The parameters are
 
@@ -206,10 +210,14 @@ class LQRController(AbstractController):
             (Default value=0.)
         """
         # state cost matrix
-        self.Q = np.array([[p1p1_cost, p1p2_cost, p1v1_cost, p1v2_cost],
-                           [p1p2_cost, p2p2_cost, p2v1_cost, p2v2_cost],
-                           [p1v1_cost, p2v1_cost, v1v1_cost, v1v2_cost],
-                           [p1v2_cost, p2v2_cost, v1v2_cost, v2v2_cost]])
+        self.Q = np.array(
+            [
+                [p1p1_cost, p1p2_cost, p1v1_cost, p1v2_cost],
+                [p1p2_cost, p2p2_cost, p2v1_cost, p2v2_cost],
+                [p1v1_cost, p2v1_cost, v1v1_cost, v1v2_cost],
+                [p1v2_cost, p2v2_cost, v1v2_cost, v2v2_cost],
+            ]
+        )
 
         # control cost matrix
         self.R = np.array([[u1u1_cost, u1u2_cost], [u1u2_cost, u2u2_cost]])
@@ -231,8 +239,7 @@ class LQRController(AbstractController):
     #                              u2u2_cost=pars[9],
     #                              u1u2_cost=pars[10])
 
-    def set_cost_parameters_(self,
-                             pars=[1., 1., 1., 1., 1.]):
+    def set_cost_parameters_(self, pars=[1.0, 1.0, 1.0, 1.0, 1.0]):
         """
         Set the diagonal parameters of Q and R matrices with a list.
 
@@ -251,17 +258,19 @@ class LQRController(AbstractController):
             shape=(5,), dtype=float
             (Default value=[1., 1., 1., 1., 1.])
         """
-        self.set_cost_parameters(p1p1_cost=pars[0],
-                                 p2p2_cost=pars[1],
-                                 v1v1_cost=pars[2],
-                                 v2v2_cost=pars[3],
-                                 p1v1_cost=0.0,
-                                 p1v2_cost=0.0,
-                                 p2v1_cost=0.0,
-                                 p2v2_cost=0.0,
-                                 u1u1_cost=pars[4],
-                                 u2u2_cost=pars[4],
-                                 u1u2_cost=0.0)
+        self.set_cost_parameters(
+            p1p1_cost=pars[0],
+            p2p2_cost=pars[1],
+            v1v1_cost=pars[2],
+            v2v2_cost=pars[3],
+            p1v1_cost=0.0,
+            p1v2_cost=0.0,
+            p2v1_cost=0.0,
+            p2v2_cost=0.0,
+            u1u1_cost=pars[4],
+            u2u2_cost=pars[4],
+            u1u2_cost=0.0,
+        )
 
     def set_cost_matrices(self, Q, R):
         """
@@ -312,9 +321,9 @@ class LQRController(AbstractController):
         """
         y = x.copy().astype(float)
 
-        #y[0] = y[0] % (2*np.pi)
-        y[0] = (y[0] + np.pi - self.xd[0]) % (2*np.pi) - (np.pi - self.xd[0])
-        y[1] = (y[1] + np.pi - self.xd[1]) % (2*np.pi) - (np.pi - self.xd[1])
+        # y[0] = y[0] % (2*np.pi)
+        y[0] = (y[0] + np.pi - self.xd[0]) % (2 * np.pi) - (np.pi - self.xd[0])
+        y[1] = (y[1] + np.pi - self.xd[1]) % (2 * np.pi) - (np.pi - self.xd[1])
 
         y -= self.xd
 
@@ -327,7 +336,7 @@ class LQRController(AbstractController):
         u[0] = np.clip(u[0], -self.torque_limit[0], self.torque_limit[0])
         u[1] = np.clip(u[1], -self.torque_limit[1], self.torque_limit[1])
 
-        #print(x, u)
+        # print(x, u)
         return u
 
     def save_(self, save_dir):
@@ -341,36 +350,37 @@ class LQRController(AbstractController):
         """
 
         par_dict = {
-                "mass1" : self.mass[0],
-                "mass2" : self.mass[1],
-                "length1" : self.length[0],
-                "length2" : self.length[1],
-                "com1" : self.com[0],
-                "com2" : self.com[1],
-                "damping1" : self.damping[0],
-                "damping2" : self.damping[1],
-                "cfric1" : self.cfric[0],
-                "cfric2" : self.cfric[1],
-                "gravity" : self.gravity,
-                "inertia1" : self.inertia[0],
-                "inertia2" : self.inertia[1],
-                #"Ir" : self.Ir,
-                #"gr" : self.gr,
-                "torque_limit1" : self.torque_limit[0],
-                "torque_limit2" : self.torque_limit[1],
-                "xd1" : self.xd[0],
-                "xd2" : self.xd[1],
-                "xd3" : self.xd[2],
-                "xd4" : self.xd[3],
+            "mass1": self.mass[0],
+            "mass2": self.mass[1],
+            "length1": self.length[0],
+            "length2": self.length[1],
+            "com1": self.com[0],
+            "com2": self.com[1],
+            "damping1": self.damping[0],
+            "damping2": self.damping[1],
+            "cfric1": self.cfric[0],
+            "cfric2": self.cfric[1],
+            "gravity": self.gravity,
+            "inertia1": self.inertia[0],
+            "inertia2": self.inertia[1],
+            # "Ir" : self.Ir,
+            # "gr" : self.gr,
+            "torque_limit1": self.torque_limit[0],
+            "torque_limit2": self.torque_limit[1],
+            "xd1": self.xd[0],
+            "xd2": self.xd[1],
+            "xd3": self.xd[2],
+            "xd4": self.xd[3],
         }
 
-        with open(os.path.join(save_dir, "controller_lqr_parameters.yml"), 'w') as f:
+        with open(os.path.join(save_dir, "controller_lqr_parameters.yml"), "w") as f:
             yaml.dump(par_dict, f)
 
         np.savetxt(os.path.join(save_dir, "controller_lqr_Qmatrix.txt"), self.Q)
         np.savetxt(os.path.join(save_dir, "controller_lqr_Rmatrix.txt"), self.R)
         np.savetxt(os.path.join(save_dir, "controller_lqr_Kmatrix.txt"), self.K)
         np.savetxt(os.path.join(save_dir, "controller_lqr_Smatrix.txt"), self.S)
+
 
 class LQRController_nonsymbolic(AbstractController):
     """
@@ -420,17 +430,19 @@ class LQRController_nonsymbolic(AbstractController):
         If provided, the model_pars parameters overwrite
         the other provided parameters
     """
-    def __init__(self,
-                 mass=[0.5, 0.6],
-                 length=[0.3, 0.2],
-                 com=[0.3, 0.2],
-                 damping=[0.1, 0.1],
-                 coulomb_fric=[0.0, 0.0],
-                 gravity=9.81,
-                 inertia=[None, None],
-                 torque_limit=[0.0, 1.0],
-                 model_pars=None):
 
+    def __init__(
+        self,
+        mass=[0.5, 0.6],
+        length=[0.3, 0.2],
+        com=[0.3, 0.2],
+        damping=[0.1, 0.1],
+        coulomb_fric=[0.0, 0.0],
+        gravity=9.81,
+        inertia=[None, None],
+        torque_limit=[0.0, 1.0],
+        model_pars=None,
+    ):
         super().__init__()
 
         self.mass = mass
@@ -454,22 +466,23 @@ class LQRController_nonsymbolic(AbstractController):
             # self.gr = model_pars.gr
             self.torque_limit = model_pars.tl
 
-        self.plant = DoublePendulumPlant(mass=self.mass,
-                                         length=self.length,
-                                         com=self.com,
-                                         damping=self.damping,
-                                         gravity=self.gravity,
-                                         coulomb_fric=self.cfric,
-                                         inertia=self.inertia,
-                                         torque_limit=self.torque_limit)
+        self.plant = DoublePendulumPlant(
+            mass=self.mass,
+            length=self.length,
+            com=self.com,
+            damping=self.damping,
+            gravity=self.gravity,
+            coulomb_fric=self.cfric,
+            inertia=self.inertia,
+            torque_limit=self.torque_limit,
+        )
 
         # set default parameters
         self.set_goal()
         self.set_parameters()
         self.set_cost_parameters()
-        self.set_filter_args()
 
-    def set_goal(self, x=[np.pi, 0., 0., 0.]):
+    def set_goal(self, x=[np.pi, 0.0, 0.0, 0.0]):
         """set_goal.
         Set goal for the controller.
 
@@ -482,12 +495,11 @@ class LQRController_nonsymbolic(AbstractController):
             (Default value=[np.pi, 0., 0., 0.])
         """
         y = x.copy()
-        y[0] = y[0] % (2*np.pi)
-        y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi
+        y[0] = y[0] % (2 * np.pi)
+        y[1] = (y[1] + np.pi) % (2 * np.pi) - np.pi
         self.xd = np.asarray(y)
 
-    def set_parameters(self, failure_value=np.nan,
-                       cost_to_go_cut=15.):
+    def set_parameters(self, failure_value=np.nan, cost_to_go_cut=15.0):
         """set_parameters.
         Set parameters for this controller.
 
@@ -504,20 +516,22 @@ class LQRController_nonsymbolic(AbstractController):
         self.failure_value = failure_value
         self.cost_to_go_cut = cost_to_go_cut
 
-    def set_cost_parameters(self,
-                            p1p1_cost=1.,     # 1000., 0.001
-                            p2p2_cost=1.,     # 1000., 0.001
-                            v1v1_cost=1.,     # 1000.
-                            v2v2_cost=1.,     # 1000.
-                            p1p2_cost=0.,     # -500
-                            v1v2_cost=0.,     # -500
-                            p1v1_cost=0.,
-                            p1v2_cost=0.,
-                            p2v1_cost=0.,
-                            p2v2_cost=0.,
-                            u1u1_cost=0.01,    # 100., 0.01
-                            u2u2_cost=0.01,    # 100., 0.01
-                            u1u2_cost=0.):
+    def set_cost_parameters(
+        self,
+        p1p1_cost=1.0,  # 1000., 0.001
+        p2p2_cost=1.0,  # 1000., 0.001
+        v1v1_cost=1.0,  # 1000.
+        v2v2_cost=1.0,  # 1000.
+        p1p2_cost=0.0,  # -500
+        v1v2_cost=0.0,  # -500
+        p1v1_cost=0.0,
+        p1v2_cost=0.0,
+        p2v1_cost=0.0,
+        p2v2_cost=0.0,
+        u1u1_cost=0.01,  # 100., 0.01
+        u2u2_cost=0.01,  # 100., 0.01
+        u1u2_cost=0.0,
+    ):
         """set_cost_parameters.
         Parameters of Q and R matrices. The parameters are
 
@@ -571,10 +585,14 @@ class LQRController_nonsymbolic(AbstractController):
             (Default value=0.)
         """
         # state cost matrix
-        self.Q = np.array([[p1p1_cost, p1p2_cost, p1v1_cost, p1v2_cost],
-                           [p1p2_cost, p2p2_cost, p2v1_cost, p2v2_cost],
-                           [p1v1_cost, p2v1_cost, v1v1_cost, v1v2_cost],
-                           [p1v2_cost, p2v2_cost, v1v2_cost, v2v2_cost]])
+        self.Q = np.array(
+            [
+                [p1p1_cost, p1p2_cost, p1v1_cost, p1v2_cost],
+                [p1p2_cost, p2p2_cost, p2v1_cost, p2v2_cost],
+                [p1v1_cost, p2v1_cost, v1v1_cost, v1v2_cost],
+                [p1v2_cost, p2v2_cost, v1v2_cost, v2v2_cost],
+            ]
+        )
 
         # control cost matrix
         self.R = np.array([[u1u1_cost, u1u2_cost], [u1u2_cost, u2u2_cost]])
@@ -596,8 +614,7 @@ class LQRController_nonsymbolic(AbstractController):
     #                              u2u2_cost=pars[9],
     #                              u1u2_cost=pars[10])
 
-    def set_cost_parameters_(self,
-                             pars=[1., 1., 1., 1., 1.]):
+    def set_cost_parameters_(self, pars=[1.0, 1.0, 1.0, 1.0, 1.0]):
         """
         Set the diagonal parameters of Q and R matrices with a list.
 
@@ -616,17 +633,19 @@ class LQRController_nonsymbolic(AbstractController):
             shape=(5,), dtype=float
             (Default value=[1., 1., 1., 1., 1.])
         """
-        self.set_cost_parameters(p1p1_cost=pars[0],
-                                 p2p2_cost=pars[1],
-                                 v1v1_cost=pars[2],
-                                 v2v2_cost=pars[3],
-                                 p1v1_cost=0.0,
-                                 p1v2_cost=0.0,
-                                 p2v1_cost=0.0,
-                                 p2v2_cost=0.0,
-                                 u1u1_cost=pars[4],
-                                 u2u2_cost=pars[4],
-                                 u1u2_cost=0.0)
+        self.set_cost_parameters(
+            p1p1_cost=pars[0],
+            p2p2_cost=pars[1],
+            v1v1_cost=pars[2],
+            v2v2_cost=pars[3],
+            p1v1_cost=0.0,
+            p1v2_cost=0.0,
+            p2v1_cost=0.0,
+            p2v2_cost=0.0,
+            u1u1_cost=pars[4],
+            u2u2_cost=pars[4],
+            u1u2_cost=0.0,
+        )
 
     def set_cost_matrices(self, Q, R):
         """
@@ -675,8 +694,8 @@ class LQRController_nonsymbolic(AbstractController):
             units=[Nm]
         """
         y = x.copy()
-        y[0] = y[0] % (2*np.pi)
-        y[1] = (y[1] + np.pi) % (2*np.pi) - np.pi
+        y[0] = y[0] % (2 * np.pi)
+        y[1] = (y[1] + np.pi) % (2 * np.pi) - np.pi
 
         y -= self.xd
 
@@ -702,30 +721,30 @@ class LQRController_nonsymbolic(AbstractController):
         """
 
         par_dict = {
-                "mass1" : self.mass[0],
-                "mass2" : self.mass[1],
-                "length1" : self.length[0],
-                "length2" : self.length[1],
-                "com1" : self.com[0],
-                "com2" : self.com[1],
-                "damping1" : self.damping[0],
-                "damping2" : self.damping[1],
-                "cfric1" : self.cfric[0],
-                "cfric2" : self.cfric[1],
-                "gravity" : self.gravity,
-                "inertia1" : self.inertia[0],
-                "inertia2" : self.inertia[1],
-                #"Ir" : self.Ir,
-                #"gr" : self.gr,
-                "torque_limit1" : self.torque_limit[0],
-                "torque_limit2" : self.torque_limit[1],
-                "xd1" : float(self.xd[0]),
-                "xd2" : float(self.xd[1]),
-                "xd3" : float(self.xd[2]),
-                "xd4" : float(self.xd[3]),
+            "mass1": self.mass[0],
+            "mass2": self.mass[1],
+            "length1": self.length[0],
+            "length2": self.length[1],
+            "com1": self.com[0],
+            "com2": self.com[1],
+            "damping1": self.damping[0],
+            "damping2": self.damping[1],
+            "cfric1": self.cfric[0],
+            "cfric2": self.cfric[1],
+            "gravity": self.gravity,
+            "inertia1": self.inertia[0],
+            "inertia2": self.inertia[1],
+            # "Ir" : self.Ir,
+            # "gr" : self.gr,
+            "torque_limit1": self.torque_limit[0],
+            "torque_limit2": self.torque_limit[1],
+            "xd1": float(self.xd[0]),
+            "xd2": float(self.xd[1]),
+            "xd3": float(self.xd[2]),
+            "xd4": float(self.xd[3]),
         }
 
-        with open(os.path.join(save_dir, "lqr_controller_parameters.yml"), 'w') as f:
+        with open(os.path.join(save_dir, "lqr_controller_parameters.yml"), "w") as f:
             yaml.dump(par_dict, f)
 
         np.savetxt(os.path.join(save_dir, "lqr_controller_Qmatrix.txt"), self.Q)

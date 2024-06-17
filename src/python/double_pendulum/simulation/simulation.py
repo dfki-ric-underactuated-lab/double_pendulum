@@ -7,8 +7,9 @@ import matplotlib.animation as mplanimation
 from double_pendulum.simulation.visualization import get_arrow, set_arrow_properties
 from double_pendulum.utils.filters.low_pass import lowpass_filter_rt
 from double_pendulum.utils.filters.kalman_filter import kalman_filter_rt
-from double_pendulum.utils.filters.unscented_kalman_filter import unscented_kalman_filter_rt
-from scipy.integrate import odeint
+from double_pendulum.utils.filters.unscented_kalman_filter import (
+    unscented_kalman_filter_rt,
+)
 
 
 class Simulator:
@@ -225,7 +226,7 @@ class Simulator:
         self.meas_noise_vfilter = meas_noise_vfilter
         self.meas_noise_vfilter_args = meas_noise_vfilter_args
 
-    def set_motor_parameters(self, u_noise_sigmas=None, u_responsiveness=1.0):
+    def set_motor_parameters(self, u_noise_sigmas=[0.0, 0.0], u_responsiveness=1.0):
         """
         Set parameters for the motors
 
@@ -287,9 +288,9 @@ class Simulator:
 
         self.meas_noise_cut = 0.0
         self.meas_noise_vfilter = "None"
-        self.meas_noise_vfilter_args = {"alpha": [1.] * self.plant.dof * 2}
+        self.meas_noise_vfilter_args = {"alpha": [1.0, 1.0, 1.0, 1.0]}
 
-        self.u_noise_sigmas = [0.0] * self.plant.dof
+        self.u_noise_sigmas = [0.0, 0.0]
         self.u_responsiveness = 1.0
 
         self.perturbation_times = []
@@ -346,8 +347,6 @@ class Simulator:
                 fx = self.euler_integrator
             elif integrator == "runge_kutta":
                 fx = self.runge_integrator
-            elif integrator == 'odeint':
-                fx = self.odeint_integrator
             self.filter = unscented_kalman_filter_rt(
                 dim_x=2 * dof,
                 x0=x0,
@@ -641,7 +640,7 @@ class Simulator:
         nu = last_u + self.u_responsiveness * (nu - last_u)
 
         # tau noise (unoise)
-        nu = np.random.normal(nu, self.u_noise_sigmas) #, np.shape(nu))
+        nu = np.random.normal(nu, self.u_noise_sigmas, np.shape(nu))
         # for i, tau in enumerate(nu):
         #     if np.abs(tau) > 0:
         #         # nu[i] = tau + np.random.uniform(-self.unoise_amplitude,
@@ -650,11 +649,8 @@ class Simulator:
         #         nu[i] = tau + np.random.normal(0,
         #                                        self.unoise_sigmas[i],
         #                                        1)
-
-        for i in range(self.plant.dof):
-            nu[i] = np.clip(nu[i], -self.plant.torque_limit[i], self.plant.torque_limit[i])
-        # nu[0] = np.clip(nu[0], -self.plant.torque_limit[0], self.plant.torque_limit[0])
-        # nu[1] = np.clip(nu[1], -self.plant.torque_limit[1], self.plant.torque_limit[1])
+        nu[0] = np.clip(nu[0], -self.plant.torque_limit[0], self.plant.torque_limit[0])
+        nu[1] = np.clip(nu[1], -self.plant.torque_limit[1], self.plant.torque_limit[1])
         return nu
 
     def controller_step(self, dt, controller=None, integrator="runge_kutta"):
