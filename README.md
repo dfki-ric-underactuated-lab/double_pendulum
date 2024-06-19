@@ -180,9 +180,9 @@ This repository features three
 [RealAIGym leaderboards](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/)
 to compare control methods:
 
-* Simulation Leaderboard ([Acrobot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_performance_leaderboard.html), [Pendubot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/pendubot_simulation_performance_leaderboard.html))
-* Robustness Leaderboard ([Acrobot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_robustness_leaderboard.html), [Pendubot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/pendubot_simulation_robustness_leaderboard.html))
-* Real Hardware Leaderboard ([Acrobot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_real_system_leaderboard.html), [Pendubot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/pendubot_real_system_leaderboard.html))
+* Simulation Leaderboard ([Acrobot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_performance_leaderboard_v2.html), [Pendubot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/pendubot_simulation_performance_leaderboard_v2.html))
+* Robustness Leaderboard ([Acrobot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_robustness_leaderboard_v2.html), [Pendubot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/pendubot_simulation_robustness_leaderboard_v2.html))
+* Real Hardware Leaderboard ([Acrobot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_real_system_leaderboard_v1.html), [Pendubot](https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/pendubot_real_system_leaderboard_v1.html))
 
 Have a look at the
 [instructions](https://dfki-ric-underactuated-lab.github.io/double_pendulum/leaderboard.html),
