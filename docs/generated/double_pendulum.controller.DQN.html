@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>double_pendulum.controller.DQN &mdash; Double Pendulum 1.0.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -30,16 +24,12 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../index.html" class="icon icon-home">
-            Double Pendulum
-              <img src="../_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+            <a href="../index.html" class="icon icon-home"> Double Pendulum
+            <img src="../_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,8 +45,8 @@
 <li class="toctree-l3 current"><a class="reference internal" href="double_pendulum.controller.html">double_pendulum.controller</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="double_pendulum.controller.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#module-double_pendulum.controller.abstract_controller">double_pendulum.controller.abstract_controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#module-double_pendulum.controller.combined_controller">double_pendulum.controller.combined_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#double-pendulum-controller-abstract-controller">double_pendulum.controller.abstract_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#double-pendulum-controller-combined-controller">double_pendulum.controller.combined_controller</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.experiments.html">double_pendulum.experiments</a></li>
@@ -89,11 +79,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../modules.html">&lt;no title&gt;</a></li>
-          <li class="breadcrumb-item"><a href="double_pendulum.html">double_pendulum</a></li>
-          <li class="breadcrumb-item"><a href="double_pendulum.controller.html">double_pendulum.controller</a></li>
-      <li class="breadcrumb-item active">double_pendulum.controller.DQN</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../modules.html">&lt;no title&gt;</a> &raquo;</li>
+          <li><a href="double_pendulum.html">double_pendulum</a> &raquo;</li>
+          <li><a href="double_pendulum.controller.html">double_pendulum.controller</a> &raquo;</li>
+      <li>double_pendulum.controller.DQN</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/generated/double_pendulum.controller.DQN.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -103,77 +93,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-double_pendulum.controller.DQN">
-<span id="double-pendulum-controller-dqn"></span><h1>double_pendulum.controller.DQN<a class="headerlink" href="#module-double_pendulum.controller.DQN" title="Permalink to this heading"></a></h1>
+  <section id="double-pendulum-controller-dqn">
+<h1>double_pendulum.controller.DQN<a class="headerlink" href="#double-pendulum-controller-dqn" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
 <section id="double-pendulum-controller-dqn-dqn-controller">
-<h2>double_pendulum.controller.DQN.DQN_controller<a class="headerlink" href="#double-pendulum-controller-dqn-dqn-controller" title="Permalink to this heading"></a></h2>
+<h2>double_pendulum.controller.DQN.DQN_controller<a class="headerlink" href="#double-pendulum-controller-dqn-dqn-controller" title="Permalink to this headline"></a></h2>
 </section>
 <section id="double-pendulum-controller-dqn-environment">
-<h2>double_pendulum.controller.DQN.environment<a class="headerlink" href="#double-pendulum-controller-dqn-environment" title="Permalink to this heading"></a></h2>
+<h2>double_pendulum.controller.DQN.environment<a class="headerlink" href="#double-pendulum-controller-dqn-environment" title="Permalink to this headline"></a></h2>
 </section>
 <section id="double-pendulum-controller-dqn-exploration">
-<h2>double_pendulum.controller.DQN.exploration<a class="headerlink" href="#double-pendulum-controller-dqn-exploration" title="Permalink to this heading"></a></h2>
+<h2>double_pendulum.controller.DQN.exploration<a class="headerlink" href="#double-pendulum-controller-dqn-exploration" title="Permalink to this headline"></a></h2>
 </section>
 <section id="double-pendulum-controller-dqn-networks">
-<h2>double_pendulum.controller.DQN.networks<a class="headerlink" href="#double-pendulum-controller-dqn-networks" title="Permalink to this heading"></a></h2>
+<h2>double_pendulum.controller.DQN.networks<a class="headerlink" href="#double-pendulum-controller-dqn-networks" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-double_pendulum.controller.DQN.replay_buffer">
-<span id="double-pendulum-controller-dqn-replay-buffer"></span><h2>double_pendulum.controller.DQN.replay_buffer<a class="headerlink" href="#module-double_pendulum.controller.DQN.replay_buffer" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.replay_buffer.ReplayBuffer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.DQN.replay_buffer.</span></span><span class="sig-name descname"><span class="pre">ReplayBuffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clipping</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absorbing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.add" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.create_batch">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rewards</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absorbings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Array</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.create_batch" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.get_sample_indexes">
-<span class="sig-name descname"><span class="pre">get_sample_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PRNGKeyArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Array</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.get_sample_indexes" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.load" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.sample_random_batch">
-<span class="sig-name descname"><span class="pre">sample_random_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PRNGKeyArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Array</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.sample_random_batch" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#double_pendulum.controller.DQN.replay_buffer.ReplayBuffer.save" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<section id="double-pendulum-controller-dqn-replay-buffer">
+<h2>double_pendulum.controller.DQN.replay_buffer<a class="headerlink" href="#double-pendulum-controller-dqn-replay-buffer" title="Permalink to this headline"></a></h2>
 </section>
 <section id="double-pendulum-controller-dqn-simulate">
-<h2>double_pendulum.controller.DQN.simulate<a class="headerlink" href="#double-pendulum-controller-dqn-simulate" title="Permalink to this heading"></a></h2>
+<h2>double_pendulum.controller.DQN.simulate<a class="headerlink" href="#double-pendulum-controller-dqn-simulate" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-double_pendulum.controller.DQN.utils">
-<span id="double-pendulum-controller-dqn-utils"></span><h2>double_pendulum.controller.DQN.utils<a class="headerlink" href="#module-double_pendulum.controller.DQN.utils" title="Permalink to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.utils.load_pickled_data">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.DQN.utils.</span></span><span class="sig-name descname"><span class="pre">load_pickled_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_put</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.DQN.utils.load_pickled_data" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.controller.DQN.utils.save_pickled_data">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.DQN.utils.</span></span><span class="sig-name descname"><span class="pre">save_pickled_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.DQN.utils.save_pickled_data" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
+<section id="double-pendulum-controller-dqn-utils">
+<h2>double_pendulum.controller.DQN.utils<a class="headerlink" href="#double-pendulum-controller-dqn-utils" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

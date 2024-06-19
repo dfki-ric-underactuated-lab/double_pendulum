@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>T-Motor (AK-80-6) &mdash; Double Pendulum 1.0.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
-
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=af2ce170"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -31,16 +25,12 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            Double Pendulum
-              <img src="_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+            <a href="index.html" class="icon icon-home"> Double Pendulum
+            <img src="_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -89,11 +79,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
-          <li class="breadcrumb-item"><a href="hardware.html">Hardware</a></li>
-          <li class="breadcrumb-item"><a href="hardware.motors.html">Motors</a></li>
-      <li class="breadcrumb-item active">T-Motor (AK-80-6)</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">&lt;no title&gt;</a> &raquo;</li>
+          <li><a href="hardware.html">Hardware</a> &raquo;</li>
+          <li><a href="hardware.motors.html">Motors</a> &raquo;</li>
+      <li>T-Motor (AK-80-6)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/hardware.motors.tmotors.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -104,12 +94,12 @@
            <div itemprop="articleBody">
              
   <section id="t-motor-ak-80-6">
-<h1>T-Motor (AK-80-6)<a class="headerlink" href="#t-motor-ak-80-6" title="Permalink to this heading"></a></h1>
+<h1>T-Motor (AK-80-6)<a class="headerlink" href="#t-motor-ak-80-6" title="Permalink to this headline"></a></h1>
 <p>The T-Motor double pendulum uses the <a class="reference external" href="https://store.tmotor.com/goods.php?id=981">AK80-6 Motors</a> from T-Motor. Here the motors’
 physical parameters, the initial setup as well as the usage with the python
 driver is documented. The AK80-6 manual can be found <a class="reference external" href="https://store.tmotor.com/images/file/202208/251661393360838805.pdf">here</a> .</p>
 <section id="physical-parameters-of-the-actuator">
-<h2>Physical Parameters of the Actuator<a class="headerlink" href="#physical-parameters-of-the-actuator" title="Permalink to this heading"></a></h2>
+<h2>Physical Parameters of the Actuator<a class="headerlink" href="#physical-parameters-of-the-actuator" title="Permalink to this headline"></a></h2>
 <p>The AK80-6 actuator from T-Motor is a quasi direct drive with a gear
 ratio of <span class="math notranslate nohighlight">\(\small{6:1}\)</span> and a peak torque of
 <span class="math notranslate nohighlight">\(\small{12\,Nm}\)</span> at the output shaft. The motor is equipped with
@@ -154,7 +144,7 @@ Documentation</a></p>
 </ul>
 </section>
 <section id="initial-motor-setup">
-<h2>Initial Motor Setup<a class="headerlink" href="#initial-motor-setup" title="Permalink to this heading"></a></h2>
+<h2>Initial Motor Setup<a class="headerlink" href="#initial-motor-setup" title="Permalink to this headline"></a></h2>
 <p>The R-LINK Configuration Tool is used to configure the AK80-6 from
 T-Motors. Before starting to use the R-Link device make sure you have
 downloaded the <code class="docutils literal notranslate"><span class="pre">CP210x</span> <span class="pre">Universal</span> <span class="pre">Windows</span> <span class="pre">Driver</span></code> from silabs. If this
@@ -171,14 +161,14 @@ Driver</a></p></li>
 drivers</a></p></li>
 </ul>
 <section id="tutorials">
-<h3>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this heading"></a></h3>
+<h3>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>T-MOTOR: <a class="reference external" href="https://www.youtube.com/watch?v=hbqQCgebaF8">https://www.youtube.com/watch?v=hbqQCgebaF8</a></p></li>
 <li><p>Skyentific: <a class="reference external" href="https://www.youtube.com/watch?v=HzY9vzgPZkA">https://www.youtube.com/watch?v=HzY9vzgPZkA</a></p></li>
 </ul>
 </section>
 <section id="instructions-r-link-config-tool">
-<h3>Instructions: R-Link Config Tool<a class="headerlink" href="#instructions-r-link-config-tool" title="Permalink to this heading"></a></h3>
+<h3>Instructions: R-Link Config Tool<a class="headerlink" href="#instructions-r-link-config-tool" title="Permalink to this headline"></a></h3>
 <p><strong>User manual &amp; configuration tool:</strong>
 <a class="reference external" href="https://store-en.tmotor.com/goods.php?id=1085">store-en.tmotor.com</a></p>
 <p>R-LINK is a USB to serial port module, specially designed for CubeMars A
@@ -241,7 +231,7 @@ settings.</p>
 </ol>
 </section>
 <section id="debugging">
-<h3>Debugging<a class="headerlink" href="#debugging" title="Permalink to this heading"></a></h3>
+<h3>Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline"></a></h3>
 <p>Error messages that showed up during the configuration procedure, such
 as <code class="docutils literal notranslate"><span class="pre">UVLO</span></code> (VM under voltage lockout) and <code class="docutils literal notranslate"><span class="pre">OTW</span></code> (Thermal warning and
 shutdown), could be interpreted with the help of the data sheet for the
@@ -255,9 +245,9 @@ first Page under: 1. Features)</div>
 </section>
 </section>
 <section id="communication">
-<h2>Communication<a class="headerlink" href="#communication" title="Permalink to this heading"></a></h2>
+<h2>Communication<a class="headerlink" href="#communication" title="Permalink to this headline"></a></h2>
 <section id="can-bus-wiring">
-<h3>CAN Bus wiring<a class="headerlink" href="#can-bus-wiring" title="Permalink to this heading"></a></h3>
+<h3>CAN Bus wiring<a class="headerlink" href="#can-bus-wiring" title="Permalink to this headline"></a></h3>
 <p>Along the CAN bus proper grounding and ideally, isolated ground is
 required for improvement of the signal quality. Therefore, the common
 shared ground for PC and motors is of great importance in CAN connection
@@ -275,7 +265,7 @@ is needed. The diagram below displays the wiring of the CAN bus.</p>
 <p><strong>Fig. 2:</strong> main pc = CPU, CAN transceiver = CAN XCVR, actuator = AC</p>
 </section>
 <section id="setting-up-the-can-interface">
-<h3>Setting up the CAN interface<a class="headerlink" href="#setting-up-the-can-interface" title="Permalink to this heading"></a></h3>
+<h3>Setting up the CAN interface<a class="headerlink" href="#setting-up-the-can-interface" title="Permalink to this headline"></a></h3>
 <p>During regular operation the motors are commanded via CAN interface.
 To setup the CAN connection follow these steps:</p>
 <ul class="simple">
@@ -312,7 +302,7 @@ for this purpose is <code class="docutils literal notranslate"><span class="pre"
 </div>
 </section>
 <section id="testing-motor-connection">
-<h3>Testing Motor Connection<a class="headerlink" href="#testing-motor-connection" title="Permalink to this heading"></a></h3>
+<h3>Testing Motor Connection<a class="headerlink" href="#testing-motor-connection" title="Permalink to this headline"></a></h3>
 <p>To test the connection to the motors, you can use the performance profiling
 script.  The script will print the communication frequencies to the terminal.</p>
 <div class="line-block">
@@ -323,7 +313,7 @@ measure the communication frequency with 1/2 motors.</div>
 </section>
 </section>
 <section id="python-interface">
-<h2>Python Interface<a class="headerlink" href="#python-interface" title="Permalink to this heading"></a></h2>
+<h2>Python Interface<a class="headerlink" href="#python-interface" title="Permalink to this headline"></a></h2>
 <p>The Python - Motor communication is done with the <a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/mini-cheetah-tmotor-python-can">python driver</a>.
 The basic python interface is the following:</p>
 <p>Example Motor Initialization (for can interface <code class="docutils literal notranslate"><span class="pre">can0</span></code> and <code class="docutils literal notranslate"><span class="pre">motor_id</span></code> =1):</p>
@@ -342,7 +332,7 @@ The basic python interface is the following:</p>
 except for <code class="docutils literal notranslate"><span class="pre">send_deg_command</span></code>, which returns degrees instead of radians.</p>
 </section>
 <section id="internal-pd-controller">
-<h2>Internal PD-Controller<a class="headerlink" href="#internal-pd-controller" title="Permalink to this heading"></a></h2>
+<h2>Internal PD-Controller<a class="headerlink" href="#internal-pd-controller" title="Permalink to this headline"></a></h2>
 <p>A proportional-derivative controller, which is based on the MIT
 Mini-Cheetah Motor, is implemented on the motor controller board. The
 control block diagram of this closed loop controller is shown below. It

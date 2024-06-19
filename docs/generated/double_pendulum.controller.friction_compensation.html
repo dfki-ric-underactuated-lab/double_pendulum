@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>double_pendulum.controller.friction_compensation &mdash; Double Pendulum 1.0.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -30,16 +24,12 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../index.html" class="icon icon-home">
-            Double Pendulum
-              <img src="../_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+            <a href="../index.html" class="icon icon-home"> Double Pendulum
+            <img src="../_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,8 +45,8 @@
 <li class="toctree-l3 current"><a class="reference internal" href="double_pendulum.controller.html">double_pendulum.controller</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="double_pendulum.controller.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#module-double_pendulum.controller.abstract_controller">double_pendulum.controller.abstract_controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#module-double_pendulum.controller.combined_controller">double_pendulum.controller.combined_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#double-pendulum-controller-abstract-controller">double_pendulum.controller.abstract_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#double-pendulum-controller-combined-controller">double_pendulum.controller.combined_controller</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.experiments.html">double_pendulum.experiments</a></li>
@@ -89,11 +79,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../modules.html">&lt;no title&gt;</a></li>
-          <li class="breadcrumb-item"><a href="double_pendulum.html">double_pendulum</a></li>
-          <li class="breadcrumb-item"><a href="double_pendulum.controller.html">double_pendulum.controller</a></li>
-      <li class="breadcrumb-item active">double_pendulum.controller.friction_compensation</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../modules.html">&lt;no title&gt;</a> &raquo;</li>
+          <li><a href="double_pendulum.html">double_pendulum</a> &raquo;</li>
+          <li><a href="double_pendulum.controller.html">double_pendulum.controller</a> &raquo;</li>
+      <li>double_pendulum.controller.friction_compensation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/generated/double_pendulum.controller.friction_compensation.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -103,108 +93,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-double_pendulum.controller.friction_compensation">
-<span id="double-pendulum-controller-friction-compensation"></span><h1>double_pendulum.controller.friction_compensation<a class="headerlink" href="#module-double_pendulum.controller.friction_compensation" title="Permalink to this heading"></a></h1>
+  <section id="double-pendulum-controller-friction-compensation">
+<h1>double_pendulum.controller.friction_compensation<a class="headerlink" href="#double-pendulum-controller-friction-compensation" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-double_pendulum.controller.friction_compensation.friction_compensation_controller">
-<span id="double-pendulum-controller-friction-compensation-friction-compensation-controller"></span><h2>double_pendulum.controller.friction_compensation.friction_compensation_controller<a class="headerlink" href="#module-double_pendulum.controller.friction_compensation.friction_compensation_controller" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="double_pendulum.controller.friction_compensation.friction_compensation_controller.FrictionCompensationController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.controller.friction_compensation.friction_compensation_controller.</span></span><span class="sig-name descname"><span class="pre">FrictionCompensationController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0,</span> <span class="pre">1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">0.1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coulomb_fric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9.81</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_pars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.friction_compensation.friction_compensation_controller.FrictionCompensationController" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="double_pendulum.controller.html#double_pendulum.controller.abstract_controller.AbstractController" title="double_pendulum.controller.abstract_controller.AbstractController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractController</span></code></a></p>
-<p>Friction compensation controller.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>mass</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[1.0, 1.0]
-masses of the double pendulum,
-[m1, m2], units=[kg]</p>
-</dd>
-<dt><strong>length</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.5, 0.5]
-link lengths of the double pendulum,
-[l1, l2], units=[m]</p>
-</dd>
-<dt><strong>com</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.5, 0.5]
-center of mass lengths of the double pendulum links
-[r1, r2], units=[m]</p>
-</dd>
-<dt><strong>damping</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.5, 0.5]
-damping coefficients of the double pendulum actuators
-[b1, b2], units=[kg*m/s]</p>
-</dd>
-<dt><strong>gravity</strong><span class="classifier">float, optional</span></dt><dd><p>default=9.81
-gravity acceleration (pointing downwards),
-units=[m/s²]</p>
-</dd>
-<dt><strong>coulomb_fric</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.0, 0.0]
-coulomb friction coefficients for the double pendulum actuators
-[cf1, cf2], units=[Nm]</p>
-</dd>
-<dt><strong>inertia</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[None, None]
-inertia of the double pendulum links
-[I1, I2], units=[kg*m²]
-if entry is None defaults to point mass m*l² inertia for the entry</p>
-</dd>
-<dt><strong>torque_limit</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float, default=[0.0, 1.0]
-torque limit of the motors
-[tl1, tl2], units=[Nm, Nm]</p>
-</dd>
-<dt><strong>model_pars</strong><span class="classifier">model_parameters object, optional</span></dt><dd><p>object of the model_parameters class, default=None
-Can be used to set all model parameters above
-If provided, the model_pars parameters overwrite
-the other provided parameters</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.friction_compensation.friction_compensation_controller.FrictionCompensationController.get_control_output_">
-<span class="sig-name descname"><span class="pre">get_control_output_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.friction_compensation.friction_compensation_controller.FrictionCompensationController.get_control_output_" title="Permalink to this definition"></a></dt>
-<dd><p>The function to compute the control input for the double pendulum’s
-actuator(s).
-Compensates the actuator friction.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>x</strong><span class="classifier">array_like, shape=(4,), dtype=float,</span></dt><dd><p>state of the double pendulum,
-order=[angle1, angle2, velocity1, velocity2],
-units=[rad, rad, rad/s, rad/s]</p>
-</dd>
-<dt><strong>t</strong><span class="classifier">float, optional</span></dt><dd><p>time, unit=[s]
-(Default value=None)</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>array_like</dt><dd><p>shape=(2,), dtype=float
-actuation input/motor torque,
-order=[u1, u2],
-units=[Nm]</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.controller.friction_compensation.friction_compensation_controller.FrictionCompensationController.save_">
-<span class="sig-name descname"><span class="pre">save_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.controller.friction_compensation.friction_compensation_controller.FrictionCompensationController.save_" title="Permalink to this definition"></a></dt>
-<dd><p>Save controller parameters</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>save_dir</strong><span class="classifier">string or path object</span></dt><dd><p>directory where the parameters will be saved</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<section id="double-pendulum-controller-friction-compensation-friction-compensation-controller">
+<h2>double_pendulum.controller.friction_compensation.friction_compensation_controller<a class="headerlink" href="#double-pendulum-controller-friction-compensation-friction-compensation-controller" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

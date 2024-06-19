@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>double_pendulum.analysis &mdash; Double Pendulum 1.0.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -30,16 +24,12 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../index.html" class="icon icon-home">
-            Double Pendulum
-              <img src="../_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+            <a href="../index.html" class="icon icon-home"> Double Pendulum
+            <img src="../_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -53,11 +43,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="double_pendulum.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">double_pendulum.analysis</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.analysis.benchmark">double_pendulum.analysis.benchmark</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.analysis.benchmark_plot">double_pendulum.analysis.benchmark_plot</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.analysis.benchmark_scores">double_pendulum.analysis.benchmark_scores</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.analysis.leaderboard">double_pendulum.analysis.leaderboard</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.analysis.utils">double_pendulum.analysis.utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#double-pendulum-analysis-benchmark">double_pendulum.analysis.benchmark</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#double-pendulum-analysis-benchmark-plot">double_pendulum.analysis.benchmark_plot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#double-pendulum-analysis-benchmark-scores">double_pendulum.analysis.benchmark_scores</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#double-pendulum-analysis-leaderboard">double_pendulum.analysis.leaderboard</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#double-pendulum-analysis-utils">double_pendulum.analysis.utils</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.controller.html">double_pendulum.controller</a></li>
@@ -91,10 +81,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../modules.html">&lt;no title&gt;</a></li>
-          <li class="breadcrumb-item"><a href="double_pendulum.html">double_pendulum</a></li>
-      <li class="breadcrumb-item active">double_pendulum.analysis</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../modules.html">&lt;no title&gt;</a> &raquo;</li>
+          <li><a href="double_pendulum.html">double_pendulum</a> &raquo;</li>
+      <li>double_pendulum.analysis</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/generated/double_pendulum.analysis.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -104,422 +94,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-double_pendulum.analysis">
-<span id="double-pendulum-analysis"></span><h1>double_pendulum.analysis<a class="headerlink" href="#module-double_pendulum.analysis" title="Permalink to this heading"></a></h1>
+  <section id="double-pendulum-analysis">
+<h1>double_pendulum.analysis<a class="headerlink" href="#double-pendulum-analysis" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-double_pendulum.analysis.benchmark">
-<span id="double-pendulum-analysis-benchmark"></span><h2>double_pendulum.analysis.benchmark<a class="headerlink" href="#module-double_pendulum.analysis.benchmark" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.benchmark.</span></span><span class="sig-name descname"><span class="pre">benchmarker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_final</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">0.1,</span> <span class="pre">1.0,</span> <span class="pre">1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_only_final_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_check_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'epsilon'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_check_method_height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integrator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runge_kutta'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.benchmark">
-<span class="sig-name descname"><span class="pre">benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compute_model_robustness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_noise_robustness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_unoise_robustness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_uresponsiveness_robustness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_delay_robustness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_perturbation_robustness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpar_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Ir',</span> <span class="pre">'m1r1',</span> <span class="pre">'I1',</span> <span class="pre">'b1',</span> <span class="pre">'cf1',</span> <span class="pre">'m2r2',</span> <span class="pre">'m2',</span> <span class="pre">'I2',</span> <span class="pre">'b2',</span> <span class="pre">'cf2']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelpar_var_lists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'I1':</span> <span class="pre">[],</span> <span class="pre">'I2':</span> <span class="pre">[],</span> <span class="pre">'Ir':</span> <span class="pre">[],</span> <span class="pre">'b1':</span> <span class="pre">[],</span> <span class="pre">'b2':</span> <span class="pre">[],</span> <span class="pre">'cf1':</span> <span class="pre">[],</span> <span class="pre">'cf2':</span> <span class="pre">[],</span> <span class="pre">'m1r1':</span> <span class="pre">[],</span> <span class="pre">'m2':</span> <span class="pre">[],</span> <span class="pre">'m2r2':</span> <span class="pre">[]}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_noise_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vel'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_noise_sigma_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">0.3,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_noise_sigma_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">0.5,</span> <span class="pre">1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_responses</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0,</span> <span class="pre">1.1,</span> <span class="pre">1.2,</span> <span class="pre">1.3,</span> <span class="pre">1.4,</span> <span class="pre">1.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vel'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delays</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.01,</span> <span class="pre">0.02,</span> <span class="pre">0.05,</span> <span class="pre">0.1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbations_per_joint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_min_t_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_sigma_minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.01,</span> <span class="pre">0.05]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_amp_minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">1.0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.benchmark" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.check_delay_robustness">
-<span class="sig-name descname"><span class="pre">check_delay_robustness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delay_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'posvel'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delays</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.check_delay_robustness" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.check_goal_success">
-<span class="sig-name descname"><span class="pre">check_goal_success</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_traj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.check_goal_success" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.check_meas_noise_robustness">
-<span class="sig-name descname"><span class="pre">check_meas_noise_robustness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_noise_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vel'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_noise_sigma_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.check_meas_noise_robustness" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.check_modelpar_robustness">
-<span class="sig-name descname"><span class="pre">check_modelpar_robustness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mpar_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Ir',</span> <span class="pre">'m1r1',</span> <span class="pre">'I1',</span> <span class="pre">'b1',</span> <span class="pre">'cf1',</span> <span class="pre">'m2r2',</span> <span class="pre">'m2',</span> <span class="pre">'I2',</span> <span class="pre">'b2',</span> <span class="pre">'cf2']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_lists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'I1':</span> <span class="pre">[],</span> <span class="pre">'I2':</span> <span class="pre">[],</span> <span class="pre">'Ir':</span> <span class="pre">[],</span> <span class="pre">'b1':</span> <span class="pre">[],</span> <span class="pre">'b2':</span> <span class="pre">[],</span> <span class="pre">'cf1':</span> <span class="pre">[],</span> <span class="pre">'cf2':</span> <span class="pre">[],</span> <span class="pre">'m1r1':</span> <span class="pre">[],</span> <span class="pre">'m2':</span> <span class="pre">[],</span> <span class="pre">'m2r2':</span> <span class="pre">[]}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.check_modelpar_robustness" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.check_perturbation_robustness">
-<span class="sig-name descname"><span class="pre">check_perturbation_robustness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pert_per_joint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_t_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.01,</span> <span class="pre">0.05]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amplitude_min_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">1.0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.check_perturbation_robustness" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.check_unoise_robustness">
-<span class="sig-name descname"><span class="pre">check_unoise_robustness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_noise_sigma_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.check_unoise_robustness" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.check_uresponsiveness_robustness">
-<span class="sig-name descname"><span class="pre">check_uresponsiveness_robustness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_responses</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.check_uresponsiveness_robustness" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.compute_cost">
-<span class="sig-name descname"><span class="pre">compute_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_traj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_traj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'free'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.compute_cost" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.compute_ref_cost">
-<span class="sig-name descname"><span class="pre">compute_ref_cost</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.compute_ref_cost" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.compute_success_measure">
-<span class="sig-name descname"><span class="pre">compute_success_measure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_traj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_traj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.compute_success_measure" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.save" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.set_cost_par">
-<span class="sig-name descname"><span class="pre">set_cost_par</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Qf</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.set_cost_par" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.set_init_traj">
-<span class="sig-name descname"><span class="pre">set_init_traj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectory_csv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.set_init_traj" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.set_model_parameter">
-<span class="sig-name descname"><span class="pre">set_model_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.608,</span> <span class="pre">0.63]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.3,</span> <span class="pre">0.2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.275,</span> <span class="pre">0.166]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.081,</span> <span class="pre">0.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.093,</span> <span class="pre">0.186]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9.81</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.05472,</span> <span class="pre">0.02522]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">6.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_pars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.set_model_parameter" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark.benchmarker.simulate_and_get_cost">
-<span class="sig-name descname"><span class="pre">simulate_and_get_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_inertia</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_limit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark.benchmarker.simulate_and_get_cost" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<section id="double-pendulum-analysis-benchmark">
+<h2>double_pendulum.analysis.benchmark<a class="headerlink" href="#double-pendulum-analysis-benchmark" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-double_pendulum.analysis.benchmark_plot">
-<span id="double-pendulum-analysis-benchmark-plot"></span><h2>double_pendulum.analysis.benchmark_plot<a class="headerlink" href="#module-double_pendulum.analysis.benchmark_plot" title="Permalink to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark_plot.plot_benchmark_results">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.benchmark_plot.</span></span><span class="sig-name descname"><span class="pre">plot_benchmark_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'results.pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">costlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">1000000.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pdf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark_plot.plot_benchmark_results" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark_plot.plot_model_robustness_multi">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.benchmark_plot.</span></span><span class="sig-name descname"><span class="pre">plot_model_robustness_multi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results_dirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">costlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark_plot.plot_model_robustness_multi" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
+<section id="double-pendulum-analysis-benchmark-plot">
+<h2>double_pendulum.analysis.benchmark_plot<a class="headerlink" href="#double-pendulum-analysis-benchmark-plot" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-double_pendulum.analysis.benchmark_scores">
-<span id="double-pendulum-analysis-benchmark-scores"></span><h2>double_pendulum.analysis.benchmark_scores<a class="headerlink" href="#module-double_pendulum.analysis.benchmark_scores" title="Permalink to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark_scores.get_delay_score">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.benchmark_scores.</span></span><span class="sig-name descname"><span class="pre">get_delay_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark_scores.get_delay_score" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark_scores.get_measurement_noise_score">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.benchmark_scores.</span></span><span class="sig-name descname"><span class="pre">get_measurement_noise_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark_scores.get_measurement_noise_score" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark_scores.get_model_score">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.benchmark_scores.</span></span><span class="sig-name descname"><span class="pre">get_model_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark_scores.get_model_score" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark_scores.get_perturbation_score">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.benchmark_scores.</span></span><span class="sig-name descname"><span class="pre">get_perturbation_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark_scores.get_perturbation_score" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark_scores.get_scores">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.benchmark_scores.</span></span><span class="sig-name descname"><span class="pre">get_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'results.pkl'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark_scores.get_scores" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark_scores.get_unoise_score">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.benchmark_scores.</span></span><span class="sig-name descname"><span class="pre">get_unoise_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark_scores.get_unoise_score" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.benchmark_scores.get_uresponsiveness_score">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.benchmark_scores.</span></span><span class="sig-name descname"><span class="pre">get_uresponsiveness_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.benchmark_scores.get_uresponsiveness_score" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
+<section id="double-pendulum-analysis-benchmark-scores">
+<h2>double_pendulum.analysis.benchmark_scores<a class="headerlink" href="#double-pendulum-analysis-benchmark-scores" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-double_pendulum.analysis.leaderboard">
-<span id="double-pendulum-analysis-leaderboard"></span><h2>double_pendulum.analysis.leaderboard<a class="headerlink" href="#module-double_pendulum.analysis.leaderboard" title="Permalink to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_energy">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_energy" title="Permalink to this definition"></a></dt>
-<dd><p>get_energy.</p>
-<p>Get the mechanical energy used during the swingup.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 4)
-states, units=[rad, rad, rad/s, rad/s]
-order=[angle1, angle2, velocity1, velocity2]</p>
-</dd>
-<dt><strong>U</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 2)
-actuations/motor torques
-order=[u1, u2],
-units=[Nm]</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>float</dt><dd><p>energy</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_integrated_torque">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_integrated_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_integrated_torque" title="Permalink to this definition"></a></dt>
-<dd><p>get_integrated_torque.</p>
-<p>Get the (discrete) time integral over the torque.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>T</strong><span class="classifier">array-like</span></dt><dd><p>time points, unit=[s]
-shape=(N,)</p>
-</dd>
-<dt><strong>U</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 2)
-actuations/motor torques
-order=[u1, u2],
-units=[Nm]</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>float</dt><dd><p>integrated torque</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_max_tau">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_max_tau</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_max_tau" title="Permalink to this definition"></a></dt>
-<dd><p>get_max_tau.</p>
-<p>Get the maximum torque used in the trajectory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>U</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 2)
-actuations/motor torques
-order=[u1, u2],
-units=[Nm]</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>float</dt><dd><p>maximum torque</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_swingup_time">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_swingup_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.01,</span> <span class="pre">0.01,</span> <span class="pre">0.01,</span> <span class="pre">0.01]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_to_stay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'height'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_swingup_time" title="Permalink to this definition"></a></dt>
-<dd><p>get_swingup_time.
-get the swingup time from a data_dict.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>T</strong><span class="classifier">array-like</span></dt><dd><p>time points, unit=[s]
-shape=(N,)</p>
-</dd>
-<dt><strong>X</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 4)
-states, units=[rad, rad, rad/s, rad/s]
-order=[angle1, angle2, velocity1, velocity2]</p>
-</dd>
-<dt><strong>U</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 2)
-actuations/motor torques
-order=[u1, u2],
-units=[Nm]</p>
-</dd>
-<dt><strong>eps</strong><span class="classifier">list</span></dt><dd><p>list with len(eps) = 4. The thresholds for the swingup to be
-successfull ([position, velocity])
-default = [1e-2, 1e-2, 1e-2, 1e-2]</p>
-</dd>
-<dt><strong>has_to_stay</strong><span class="classifier">bool</span></dt><dd><p>whether the pendulum has to stay upright until the end of the trajectory
-default=True</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>float</dt><dd><p>swingup time</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_tau_smoothness">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_tau_smoothness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_tau_smoothness" title="Permalink to this definition"></a></dt>
-<dd><p>get_tau_smoothness.</p>
-<p>Get the standard deviation of the changes in the torque signal.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>U</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 2)
-actuations/motor torques
-order=[u1, u2],
-units=[Nm]</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>float</dt><dd><p>torque smoothness (std of changes)</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_torque_cost">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_torque_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[1.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">1.]])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_torque_cost" title="Permalink to this definition"></a></dt>
-<dd><p>get_torque_cost.</p>
-<p>Get the running cost torque with cost parameter R.
-The cost is normalized with the timestep.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>T</strong><span class="classifier">array-like</span></dt><dd><p>time points, unit=[s]
-shape=(N,)</p>
-</dd>
-<dt><strong>U</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 2)
-actuations/motor torques
-order=[u1, u2],
-units=[Nm]</p>
-</dd>
-<dt><strong>R</strong><span class="classifier">numpy array</span></dt><dd><p>running cost weight matrix (2x2)</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>float</dt><dd><p>torque cost</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.get_velocity_cost">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">get_velocity_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[1.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">1.]])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.get_velocity_cost" title="Permalink to this definition"></a></dt>
-<dd><p>get_torque_cost.</p>
-<p>Get the running velocity cost with cost matrix Q.
-The cost is normalized with the timestep.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>T</strong><span class="classifier">array-like</span></dt><dd><p>time points, unit=[s]
-shape=(N,)</p>
-</dd>
-<dt><strong>X</strong><span class="classifier">array-like</span></dt><dd><p>shape=(N, 4)
-states, units=[rad, rad, rad/s, rad/s]
-order=[angle1, angle2, velocity1, velocity2]</p>
-</dd>
-<dt><strong>Q</strong><span class="classifier">numpy array</span></dt><dd><p>running cost weight matrix (2x2)</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>float</dt><dd><p>torque cost</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.leaderboard.leaderboard_scores">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.leaderboard.</span></span><span class="sig-name descname"><span class="pre">leaderboard_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'energy':</span> <span class="pre">0.0,</span> <span class="pre">'integ_tau':</span> <span class="pre">0.1,</span> <span class="pre">'max_tau':</span> <span class="pre">0.1,</span> <span class="pre">'swingup_time':</span> <span class="pre">0.2,</span> <span class="pre">'tau_cost':</span> <span class="pre">0.0,</span> <span class="pre">'tau_smoothness':</span> <span class="pre">0.6,</span> <span class="pre">'velocity_cost':</span> <span class="pre">0.2}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'energy':</span> <span class="pre">1.0,</span> <span class="pre">'integ_tau':</span> <span class="pre">10.0,</span> <span class="pre">'max_tau':</span> <span class="pre">1.0,</span> <span class="pre">'swingup_time':</span> <span class="pre">10.0,</span> <span class="pre">'tau_cost':</span> <span class="pre">10.0,</span> <span class="pre">'tau_smoothness':</span> <span class="pre">1.0,</span> <span class="pre">'velocity_cost':</span> <span class="pre">1000}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'v1'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.leaderboard.leaderboard_scores" title="Permalink to this definition"></a></dt>
-<dd><p>leaderboard_scores.
-Compute leaderboard scores from data_dictionaries which will be loaded from
-data_paths.  Data can be either from simulation or experiments (but for
-comparability it should only be one).</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>data_paths</strong><span class="classifier">dict</span></dt><dd><p>contains the names and paths to the trajectory data in the form:
-{controller1_name: {“csv_path”: data_path1, “name”: controller1_name, “username”: username1},</p>
-<blockquote>
-<div><p>controller2_name: {“csv_path”: data_path2, “name”: controller2_name, “username”: username2},
-…}</p>
-</div></blockquote>
-</dd>
-<dt><strong>save_to</strong><span class="classifier">string</span></dt><dd><p>path where the result will be saved as a csv file</p>
-</dd>
-<dt><strong>weights</strong><span class="classifier">dict</span></dt><dd><p>dictionary containing the weights for the different criteria in the
-form:
-{“swingup_time”: weight1,</p>
-<blockquote>
-<div><p>“max_tau”: weight2,
-“energy”: weight3,
-“integ_tau”: weight4,
-“tau_cost”: weight5,
-“tau_smoothness”: weight6,
-“velocity_cost” : weight7}
-The weights should sum up to 1 for the final score to be in the range
-[0, 1].</p>
-</div></blockquote>
-</dd>
-<dt><strong>normalize</strong><span class="classifier">dict</span></dt><dd><p>dictionary containing normalization constants for the different
-criteria in the form:
-{“swingup_time”: norm1,</p>
-<blockquote>
-<div><p>“max_tau”: norm2,
-“energy”: norm3,
-“integ_tau”: norm4,
-“tau_cost”: norm5,
-“tau_smoothness”: norm6,
-“velocity_cost”: norm7}
-The normalization constants should be the maximum values that can be
-achieved by the criteria so that after dividing by the norm the result
-is in the range [0, 1].</p>
-</div></blockquote>
-</dd>
-<dt><strong>simulation</strong><span class="classifier">bool</span></dt><dd><p>whether to load the simulaition trajectory data</p>
-</dd>
-<dt><strong>link_base</strong><span class="classifier">string</span></dt><dd><p>base-link for hosting data. Not needed for local execution</p>
-</dd>
-<dt><strong>score_version</strong><span class="classifier">string</span></dt><dd><p>which equation should be used for the score calculation
-if set to something else than “v1”, “v2” will be used
-default: “v1”</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="double-pendulum-analysis-leaderboard">
+<h2>double_pendulum.analysis.leaderboard<a class="headerlink" href="#double-pendulum-analysis-leaderboard" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-double_pendulum.analysis.utils">
-<span id="double-pendulum-analysis-utils"></span><h2>double_pendulum.analysis.utils<a class="headerlink" href="#module-double_pendulum.analysis.utils" title="Permalink to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.analysis.utils.get_par_list">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.analysis.utils.</span></span><span class="sig-name descname"><span class="pre">get_par_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_rel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_rel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.analysis.utils.get_par_list" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
+<section id="double-pendulum-analysis-utils">
+<h2>double_pendulum.analysis.utils<a class="headerlink" href="#double-pendulum-analysis-utils" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

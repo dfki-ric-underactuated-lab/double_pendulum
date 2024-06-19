@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>double_pendulum.experiments &mdash; Double Pendulum 1.0.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -30,16 +24,12 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../index.html" class="icon icon-home">
-            Double Pendulum
-              <img src="../_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
+            <a href="../index.html" class="icon icon-home"> Double Pendulum
+            <img src="../_static/chaotic_freefall_long_exposure_shot.jpg" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,11 +45,11 @@
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.controller.html">double_pendulum.controller</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">double_pendulum.experiments</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.experiments.experimental_utils">double_pendulum.experiments.experimental_utils</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.experiments.hardware_control_loop_mjbots">double_pendulum.experiments.hardware_control_loop_mjbots</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.experiments.hardware_control_loop_tmotors">double_pendulum.experiments.hardware_control_loop_tmotors</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.experiments.performance_profiler">double_pendulum.experiments.performance_profiler</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-double_pendulum.experiments.video_recording">double_pendulum.experiments.video_recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#double-pendulum-experiments-experimental-utils">double_pendulum.experiments.experimental_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#double-pendulum-experiments-hardware-control-loop-mjbots">double_pendulum.experiments.hardware_control_loop_mjbots</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#double-pendulum-experiments-hardware-control-loop-tmotors">double_pendulum.experiments.hardware_control_loop_tmotors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#double-pendulum-experiments-performance-profiler">double_pendulum.experiments.performance_profiler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#double-pendulum-experiments-video-recording">double_pendulum.experiments.video_recording</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.filter.html">double_pendulum.filter</a></li>
@@ -91,10 +81,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../modules.html">&lt;no title&gt;</a></li>
-          <li class="breadcrumb-item"><a href="double_pendulum.html">double_pendulum</a></li>
-      <li class="breadcrumb-item active">double_pendulum.experiments</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../modules.html">&lt;no title&gt;</a> &raquo;</li>
+          <li><a href="double_pendulum.html">double_pendulum</a> &raquo;</li>
+      <li>double_pendulum.experiments</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/generated/double_pendulum.experiments.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -104,183 +94,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-double_pendulum.experiments">
-<span id="double-pendulum-experiments"></span><h1>double_pendulum.experiments<a class="headerlink" href="#module-double_pendulum.experiments" title="Permalink to this heading"></a></h1>
+  <section id="double-pendulum-experiments">
+<h1>double_pendulum.experiments<a class="headerlink" href="#double-pendulum-experiments" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-double_pendulum.experiments.experimental_utils">
-<span id="double-pendulum-experiments-experimental-utils"></span><h2>double_pendulum.experiments.experimental_utils<a class="headerlink" href="#module-double_pendulum.experiments.experimental_utils" title="Permalink to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.experiments.experimental_utils.rad2rev">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.experiments.experimental_utils.</span></span><span class="sig-name descname"><span class="pre">rad2rev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle_in_radians</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.experimental_utils.rad2rev" title="Permalink to this definition"></a></dt>
-<dd><p>Convert radians to revolutions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>angle_in_radians</strong><span class="classifier">float</span></dt><dd><p>angle, unit=[rad]</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>float</dt><dd><p>angle in revolutions</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.experiments.experimental_utils.rev2rad">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.experiments.experimental_utils.</span></span><span class="sig-name descname"><span class="pre">rev2rad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle_in_revolution</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.experimental_utils.rev2rad" title="Permalink to this definition"></a></dt>
-<dd><p>Convert revolutions to radians.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>angle_in_revolution</strong><span class="classifier">float</span></dt><dd><p>angle, unit=[rev]</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>float</dt><dd><p>angle in radians</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.experiments.experimental_utils.save_data">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.experiments.experimental_utils.</span></span><span class="sig-name descname"><span class="pre">save_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoulder_meas_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoulder_meas_vel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoulder_meas_tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elbow_meas_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elbow_meas_vel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elbow_meas_tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.experimental_utils.save_data" title="Permalink to this definition"></a></dt>
-<dd><p>save data to csv file.
-Deprecated. One should use double_pendulum.utils.save_trajectory instead.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.experiments.experimental_utils.setZeroPosition">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.experiments.experimental_utils.</span></span><span class="sig-name descname"><span class="pre">setZeroPosition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initPos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initVel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initTau</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.experimental_utils.setZeroPosition" title="Permalink to this definition"></a></dt>
-<dd><p>Set the zero position for a tmotor.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>motor</strong><span class="classifier">motor_driver.canmotorlib.CanMotorController</span></dt><dd><p>motor whose position will be initialized</p>
-</dd>
-<dt><strong>initPos</strong><span class="classifier">float</span></dt><dd><p>initial motor position from sensor readings</p>
-</dd>
-<dt><strong>initPos</strong><span class="classifier">float</span></dt><dd><p>initial motor velocity from sensor readings</p>
-</dd>
-<dt><strong>initPos</strong><span class="classifier">float</span></dt><dd><p>initial motor torque from sensor readings</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="double-pendulum-experiments-experimental-utils">
+<h2>double_pendulum.experiments.experimental_utils<a class="headerlink" href="#double-pendulum-experiments-experimental-utils" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-double_pendulum.experiments.hardware_control_loop_mjbots">
-<span id="double-pendulum-experiments-hardware-control-loop-mjbots"></span><h2>double_pendulum.experiments.hardware_control_loop_mjbots<a class="headerlink" href="#module-double_pendulum.experiments.hardware_control_loop_mjbots" title="Permalink to this heading"></a></h2>
+<section id="double-pendulum-experiments-hardware-control-loop-mjbots">
+<h2>double_pendulum.experiments.hardware_control_loop_mjbots<a class="headerlink" href="#double-pendulum-experiments-hardware-control-loop-mjbots" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-double_pendulum.experiments.hardware_control_loop_tmotors">
-<span id="double-pendulum-experiments-hardware-control-loop-tmotors"></span><h2>double_pendulum.experiments.hardware_control_loop_tmotors<a class="headerlink" href="#module-double_pendulum.experiments.hardware_control_loop_tmotors" title="Permalink to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.experiments.hardware_control_loop_tmotors.run_experiment">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.experiments.hardware_control_loop_tmotors.</span></span><span class="sig-name descname"><span class="pre">run_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_final</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'can0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AK80_6_V1p1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[6.0,</span> <span class="pre">6.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_video</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.hardware_control_loop_tmotors.run_experiment" title="Permalink to this definition"></a></dt>
-<dd><p>run_experiment.
-Hardware control loop for tmotor system.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>controller</strong><span class="classifier">controller object</span></dt><dd><p>controller which gives the control signal</p>
-</dd>
-<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>timestep of the control, unit=[s]
-(Default value=0.01)</p>
-</dd>
-<dt><strong>t_final</strong><span class="classifier">float</span></dt><dd><p>duration of the experiment
-(Default value=10.)</p>
-</dd>
-<dt><strong>can_port</strong><span class="classifier">string</span></dt><dd><p>the can port which is used to control the motors
-(Default value=”can0”)</p>
-</dd>
-<dt><strong>motor_ids</strong><span class="classifier">list</span></dt><dd><p>shape=(2,), dtype=int
-ids of the 2 motors
-(Default value=[8, 9])</p>
-</dd>
-<dt><strong>motor_type</strong><span class="classifier">string</span></dt><dd><p>the motor type being used
-(Default value=”AK80_6_V1p1”)</p>
-</dd>
-<dt><strong>tau_limit</strong><span class="classifier">array_like, optional</span></dt><dd><p>shape=(2,), dtype=float,
-torque limit of the motors
-[tl1, tl2], units=[Nm, Nm]
-(Default value=[4., 4.])</p>
-</dd>
-<dt><strong>save_dir</strong><span class="classifier">string of path object</span></dt><dd><p>directory where log data will be stored
-(Default value=”.”)</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="double-pendulum-experiments-hardware-control-loop-tmotors">
+<h2>double_pendulum.experiments.hardware_control_loop_tmotors<a class="headerlink" href="#double-pendulum-experiments-hardware-control-loop-tmotors" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-double_pendulum.experiments.performance_profiler">
-<span id="double-pendulum-experiments-performance-profiler"></span><h2>double_pendulum.experiments.performance_profiler<a class="headerlink" href="#module-double_pendulum.experiments.performance_profiler" title="Permalink to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.experiments.performance_profiler.motor_send_n_commands">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.experiments.performance_profiler.</span></span><span class="sig-name descname"><span class="pre">motor_send_n_commands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numTimes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.performance_profiler.motor_send_n_commands" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.experiments.performance_profiler.motor_send_n_commands2">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.experiments.performance_profiler.</span></span><span class="sig-name descname"><span class="pre">motor_send_n_commands2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[8,</span> <span class="pre">9]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'can0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numTimes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.performance_profiler.motor_send_n_commands2" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.experiments.performance_profiler.motor_speed_test">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.experiments.performance_profiler.</span></span><span class="sig-name descname"><span class="pre">motor_speed_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[8,</span> <span class="pre">9]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'can0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.performance_profiler.motor_speed_test" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.experiments.performance_profiler.motor_speed_test2">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.experiments.performance_profiler.</span></span><span class="sig-name descname"><span class="pre">motor_speed_test2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[8,</span> <span class="pre">9]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'can0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.performance_profiler.motor_speed_test2" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="double_pendulum.experiments.performance_profiler.profiler">
-<span class="sig-prename descclassname"><span class="pre">double_pendulum.experiments.performance_profiler.</span></span><span class="sig-name descname"><span class="pre">profiler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas_dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.performance_profiler.profiler" title="Permalink to this definition"></a></dt>
-<dd><p>validate avg dt of the control loop with (start time - end time) / numSteps</p>
-</dd></dl>
-
+<section id="double-pendulum-experiments-performance-profiler">
+<h2>double_pendulum.experiments.performance_profiler<a class="headerlink" href="#double-pendulum-experiments-performance-profiler" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-double_pendulum.experiments.video_recording">
-<span id="double-pendulum-experiments-video-recording"></span><h2>double_pendulum.experiments.video_recording<a class="headerlink" href="#module-double_pendulum.experiments.video_recording" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="double_pendulum.experiments.video_recording.VideoWriterWidget">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">double_pendulum.experiments.video_recording.</span></span><span class="sig-name descname"><span class="pre">VideoWriterWidget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">video_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.video_recording.VideoWriterWidget" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.experiments.video_recording.VideoWriterWidget.save_frame">
-<span class="sig-name descname"><span class="pre">save_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.video_recording.VideoWriterWidget.save_frame" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.experiments.video_recording.VideoWriterWidget.show_frame">
-<span class="sig-name descname"><span class="pre">show_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.video_recording.VideoWriterWidget.show_frame" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.experiments.video_recording.VideoWriterWidget.start_recording">
-<span class="sig-name descname"><span class="pre">start_recording</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.video_recording.VideoWriterWidget.start_recording" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="double_pendulum.experiments.video_recording.VideoWriterWidget.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#double_pendulum.experiments.video_recording.VideoWriterWidget.update" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<section id="double-pendulum-experiments-video-recording">
+<h2>double_pendulum.experiments.video_recording<a class="headerlink" href="#double-pendulum-experiments-video-recording" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 
