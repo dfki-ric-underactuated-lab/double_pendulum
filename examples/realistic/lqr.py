@@ -74,7 +74,7 @@ u_responsiveness = 1.0
 perturbation_array, _, _, _ = get_random_gauss_perturbation_array(
     t_final, dt, 3, 1.0, [0.01, 0.05], [0.1, 1.0]
 )
-plot_perturbation_array(t_final, dt, perturbation_array)
+# plot_perturbation_array(t_final, dt, perturbation_array)
 
 # filter args
 lowpass_alpha = [1.0, 1.0, 0.2, 0.2]
