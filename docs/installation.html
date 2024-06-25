@@ -38,8 +38,7 @@
               <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="dynamics.html"> Double Pendulum Dynamics</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#"> Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#potential-issues">Potential Issues</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"> Installation</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
@@ -84,12 +83,20 @@ the moment. Only the moteus python package needs to be commented in the
 setup.py and it will not be possible to operate mjbots hardware.</p>
 <p>We recommend using a virtual python environment.</p>
 <ol class="arabic">
-<li><p>Install dependencies (only neccessary for C++ code, used for iLQR optimization):</p>
+<li><p>Install dependencies:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># ubuntu20</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libyaml</span><span class="o">-</span><span class="n">cpp</span><span class="o">-</span><span class="n">dev</span> <span class="n">libeigen3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libpython3</span><span class="mf">.8</span> <span class="n">libx11</span><span class="o">-</span><span class="mi">6</span> <span class="n">libsm6</span> <span class="n">libxt6</span> <span class="n">libglib2</span><span class="mf">.0</span><span class="o">-</span><span class="mi">0</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span> <span class="n">python3</span><span class="o">-</span><span class="n">numpydoc</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span><span class="o">-</span><span class="n">rtd</span><span class="o">-</span><span class="n">theme</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span> <span class="n">unzip</span> <span class="n">libyaml</span><span class="o">-</span><span class="n">cpp</span><span class="o">-</span><span class="n">dev</span> <span class="n">libeigen3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libpython3</span><span class="mf">.8</span> <span class="n">libx11</span><span class="o">-</span><span class="mi">6</span> <span class="n">libsm6</span> <span class="n">libxt6</span> <span class="n">libglib2</span><span class="mf">.0</span><span class="o">-</span><span class="mi">0</span> <span class="n">python3</span><span class="o">-</span><span class="n">pip</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span> <span class="n">python3</span><span class="o">-</span><span class="n">numpydoc</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span><span class="o">-</span><span class="n">rtd</span><span class="o">-</span><span class="n">theme</span>
 
 <span class="c1"># ubuntu22</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libyaml</span><span class="o">-</span><span class="n">cpp</span><span class="o">-</span><span class="n">dev</span> <span class="n">libeigen3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libx11</span><span class="o">-</span><span class="mi">6</span> <span class="n">libsm6</span> <span class="n">libglib2</span><span class="mf">.0</span><span class="o">-</span><span class="mi">0</span> <span class="n">libboost</span><span class="o">-</span><span class="n">dev</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span> <span class="n">python3</span><span class="o">-</span><span class="n">numpydoc</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span><span class="o">-</span><span class="n">rtd</span><span class="o">-</span><span class="n">theme</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span> <span class="n">unzip</span> <span class="n">libyaml</span><span class="o">-</span><span class="n">cpp</span><span class="o">-</span><span class="n">dev</span> <span class="n">libeigen3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libx11</span><span class="o">-</span><span class="mi">6</span> <span class="n">libsm6</span> <span class="n">libglib2</span><span class="mf">.0</span><span class="o">-</span><span class="mi">0</span> <span class="n">libboost</span><span class="o">-</span><span class="n">dev</span> <span class="n">python3</span><span class="o">-</span><span class="n">pip</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span> <span class="n">python3</span><span class="o">-</span><span class="n">numpydoc</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span><span class="o">-</span><span class="n">rtd</span><span class="o">-</span><span class="n">theme</span>
+</pre></div>
+</div>
+</li>
+<li><p>The header only eigen library can be installed via (For more information
+visit <a href="#id1"><span class="problematic" id="id2">`eigen&lt;https://eigen.tuxfamily.org/index.php?title=Main_Page&gt;`__</span></a>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="o">-</span><span class="n">O</span> <span class="n">Eigen</span><span class="o">.</span><span class="n">zip</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">gitlab</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">libeigen</span><span class="o">/</span><span class="n">eigen</span><span class="o">/-/</span><span class="n">archive</span><span class="o">/</span><span class="mf">3.4.0</span><span class="o">/</span><span class="n">eigen</span><span class="o">-</span><span class="mf">3.4.0</span><span class="o">.</span><span class="n">zip</span>
+<span class="n">unzip</span> <span class="n">Eigen</span><span class="o">.</span><span class="n">zip</span>
+<span class="n">sudo</span> <span class="n">mv</span> <span class="n">eigen</span><span class="o">-*/</span><span class="n">Eigen</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">include</span><span class="o">/</span>
 </pre></div>
 </div>
 </li>
@@ -117,7 +124,7 @@ such as tensorflow, drake etc.) for all controllers do</p>
 </ol>
 <p>The following two bullet points may be useful when only
 the C++/Python code is needed, if you work on the code and need to recompile
-often, or if errors appear during the installation call in 3.</p>
+often, or if errors appear during the installation call in 4.</p>
 <ol class="arabic" start="4">
 <li><p>If you want to install only the Python package, you can do:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">python</span>
@@ -142,17 +149,6 @@ often, or if errors appear during the installation call in 3.</p>
 </div>
 </li>
 </ol>
-<section id="potential-issues">
-<h2>Potential Issues<a class="headerlink" href="#potential-issues" title="Permalink to this headline"></a></h2>
-<p>If you have the issue that the eigen library is not correctly installed you can
-install the header only library with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="o">-</span><span class="n">O</span> <span class="n">Eigen</span><span class="o">.</span><span class="n">zip</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">gitlab</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">libeigen</span><span class="o">/</span><span class="n">eigen</span><span class="o">/-/</span><span class="n">archive</span><span class="o">/</span><span class="mf">3.4.0</span><span class="o">/</span><span class="n">eigen</span><span class="o">-</span><span class="mf">3.4.0</span><span class="o">.</span><span class="n">zip</span>
-<span class="n">unzip</span> <span class="n">Eigen</span><span class="o">.</span><span class="n">zip</span>
-<span class="n">sudo</span> <span class="n">mv</span> <span class="n">eigen</span><span class="o">-*/</span><span class="n">Eigen</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">include</span><span class="o">/</span>
-</pre></div>
-</div>
-<p>For more information visit <a class="reference external" href="https://eigen.tuxfamily.org/index.php?title=Main_Page">eigen</a> .</p>
-</section>
 </section>
 
 
