@@ -35,5 +35,6 @@ WORKDIR "/double_pendulum"
 # RUN git checkout v0.1.0
 
 RUN make install
+RUN make pythonfull
 RUN make doc
 RUN make tests
