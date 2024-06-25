@@ -690,20 +690,20 @@ class Simulator:
             ani_plot_counter += 1
 
         # plot base
-        self.animation_plots[ani_plot_counter].set_data(ee_pos[0][0], ee_pos[0][1])
+        self.animation_plots[ani_plot_counter].set_data([ee_pos[0][0]], [ee_pos[0][1]])
         ani_plot_counter += 1
 
         # plot bodies
         for link in range(self.plant.n_links):
             self.animation_plots[ani_plot_counter].set_data(
-                ee_pos[link + 1][0], ee_pos[link + 1][1]
+                [ee_pos[link + 1][0]], [ee_pos[link + 1][1]]
             )
             ani_plot_counter += 1
 
             if self.plot_trail:
                 self.animation_plots[ani_plot_counter].set_data(
-                    np.asarray(self.ee_poses)[:, link + 1, 0],
-                    np.asarray(self.ee_poses)[:, link + 1, 1],
+                    [np.asarray(self.ee_poses)[:, link + 1, 0]],
+                    [np.asarray(self.ee_poses)[:, link + 1, 1]],
                 )
                 ani_plot_counter += 1
 
@@ -734,7 +734,7 @@ class Simulator:
             coords = np.asarray(coords)
             if len(coords) > 1:
                 self.animation_plots[ani_plot_counter].set_data(
-                    coords.T[0], coords.T[1]
+                    [coords.T[0]], [coords.T[1]]
                 )
             ani_plot_counter += 1
 
@@ -747,7 +747,7 @@ class Simulator:
             coords = np.asarray(coords)
             if len(coords) > 1:
                 self.animation_plots[ani_plot_counter].set_data(
-                    coords.T[0], coords.T[1]
+                    [coords.T[0]], [coords.T[1]]
                 )
             ani_plot_counter += 1
 

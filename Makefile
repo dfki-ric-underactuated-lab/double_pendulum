@@ -10,6 +10,9 @@ install: python cpp
 python:
 	make -C $(PYTHON_ROOT)
 
+pythonfull:
+	make -C $(PYTHON_ROOT) full
+
 cpp:
 	make -C $(CPP_ROOT)
 
