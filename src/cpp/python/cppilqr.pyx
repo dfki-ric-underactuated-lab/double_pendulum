@@ -313,7 +313,8 @@ cdef class cppilqrmpc:
 
         array_wrapper = ArrayWrapper()
         array_wrapper.set_data(N-1, <void*> vec)
-        ar = np.array(array_wrapper, copy=False)
+        # ar = np.array(array_wrapper, copy=False)
+        ar = np.array(array_wrapper)
         ar.base = <PyObject*> array_wrapper
         Py_INCREF(array_wrapper)
         return ar
@@ -326,7 +327,7 @@ cdef class cppilqrmpc:
 
         array_wrapper = ArrayWrapper()
         array_wrapper.set_data(N-1, <void*> vec)
-        ar = np.array(array_wrapper, copy=False)
+        ar = np.array(array_wrapper)
         ar.base = <PyObject*> array_wrapper
         Py_INCREF(array_wrapper)
         return ar
@@ -339,7 +340,7 @@ cdef class cppilqrmpc:
 
         array_wrapper = ArrayWrapper()
         array_wrapper.set_data(N, <void*> vec)
-        ar = np.array(array_wrapper, copy=False)
+        ar = np.array(array_wrapper)
         ar.base = <PyObject*> array_wrapper
         Py_INCREF(array_wrapper)
         return ar
@@ -352,7 +353,7 @@ cdef class cppilqrmpc:
 
         array_wrapper = ArrayWrapper()
         array_wrapper.set_data(N, <void*> vec)
-        ar = np.array(array_wrapper, copy=False)
+        ar = np.array(array_wrapper)
         ar.base = <PyObject*> array_wrapper
         Py_INCREF(array_wrapper)
         return ar
@@ -365,7 +366,7 @@ cdef class cppilqrmpc:
 
         array_wrapper = ArrayWrapper()
         array_wrapper.set_data(N, <void*> vec)
-        ar = np.array(array_wrapper, copy=False)
+        ar = np.array(array_wrapper)
         ar.base = <PyObject*> array_wrapper
         Py_INCREF(array_wrapper)
         return ar
@@ -378,7 +379,7 @@ cdef class cppilqrmpc:
 
         array_wrapper = ArrayWrapper()
         array_wrapper.set_data(N, <void*> vec)
-        ar = np.array(array_wrapper, copy=False)
+        ar = np.array(array_wrapper)
         ar.base = <PyObject*> array_wrapper
         Py_INCREF(array_wrapper)
         return ar

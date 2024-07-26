@@ -24,6 +24,7 @@ setup(
         "dill",
         "argparse",
         "opencv-python",
+        "pyyaml",
         # c++ python bindings
         "cython<1.0.0",
     ],
@@ -39,7 +40,6 @@ setup(
             "gymnasium",
             "stable_baselines3",
             "shimmy",
-            "pyyaml",
             "jax",
             "jaxlib",
             "flax",
@@ -48,7 +48,15 @@ setup(
         "doc": ["sphinx", "sphinx-rtd-theme", "numpydoc"],
         "test": ["pytest", "lark"],
         "OC": ["drake", "meshcat"],
-        "RL": ["gymnasium", "stable_baselines3", "shimmy", "pyyaml", "jax", "jaxlib", "flax", "tqdm"],
+        "RL": [
+            "gymnasium",
+            "stable_baselines3",
+            "shimmy",
+            "jax",
+            "jaxlib",
+            "flax",
+            "tqdm",
+        ],
     },
     classifiers=[
         "Development Status :: 5 - Stable",
