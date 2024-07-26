@@ -6,7 +6,7 @@ from double_pendulum.controller.abstract_controller import AbstractController
 from double_pendulum.controller.AR_EAPO.eapo_ar import EAPO_AR
 
 
-class EAPOController(AbstractController):
+class AR_EAPOController(AbstractController):
     def __init__(
         self,
         model_path: str | Path,

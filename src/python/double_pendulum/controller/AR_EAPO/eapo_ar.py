@@ -106,7 +106,6 @@ class ARRolloutBufferWithEntropy(RolloutBuffer):
         self.rho_r = 0.0
         self.rho_e = 0.0
         self.trace = 0.0
-        self.b = 0.0
 
     def reset(self) -> None:
         super().reset()

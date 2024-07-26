@@ -1,5 +1,5 @@
 from pathlib import Path
-from double_pendulum.controller.AR_EAPO import EAPOController
+from double_pendulum.controller.AR_EAPO import AR_EAPOController
 
 
 name = "ar-eapo"
@@ -15,7 +15,7 @@ leaderboard_config = {
 model_path = Path(
     "../../../data/policies/design_C.1/model_1.1/acrobot/AR-EAPO/model.zip"
 )
-controller = EAPOController(
+controller = AR_EAPOController(
     model_path=model_path,
     robot="acrobot",
     max_torque=6.0,
