@@ -475,7 +475,7 @@ class Policy(ActorCriticPolicy):
         return self.value_net.forward(latent_vf), self.entropy_net.forward(latent_ent)
 
 
-class EAPO_AR(PPO):
+class AR_EAPO(PPO):
     rollout_buffer: ARRolloutBufferWithEntropy
     policy: Policy
 
@@ -921,7 +921,7 @@ class EAPO_AR(PPO):
 
     @classmethod
     def load(
-        cls: type["EAPO_AR"],
+        cls: type["AR_EAPO"],
         path: str | Path,
         env: GymEnv | None = None,
         device: th.device | str = "auto",
@@ -929,7 +929,7 @@ class EAPO_AR(PPO):
         print_system_info: bool = False,
         force_reset: bool = True,
         **kwargs,
-    ) -> "EAPO_AR":
+    ) -> "AR_EAPO":
         model = super().load(
             path, env, device, custom_objects, print_system_info, force_reset, **kwargs
         )

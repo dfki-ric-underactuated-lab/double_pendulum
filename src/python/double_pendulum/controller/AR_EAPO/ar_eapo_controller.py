@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 
 from double_pendulum.controller.abstract_controller import AbstractController
-from double_pendulum.controller.AR_EAPO.eapo_ar import EAPO_AR
+from double_pendulum.controller.AR_EAPO.ar_eapo import AR_EAPO
 
 
 class AR_EAPOController(AbstractController):
@@ -17,7 +17,7 @@ class AR_EAPOController(AbstractController):
     ):
         super().__init__()
 
-        self.model: EAPO_AR = EAPO_AR.load(model_path)
+        self.model: AR_EAPO = AR_EAPO.load(model_path)
         self.torque_limits = np.array(
             [max_torque * (robot == "pendubot"), max_torque * (robot == "acrobot")],
             np.float64,
