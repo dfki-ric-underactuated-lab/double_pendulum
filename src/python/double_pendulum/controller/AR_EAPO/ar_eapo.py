@@ -577,19 +577,6 @@ class AR_EAPO(PPO):
     def _setup_model(self) -> None:
         OnPolicyAlgorithm._setup_model(self)
 
-        self.rollout_buffer = ARRolloutBufferWithEntropy(
-            ar_config=self.ar_config,
-            buffer_size=self.n_steps,
-            observation_space=self.observation_space,
-            action_space=self.action_space,
-            device=self.device,
-            gae_lambda=self.gae_lambda,
-            gamma=self.gamma,
-            e_lambda=self.e_lambda,
-            e_gamma=self.e_gamma,
-            n_envs=self.n_envs,
-        )
-
         # Initialize schedules for policy/value clipping
         self.clip_range = get_schedule_fn(self.clip_range)
         if self.clip_range_vf is not None:
