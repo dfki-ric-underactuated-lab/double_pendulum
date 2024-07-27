@@ -27,8 +27,11 @@ RUN cp -r eigen-3.4.0/Eigen /usr/local/include
 
 #RUN python -m ensurepip --upgrade
 RUN pip install -U pip
+RUN pip3 install numpy==1.24.1 dill
+RUN python3 -m pip install drake
 
-RUN git clone https://github.com/dfki-ric-underactuated-lab/double_pendulum.git
+# Copy everything
+COPY . ./double_pendulum/
 
 WORKDIR "/double_pendulum"
 
@@ -36,5 +39,4 @@ WORKDIR "/double_pendulum"
 
 RUN make install
 RUN make pythonfull
-RUN make doc
-RUN make tests
+
