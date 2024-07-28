@@ -32,9 +32,10 @@ RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install drake
 
 RUN python -m pip install torch
-RUN python -m pip install stable-baselines3
+RUN python -m pip install stable-baselines3==2.3.2
 RUN python -m pip install evotorch
 RUN python -m pip install gymnasium
+RUN python -m pip install ffmpeg-python
 
 # Copy everything
 COPY . ./double_pendulum/
@@ -45,3 +46,10 @@ WORKDIR "/double_pendulum"
 
 RUN make install
 RUN make pythonfull
+
+RUN apt-get -y update
+RUN apt-get -y upgrade
+RUN apt-get install -y ffmpeg
+
+
+RUN python -m pip install stable-baselines3==2.3.2

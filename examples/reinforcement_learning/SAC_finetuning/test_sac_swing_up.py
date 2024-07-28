@@ -26,7 +26,6 @@ elif robot == "acrobot":
     torque_limit = [0.0, max_torque]
     # model_path = "models/max_torque_1.5_robustness_0.2"
     model_path = "acrobot_score_0500"
-    #model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/SAC_main_training/log_data/SAC_training/run_baseline_easy4.py-1.5-0.0-0-0/best_model/best_model.zip"
 
 # import model parameter
 model_par_path = (

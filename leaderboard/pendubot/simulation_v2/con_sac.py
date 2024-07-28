@@ -76,7 +76,7 @@ design = "design_C.1"
 model = "model_1.0"
 
 model_par_path = (
-    "/home/alberto_sinigaglia/double_pendulum/data/system_identification/identified_parameters/"
+    "/double_pendulum/data/system_identification/identified_parameters/"
     + design
     + "/"
     + model

@@ -13,11 +13,10 @@ model_par_path = (
     + model
     + "/model_parameters.yml"
 )
+max_torque = 3.
+
 mpar = model_parameters(filepath=model_par_path)
-mpar.set_torque_limit([0.0, 6.0])
-mpar.set_motor_inertia(0.0)
-mpar.set_damping([0.0, 0.0])
-mpar.set_cfric([0.0, 0.0])
+mpar.set_torque_limit([0.0, max_torque])
 
 
 integrator = "runge_kutta"
