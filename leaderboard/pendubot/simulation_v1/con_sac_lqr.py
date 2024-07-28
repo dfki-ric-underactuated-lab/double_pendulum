@@ -15,8 +15,8 @@ name = "sac_lqr"
 leaderboard_config = {
     "csv_path": name + "/sim_swingup.csv",
     "name": name,
-    "simple_name": "SAC LQR",
-    "short_description": "Swing-up with an RL Policy learned with SAC.",
+    "simple_name": "SAC_main_training LQR",
+    "short_description": "Swing-up with an RL Policy learned with SAC_main_training.",
     "readme_path": f"readmes/{name}.md",
     "username": "chiniklas",
 }

@@ -28,8 +28,8 @@ name = "sac_lqr"
 leaderboard_config = {
     "csv_path": name + "/sim_swingup.csv",
     "name": name,
-    "simple_name": "SAC LQR",
-    "short_description": "Swing-up with an RL Policy learned with SAC.",
+    "simple_name": "SAC_main_training LQR",
+    "short_description": "Swing-up with an RL Policy learned with SAC_main_training.",
     "readme_path": f"readmes/{name}.md",
     "username": "chiniklas",
 }
@@ -38,7 +38,7 @@ leaderboard_config = {
 #     def __init__(self, model_path, dynamics_func, dt):
 #         super().__init__()
 #
-#         self.model = SAC.load(model_path)
+#         self.model = SAC_main_training.load(model_path)
 #         self.dynamics_func = dynamics_func
 #         self.dt = dt
 #

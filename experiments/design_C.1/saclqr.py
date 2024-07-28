@@ -29,14 +29,14 @@ if robot == "pendubot":
     active_act = 0
     scaling = False
     load_path = "../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr"
-    model_path = "../data/policies/design_C.1/model_1.0/pendubot/SAC/best_model.zip"
+    model_path = "../data/policies/design_C.1/model_1.0/pendubot/SAC_main_training/best_model.zip"
 
 elif robot == "acrobot":
     torque_limit = [0.5, 5.0]
     active_act = 1
     scaling = True
     load_path = "../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr"
-    model_path = "../data/policies/design_C.1/model_1.0/acrobot/SAC/sac_model.zip"
+    model_path = "../data/policies/design_C.1/model_1.0/acrobot/SAC_main_training/sac_model.zip"
 
 ## set model and controller parameters
 model_par_path = (
