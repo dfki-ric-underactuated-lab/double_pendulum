@@ -69,6 +69,14 @@ repository on a real system. The instructions for testing the code can be found
 
 [Installation Instructions](https://dfki-ric-underactuated-lab.github.io/double_pendulum/installation.html).
 
+## How to run
+```bash
+git clone ...
+cd double_pendulum
+docker build -t dp .
+docker run -it dp /bin/bash
+```
+
 ## Documentation
 
 Link to [documentation](https://dfki-ric-underactuated-lab.github.io/double_pendulum/index.html).

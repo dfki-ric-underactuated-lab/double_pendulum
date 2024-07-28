@@ -86,16 +86,7 @@ model_par_path = (
     + "/model_parameters.yml"
 )
 
-# robustness score = 0.584
-model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/SAC/models/run_baseline_adjusted.py-3.0-0.0-0-0/best_model.zip"
-# robustness score = 0.329
-model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/SAC/models/run_finetuning1_slow.py-3.0-0.0-0-0/6/best_model.zip"
-# # robustness score = 0.295.... pd
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/evolutionary_acrobot/savings_3.0/best_model-generation-0.5640000104904175.zip"
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/evolutionary_acrobot/savings_3.0/best_model-generation-0.5600000023841858.zip"
-
-
-model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/evolutionary_acrobot_2.0/savings_3.0/26/best_model-0.41749998927116394-0.539.zip"
+model_path = "../model.zip"
 
 # Model parameters
 mpar = model_parameters(filepath=model_par_path)

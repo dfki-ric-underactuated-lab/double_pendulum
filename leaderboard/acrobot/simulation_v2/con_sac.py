@@ -86,23 +86,8 @@ model_par_path = (
     + "/model_parameters.yml"
 )
 
-# # score = 0.482
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/SAC/models/run_baseline_adjusted.py-3.0-0.0-0-0/best_model.zip"
-# # score = 0.512
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/SAC/models/run_finetuning1_slow.py-3.0-0.0-0-0/6/best_model.zip"
-# # new evol
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/good_models/evol_run_finetuning1_slow.py-3.0-0.0-0-0/best_model_3.0.zip"
+model_path = "../model.zip"
 
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/evolutionary_acrobot/best_model_3.0_other.zip"
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/evolutionary_acrobot/savings_3.0/best_model-generation-0.5370000004768372.zip"
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/good_models/evol_run_finetuning1_slow.py-3.0-0.0-0-0/best_model_3.0.zip"
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/evolutionary_acrobot_2.0/savings_3.0/26/best_model-0.41749998927116394-0.539.zip"
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/evolutionary_acrobot_2.0/savings_3.0_backup/best_model-0.40666666626930237-0.53.zip"
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/BEST_EVOL/acrobot/3.0/best_model-0.41749998927116394-0.539.zip"
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/BEST_EVOL/acrobot/3.0_other/best_model-0.4020000100135803-0.523.zip"
-
-#model_path="/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/good_models/evol_run_finetuning2.py-3.0-0.0-0-0/best_model_3.0_other.zip"
-model_path ="/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/good_models/evol_run_finetuning1_slow.py-3.0-0.0-0-0/best_model_3.0.zip"
 # Model parameters
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_torque_limit(torque_limit)

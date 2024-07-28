@@ -83,18 +83,11 @@ model_par_path = (
     + "/model_parameters.yml"
 )
 
-max_torque = 2.75
+max_torque = 3.0
 torque_limit = [max_torque, 0.0] if robot == "pendubot" else [0.0, max_torque]
-# score = 0.51
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/good_models_pendubot/run_baseline_adjusted.py-3.0-0.0-0-0/best_model.zip"
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/evolutionary/best_model_3.0.zip"
-# model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/evolutionary/best_model_2.75.zip"
-# model_path  = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/evolutionary/savings_3.0/best_model-generation-0.10199999809265137.zip"
-#model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/good_models_pendubot/evol_run_baseline_finetuning2.py-3.0-0.0-0-0-146/best_model_3.0.zip"
-#model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/BEST_EVOL/pendubot/2.75/best_model-0.39800000190734863-0.518.zip"
-#model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/BEST_EVOL/pendubot/3.0/best_model-0.39366665482521057-0.516.zip"
-#model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/good_models_pendubot/evol_run_baseline_finetuning2.py-3.0-0.0-0-0-146/best_model_3.0.zip"
-model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/good_models_pendubot/evol_run_baseline_adjusted.py-2.75-0.0-0-0/best_model_2.75.zip"
+
+model_path = "../model.zip"
+
 # Model parameters
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_torque_limit(torque_limit)

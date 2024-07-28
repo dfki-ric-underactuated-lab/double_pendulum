@@ -85,19 +85,7 @@ model_par_path = (
     + "/model_parameters.yml"
 )
 
-# score = 0.51 -> 0.572 average = 0.541
-model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/good_models_pendubot/run_baseline_adjusted.py-3.0-0.0-0-0/best_model.zip"
-
-# score = 0.513 -> 0.681  average = 0.597
-model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/SAC_pendubot/models/run_baseline_finetuning2.py-3.0-0.0-0-0/73/best_model.zip"
-
-# score = 0.517 ->
-model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/SAC_pendubot/models/run_baseline_finetuning2.py-3.0-0.0-0-0/146/best_model.zip"
-
-# score = 0.536 ->
-model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/evolutionary/best_model_3.0.zip"
-
-model_path = "/home/alberto_sinigaglia/double_pendulum/examples/reinforcement_learning/evolutionary_2.0/savings_3.0_backup/best_model-0.39366665482521057-0.516.zip"
+model_path = "../model.zip"
 
 # Model parameters
 mpar = model_parameters(filepath=model_par_path)
