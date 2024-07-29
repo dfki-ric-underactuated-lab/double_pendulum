@@ -236,7 +236,7 @@ class Policy(ActorCriticPolicy):
         net_arch: list[int] | dict[str, list[int]] | None = None,
         activation_fn_pi: type[nn.Module] = nn.Tanh,
         activation_fn_vf: type[nn.Module] = nn.ReLU,
-        use_squashed_gaussian: bool = False,
+        use_squashed_gaussian: bool = True,
         ortho_init: bool = True,
         use_sde: bool = False,
         log_std_init: float = 0,

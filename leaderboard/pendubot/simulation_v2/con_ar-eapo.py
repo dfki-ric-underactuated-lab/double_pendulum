@@ -9,7 +9,7 @@ leaderboard_config = {
     "simple_name": "AR-EAPO",
     "short_description": "Policy trained with average reward maximum entropy RL",
     "readme_path": f"readmes/{name}.md",
-    "username": "BC2",
+    "username": "rnilva",
 }
 
 model_path = Path(
