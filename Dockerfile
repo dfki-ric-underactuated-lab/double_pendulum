@@ -10,6 +10,7 @@ RUN apt-get update && \
     apt-get install python3-pip -y && \
     apt-get install libyaml-cpp-dev -y && \
     #apt install libeigen3-dev -y && \
+    apt-get install ffmpeg -y && \
     apt-get install libpython3.10 -y && \
     apt-get install libx11-6 -y && \
     apt-get install libsm6 -y && \
@@ -25,16 +26,13 @@ RUN wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.
 RUN unzip Eigen.zip
 RUN cp -r eigen-3.4.0/Eigen /usr/local/include
 
-#RUN python -m ensurepip --upgrade
 RUN pip install -U pip
 
-RUN git clone https://github.com/dfki-ric-underactuated-lab/double_pendulum.git
+COPY . ./double_pendulum/
 
 WORKDIR "/double_pendulum"
 
-# RUN git checkout v0.1.0
-
 RUN make install
 RUN make pythonfull
-RUN make doc
-RUN make tests
+
+RUN python -m pip install stable-baselines3==2.3.2 cloudpickle==3.0.0
