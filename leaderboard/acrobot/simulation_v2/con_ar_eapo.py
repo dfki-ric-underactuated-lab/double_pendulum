@@ -13,7 +13,7 @@ leaderboard_config = {
 }
 
 model_path = Path(
-    "../../../data/policies/design_C.1/model_1.1/acrobot/AR-EAPO/model.zip"
+    "../../../data/policies/design_C.1/model_1.1/acrobot/AR_EAPO/model.zip"
 )
 controller = AR_EAPOController(
     model_path=model_path,
