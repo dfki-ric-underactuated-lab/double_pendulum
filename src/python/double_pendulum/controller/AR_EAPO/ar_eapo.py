@@ -59,7 +59,7 @@ class ARConfig:
     use_weighted_average: bool = True
     r_step_size: float = 0.001
     use_trace_for_weighted_average: bool = True
-    use_advantage: bool = False
+    use_advantage: bool = True
 
 
 class RolloutBufferSamplesWithEntropy(NamedTuple):
@@ -80,8 +80,8 @@ class ARRolloutBufferWithEntropy(RolloutBuffer):
         observation_space: Space,
         action_space: Space,
         device: Any | str = "auto",
-        gae_lambda: float = 1,
-        gamma: float = 0.99,
+        gae_lambda: float = 0.8,
+        gamma: float = 1.0,
         n_envs: int = 1,
         e_lambda: float | None = None,
         e_gamma: float | None = None,
