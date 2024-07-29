@@ -54,14 +54,14 @@ class SACController(AbstractController):
         return self.dynamics_func.unscale_action(action)
 
 
-name = "sac"
+name = "evolsac"
 leaderboard_config = {
     "csv_path": name + "/sim_swingup.csv",
     "name": name,
-    "simple_name": "sac",
-    "short_description": "SAC for both swingup and stabilisation",
+    "simple_name": "evolsac",
+    "short_description": "Evolutionary SAC for both swingup and stabilisation",
     "readme_path": f"readmes/{name}.md",
-    "username": "MarcoCali0",
+    "username": "AlbertoSinigaglia",
 }
 
 
