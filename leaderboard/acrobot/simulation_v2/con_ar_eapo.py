@@ -2,7 +2,7 @@ from pathlib import Path
 from double_pendulum.controller.AR_EAPO import AR_EAPOController
 
 
-name = "ar-eapo"
+name = "ar_eapo"
 leaderboard_config = {
     "csv_path": name + "/sim_swingup.csv",
     "name": name,
