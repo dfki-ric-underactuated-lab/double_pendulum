@@ -1,7 +1,6 @@
 from copy import deepcopy
 
 import numpy as np
-
 from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.simulation.simulation import Simulator
 
@@ -18,12 +17,12 @@ def get_par_list(x0, min_rel, max_rel, n):
 
 
 class CustomSimulator(Simulator):
-    def __init__(self, plant, robustness,max_torque):
+    def __init__(self, plant, robustness, max_torque):
         self.base_plant = deepcopy(plant)
         design = "design_C.1"
         model = "model_1.0"
         robot = "acrobot"
-    
+
         model_par_path = (
             "../../../data/system_identification/identified_parameters/"
             + design

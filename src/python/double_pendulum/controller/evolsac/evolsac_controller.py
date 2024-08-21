@@ -1,11 +1,18 @@
 import numpy as np
-
+import torch
 from double_pendulum.controller.abstract_controller import AbstractController
 
 
-class SACController(AbstractController):
+class EvolSACController(AbstractController):
     def __init__(
-        self, model, dynamics_func, scaling=True, include_time=True, window_size=0
+        self,
+        model,
+        dynamics_func,
+        scaling=True,
+        include_time=True,
+        window_size=0,
+        SNES_phase=False,
+        evaluating=True,
     ):
         super().__init__()
         self.model = model
@@ -18,6 +25,8 @@ class SACController(AbstractController):
         ]
         self.old_action = [[0.0] for _ in range(self.window_size)]
         self.timestep = 0
+        self.SNES_phase = SNES_phase
+        self.evaluating = evaluating
 
     def get_state(self, obs, time):
         if self.window_size > 0:
@@ -44,25 +53,14 @@ class SACController(AbstractController):
         obs = self.dynamics_func.normalize_state(x)
         self.update_old_state(obs, t)
         action = self.model.predict(self.get_state(obs, t), deterministic=True)
+
+        # add gaussian noise to action
+        if not self.evaluating and self.SNES_phase:
+            a = action[0][0]
+            a = torch.atanh(torch.tensor(a))
+            a += np.random.randn() * 0.1
+            a = torch.tanh(a).numpy()
+            action[0][0] = np.clip(a, a_min=-1, a_max=+1)
+
         self.update_old_action(action)
         return self.dynamics_func.unscale_action(action)
-
-
-def load_controller(dynamics_func, model, window_size, include_time):
-    name = "sac"
-    leaderboard_config = {
-        "csv_path": name + "/sim_swingup.csv",
-        "name": name,
-        "simple_name": "sac",
-        "short_description": "SAC_main_training for both swingup and stabilisation",
-        "readme_path": f"readmes/{name}.md",
-        "username": "MarcoCali0",
-    }
-    controller = SACController(
-        model=model,
-        dynamics_func=dynamics_func,
-        window_size=window_size,
-        include_time=include_time,
-    )
-    controller.init()
-    return controller, leaderboard_config

@@ -3,16 +3,42 @@ import shutil
 
 import numpy as np
 import pandas
-from controller import *
+from double_pendulum.analysis.leaderboard import leaderboard_scores
+from double_pendulum.controller.evolsac.evolsac_controller import EvolSACController
+from double_pendulum.model.model_parameters import model_parameters
 from sim_controller import simulate_controller
 from stable_baselines3.common.callbacks import BaseCallback
 
-from double_pendulum.analysis.leaderboard import leaderboard_scores
-from double_pendulum.model.model_parameters import model_parameters
+
+def load_controller(dynamics_func, model, window_size, include_time):
+    name = "evolsac"
+    leaderboard_config = {
+        "csv_path": name + "/sim_swingup.csv",
+        "name": name,
+        "simple_name": name,
+        "short_description": "SAC finetuning for both swingup and stabilisation",
+        "readme_path": f"readmes/{name}.md",
+        "username": "MarcoCali0",
+    }
+    controller = EvolSACController(
+        model=model,
+        dynamics_func=dynamics_func,
+        window_size=window_size,
+        include_time=include_time,
+    )
+    controller.init()
+    return controller, leaderboard_config
 
 
 def magic_score(
-    dynamics_func, model, folder, folder_id, window_size, max_torque, include_time, index=None
+    dynamics_func,
+    model,
+    folder,
+    folder_id,
+    window_size,
+    max_torque,
+    include_time,
+    index=None,
 ):
     if folder == "acrobot":
 
@@ -65,7 +91,11 @@ def magic_score(
         os.makedirs(data_dir)
 
     controller_name = "sac"
-    save_dir = (f"{data_dir}/{controller_name}" if index is None else f"{data_dir}/{controller_name}/{index}")
+    save_dir = (
+        f"{data_dir}/{controller_name}"
+        if index is None
+        else f"{data_dir}/{controller_name}/{index}"
+    )
     if index is not None:
         leaderboard_config["csv_path"] = f"{controller_name}/{index}/sim_swingup.csv"
     save_to = os.path.join(save_dir, "leaderboard_entry.csv")
@@ -169,7 +199,6 @@ class MagicCallback(BaseCallback):
         return True
 
 
-
 # import asyncio
 # class BruteMagicCallback(BaseCallback):
 #     def __init__(
@@ -231,9 +260,9 @@ class MagicCallback(BaseCallback):
 #     copy_files(f"./data/{callback.folder_id}/sac/{iteration}", f"{os.path.join(callback.path, str(iteration))}")
 
 
-
-
 import concurrent.futures
+
+
 class BruteMagicCallback(BaseCallback):
     def __init__(
         self,
@@ -263,8 +292,12 @@ class BruteMagicCallback(BaseCallback):
         self.executor.submit(lambda: async_store(self.iteration, self))
         return True
 
+
 import tempfile
+
 from stable_baselines3 import SAC
+
+
 def deepcopy_model(model):
     with tempfile.TemporaryDirectory() as tmpdirname:
         model_path = os.path.join(tmpdirname, "temp_model")
@@ -274,10 +307,9 @@ def deepcopy_model(model):
 
 
 from copy import deepcopy
-def async_store(
-    iteration,
-    callback: BruteMagicCallback
-):
+
+
+def async_store(iteration, callback: BruteMagicCallback):
     model = deepcopy_model(callback.model)
     _ = magic_score(
         callback.dynamics_func,
@@ -287,9 +319,12 @@ def async_store(
         callback.window_size,
         callback.max_torque,
         callback.include_time,
-        index=iteration
+        index=iteration,
     )
     if not os.path.exists(f"{callback.path}/{iteration}"):
         os.makedirs(f"{callback.path}/{iteration}", exist_ok=True)
     model.save(f"{callback.path}/{iteration}/best_model")
-    copy_files(f"./data/{callback.folder_id}/sac/{iteration}", f"{os.path.join(callback.path, str(iteration))}")
+    copy_files(
+        f"./data/{callback.folder_id}/sac/{iteration}",
+        f"{os.path.join(callback.path, str(iteration))}",
+    )
