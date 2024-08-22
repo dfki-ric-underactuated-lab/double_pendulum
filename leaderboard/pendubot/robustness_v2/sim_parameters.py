@@ -12,13 +12,8 @@ model_par_path = (
     + model
     + "/model_parameters.yml"
 )
-max_torque = 3.0
-max_velocity = 50.0
-torque_limit = [max_torque, 0.0] if robot == "pendubot" else [0.0, max_torque]
 
 mpar = model_parameters(filepath=model_par_path)
-mpar.set_torque_limit(torque_limit)
-
 
 integrator = "runge_kutta"
 dt = 0.002

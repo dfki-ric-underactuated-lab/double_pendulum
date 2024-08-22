@@ -1,20 +1,10 @@
+import stable_baselines3
 from double_pendulum.controller.evolsac.evolsac_controller import EvolSACController
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.simulation.gym_env import double_pendulum_dynamics_func
 from double_pendulum.simulation.simulation import Simulator
-from sim_parameters import (
-    design,
-    integrator,
-    max_torque,
-    max_velocity,
-    model,
-    model_par_path,
-    mpar,
-    robot,
-    torque_limit,
-)
+from sim_parameters import design, integrator, model, mpar, robot
 from stable_baselines3 import SAC
-import stable_baselines3
 
 assert stable_baselines3.__version__ == "2.3.2"
 
@@ -32,13 +22,15 @@ leaderboard_config = {
 # robot = "acrobot"
 # design = "design_C.1"
 # model = "model_1.0"
-# model_par_path
-# max_torque = 3.0
-# mpar = model_parameters(filepath=model_par_path) #
+# mpar = model_parameters(filepath=model_par_path)
 # mpar.set_torque_limit(torque_limit)
-# max_velocity = 50.0
-# torque_limit = [max_torque, 0.0] if robot == "pendubot" else [0.0, max_torque]
+
 # integrator = "runge_kutta"
+
+max_torque = 3.0
+max_velocity = 50.0
+torque_limit = [max_torque, 0.0] if robot == "pendubot" else [0.0, max_torque]
+mpar.set_torque_limit(torque_limit)
 
 print(f"Loading {robot} trained model...")
 
