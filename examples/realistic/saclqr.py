@@ -30,7 +30,7 @@ if robot == "pendubot":
     # design = "design_A.0"
     # model = "model_2.0"
     # load_path = "../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr"
-    # model_path = "../../data/policies/design_A.0/model_2.0/pendubot/SAC_main_training/sac_model.zip"
+    # model_path = "../../data/policies/design_A.0/model_2.0/pendubot/SAC/sac_model.zip"
     # scaling_state = True
     # torque_limit = [5.0, 0.5]
     # active_act = 0
@@ -47,7 +47,7 @@ elif robot == "acrobot":
     # design = "design_C.0"
     # model = "model_3.0"
     # load_path = "../../data/controller_parameters/design_C.0/acrobot/lqr/roa"
-    # model_path = "../../data/policies/design_C.0/model_3.0/acrobot/SAC_main_training/sac_model.zip"
+    # model_path = "../../data/policies/design_C.0/model_3.0/acrobot/SAC/sac_model.zip"
     # scaling_state = True
     # torque_limit = [0.5, 5.0]
     # active_act = 1
