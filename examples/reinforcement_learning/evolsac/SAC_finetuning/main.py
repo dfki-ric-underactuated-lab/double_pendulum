@@ -5,19 +5,18 @@ import gymnasium as gym
 import numpy as np
 import stable_baselines3
 import torch
+from double_pendulum.model.model_parameters import model_parameters
+from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
+from double_pendulum.simulation.gym_env import double_pendulum_dynamics_func
+from double_pendulum.simulation.simulation import Simulator
 from environment import CustomCustomEnv
-from magic import MagicCallback, BruteMagicCallback
+from magic import BruteMagicCallback, MagicCallback
 from simulator import CustomSimulator
 from stable_baselines3 import SAC
 from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.sac.policies import MlpPolicy
 from wrappers import *
-
-from double_pendulum.model.model_parameters import model_parameters
-from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
-from double_pendulum.simulation.gym_env import double_pendulum_dynamics_func
-from double_pendulum.simulation.simulation import Simulator
 
 np.random.seed(0)
 torch.manual_seed(0)
@@ -212,6 +211,8 @@ agent = SAC(
 agent.set_parameters(input("input model zip file path"))
 
 import asyncio
+
+
 async def main():
     agent.learn(total_timesteps=training_steps, callback=eval_callback)
 
