@@ -16,7 +16,7 @@ from double_pendulum.simulation.gym_env import double_pendulum_dynamics_func
 ROBOTS: TypeAlias = Literal["acrobot", "pendubot"]
 
 
-GOAL = np.array([np.pi, 0.0, 0.0, 0.0])
+GOAL = np.array([np.pi, 0.0, 0.0, 0.0], dtype=np.float64)
 
 
 class Environment(Env[np.ndarray, np.ndarray]):
@@ -51,14 +51,15 @@ class Environment(Env[np.ndarray, np.ndarray]):
         super().reset(seed=seed, options=options)
         self._num_steps = 0
 
-        rand = self.np_random.normal(0, 0.01, 4)
-        rand[2:] -= 0.05
+        rand = self.np_random.standard_normal(4, np.float64) * 0.01
         self.x = rand
 
         if self.scaling:
-            rand = self._dynamics_func.normalize_state(rand)
+            observation = self._dynamics_func.normalize_state(rand)
+        else:
+            observation = rand.copy()
 
-        return rand, {}
+        return observation, {}
 
     def step(
         self, action: np.ndarray
@@ -77,21 +78,28 @@ class Environment(Env[np.ndarray, np.ndarray]):
         if self.scaling:
             observation = self._dynamics_func.normalize_state(self.x)
         else:
-            observation = self.x
+            observation = self.x.copy()
 
         # Termination is always False.
         return observation, reward, False, truncated, {}
 
     def _reward(self, x: np.ndarray, action: np.ndarray) -> float:
         # Scaling and unscaling to get angles in the right range.
-        x = self._dynamics_func.normalize_state(x)
-        x = self._dynamics_func.unscale_state(x)
+        # x = self._dynamics_func.normalize_state(x)
+        # x = self._dynamics_func.unscale_state(x)
+        x = self._wrap_angles(x)
         u = self._dynamics_func.unscale_action(action)
         diff = x - GOAL
         r = -np.einsum("i, ij, j", diff, self.Q, diff)
         r -= np.einsum("i, ij, j", u, self.R, u)
         r *= self.reward_scale
         return r
+
+    def _wrap_angles(self, x: np.ndarray):
+        x = x.copy()
+        x[0] = x[0] % (2 * np.pi)  # [0, 2π]
+        x[1] = (x[1] + np.pi) % (2 * np.pi) - np.pi  # [-π, π]
+        return x
 
 
 def make_env(
@@ -109,6 +117,7 @@ def make_env(
     n_envs: int,
     norm_obs: bool,
     seed: int | None = None,
+    training: bool = True,
 ) -> tuple[VecEnv, double_pendulum_dynamics_func]:
     torque_limits = np.array(
         [max_torque * (robot == "pendubot"), max_torque * (robot == "acrobot")],
@@ -145,7 +154,7 @@ def make_env(
     env = make_vec_env(Environment, n_envs, seed, env_kwargs=env_kwargs)
     if norm_obs:
         env = VecNormalize(
-            env, training=True, norm_obs=True, norm_reward=False, gamma=1.0
+            env, training=training, norm_obs=True, norm_reward=False, gamma=1.0
         )
 
     return env, dynamics_func
