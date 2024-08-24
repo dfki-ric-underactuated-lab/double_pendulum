@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 from dataclasses import dataclass, asdict
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -40,6 +41,7 @@ class PPOConfig:
     normalize_advantage: bool = True
     vf_coef: float = 0.25
     max_grad_norm: float = 10.0
+    policy_kwargs: dict[str, Any] | None = None
 
 
 @dataclass
@@ -74,7 +76,11 @@ def train(config: Config, _=None):
 
     if config.model_save_dir is not None:
         model_save_dir = Path(config.model_save_dir)
-        model_save_dir = model_save_dir / f"{datetime.now().strftime('%y%m%d_%H%M%S')}"
+        model_save_dir = (
+            model_save_dir
+            / config.env_config.robot
+            / f"{datetime.now().strftime('%y%m%d_%H%M%S')}"
+        )
         model_save_dir.mkdir(parents=True, exist_ok=True)
         model.save(model_save_dir / "model.zip")
 
