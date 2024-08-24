@@ -84,9 +84,6 @@ class Environment(Env[np.ndarray, np.ndarray]):
         return observation, reward, False, truncated, {}
 
     def _reward(self, x: np.ndarray, action: np.ndarray) -> float:
-        # Scaling and unscaling to get angles in the right range.
-        # x = self._dynamics_func.normalize_state(x)
-        # x = self._dynamics_func.unscale_state(x)
         x = self._wrap_angles(x)
         u = self._dynamics_func.unscale_action(action)
         diff = x - GOAL
