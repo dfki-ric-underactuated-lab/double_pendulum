@@ -24,6 +24,12 @@ ppo_config:
   normalize_advantage: true
   vf_coef: 0.25
   max_grad_norm: 10.0
+  policy_kwargs:
+    log_std_init: -1
+    activation_fn_pi: ReLU
+    net_arch:
+      pi: [256, 256]
+      vf: [512, 512]
 
 ar_config:
   use_weighted_average: true
@@ -32,10 +38,10 @@ ar_config:
   r_step_size: 0.01
 
 eapo_config:
-  tau: 1.0
+  tau: 2.0
   e_lambda: 0.6
   c2: 0.5
 
-verbose: 1
-total_timesteps: 30000000
+verbose: 0
+total_timesteps: 50000000
 model_save_dir: saved_models
