@@ -42,6 +42,6 @@ eapo_config:
   e_lambda: 0.6
   c2: 0.5
 
-verbose: 0
+verbose: 1
 total_timesteps: 50000000
 model_save_dir: saved_models
