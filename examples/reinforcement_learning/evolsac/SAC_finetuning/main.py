@@ -33,7 +33,7 @@ class MyEnv(CustomCustomEnv):
         delta_action = np.abs(a - self.previous_action)
         lambda_delta = 0.05
         lambda_action = 0.02
-        lambda_velocities = 0.005
+        lambda_velocities = 0.01
         if not terminated:
             if self.stabilisation_mode:
                 reward = (
@@ -62,21 +62,22 @@ max_torque = float(sys.argv[1])
 robustness = float(sys.argv[2])
 WINDOW_SIZE = int(sys.argv[3])
 INCLUDE_TIME = bool(int(sys.argv[4]))
+robot = str(sys.argv[5])
 FOLDER_ID = f"{os.path.basename(__file__)}-{max_torque}-{robustness}-{WINDOW_SIZE}-{int(INCLUDE_TIME)}"
 TERMINATION = False
 
+# define robot variation
+# robot = "acrobot"
+
 # setting log path for the training
-log_dir = f"./log_data/SAC_training/{FOLDER_ID}"
+log_dir = f"./log_data_{robot}/SAC_training/{FOLDER_ID}"
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 
-# define robot variation
-robot = "acrobot"
-
 design = "design_C.1"
-model = "model_1.0"
+model = "model_1.1"
 model_par_path = (
-    "../../../data/system_identification/identified_parameters/"
+    "../../../../data/system_identification/identified_parameters/"
     + design
     + "/"
     + model
@@ -93,7 +94,7 @@ dt = 0.01
 integrator = "runge_kutta"
 
 plant = SymbolicDoublePendulum(model_pars=mpar)
-simulator = CustomSimulator(plant=plant, robustness=robustness, max_torque=max_torque)
+simulator = CustomSimulator(plant=plant, robustness=robustness, max_torque=max_torque, robot=robot)
 eval_simulator = Simulator(plant=plant)
 
 # learning environment parameters
@@ -108,14 +109,14 @@ max_steps = 10 / dt
 n_envs = 50
 training_steps = 10_000_000
 verbose = 1
-eval_freq = 1000
+eval_freq = 5000
 n_eval_episodes = 1
 # a patto che i reward istantanei siano piccoli
 # 0.01 -> 1500000 -> 7
 # 0.003 -> 1500000 -> 46
 # 0.001 -> 1500000 -> 38
 # 0.0003 -> 1500000 -> 19
-learning_rate = 0.00003
+learning_rate = 0.00008
 
 ###############################################################################
 
@@ -185,7 +186,7 @@ eval_env = wrap(
 eval_callback = EvalCallback(
     eval_env,
     callback_after_eval=BruteMagicCallback(
-        f"./models/",
+        f"./models_{robot}/",
         folder_id=FOLDER_ID,
         dynamics_func=eval_dynamics_func,
         robot=robot,
@@ -208,12 +209,7 @@ agent = SAC(
     verbose=verbose,
     learning_rate=learning_rate,
 )
-agent.set_parameters(input("input model zip file path"))
 
-import asyncio
-
-
-async def main():
-    agent.learn(total_timesteps=training_steps, callback=eval_callback)
-
-asyncio.run(main())
+loaded_model = "/home/alberto_sinigaglia/test_dp_clone/leaderboard/pendubot/pendubot_best_model_0567_0800.zip" if robot == "pendubot" else "/home/alberto_sinigaglia/test_dp_clone/leaderboard/acrobot/acrobot_best_model_0504_0700.zip"
+agent.set_parameters(loaded_model)
+agent.learn(total_timesteps=training_steps, callback=eval_callback)

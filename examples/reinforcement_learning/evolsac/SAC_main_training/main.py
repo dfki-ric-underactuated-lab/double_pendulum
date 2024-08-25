@@ -6,7 +6,7 @@ import numpy as np
 import stable_baselines3
 import torch
 from environment import CustomCustomEnv
-from magic import MagicCallback
+from magic import MagicCallback, BruteMagicCallback
 from simulator import CustomSimulator
 from stable_baselines3 import SAC
 from stable_baselines3.common.callbacks import EvalCallback
@@ -35,7 +35,7 @@ class MyEnv(CustomCustomEnv):
         delta_action = np.abs(a - self.previous_action)
         lambda_delta = 0.05
         lambda_action = 0.02
-        lambda_velocities = 0.005
+        lambda_velocities = 0.01
         if not terminated:
             if self.stabilisation_mode:
                 reward = (
@@ -47,7 +47,7 @@ class MyEnv(CustomCustomEnv):
                 )
             else:
                 reward = (
-                    (1 - np.abs(a)) * self.V()
+                    self.V()
                     - lambda_action * np.square(a)
                     - 2 * lambda_velocities * (omega1**2 + omega2**2)
                     - 3 * lambda_delta * delta_action
@@ -67,18 +67,18 @@ INCLUDE_TIME = bool(int(sys.argv[4]))
 FOLDER_ID = f"{os.path.basename(__file__)}-{max_torque}-{robustness}-{WINDOW_SIZE}-{int(INCLUDE_TIME)}"
 TERMINATION = False
 
+# define robot variation
+robot = "pendubot"
+
 # setting log path for the training
-log_dir = f"./log_data/SAC_training/{FOLDER_ID}"
+log_dir = f"./log_data_{robot}/SAC_training/{FOLDER_ID}"
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 
-# define robot variation
-robot = "acrobot"
-
 design = "design_C.1"
-model = "model_1.0"
+model = "model_1.1"
 model_par_path = (
-    "../../../data/system_identification/identified_parameters/"
+    "../../../../data/system_identification/identified_parameters/"
     + design
     + "/"
     + model
@@ -186,8 +186,8 @@ eval_env = wrap(
 
 eval_callback = EvalCallback(
     eval_env,
-    callback_after_eval=MagicCallback(
-        f"./models/",
+    callback_after_eval=BruteMagicCallback(
+        f"./models_{robot}/",
         folder_id=FOLDER_ID,
         dynamics_func=eval_dynamics_func,
         robot=robot,

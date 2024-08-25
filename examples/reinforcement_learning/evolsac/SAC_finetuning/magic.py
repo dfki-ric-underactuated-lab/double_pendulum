@@ -40,57 +40,46 @@ def magic_score(
     include_time,
     index=None,
 ):
-    if folder == "acrobot":
+    design = "design_C.1"
+    integrator = "runge_kutta"
+    dt = 0.002
+    t0 = 0.0
+    t_final = 10.0
+    x0 = [0.0, 0.0, 0.0, 0.0]
+    goal = [np.pi, 0.0, 0.0, 0.0]
 
-        design = "design_C.1"
-        robot = "acrobot"
+    if folder == "acrobot":
         model_par_path = (
-            "../../../data/system_identification/identified_parameters/"
+            "../../../../data/system_identification/identified_parameters/"
             + design
             + "/"
-            + "model_1.0"
+            + "model_1.1"
             + "/model_parameters.yml"
         )
         mpar = model_parameters(filepath=model_par_path)
         mpar.set_torque_limit([0.0, max_torque])
 
-        integrator = "runge_kutta"
-        dt = 0.002
-        t0 = 0.0
-        t_final = 10.0
-        x0 = [0.0, 0.0, 0.0, 0.0]
-        goal = [np.pi, 0.0, 0.0, 0.0]
-
-    else:
-        design = "design_C.1"
-        robot = "pendubot"
+    else: # robot = "pendubot"
         model_par_path = (
-            "../../../data/system_identification/identified_parameters/"
+            "../../../../data/system_identification/identified_parameters/"
             + design
             + "/"
-            + "model_1.0"
+            + "model_1.1"
             + "/model_parameters.yml"
         )
         mpar = model_parameters(filepath=model_par_path)
         mpar.set_torque_limit([max_torque, 0.0])
 
-        integrator = "runge_kutta"
-        dt = 0.002
-        t0 = 0.0
-        t_final = 10.0
-        x0 = [0.0, 0.0, 0.0, 0.0]
-        goal = [np.pi, 0.0, 0.0, 0.0]
-
     controller, leaderboard_config = load_controller(
         dynamics_func, model, window_size, include_time
     )
 
-    data_dir = f"data/{folder_id}"
+    data_dir = f"data_{folder}/{folder_id}"
 
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
 
-    controller_name = "sac"
+    controller_name = f"evolsac_{folder}"
     save_dir = (
         f"{data_dir}/{controller_name}"
         if index is None
@@ -198,68 +187,6 @@ class MagicCallback(BaseCallback):
             copy_files(f"./data/{self.folder_id}/sac/", self.path)
         return True
 
-
-# import asyncio
-# class BruteMagicCallback(BaseCallback):
-#     def __init__(
-#         self,
-#         path,
-#         folder_id,
-#         dynamics_func,
-#         robot,
-#         window_size,
-#         max_torque,
-#         include_time,
-#     ):
-#         super().__init__(False)
-#         self.path = f"{path}{folder_id}"
-#         if not os.path.exists(path):
-#             os.makedirs(path, exist_ok=True)
-#         self.folder_id = folder_id
-#         self.dynamics_func = dynamics_func
-#         self.robot = robot
-#         self.window_size = window_size
-#         self.max_torque = max_torque
-#         self.include_time = include_time
-#         self.iteration = 0
-
-#     def _on_step(self) -> bool:
-#         self.iteration += 1
-#         asyncio.create_task(async_store(self.iteration, self))
-#         return True
-
-# import tempfile
-# from stable_baselines3 import SAC_main_training
-# def deepcopy_model(model):
-#     with tempfile.TemporaryDirectory() as tmpdirname:
-#         model_path = os.path.join(tmpdirname, "temp_model")
-#         model.save(model_path)
-#         copied_model = SAC_main_training.load(model_path)
-#     return copied_model
-
-
-# from copy import deepcopy
-# async def async_store(
-#     iteration,
-#     callback: BruteMagicCallback
-# ):
-#     model = deepcopy_model(callback.model)
-#     _ = magic_score(
-#         callback.dynamics_func,
-#         model,
-#         callback.robot,
-#         callback.folder_id,
-#         callback.window_size,
-#         callback.max_torque,
-#         callback.include_time,
-#         index=iteration
-#     )
-#     if not os.path.exists(f"{callback.path}/{iteration}"):
-#         os.makedirs(f"{callback.path}/{iteration}", exist_ok=True)
-#     model.save(f"{callback.path}/{iteration}/best_model")
-#     copy_files(f"./data/{callback.folder_id}/sac/{iteration}", f"{os.path.join(callback.path, str(iteration))}")
-
-
 import concurrent.futures
 
 
@@ -306,8 +233,6 @@ def deepcopy_model(model):
     return copied_model
 
 
-from copy import deepcopy
-
 
 def async_store(iteration, callback: BruteMagicCallback):
     model = deepcopy_model(callback.model)
@@ -325,6 +250,6 @@ def async_store(iteration, callback: BruteMagicCallback):
         os.makedirs(f"{callback.path}/{iteration}", exist_ok=True)
     model.save(f"{callback.path}/{iteration}/best_model")
     copy_files(
-        f"./data/{callback.folder_id}/sac/{iteration}",
+        f"./data/{callback.folder_id}/evolsac/{iteration}",
         f"{os.path.join(callback.path, str(iteration))}",
     )

@@ -22,8 +22,6 @@ leaderboard_config = {
 # robot = "acrobot"
 # design = "design_C.1"
 # model = "model_1.0"
-# mpar = model_parameters(filepath=model_par_path)
-# mpar.set_torque_limit(torque_limit)
 
 # integrator = "runge_kutta"
 
@@ -34,8 +32,7 @@ mpar.set_torque_limit(torque_limit)
 
 print(f"Loading {robot} trained model...")
 
-model_path = f"../../../data/policies/{design}/{model}/{robot}/evolsac/model.zip"
-
+model_path = "../../../data/policies/design_C.1/model_1.0/acrobot/evolsac/model.zip"
 # Simulation parameters
 dt = 0.01
 

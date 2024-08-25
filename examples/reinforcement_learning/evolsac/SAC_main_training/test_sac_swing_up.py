@@ -14,8 +14,8 @@ from double_pendulum.utils.plotting import plot_timeseries
 robot = "acrobot"
 
 design = "design_C.1"
-model = "model_1.0"
-max_torque = 3.5
+model = "model_1.1"
+max_torque = 3
 scaling_state = True
 
 if robot == "pendubot":
@@ -29,7 +29,7 @@ elif robot == "acrobot":
 
 # import model parameter
 model_par_path = (
-    "../../../data/system_identification/identified_parameters/"
+    "../../../../data/system_identification/identified_parameters/"
     + design
     + "/"
     + model

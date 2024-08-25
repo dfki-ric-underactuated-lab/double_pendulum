@@ -34,7 +34,7 @@ mpar.set_torque_limit(torque_limit)
 
 print(f"Loading {robot} trained model...")
 
-model_path = f"../../../data/policies/{design}/{model}/{robot}/evolsac/model.zip"
+model_path = "../../../data/policies/design_C.1/model_1.0/pendubot/evolsac/model.zip"
 
 # Simulation parameters
 dt = 0.01

@@ -20,11 +20,11 @@ class CustomSimulator(Simulator):
     def __init__(self, plant, robustness, max_torque):
         self.base_plant = deepcopy(plant)
         design = "design_C.1"
-        model = "model_1.0"
+        model = "model_1.1"
         robot = "acrobot"
-
+        
         model_par_path = (
-            "../../../data/system_identification/identified_parameters/"
+            "../../../../data/system_identification/identified_parameters/"
             + design
             + "/"
             + model
@@ -32,7 +32,8 @@ class CustomSimulator(Simulator):
         )
         mpar = model_parameters(filepath=model_par_path)
         # SHOULD USE MAX_TORQUE FROM TRAIN_SAC
-        mpar.set_torque_limit([0.0, max_torque])
+        torque_limit = [0.0, max_torque] if robot == "acrobot" else [max_torque,0.0]
+        mpar.set_torque_limit(torque_limit)
 
         self.mpar = mpar
         self.robustness = robustness

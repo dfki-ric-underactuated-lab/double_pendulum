@@ -1,11 +1,7 @@
 import os
-import argparse
-import importlib
 import numpy as np
-import matplotlib.pyplot as plt
 
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
-from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.utils.csv_trajectory import save_trajectory
 from double_pendulum.utils.plotting import plot_timeseries

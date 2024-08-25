@@ -6,7 +6,7 @@ import numpy as np
 import stable_baselines3
 import torch
 from environment import CustomCustomEnv
-from magic import MagicCallback
+from magic import MagicCallback, BruteMagicCallback
 from simulator import CustomSimulator
 from stable_baselines3 import SAC
 from stable_baselines3.common.callbacks import EvalCallback
@@ -64,21 +64,19 @@ max_torque = float(sys.argv[1])
 robustness = float(sys.argv[2])
 WINDOW_SIZE = int(sys.argv[3])
 INCLUDE_TIME = bool(int(sys.argv[4]))
+robot = str(sys.argv[5])
 FOLDER_ID = f"{os.path.basename(__file__)}-{max_torque}-{robustness}-{WINDOW_SIZE}-{int(INCLUDE_TIME)}"
 TERMINATION = False
 
 # setting log path for the training
-log_dir = f"./log_data/SAC_training/{FOLDER_ID}"
+log_dir = f"./log_data_{robot}/SAC_training/{FOLDER_ID}"
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 
-# define robot variation
-robot = "pendubot"
-
 design = "design_C.1"
-model = "model_1.0"
+model = "model_1.1"
 model_par_path = (
-    "../../../data/system_identification/identified_parameters/"
+    "../../../../data/system_identification/identified_parameters/"
     + design
     + "/"
     + model
@@ -95,7 +93,7 @@ dt = 0.01
 integrator = "runge_kutta"
 
 plant = SymbolicDoublePendulum(model_pars=mpar)
-simulator = CustomSimulator(plant=plant, robustness=robustness, max_torque=max_torque)
+simulator = CustomSimulator(plant=plant, robustness=robustness, max_torque=max_torque, robot=robot)
 eval_simulator = Simulator(plant=plant)
 
 # learning environment parameters
@@ -187,7 +185,7 @@ eval_env = wrap(
 eval_callback = EvalCallback(
     eval_env,
     callback_after_eval=MagicCallback(
-        f"./models/",
+        f"./models_{robot}/",
         folder_id=FOLDER_ID,
         dynamics_func=eval_dynamics_func,
         robot=robot,
@@ -220,7 +218,8 @@ REFERENCE_AGENT = SAC(
     verbose=verbose,
     learning_rate=learning_rate,
 )
-REFERENCE_AGENT.set_parameters(input("input path to the model zip"))
+reference_agent_ = "/home/alberto_sinigaglia/test_dp_clone/leaderboard/pendubot/pendubot_best_model_0567_0800.zip" if robot == "pendubot" else "/home/alberto_sinigaglia/test_dp_clone/leaderboard/acrobot/acrobot_best_model_0504_0700.zip"
+REFERENCE_AGENT.set_parameters(reference_agent_)
 
 from evotorch import Problem
 from evotorch.algorithms.distributed.gaussian import SNES
