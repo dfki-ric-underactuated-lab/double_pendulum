@@ -27,7 +27,7 @@ RUN cp -r eigen-3.4.0/Eigen /usr/local/include
 
 #RUN python -m ensurepip --upgrade
 RUN pip install -U pip
-RUN pip3 install numpy==1.24.1 dill
+RUN pip3 install numpy dill
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install drake
 
