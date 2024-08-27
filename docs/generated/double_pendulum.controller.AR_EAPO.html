@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>double_pendulum.controller &mdash; Double Pendulum 1.0.0 documentation</title>
+  <title>double_pendulum.controller.AR_EAPO &mdash; Double Pendulum 1.0.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
@@ -15,8 +15,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="double_pendulum.controller.AR_EAPO" href="double_pendulum.controller.AR_EAPO.html" />
-    <link rel="prev" title="double_pendulum.analysis" href="double_pendulum.analysis.html" /> 
+    <link rel="next" title="double_pendulum.controller.DQN" href="double_pendulum.controller.DQN.html" />
+    <link rel="prev" title="double_pendulum.controller" href="double_pendulum.controller.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,11 +42,11 @@
 <li class="toctree-l1 current"><a class="reference internal" href="double_pendulum.html"> Software Documentation</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="double_pendulum.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.analysis.html">double_pendulum.analysis</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">double_pendulum.controller</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#double-pendulum-controller-abstract-controller">double_pendulum.controller.abstract_controller</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#double-pendulum-controller-combined-controller">double_pendulum.controller.combined_controller</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="double_pendulum.controller.html">double_pendulum.controller</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="double_pendulum.controller.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#double-pendulum-controller-abstract-controller">double_pendulum.controller.abstract_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="double_pendulum.controller.html#double-pendulum-controller-combined-controller">double_pendulum.controller.combined_controller</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="double_pendulum.experiments.html">double_pendulum.experiments</a></li>
@@ -82,9 +82,10 @@
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../modules.html">&lt;no title&gt;</a> &raquo;</li>
           <li><a href="double_pendulum.html">double_pendulum</a> &raquo;</li>
-      <li>double_pendulum.controller</li>
+          <li><a href="double_pendulum.controller.html">double_pendulum.controller</a> &raquo;</li>
+      <li>double_pendulum.controller.AR_EAPO</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/generated/double_pendulum.controller.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/generated/double_pendulum.controller.AR_EAPO.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -92,39 +93,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="double-pendulum-controller">
-<h1>double_pendulum.controller<a class="headerlink" href="#double-pendulum-controller" title="Permalink to this headline"></a></h1>
-<section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.AR_EAPO.html">double_pendulum.controller.AR_EAPO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.DQN.html">double_pendulum.controller.DQN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.SAC.html">double_pendulum.controller.SAC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.energy.html">double_pendulum.controller.energy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.friction_compensation.html">double_pendulum.controller.friction_compensation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.gamepad.html">double_pendulum.controller.gamepad</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.gravity_compensation.html">double_pendulum.controller.gravity_compensation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.ilqr.html">double_pendulum.controller.ilqr</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.inverse_dynamics.html">double_pendulum.controller.inverse_dynamics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.lqr.html">double_pendulum.controller.lqr</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.mcpilco.html">double_pendulum.controller.mcpilco</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.partial_feedback_linearization.html">double_pendulum.controller.partial_feedback_linearization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.pid.html">double_pendulum.controller.pid</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.random_exploration.html">double_pendulum.controller.random_exploration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.trajectory_following.html">double_pendulum.controller.trajectory_following</a></li>
-<li class="toctree-l1"><a class="reference internal" href="double_pendulum.controller.tvlqr.html">double_pendulum.controller.tvlqr</a></li>
-</ul>
-</div>
-</section>
+  <section id="double-pendulum-controller-ar-eapo">
+<h1>double_pendulum.controller.AR_EAPO<a class="headerlink" href="#double-pendulum-controller-ar-eapo" title="Permalink to this headline"></a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="double-pendulum-controller-abstract-controller">
-<h2>double_pendulum.controller.abstract_controller<a class="headerlink" href="#double-pendulum-controller-abstract-controller" title="Permalink to this headline"></a></h2>
+<section id="double-pendulum-controller-ar-eapo-ar-eapo">
+<h2>double_pendulum.controller.AR_EAPO.ar_eapo<a class="headerlink" href="#double-pendulum-controller-ar-eapo-ar-eapo" title="Permalink to this headline"></a></h2>
 </section>
-<section id="double-pendulum-controller-combined-controller">
-<h2>double_pendulum.controller.combined_controller<a class="headerlink" href="#double-pendulum-controller-combined-controller" title="Permalink to this headline"></a></h2>
+<section id="double-pendulum-controller-ar-eapo-ar-eapo-controller">
+<h2>double_pendulum.controller.AR_EAPO.ar_eapo_controller<a class="headerlink" href="#double-pendulum-controller-ar-eapo-ar-eapo-controller" title="Permalink to this headline"></a></h2>
+</section>
+<section id="double-pendulum-controller-ar-eapo-utils">
+<h2>double_pendulum.controller.AR_EAPO.utils<a class="headerlink" href="#double-pendulum-controller-ar-eapo-utils" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 
@@ -132,8 +113,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="double_pendulum.analysis.html" class="btn btn-neutral float-left" title="double_pendulum.analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="double_pendulum.controller.AR_EAPO.html" class="btn btn-neutral float-right" title="double_pendulum.controller.AR_EAPO" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="double_pendulum.controller.html" class="btn btn-neutral float-left" title="double_pendulum.controller" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="double_pendulum.controller.DQN.html" class="btn btn-neutral float-right" title="double_pendulum.controller.DQN" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

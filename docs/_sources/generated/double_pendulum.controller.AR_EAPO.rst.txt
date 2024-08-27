@@ -1,0 +1,34 @@
+double\_pendulum.controller.AR\_EAPO
+============================================
+
+.. automodule:: double_pendulum.controller.AR_EAPO
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.AR\_EAPO.ar\_eapo
+----------------------------------------------------
+
+.. automodule:: double_pendulum.controller.AR_EAPO.ar_eapo
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.AR\_EAPO.ar\_eapo\_controller
+----------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.AR_EAPO.ar_eapo_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.AR\_EAPO.utils
+-------------------------------------------------
+
+.. automodule:: double_pendulum.controller.AR_EAPO.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

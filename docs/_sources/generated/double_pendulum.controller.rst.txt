@@ -12,6 +12,7 @@ Subpackages
 .. toctree::
    :maxdepth: 1
 
+   double_pendulum.controller.AR_EAPO
    double_pendulum.controller.DQN
    double_pendulum.controller.SAC
    double_pendulum.controller.energy
