@@ -1,0 +1,47 @@
+env_config:
+  robot: pendubot
+  model_params_path: ../../../data/system_identification/identified_parameters/design_C.1/model_1.1/model_parameters.yml
+  dt: 0.01
+  max_torque: 6.0
+  max_velocity: 20.0
+  scaling: true
+  max_steps: 1000
+  Q: [50.0, 50.0, 4.0, 2.0]
+  R: 1.0
+  reward_scale: 0.001
+  random_truncation_probability: 0.001
+  n_envs: 64
+  norm_obs: true
+  seed: null
+
+ppo_config:
+  learning_rate: 5.0e-4
+  n_steps: 128
+  batch_size: 1024
+  n_epochs: 6
+  gae_lambda: 0.8
+  clip_range: 0.05
+  normalize_advantage: true
+  vf_coef: 0.25
+  max_grad_norm: 10.0
+  policy_kwargs:
+    log_std_init: -1
+    activation_fn_pi: ReLU
+    net_arch:
+      pi: [256, 256]
+      vf: [512, 512]
+
+ar_config:
+  use_weighted_average: true
+  use_advantage: true
+  use_trace_for_weighted_average: true
+  r_step_size: 0.01
+
+eapo_config:
+  tau: 2.0
+  e_lambda: 0.6
+  c2: 0.5
+
+verbose: 1
+total_timesteps: 50000000
+model_save_dir: saved_models
