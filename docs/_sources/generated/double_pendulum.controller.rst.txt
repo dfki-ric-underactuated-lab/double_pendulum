@@ -16,6 +16,7 @@ Subpackages
    double_pendulum.controller.DQN
    double_pendulum.controller.SAC
    double_pendulum.controller.energy
+   double_pendulum.controller.evolsac
    double_pendulum.controller.friction_compensation
    double_pendulum.controller.gamepad
    double_pendulum.controller.gravity_compensation

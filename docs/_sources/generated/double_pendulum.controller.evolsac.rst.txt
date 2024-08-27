@@ -1,0 +1,18 @@
+double\_pendulum.controller.evolsac
+===========================================
+
+.. automodule:: double_pendulum.controller.evolsac
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.evolsac.evolsac\_controller
+--------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.evolsac.evolsac_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:
