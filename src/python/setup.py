@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="DoublePendulum",
@@ -58,6 +58,7 @@ setup(
             "flax",
             "tqdm",
             "cloudpickle==3.0.0",
+            "evotorch",
         ],
     },
     classifiers=[
