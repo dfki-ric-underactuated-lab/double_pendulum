@@ -32,5 +32,9 @@ leaderboard/acrobot/robustness_v2/data/*
 leaderboard/pendubot/simulation_v2/data/*
 leaderboard/pendubot/robustness_v2/data/*
 data/experiment_records/*
+experiments/design_A.0/data/*
+experiments/design_C.0/data/*
+experiments/design_C.1/data/*
+experiments/design_independent/data/*
 *local*
 

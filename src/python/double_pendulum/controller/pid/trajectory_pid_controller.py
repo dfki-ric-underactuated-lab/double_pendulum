@@ -45,15 +45,17 @@ class TrajPIDController(AbstractController):
         number of break points used for interpolation
         (Default value = 40)
     """
-    def __init__(self,
-                 T=None,
-                 X=None,
-                 U=None,
-                 csv_path=None,
-                 use_feed_forward_torque=True,
-                 torque_limit=[0.0, 1.0],
-                 num_break=40):
 
+    def __init__(
+        self,
+        T=None,
+        X=None,
+        U=None,
+        csv_path=None,
+        use_feed_forward_torque=True,
+        torque_limit=[0.0, 1.0],
+        num_break=40,
+    ):
         super().__init__()
 
         self.use_ff = use_feed_forward_torque
@@ -62,8 +64,8 @@ class TrajPIDController(AbstractController):
         # load trajectory
         if csv_path is not None:
             self.T, self.X, self.U = load_trajectory(
-                    csv_path=csv_path,
-                    with_tau=self.use_ff)
+                csv_path=csv_path, with_tau=self.use_ff
+            )
         elif T is not None and X is not None:
             self.T = T
             self.X = X
@@ -79,17 +81,13 @@ class TrajPIDController(AbstractController):
 
         # interpolate trajectory
         self.P_interp = InterpolateVector(
-                T=self.T,
-                X=self.X.T[:2].T,
-                num_break=num_break,
-                poly_degree=3)
+            T=self.T, X=self.X.T[:2].T, num_break=num_break, poly_degree=3
+        )
 
         if self.use_ff:
             self.U_interp = InterpolateVector(
-                    T=self.T,
-                    X=self.U,
-                    num_break=num_break,
-                    poly_degree=3)
+                T=self.T, X=self.U, num_break=num_break, poly_degree=3
+            )
 
         # default weights
         self.Kp = 10.0
@@ -152,20 +150,20 @@ class TrajPIDController(AbstractController):
         p = self.P_interp.get_value(tt)
         e1 = p[0] - x[0]
         e2 = p[1] - x[1]
-        e1 = (e1 + np.pi) % (2*np.pi) - np.pi
-        e2 = (e2 + np.pi) % (2*np.pi) - np.pi
+        e1 = (e1 + np.pi) % (2 * np.pi) - np.pi
+        e2 = (e2 + np.pi) % (2 * np.pi) - np.pi
         self.errors1.append(e1)
         self.errors2.append(e2)
 
-        P1 = self.Kp*e1
-        P2 = self.Kp*e2
+        P1 = self.Kp * e1
+        P2 = self.Kp * e2
 
-        I1 = self.Ki*np.sum(np.asarray(self.errors1))*self.dt
-        I2 = self.Ki*np.sum(np.asarray(self.errors2))*self.dt
+        I1 = self.Ki * np.sum(np.asarray(self.errors1)) * self.dt
+        I2 = self.Ki * np.sum(np.asarray(self.errors2)) * self.dt
 
         if len(self.errors1) > 2:
-            D1 = self.Kd*(self.errors1[-1]-self.errors1[-2]) / self.dt
-            D2 = self.Kd*(self.errors2[-1]-self.errors2[-2]) / self.dt
+            D1 = self.Kd * (self.errors1[-1] - self.errors1[-2]) / self.dt
+            D2 = self.Kd * (self.errors2[-1] - self.errors2[-2]) / self.dt
         else:
             D1 = 0.0
             D2 = 0.0
@@ -215,21 +213,25 @@ class TrajPIDController(AbstractController):
         """
 
         par_dict = {
-                "dt" : self.dt,
-                "torque_limit1" : self.torque_limit[0],
-                "torque_limit2" : self.torque_limit[1],
-                "Kp" : self.Kp,
-                "Ki" : self.Ki,
-                "Kd" : self.Kd,
-                "goal_x1" : self.goal[0],
-                "goal_x2" : self.goal[1],
-                "goal_x3" : self.goal[2],
-                "goal_x4" : self.goal[3],
-                "use_feed_forward_torque" : self.use_ff,
+            "dt": self.dt,
+            "torque_limit1": self.torque_limit[0],
+            "torque_limit2": self.torque_limit[1],
+            "Kp": self.Kp,
+            "Ki": self.Ki,
+            "Kd": self.Kd,
+            "goal_x1": self.goal[0],
+            "goal_x2": self.goal[1],
+            "goal_x3": self.goal[2],
+            "goal_x4": self.goal[3],
+            "use_feed_forward_torque": self.use_ff,
         }
 
-        with open(os.path.join(save_dir, "controller_traj_pid_parameters.yml"), 'w') as f:
+        with open(
+            os.path.join(save_dir, "controller_traj_pid_parameters.yml"), "w"
+        ) as f:
             yaml.dump(par_dict, f)
 
-        np.savetxt(os.path.join(save_dir, "controller_traj_pid_errors.csv"),
-                   [self.errors1, self.errors2])
+        np.savetxt(
+            os.path.join(save_dir, "controller_traj_pid_errors.csv"),
+            [self.errors1, self.errors2],
+        )

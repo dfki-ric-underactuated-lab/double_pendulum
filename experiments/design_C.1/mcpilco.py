@@ -17,7 +17,7 @@ if robot == "pendubot":
     torque_limit = [5.0, 0.5]
 
 model_par_path = (
-    "../data/system_identification/identified_parameters/"
+    "../../data/system_identification/identified_parameters/"
     + design
     + "/"
     + model
@@ -35,13 +35,7 @@ n_dof = 2
 controlled_joint = [0, 1]
 
 policy_par_path = (
-    "../../../data/policies/"
-    + design
-    + "/"
-    + model
-    + "/"
-    + robot
-    + "/MC-PILCO/policy.np"
+    "../../data/policies/" + design + "/" + model + "/" + robot + "/MC-PILCO/policy.np"
 )
 file = open(policy_par_path, "rb")
 parameters = pkl.load(file)
@@ -65,7 +59,8 @@ run_experiment(
     dt=dt,
     t_final=t_final,
     can_port="can0",
-    motor_ids=[1, 2],
+    motor_ids=[3, 1],
+    motor_directions=[1.0, -1.0],
     tau_limit=torque_limit,
     save_dir=os.path.join("data", design, robot, "tmotors/mcpilco"),
 )

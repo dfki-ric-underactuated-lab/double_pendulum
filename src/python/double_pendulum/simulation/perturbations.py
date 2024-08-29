@@ -21,7 +21,7 @@ def get_gaussian_perturbation_array(
         else:
             perturbation_array.append([])
 
-    return perturbation_array
+    return np.asarray(perturbation_array)
 
 
 def get_random_gauss_perturbation_array(
@@ -59,8 +59,15 @@ def get_random_gauss_perturbation_array(
     )
 
 
-def plot_perturbation_array(tmax, dt, perturbation_array):
-    t = np.arange(0, tmax, dt)
+def plot_perturbation_array(
+    tmax,
+    dt,
+    perturbation_array,
+    save_to=None,
+    show=True,
+):
+    # t = np.arange(0, tmax, dt)
+    t = np.linspace(0, tmax, len(perturbation_array[0]))
 
     if len(perturbation_array[0]) > 0:
         plt.plot(t, perturbation_array[0], label="joint 1")
@@ -73,4 +80,20 @@ def plot_perturbation_array(tmax, dt, perturbation_array):
         plt.plot(t, np.zeros(len(t)), label="joint 2")
 
     plt.legend(loc="best")
-    plt.show()
+
+    if not (save_to is None):
+        plt.savefig(save_to, bbox_inches="tight")
+    if show:
+        plt.tight_layout()
+        plt.show()
+
+
+def get_perturbation_starts(perturbation_array):
+    inds = []
+    for i in range(perturbation_array.shape[1] - 1):
+        if (
+            np.max(np.abs(perturbation_array[:, i + 1])) >= 0.1
+            and np.max(np.abs(perturbation_array[:, i])) < 0.1
+        ):
+            inds.append(i + 1)
+    return inds

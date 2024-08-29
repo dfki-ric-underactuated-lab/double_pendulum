@@ -31,7 +31,8 @@ run_experiment(
     dt=dt,
     t_final=t_final,
     can_port="can0",
-    motor_ids=[1, 2],
+    motor_ids=[3, 1],
     tau_limit=torque_limit,
     save_dir=os.path.join("data", design, "double-pendulum/donothing"),
+    record_video=True,
 )

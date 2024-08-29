@@ -28,19 +28,19 @@ if robot == "pendubot":
     torque_limit_con = [5.0, 0.0]
     active_act = 0
     scaling = False
-    load_path = "../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr"
-    model_path = "../data/policies/design_C.1/model_1.0/pendubot/SAC_main_training/best_model.zip"
+    load_path = "../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr"
+    model_path = "../../data/policies/design_C.1/model_1.0/pendubot/SAC_main_training/best_model.zip"
 
 elif robot == "acrobot":
     torque_limit = [0.5, 5.0]
     active_act = 1
     scaling = True
-    load_path = "../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr"
-    model_path = "../data/policies/design_C.1/model_1.0/acrobot/SAC_main_training/sac_model.zip"
+    load_path = "../../data/controller_parameters/design_C.1/model_1.1/acrobot/lqr"
+    model_path = "../../data/policies/design_C.1/model_1.0/acrobot/SAC_main_training/sac_model.zip"
 
 ## set model and controller parameters
 model_par_path = (
-    "../data/system_identification/identified_parameters/"
+    "../../data/system_identification/identified_parameters/"
     + design
     + "/"
     + model
@@ -55,10 +55,6 @@ if friction_compensation:
     mpar_con.set_damping([0.0, 0.0])
     mpar_con.set_cfric([0.0, 0.0])
 mpar_con.set_torque_limit(torque_limit_con)
-
-# measurement filter
-lowpass_alpha = [1.0, 1.0, 0.2, 0.2]
-filter_velocity_cut = 0.1
 
 # control parameter
 dt = 0.0025
@@ -112,7 +108,9 @@ plant = SymbolicDoublePendulum(model_pars=mpar_con)
 sim = Simulator(plant=plant)
 
 # filter
-filter = lowpass_filter(lowpass_alpha, x0, filter_velocity_cut)
+filter = lowpass_filter(
+    alpha=[1.0, 1.0, 0.2, 0.2], x0=[0.0, 0.0, 0.0, 0.0], filt_velocity_cut=0.1
+)
 
 dynamics_func = double_pendulum_dynamics_func(
     simulator=sim,
@@ -158,7 +156,8 @@ run_experiment(
     dt=dt,
     t_final=t_final,
     can_port="can0",
-    motor_ids=[1, 2],
+    motor_ids=[3, 1],
+    motor_directions=[1.0, -1.0],
     tau_limit=torque_limit,
     save_dir=os.path.join("data", design, robot, "tmotors/sac_lqr_results"),
 )

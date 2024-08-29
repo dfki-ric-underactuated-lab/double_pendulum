@@ -9,6 +9,9 @@ from double_pendulum.controller.combined_controller import CombinedController
 from double_pendulum.utils.wrap_angles import wrap_angles_top, wrap_angles_diff
 from double_pendulum.utils.csv_trajectory import load_trajectory
 from double_pendulum.filter.lowpass import lowpass_filter
+from double_pendulum.simulation.perturbations import (
+    get_random_gauss_perturbation_array,
+)
 
 # model parameters
 design = "design_C.1"
@@ -42,10 +45,6 @@ t_final = 10.0
 # swingup parameters
 x0 = [0.0, 0.0, 0.0, 0.0]
 goal = [np.pi, 0.0, 0.0, 0.0]
-
-# filter args
-lowpass_alpha = [1.0, 1.0, 0.2, 0.2]
-filter_velocity_cut = 0.1
 
 # controller parameters
 Q = np.diag([0.64, 0.56, 0.13, 0.067])
@@ -81,7 +80,9 @@ def condition2(t, x):
 
 
 # filter
-filter = lowpass_filter(lowpass_alpha, x0, filter_velocity_cut)
+filter = lowpass_filter(
+    alpha=[1.0, 1.0, 0.2, 0.2], x0=[0.0, 0.0, 0.0, 0.0], filt_velocity_cut=0.1
+)
 
 # controller
 controller1 = TVLQRController(
@@ -107,12 +108,20 @@ if friction_compensation:
     controller.set_friction_compensation(damping=mpar.b, coulomb_fric=mpar.cf)
 controller.init()
 
+# np.random.seed(2)
+# perturbation_array, _, _, _ = get_random_gauss_perturbation_array(
+#     t_final, dt, 3, 1.0, [0.05, 0.1], [0.5, 0.6]
+# )
+
 run_experiment(
     controller=controller,
     dt=dt,
     t_final=t_final,
     can_port="can0",
-    motor_ids=[1, 2],
+    motor_ids=[3, 1],
+    motor_directions=[1.0, -1.0],
     tau_limit=torque_limit,
     save_dir=os.path.join("data", design, robot, "tvlqr"),
+    record_video=True,
+    # perturbation_array=perturbation_array,
 )

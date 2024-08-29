@@ -32,6 +32,7 @@ def plot_timeseries(
     X_filt=None,
     U_con=None,
     U_friccomp=None,
+    U_perturbation=None,
     ACC_des=None,
     save_to=None,
     show=True,
@@ -59,7 +60,7 @@ def plot_timeseries(
     if plot_pos:
         ax[i].plot(T[: len(X)], np.asarray(X).T[0], label=r"$q_1$", color="blue")
         ax[i].plot(T[: len(X)], np.asarray(X).T[1], label=r"$q_2$", color="red")
-        if not (X_des is None):
+        if not (X_des is None or np.shape(X_des)[0] == 0):
             ax[i].plot(
                 T_des[: len(X_des)],
                 np.asarray(X_des).T[0],
@@ -74,7 +75,7 @@ def plot_timeseries(
                 label=r"$q_2$ desired",
                 color="orange",
             )
-        if not (X_meas is None):
+        if not (X_meas is None or np.shape(X_meas)[0] == 0):
             ax[i].plot(
                 T[: len(X_meas)],
                 np.asarray(X_meas).T[0],
@@ -91,7 +92,7 @@ def plot_timeseries(
                 color="red",
                 alpha=0.2,
             )
-        if not (X_filt is None):
+        if not (X_filt is None or np.shape(X_filt)[0] == 0):
             ax[i].plot(
                 T[: len(X_filt)],
                 np.asarray(X_filt).T[0],
@@ -119,7 +120,7 @@ def plot_timeseries(
         i += 1
         ax[i].plot(T[: len(X)], np.asarray(X).T[2], label=r"$\dot{q}_1$", color="blue")
         ax[i].plot(T[: len(X)], np.asarray(X).T[3], label=r"$\dot{q}_2$", color="red")
-        if not (X_des is None):
+        if not (X_des is None or np.shape(X_des)[0] == 0):
             ax[i].plot(
                 T_des[: len(X_des)],
                 np.asarray(X_des).T[2],
@@ -134,7 +135,7 @@ def plot_timeseries(
                 label=r"$\dot{q}_2$ desired",
                 color="orange",
             )
-        if not (X_meas is None):
+        if not (X_meas is None or np.shape(X_meas)[0] == 0):
             ax[i].plot(
                 T[: len(X_meas)],
                 np.asarray(X_meas).T[2],
@@ -151,7 +152,7 @@ def plot_timeseries(
                 color="red",
                 alpha=0.2,
             )
-        if not (X_filt is None):
+        if not (X_filt is None or np.shape(X_filt)[0] == 0):
             ax[i].plot(
                 T[: len(X_filt)],
                 np.asarray(X_filt).T[2],
@@ -183,7 +184,7 @@ def plot_timeseries(
         ax[i].plot(
             T[: len(ACC)], np.asarray(ACC).T[1], label=r"$\ddot{q}_2$", color="red"
         )
-        if not (ACC_des is None):
+        if not (ACC_des is None or np.shape(ACC_des)[0] == 0):
             ax[i].plot(
                 T_des[: len(ACC_des)],
                 np.asarray(ACC_des).T[0],
@@ -215,7 +216,7 @@ def plot_timeseries(
         ax[i].plot(
             T[: len(U)], np.asarray(U).T[1, : len(T)], label=r"$u_2$", color="red"
         )
-        if not (U_des is None):
+        if not (U_des is None or np.shape(U_des)[0] == 0):
             ax[i].plot(
                 T_des[: len(U_des)],
                 np.asarray(U_des).T[0],
@@ -228,9 +229,9 @@ def plot_timeseries(
                 np.asarray(U_des).T[1],
                 ls="--",
                 label=r"$u_2$ desired",
-                color="orange",
+                color="lightcoral",
             )
-        if not (U_con is None):
+        if not (U_con is None or np.shape(U_con)[0] == 0):
             ax[i].plot(
                 T[: len(U_con)],
                 np.asarray(U_con).T[0],
@@ -247,7 +248,7 @@ def plot_timeseries(
                 color="red",
                 alpha=0.2,
             )
-        if not (U_friccomp is None):
+        if not (U_friccomp is None or np.shape(U_friccomp)[0] == 0):
             ax[i].plot(
                 T[: len(U_friccomp)],
                 np.asarray(U_friccomp).T[0],
@@ -261,6 +262,21 @@ def plot_timeseries(
                 ls="-",
                 label=r"$u_2$ friction comp.",
                 color="brown",
+            )
+        if not (U_perturbation is None or np.shape(U_perturbation)[0] == 0):
+            ax[i].plot(
+                T,
+                np.asarray(U_perturbation).T[0][: len(T)],
+                ls="-",
+                label=r"$u_1$ perturbation",
+                color="green",
+            )
+            ax[i].plot(
+                T,
+                np.asarray(U_perturbation).T[1][: len(T)],
+                ls="-",
+                label=r"$u_2$ perturbation",
+                color="orange",
             )
         for line in tau_x_lines:
             ax[i].plot([line, line], [np.min(U), np.max(U)], ls="--", color="gray")
@@ -323,9 +339,7 @@ def plot_figures(
     fig, ax = plt.subplots()
     plt.plot(meas_time[:index], elbow_meas_pos[:index], label="measured position")
     if not (elbow_des_pos is None):
-        plt.plot(
-            elbow_des_time, elbow_des_pos, label="desired position"
-        )
+        plt.plot(elbow_des_time, elbow_des_pos, label="desired position")
     # trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
     plt.xlabel("Time (s)")
     plt.ylabel("Position (rad)")
@@ -343,9 +357,7 @@ def plot_figures(
             meas_time[:index], elbow_filtered_vel[:index], label="filtered velocity"
         )
     if not (elbow_des_vel is None):
-        plt.plot(
-            elbow_des_time, elbow_des_vel, label="desired velocity"
-        )
+        plt.plot(elbow_des_time, elbow_des_vel, label="desired velocity")
     # trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
     plt.xlabel("Time (s)")
     plt.ylabel("Velocity (rad)")
@@ -423,9 +435,7 @@ def plot_figures(
         meas_time[:index], shoulder_tau_controller[:index], label="controller torque"
     )
     if not (shoulder_des_tau is None):
-        plt.plot(
-            shoulder_des_time, shoulder_des_tau, label="desired torque"
-        )
+        plt.plot(shoulder_des_time, shoulder_des_tau, label="desired torque")
     if not (shoulder_fric_tau is None):
         plt.plot(
             meas_time[:index], shoulder_fric_tau[:index], label="friction comp. torque"
