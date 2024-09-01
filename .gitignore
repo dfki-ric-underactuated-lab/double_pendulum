@@ -38,3 +38,5 @@ experiments/design_C.1/data/*
 experiments/design_independent/data/*
 *local*
 
+
+.idea/
