@@ -167,13 +167,6 @@ class PastActionsSACPolicy(CustomPolicy):
         super().__init__(*args, **kwargs)
 
 
-class CustomUnpickler(pickle.Unpickler):
-    def find_class(self, module, name):
-        if 'General' in module:
-            module = 'double_pendulum.controller.history_sac.history_sac'
-        return super().find_class(module, name)
-
-
 class HistorySAC(SAC):
 
     def __init__(self, policy_classes, replay_buffer_classes, *args, **kwargs):
@@ -224,8 +217,7 @@ class HistorySAC(SAC):
             **kwargs,
 
     ) -> SelfBaseAlgorithm:
-        with open(os.path.abspath(path + '.pkl'), 'rb') as f:
-            loaded_data = CustomUnpickler(f).load()
+        loaded_data = th.load(os.path.abspath(path + '.pkl'))
 
         model = HistorySAC(
             policy_classes=loaded_data["policy_classes"],
