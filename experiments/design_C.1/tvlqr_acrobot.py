@@ -122,6 +122,6 @@ run_experiment(
     motor_directions=[1.0, -1.0],
     tau_limit=torque_limit,
     save_dir=os.path.join("data", design, robot, "tvlqr"),
-    record_video=True,
+    record_video=False,
     # perturbation_array=perturbation_array,
 )

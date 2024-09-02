@@ -131,8 +131,8 @@ def go_to_zero(motor1, motor2, motor_directions=[1.0, 1.0]):
         goal2 = np.round(pos2 / (2.0 * np.pi)) * 2.0 * np.pi
 
         while (
-            np.abs(pos1) > pos_epsilon
-            or np.abs(pos2) > pos_epsilon
+            np.abs(pos1 - goal1) > pos_epsilon
+            or np.abs(pos2 - goal2) > pos_epsilon
             or np.abs(vel1) > vel_epsilon
             or np.abs(vel2) > vel_epsilon
         ):
@@ -147,16 +147,19 @@ def go_to_zero(motor1, motor2, motor_directions=[1.0, 1.0]):
             else:
                 next_pos2 = goal2
 
+            next_pos1 *= motor_directions[0]
+            next_pos2 *= motor_directions[1]
+
             (
                 pos1,
                 vel1,
                 shoulder_tau,
-            ) = motor1.send_rad_command(next_pos1, 0.0, 10.0, 0.1, 0.0)
+            ) = motor1.send_rad_command(next_pos1, 0.0, 5.0, 0.1, 0.0)
             (
                 pos2,
                 vel2,
                 elbow_tau,
-            ) = motor2.send_rad_command(next_pos2, 0.0, 10.0, 0.1, 0.0)
+            ) = motor2.send_rad_command(next_pos2, 0.0, 5.0, 0.1, 0.0)
 
             # correction for motor axis directions
             pos1 *= motor_directions[0]

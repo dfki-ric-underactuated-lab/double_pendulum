@@ -8,6 +8,9 @@ from double_pendulum.controller.combined_controller import CombinedController
 from double_pendulum.experiments.hardware_control_loop_tmotors import run_experiment
 from double_pendulum.utils.wrap_angles import wrap_angles_top, wrap_angles_diff
 from double_pendulum.filter.lowpass import lowpass_filter
+from double_pendulum.simulation.perturbations import (
+    get_random_gauss_perturbation_array,
+)
 
 # model parameters
 design = "design_C.1"
@@ -102,6 +105,11 @@ if friction_compensation:
     controller.set_friction_compensation(damping=mpar.b, coulomb_fric=mpar.cf)
 controller.init()
 
+# np.random.seed(2)
+# perturbation_array, _, _, _ = get_random_gauss_perturbation_array(
+#     t_final, dt, 3, 1.0, [0.05, 0.1], [0.5, 0.6]
+# )
+
 run_experiment(
     controller=controller,
     dt=dt,
@@ -111,5 +119,6 @@ run_experiment(
     motor_directions=[1.0, -1.0],
     tau_limit=torque_limit,
     save_dir=os.path.join("data", design, robot, "tvlqr"),
-    record_video=True,
+    record_video=False,
+    # perturbation_array=perturbation_array,
 )
