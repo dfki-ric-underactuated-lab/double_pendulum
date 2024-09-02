@@ -13,5 +13,5 @@ leaderboard_config = {
     "username": "tfaust",
 }
 
-controller = HistorySACController("acrobot", model_path="../../../src/python/double_pendulum/controller/history_sac/models/acrobot")
+controller = HistorySACController("acrobot", model_path="../../../data/policies/design_C.1/model_1.1/acrobot/history_sac/acrobot")
 controller.init()
