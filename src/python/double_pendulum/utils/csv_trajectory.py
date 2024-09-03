@@ -74,7 +74,7 @@ def save_trajectory(
         header += ",acc1,acc2"
         min_len = min(min_len, len(ACC))
 
-    if X_meas is not None and len(X_des) > 0:
+    if X_meas is not None and len(X_meas) > 0:
         data.append(np.array(X_meas).T[0])
         data.append(np.array(X_meas).T[1])
         data.append(np.array(X_meas).T[2])
