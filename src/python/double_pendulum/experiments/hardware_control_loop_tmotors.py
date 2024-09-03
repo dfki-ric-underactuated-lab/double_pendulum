@@ -86,15 +86,15 @@ def run_experiment(
     if perturbation_array is None:
         perturbation_array = np.zeros((2, int(t_final / dt)))
 
-    n = int(t_final / dt) + 2
+    n = int(t_final / dt)
 
-    meas_time = np.zeros(n + 1)
-    pos_meas1 = np.zeros(n + 1)
-    vel_meas1 = np.zeros(n + 1)
-    tau_meas1 = np.zeros(n + 1)
-    pos_meas2 = np.zeros(n + 1)
-    vel_meas2 = np.zeros(n + 1)
-    tau_meas2 = np.zeros(n + 1)
+    meas_time = np.zeros(n + 2)
+    pos_meas1 = np.zeros(n + 2)
+    vel_meas1 = np.zeros(n + 2)
+    tau_meas1 = np.zeros(n + 2)
+    pos_meas2 = np.zeros(n + 2)
+    vel_meas2 = np.zeros(n + 2)
+    tau_meas2 = np.zeros(n + 2)
 
     tau_cmd = np.zeros(2)
 
@@ -151,6 +151,8 @@ def run_experiment(
 
         index += 1
 
+        time.sleep(1.0)
+
         print("Starting Experiment...")
         try:
             while t < t_final:
@@ -166,11 +168,11 @@ def run_experiment(
                 tau_cmd[1] = np.clip(tau_con[1], -tau_limit[1], tau_limit[1])
 
                 # perturbations
-                tau_cmd[0] += perturbation_array[0, index]
-                tau_cmd[1] += perturbation_array[1, index]
+                tau_cmd[0] += perturbation_array[0, min(index, n-1)]
+                tau_cmd[1] += perturbation_array[1, min(index, n-1)]
 
                 # play terminal bell sound when perturbation is active
-                if np.max(np.abs(perturbation_array[:, index])) > 0.1:
+                if np.max(np.abs(perturbation_array[:, min(index, n-1)])) > 0.1:
                     print("\a", end="\r")
 
                 # correction for motor axis directions

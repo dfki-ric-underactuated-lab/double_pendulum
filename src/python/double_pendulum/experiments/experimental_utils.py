@@ -113,7 +113,7 @@ def go_to_zero(motor1, motor2, motor_directions=[1.0, 1.0]):
     print("Moving back to initial configuration...")
     try:
         counter = 0
-        pos_epsilon = 0.02
+        pos_epsilon = 0.05
         vel_epsilon = 0.1
         pos1, vel1, tau1 = motor1.send_rad_command(0.0, 0.0, 0.0, 0.0, 0.0)
         pos2, vel2, tau2 = motor2.send_rad_command(0.0, 0.0, 0.0, 0.0, 0.0)
@@ -154,12 +154,12 @@ def go_to_zero(motor1, motor2, motor_directions=[1.0, 1.0]):
                 pos1,
                 vel1,
                 shoulder_tau,
-            ) = motor1.send_rad_command(next_pos1, 0.0, 5.0, 0.1, 0.0)
+            ) = motor1.send_rad_command(next_pos1, 0.0, 5.0, 1.0, 0.0)
             (
                 pos2,
                 vel2,
                 elbow_tau,
-            ) = motor2.send_rad_command(next_pos2, 0.0, 5.0, 0.1, 0.0)
+            ) = motor2.send_rad_command(next_pos2, 0.0, 5.0, 1.0, 0.0)
 
             # correction for motor axis directions
             pos1 *= motor_directions[0]

@@ -18,8 +18,9 @@ class VideoWriterWidget(object):
         self.frame_height = int(self.capture.get(4))
 
         # Set up codec and output video settings
-        self.codec = cv2.VideoWriter_fourcc("M", "J", "P", "G")
-        self.fps = 30
+        # self.codec = cv2.VideoWriter_fourcc("M", "J", "P", "G")
+        self.codec = cv2.VideoWriter_fourcc("m", "p", "4", "v")
+        self.fps = 24
         self.output_video = cv2.VideoWriter(
             self.video_file_name,
             self.codec,

@@ -31,7 +31,7 @@ mpar_con.set_torque_limit(torque_limit_con)
 
 ## trajectory parameters
 csv_path = "../../data/trajectories/design_C.1/model_1.1/pendubot/ilqr_1/trajectory.csv"
-dt = 0.0025
+dt = 0.002
 t_final = 10.0
 
 # swingup parameters
@@ -46,13 +46,13 @@ filter_velocity_cut = 0.1
 lqr_path = "../../data/controller_parameters/design_C.1/model_1.1/pendubot/lqr"
 lqr_pars = np.loadtxt(os.path.join(lqr_path, "controller_par.csv"))
 Q_lqr = np.diag(lqr_pars[:4])
-R_lqr = np.diag([lqr_pars[4], lqr_pars[4]])
+R_lqr = 8.0*np.diag([lqr_pars[4], lqr_pars[4]])
 
 S = np.loadtxt(os.path.join(lqr_path, "Smatrix"))
 rho = np.loadtxt(os.path.join(lqr_path, "rho"))
 
 Q = np.diag([1.0, 1.0, 1.0, 1.0])
-R = np.eye(2)
+R = np.eye(2)*2.0
 Qf = np.loadtxt(os.path.join(lqr_path, "Smatrix"))
 
 
@@ -106,9 +106,9 @@ if friction_compensation:
 controller.init()
 
 # np.random.seed(2)
-# perturbation_array, _, _, _ = get_random_gauss_perturbation_array(
-#     t_final, dt, 3, 1.0, [0.05, 0.1], [0.5, 0.6]
-# )
+perturbation_array, _, _, _ = get_random_gauss_perturbation_array(
+    t_final, dt, 2, 1.0, [0.05, 0.1], [0.4, 0.6]
+)
 
 run_experiment(
     controller=controller,
@@ -119,6 +119,7 @@ run_experiment(
     motor_directions=[1.0, -1.0],
     tau_limit=torque_limit,
     save_dir=os.path.join("data", design, robot, "tvlqr"),
-    record_video=False,
-    # perturbation_array=perturbation_array,
+    record_video=True,
+    safety_velocity_limit=30.0,
+    #perturbation_array=perturbation_array,
 )

@@ -109,9 +109,9 @@ if friction_compensation:
 controller.init()
 
 # np.random.seed(2)
-# perturbation_array, _, _, _ = get_random_gauss_perturbation_array(
-#     t_final, dt, 3, 1.0, [0.05, 0.1], [0.5, 0.6]
-# )
+perturbation_array, _, _, _ = get_random_gauss_perturbation_array(
+    t_final, dt, 2, 1.0, [0.05, 0.1], [0.4, 0.6]
+)
 
 run_experiment(
     controller=controller,
@@ -122,6 +122,7 @@ run_experiment(
     motor_directions=[1.0, -1.0],
     tau_limit=torque_limit,
     save_dir=os.path.join("data", design, robot, "tvlqr"),
-    record_video=False,
+    record_video=True,
+    safety_velocity_limit=30.0,
     # perturbation_array=perturbation_array,
 )
