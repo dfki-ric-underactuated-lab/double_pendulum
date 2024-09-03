@@ -1,0 +1,34 @@
+double\_pendulum.controller.history\_sac
+================================================
+
+.. automodule:: double_pendulum.controller.history_sac
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.history\_sac.history\_sac
+------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.history_sac.history_sac
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.history\_sac.history\_sac\_controller
+------------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.history_sac.history_sac_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.history\_sac.utils
+-----------------------------------------------------
+
+.. automodule:: double_pendulum.controller.history_sac.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

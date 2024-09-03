@@ -20,6 +20,7 @@ Subpackages
    double_pendulum.controller.friction_compensation
    double_pendulum.controller.gamepad
    double_pendulum.controller.gravity_compensation
+   double_pendulum.controller.history_sac
    double_pendulum.controller.ilqr
    double_pendulum.controller.inverse_dynamics
    double_pendulum.controller.lqr
