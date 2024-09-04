@@ -193,7 +193,6 @@ def leaderboard_scores(
                         )
                     )
                 )
-
             scores.append(score)
 
             header = "Swingup Success,"
@@ -225,7 +224,7 @@ def leaderboard_scores(
             results = np.asarray(results).T
 
             np.savetxt(
-                os.path.join(os.path.dirname(path), "scores.csv"),
+                os.path.join(os.path.dirname(path), f"scores_{score_version}.csv"),
                 results,
                 header=header,
                 delimiter=",",
