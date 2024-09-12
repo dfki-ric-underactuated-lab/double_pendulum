@@ -1,6 +1,7 @@
 import gymnasium as gym
 import numpy as np
 
+
 class CustomCustomEnv(gym.Env):
     def __init__(
         self,
@@ -26,7 +27,7 @@ class CustomCustomEnv(gym.Env):
         self.observation = self.reset_func()
         self.step_counter = 0
         self.stabilisation_mode = False
-        self.y = [0,0] 
+        self.y = [0, 0]
         self.update_y()
         self.scaling = scaling
 
