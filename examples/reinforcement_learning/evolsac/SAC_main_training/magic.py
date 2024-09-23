@@ -48,27 +48,16 @@ def magic_score(
     x0 = [0.0, 0.0, 0.0, 0.0]
     goal = [np.pi, 0.0, 0.0, 0.0]
 
-    if folder == "acrobot":
-        model_par_path = (
-            f"../../../../data/system_identification/identified_parameters/"
-            + design
-            + "/"
-            + "model_1.1"
-            + "/model_parameters.yml"
-        )
-        mpar = model_parameters(filepath=model_par_path)
-        mpar.set_torque_limit([0.0, max_torque])
-
-    else: # robot = "pendubot"
-        model_par_path = (
-            f"../../../../data/system_identification/identified_parameters/"
-            + design
-            + "/"
-            + "model_1.1"
-            + "/model_parameters.yml"
-        )
-        mpar = model_parameters(filepath=model_par_path)
-        mpar.set_torque_limit([max_torque, 0.0])
+    model_par_path = (
+        f"../../../../data/system_identification/identified_parameters/"
+        + design
+        + "/"
+        + "model_1.0"
+        + "/model_parameters.yml"
+    )
+    torque_limit = [0.0, max_torque] if folder == "acrobot" else [max_torque, 0.0]
+    mpar = model_parameters(filepath=model_par_path)
+    mpar.set_torque_limit(torque_limit)
 
     controller, leaderboard_config = load_controller(
         dynamics_func, model, window_size, include_time
@@ -79,7 +68,7 @@ def magic_score(
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
 
-    controller_name = f"evolsac_{folder}"
+    controller_name = f"evolsac"
     save_dir = (
         f"{data_dir}/{controller_name}"
         if index is None
@@ -179,8 +168,9 @@ class MagicCallback(BaseCallback):
         if score >= self.best:
             self.best = score
             self.model.save(f"{self.path}/best_model")
-            copy_files(f"./data/{self.folder_id}/evolsac/", self.path)
+            copy_files(f"./data_{self.robot}/{self.folder_id}/evolsac/", self.path)
         return True
+
 
 import concurrent.futures
 
@@ -226,7 +216,6 @@ def deepcopy_model(model):
         model.save(model_path)
         copied_model = SAC.load(model_path)
     return copied_model
-
 
 
 def async_store(iteration, callback: BruteMagicCallback):
