@@ -13,5 +13,5 @@ leaderboard_config = {
     "username": "tfaust",
 }
 
-controller = HistorySACController("pendubot", model_path="../../../data/policies/design_C.1/model_1.1/pendubot/history_sac/best_reward")
+controller = HistorySACController("pendubot", model_path="../../../data/policies/design_C.1/model_1.1/pendubot/history_sac/pendubot")
 controller.init()
