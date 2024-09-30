@@ -144,3 +144,18 @@ class HistorySACController(AbstractController):
         new_action = lowpass * self.last_action + (1 - lowpass) * action.item()
         self.last_action = new_action
         return self.dynamics_func.unscale_action(new_action)
+
+
+class IdentificationController(AbstractController):
+    def __init__(self, joint, f, a):
+        super().__init__()
+
+        self.joint = joint
+        self.f = f
+        self.a = a
+
+    def get_control_output_(self, x, t=None):
+        u = np.sin(2 * np.pi * self.f * t) * self.a
+        action = [0, 0]
+        action[self.joint] = u
+        return np.array(action)
