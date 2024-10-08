@@ -3,6 +3,7 @@ from copy import deepcopy
 import numpy as np
 from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.simulation.simulation import Simulator
+from scipy.integrate import odeint
 
 
 def get_par_list(x0, min_rel, max_rel, n):
@@ -17,12 +18,17 @@ def get_par_list(x0, min_rel, max_rel, n):
 
 
 class CustomSimulator(Simulator):
-    def __init__(self, plant, robustness, max_torque):
+    def __init__(
+        self,
+        plant,
+        robustness,
+        max_torque,
+        robot,
+        model="model_1.0",
+    ):
         self.base_plant = deepcopy(plant)
         design = "design_C.1"
-        model = "model_1.1"
-        robot = "acrobot"
-        
+
         model_par_path = (
             "../../../../data/system_identification/identified_parameters/"
             + design
@@ -31,8 +37,7 @@ class CustomSimulator(Simulator):
             + "/model_parameters.yml"
         )
         mpar = model_parameters(filepath=model_par_path)
-        # SHOULD USE MAX_TORQUE FROM TRAIN_SAC
-        torque_limit = [0.0, max_torque] if robot == "acrobot" else [max_torque,0.0]
+        torque_limit = [0.0, max_torque] if robot == "acrobot" else [max_torque, 0.0]
         mpar.set_torque_limit(torque_limit)
 
         self.mpar = mpar
@@ -98,32 +103,91 @@ class CustomSimulator(Simulator):
                 "cf2": cf2_var_list,
             }
 
-            mp = np.random.choice(mpar_vars)
-            var = np.random.choice(modelpar_var_lists[mp])
+            for mp in mpar_vars:
+                var = np.random.choice(modelpar_var_lists[mp])
+                # this code could be further simplified by using setattr
+                if mp == "Ir":
+                    self.plant.Ir = var
+                elif mp == "m1r1":
+                    m1 = self.mpar.m[0]
+                    r1 = var / m1
+                    self.plant.m[0] = m1
+                    self.plant.com[0] = r1
+                elif mp == "I1":
+                    self.plant.I[0] = var
+                elif mp == "b1":
+                    self.plant.b[0] = var
+                elif mp == "cf1":
+                    self.plant.coulomb_fric[0] = var
+                elif mp == "m2r2":
+                    m2 = self.mpar.m[1]
+                    r2 = var / m2
+                    self.plant.m[1] = m2
+                    self.plant.com[1] = r2
+                elif mp == "m2":
+                    self.plant.m[1] = var
+                elif mp == "I2":
+                    self.plant.I[1] = var
+                elif mp == "b2":
+                    self.plant.b[1] = var
+                elif mp == "cf2":
+                    self.plant.coulomb_fric[1] = var
 
-            if mp == "Ir":
-                self.plant.Ir = var
-            elif mp == "m1r1":
-                m1 = self.mpar.m[0]
-                r1 = var / m1
-                self.plant.m[0] = m1
-                self.plant.com[0] = r1
-            elif mp == "I1":
-                self.plant.I[0] = var
-            elif mp == "b1":
-                self.plant.b[0] = var
-            elif mp == "cf1":
-                self.plant.coulomb_fric[0] = var
-            elif mp == "m2r2":
-                m2 = self.mpar.m[1]
-                r2 = var / m2
-                self.plant.m[1] = m2
-                self.plant.com[1] = r2
-            elif mp == "m2":
-                self.plant.m[1] = var
-            elif mp == "I2":
-                self.plant.I[1] = var
-            elif mp == "b2":
-                self.plant.b[1] = var
-            elif mp == "cf2":
-                self.plant.coulomb_fric[1] = var
+    def odeint_integrator(self, y, dt, t, tau):
+        # print('odeint t', t)
+        plant_rhs = lambda y_, t_, u_: self.plant.rhs(t_, y_, u_)
+        odeint_out = odeint(plant_rhs, y, [t, t + dt], args=(tau,))
+        return odeint_out[1]
+
+    def step(self, tau, dt, integrator="runge_kutta"):
+        """
+        Performs a simulation step with the specified integrator.
+        Also adds process noise to the integration result.
+        Uses and updates the internal state
+
+        Parameters
+        ----------
+        tau : array_like, shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        dt : float
+            timestep, unit=[s]
+        integrator : string
+            string determining the integration method
+            "euler" : Euler integrator
+            "runge_kutta" : Runge Kutta integrator
+             (Default value = "runge_kutta")
+        """
+        # tau = np.clip(
+        #     tau,
+        #     -np.asarray(self.plant.torque_limit),
+        #     np.asarray(self.plant.torque_limit),
+        # )
+
+        if integrator == "runge_kutta":
+            self.x = np.add(
+                self.x,
+                dt * self.runge_integrator(self.x, dt, self.t, tau),
+                casting="unsafe",
+            )
+            # self.x += dt * self.runge_integrator(self.x, dt, self.t, tau)
+        elif integrator == "euler":
+            self.x = np.add(
+                self.x,
+                dt * self.euler_integrator(self.x, dt, self.t, tau),
+                casting="unsafe",
+            )
+            # self.x += dt * self.euler_integrator(self.x, dt, self.t, tau)
+        elif integrator == "odeint":
+            self.x = self.odeint_integrator(self.x, dt, self.t, tau)
+        else:
+            raise NotImplementedError(
+                f"Sorry, the integrator {integrator} is not implemented."
+            )
+        # process noise
+        self.x = np.random.normal(self.x, self.process_noise_sigmas, np.shape(self.x))
+
+        self.t += dt
+        self.record_data(self.t, self.x.copy(), tau)
+        # _ = self.get_measurement(dt)
