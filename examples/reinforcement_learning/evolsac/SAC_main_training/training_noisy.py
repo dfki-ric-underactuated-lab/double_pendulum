@@ -44,7 +44,7 @@ def random_reset_func():
         observation[3] += np.random.rand() * 0.05
 
     else:
-        rand = np.random.rand(4) * 0.01
+        rand = np.random.rand(4) * 0.03
         rand[2:] = rand[2:] - 0.05
         observation = [-1.0, -1.0, 0.0, 0.0] + rand
 
@@ -87,14 +87,12 @@ class MyEnv(CustomCustomEnv):
                     +self.V()
                     + 2 * (1 + costheta2) ** 2
                     - self.T()
-                    - 10 * lambda_action * np.square(a)
-                    - 3 * lambda_delta * delta_action
                 )
             else:
                 reward = (
-                    (1 - np.abs(a)) * self.V()  # for pendubot
+                    self.V()  # for pendubot
                     - lambda_action * np.square(a)
-                    - 3 * lambda_velocities * (omega1**2 + omega2**2)
+                    - 5 * lambda_velocities * (omega1**2 + omega2**2)
                     - 3 * lambda_delta * delta_action
                 )
         else:
@@ -103,6 +101,39 @@ class MyEnv(CustomCustomEnv):
 
     def reset(self, seed=None, options=None):
         super().reset(seed, options)
+
+        ## noise
+
+        # process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
+        process_noise_sigmas = np.max(
+            [[0] * 4, np.random.normal(loc=[0.01] * 4, scale=[0.01] * 4)], axis=0
+        )
+
+        # meas_noise_sigmas = [0.0, 0.0, 0.1, 0.1]
+        meas_noise_sigmas = np.max(
+            [[0] * 4, np.random.normal(loc=[0.01] * 4, scale=[0.01] * 4)], axis=0
+        )
+
+        delay_mode = "posvel"
+        # delay = 0.05
+        delay = np.max([0, np.random.normal(loc=0.05, scale=0.01)])
+
+        # u_noise_sigmas = [0.01, 0.01]
+        u_noise_sigmas = np.max(
+            [[0, 0], np.random.normal(loc=[0.01] * 2, scale=[0.01] * 2)], axis=0
+        )
+
+        # u_responsiveness = 0.9
+        u_responsiveness = np.min([np.random.normal(loc=0.9, scale=0.05), 1])
+
+        simulator.set_process_noise(process_noise_sigmas=process_noise_sigmas)
+        simulator.set_measurement_parameters(
+            meas_noise_sigmas=meas_noise_sigmas, delay=delay, delay_mode=delay_mode
+        )
+        simulator.set_motor_parameters(
+            u_noise_sigmas=u_noise_sigmas, u_responsiveness=u_responsiveness
+        )
+
         perturbation_array, _, _, _ = get_random_gauss_perturbation_array(
             10, dt, 2, 1.0, [0.05, 0.1], [0.4, 0.6]
         )
@@ -127,7 +158,7 @@ integrator = "runge_kutta"
 dt = 0.01
 
 
-FOLDER_ID = f"{os.path.basename(__file__)}-{max_torque}-{robustness}-{WINDOW_SIZE}-{int(INCLUDE_TIME)}-{dt}-v2"
+FOLDER_ID = f"{os.path.basename(__file__)}-{max_torque}-{robustness}-{WINDOW_SIZE}-{int(INCLUDE_TIME)}-{dt}"
 TERMINATION = False
 
 # setting log path for the training
@@ -154,26 +185,11 @@ torque_limit = [max_torque, 0.0] if robot == "pendubot" else [0.0, max_torque]
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_torque_limit(torque_limit)
 
-## noise
-process_noise_sigmas = [0.0, 0.0, 0.0, 0.0]
-meas_noise_sigmas = [0.0, 0.0, 0.1, 0.1]
-delay_mode = "posvel"
-delay = 0.05
-u_noise_sigmas = [0.01, 0.01]
-u_responsiveness = 0.9
-
 plant = SymbolicDoublePendulum(model_pars=mpar)
 simulator = CustomSimulator(
     plant=plant, robustness=robustness, max_torque=max_torque, robot=robot, model=model
 )
 
-simulator.set_process_noise(process_noise_sigmas=process_noise_sigmas)
-simulator.set_measurement_parameters(
-    meas_noise_sigmas=meas_noise_sigmas, delay=delay, delay_mode=delay_mode
-)
-simulator.set_motor_parameters(
-    u_noise_sigmas=u_noise_sigmas, u_responsiveness=u_responsiveness
-)
 
 eval_simulator = Simulator(plant=plant)
 
@@ -244,7 +260,7 @@ envs = make_vec_env(
     n_envs=n_envs,
     env_kwargs={
         "dynamics_func": dynamics_func,
-        "reset_func": zero_reset_func,
+        "reset_func": random_reset_func,
         "terminates": TERMINATION,
         "obs_space": obs_space,
         "act_space": act_space,
@@ -291,7 +307,7 @@ agent = SAC(
 )
 
 setproctitle(
-    f"noisy_training (reward v2)-> robot={robot} max_torque={max_torque}Nm robustness={robustness} history_length={WINDOW_SIZE}"
+    f"noisy_training (domain and noise randomization) -> robot={robot} max_torque={max_torque}Nm robustness={robustness}"
 )
 
 agent.learn(total_timesteps=training_steps, callback=eval_callback)
