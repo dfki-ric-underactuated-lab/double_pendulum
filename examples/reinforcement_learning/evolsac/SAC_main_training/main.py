@@ -64,11 +64,13 @@ max_torque = float(sys.argv[1])
 robustness = float(sys.argv[2])
 WINDOW_SIZE = int(sys.argv[3])
 INCLUDE_TIME = bool(int(sys.argv[4]))
+robot = str(sys.argv[5])
+
 FOLDER_ID = f"{os.path.basename(__file__)}-{max_torque}-{robustness}-{WINDOW_SIZE}-{int(INCLUDE_TIME)}"
 TERMINATION = False
 
 # define robot variation
-robot = "pendubot"
+# robot = "pendubot"
 
 # setting log path for the training
 log_dir = f"./log_data_{robot}/SAC_training/{FOLDER_ID}"

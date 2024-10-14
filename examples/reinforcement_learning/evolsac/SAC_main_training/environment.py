@@ -1,7 +1,11 @@
 import gymnasium as gym
 import numpy as np
+from double_pendulum.simulation.gym_env import double_pendulum_dynamics_func
+from double_pendulum.utils.wrap_angles import wrap_angles_diff
+
 
 class CustomCustomEnv(gym.Env):
+
     def __init__(
         self,
         dynamics_func,
@@ -13,6 +17,9 @@ class CustomCustomEnv(gym.Env):
         max_episode_steps=1000,
         scaling=True,
         terminates=True,
+        flg_train_with_lqr=False,
+        lqr_controller=None,
+        check_roa=None,
     ):
         self.dynamics_func = dynamics_func
         self.reset_func = reset_func
@@ -26,7 +33,7 @@ class CustomCustomEnv(gym.Env):
         self.observation = self.reset_func()
         self.step_counter = 0
         self.stabilisation_mode = False
-        self.y = [0,0] 
+        self.y = [0, 0]
         self.update_y()
         self.scaling = scaling
 
@@ -40,6 +47,9 @@ class CustomCustomEnv(gym.Env):
             self.control_line = 0.7 * self.max_height
 
         self.old_obs = None
+        self.flg_train_with_lqr = flg_train_with_lqr
+        self.lqr_controller = lqr_controller
+        self.check_roa = check_roa
 
     def step(self, action):
         self.old_obs = np.copy(self.observation)
@@ -47,10 +57,30 @@ class CustomCustomEnv(gym.Env):
             self.observation, action, scaling=self.scaling
         )
 
-        self.update_y()
-        self.stabilisation_mode = self.y[1] >= self.control_line
-        terminated = self.terminated_func()
-        reward = self.reward_func(terminated, action)
+        if self.flg_train_with_lqr:
+            # check roa
+            self.update_y()
+            self.stabilisation_mode = self.y[1] >= self.control_line
+            terminated = self.terminated_func()
+            reward = self.reward_func(terminated, action)
+
+            while (
+                self.check_roa(self.observation)
+                and self.step_counter < self.max_episode_steps
+            ):
+                action = self.lqr_controller(self.observation)
+                self.observation = self.dynamics_func(
+                    self.observation, action, scaling=self.scaling
+                )
+                self.step_counter += 1
+                reward += self.reward_func(terminated, action)
+
+        else:
+            self.update_y()
+            self.stabilisation_mode = self.y[1] >= self.control_line
+            terminated = self.terminated_func()
+            reward = self.reward_func(terminated, action)
+
         info = {}
         truncated = False
         self.step_counter += 1
@@ -107,3 +137,26 @@ class CustomCustomEnv(gym.Env):
 
     def T(self):
         return self.kinetic_reward()
+
+
+class double_pendulum_dynamics_func_extended(double_pendulum_dynamics_func):
+    def integration(self, x, u):
+        if self.integrator == "runge_kutta":
+            next_state = np.add(
+                x,
+                self.dt * self.simulator.runge_integrator(x, self.dt, 0.0, u),
+                casting="unsafe",
+            )
+        elif self.integrator == "euler":
+            next_state = np.add(
+                x,
+                self.dt * self.simulator.euler_integrator(x, self.dt, 0.0, u),
+                casting="unsafe",
+            )
+        elif self.integrator == "odeint":
+            next_state = np.add(
+                x,
+                self.dt * self.simulator.odeint_integrator(x, self.dt, 0.0, u),
+                casting="unsafe",
+            )
+        return next_state
