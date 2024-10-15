@@ -79,9 +79,10 @@ def resample_and_denoise(dt, times, values, force_edges=False, max_length=None):
     return resampled_times, resampled_values
 
 class HistorySACController(AbstractController):
-    def __init__(self, env_type, model_path):
+    def __init__(self, env_type, model_path, lowpass=0.0):
         super().__init__()
 
+        self.lowpass = lowpass
         dt = 0.02
         max_torque = 6
         dynamics_func = general_dynamics(env_type, dt, max_torque)
@@ -138,7 +139,7 @@ class HistorySACController(AbstractController):
         _, env.history['X_meas'] = resample_and_denoise(self.dt, self.history['T'], self.history['X'], force_edges=False, max_length=12)
 
         action, _ = self.model.predict(observation=env.history['X_meas'][-1].reshape(1, -1), deterministic=True)
-        lowpass = 0.0  # 0.85
+        lowpass = self.lowpass
         if self.last_action == 0.0:
             lowpass = 0.0
         new_action = lowpass * self.last_action + (1 - lowpass) * action.item()
