@@ -139,6 +139,7 @@ def run_experiment(
 
         # defining running index variables
         index = 0
+        index_t = 0
         t = 0.0
 
         meas_time[0] = t
@@ -168,11 +169,12 @@ def run_experiment(
                 tau_cmd[1] = np.clip(tau_con[1], -tau_limit[1], tau_limit[1])
 
                 # perturbations
-                tau_cmd[0] += perturbation_array[0, min(index, n-1)]
-                tau_cmd[1] += perturbation_array[1, min(index, n-1)]
+                index_t = int(t / dt)
+                tau_cmd[0] += perturbation_array[0, min(index_t, n - 1)]
+                tau_cmd[1] += perturbation_array[1, min(index_t, n - 1)]
 
                 # play terminal bell sound when perturbation is active
-                if np.max(np.abs(perturbation_array[:, min(index, n-1)])) > 0.1:
+                if np.max(np.abs(perturbation_array[:, min(index, n - 1)])) > 0.1:
                     print("\a", end="\r")
 
                 # correction for motor axis directions
