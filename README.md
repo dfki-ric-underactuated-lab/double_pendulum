@@ -5,12 +5,12 @@
 
 <div align="center">
 
-## :bangbang: IROS 2024 Competition :bangbang:
+## :bangbang: ICRA 2025 Competition :bangbang:
 
-We are hosting a competition at [IROS 2024](https://iros2024-abudhabi.org/).
+We are hosting a competition at [ICRA 2025](https://2025.ieee-icra.org/).
 
 If you are interested in participating, check out our competition website:
-[IROS 2024 Competition](https://ai-olympics.dfki-bremen.de/).
+[ICRA 2025 Competition](https://ai-olympics.dfki-bremen.de/).
 
 # Dual Purpose Acrobot & Pendubot Platform
 </div>
