@@ -2,7 +2,9 @@ import os
 import numpy as np
 
 from double_pendulum.utils.csv_trajectory import load_trajectory_full
-from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
+
+# from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
+from double_pendulum.model.plant import DoublePendulumPlant
 
 
 def leaderboard_scores(
@@ -30,6 +32,7 @@ def leaderboard_scores(
     link_base="",
     simulation=True,
     score_version="v1",
+    t_final=10.0,
 ):
     """leaderboard_scores.
     Compute leaderboard scores from data_dictionaries which will be loaded from
@@ -82,6 +85,24 @@ def leaderboard_scores(
 
     leaderboard_data = []
 
+    all_criteria = [
+        "swingup_time",
+        "max_tau",
+        "energy",
+        "integ_tau",
+        "tau_cost",
+        "tau_smoothness",
+        "velocity_cost",
+        "uptime",
+        "number_of_swingups",
+    ]
+
+    for crit in all_criteria:
+        if crit not in weights.keys():
+            weights[crit] = 0.0
+        if crit not in normalize.keys():
+            normalize[crit] = 1.0
+
     nonzero_weigths = 0
     for w in weights.keys():
         if weights[w] != 0.0:
@@ -101,6 +122,8 @@ def leaderboard_scores(
         tau_costs = []
         tau_smoothnesses = []
         velocity_costs = []
+        n_swingups = []
+        uptimes = []
         successes = []
         scores = []
 
@@ -112,7 +135,13 @@ def leaderboard_scores(
 
             swingup_times.append(
                 get_swingup_time(
-                    T=T, X=X, has_to_stay=True, mpar=mpar, method="height", height=0.9
+                    T=T,
+                    X=X,
+                    has_to_stay=True,
+                    mpar=mpar,
+                    method="height",
+                    height=0.9,
+                    t_final=t_final,
                 )
             )
             max_taus.append(get_max_tau(U))
@@ -121,6 +150,10 @@ def leaderboard_scores(
             tau_costs.append(get_torque_cost(T, U))
             tau_smoothnesses.append(get_tau_smoothness(U))
             velocity_costs.append(get_velocity_cost(T, X))
+            n_swingups.append(
+                get_number_of_swingups(T, X, mpar=mpar, method="height", height=0.9)
+            )
+            uptimes.append(get_uptime(T, X, mpar=mpar, method="height", height=0.9))
 
             successes.append(int(swingup_times[-1] < T[-1]))
 
@@ -143,7 +176,7 @@ def leaderboard_scores(
                         / normalize["velocity_cost"]
                     )
                 )
-            else:
+            elif score_version == "v2":
                 score = successes[-1] * (
                     1.0
                     - 1.0
@@ -193,11 +226,18 @@ def leaderboard_scores(
                         )
                     )
                 )
+            elif score_version == "v3":
+                score = weights["uptime"] * uptimes[-1] / normalize["uptime"]
+            else:
+                score = 0.0
+
             scores.append(score)
 
-            header = "Swingup Success,"
+            header = ""
             results = []
-            results.append([successes[-1]])
+            if score_version in ["v1", "v2"]:
+                results.append([successes[-1]])
+                header += "Swingup Success,"
             if weights["swingup_time"] != 0.0:
                 results.append([swingup_times[-1]])
                 header += "Swingup Time [s],"
@@ -219,6 +259,12 @@ def leaderboard_scores(
             if weights["velocity_cost"] != 0.0:
                 results.append([velocity_costs[-1]])
                 header += "Velocity Cost [m²/s²],"
+            if weights["uptime"] != 0.0:  # intentionally checking for uptime
+                results.append([n_swingups[-1]])
+                header += "#swingups,"
+            if weights["uptime"] != 0.0:
+                results.append([uptimes[-1]])
+                header += "Uptime [s],"
             results.append([score])
             header += "RealAI Score"
             results = np.asarray(results).T
@@ -240,6 +286,8 @@ def leaderboard_scores(
         tau_cost = tau_costs[best]
         tau_smoothness = tau_smoothnesses[best]
         velocity_cost = velocity_costs[best]
+        uptime = uptimes[best]
+        n_swingup = n_swingups[best]
         success = np.sum(successes)
         score = np.mean(scores)
         best_score = np.max(scores)
@@ -257,11 +305,9 @@ def leaderboard_scores(
             else:
                 name_with_link = d["name"]
 
-        append_data = [
-            name_with_link,
-            d["short_description"],
-            str(int(success)) + "/" + str(len(csv_paths)),
-        ]
+        append_data = [name_with_link, d["short_description"]]
+        if score_version in ["v1", "v2"]:
+            append_data.append(str(int(success)) + "/" + str(len(csv_paths)))
         if weights["swingup_time"] != 0.0:
             append_data.append(str(round(swingup_time, 2)))
         if weights["energy"] != 0.0:
@@ -276,6 +322,10 @@ def leaderboard_scores(
             append_data.append(str(round(tau_smoothness, 3)))
         if weights["velocity_cost"] != 0.0:
             append_data.append(str(round(velocity_cost, 2)))
+        if weights["uptime"] != 0.0:  # intentionally checking for uptime
+            append_data.append(str(n_swingup))
+        if weights["uptime"] != 0.0:
+            append_data.append(str(round(uptime, 3)))
 
         if simulation:
             append_data.append(str(round(score, 3)))
@@ -321,7 +371,8 @@ def leaderboard_scores(
 
     header = "Controller,"
     header += "Short Controller Description,"
-    header += "Swingup Success,"
+    if score_version in ["v1", "v2"]:
+        header += "Swingup Success,"
     if weights["swingup_time"] != 0.0:
         header += "Swingup Time [s],"
     if weights["energy"] != 0.0:
@@ -336,6 +387,10 @@ def leaderboard_scores(
         header += "Torque Smoothness [Nm],"
     if weights["velocity_cost"] != 0.0:
         header += "Velocity Cost [m²/s²],"
+    if weights["uptime"] != 0.0:  # intentionally checking for uptime
+        header += "#swingups,"
+    if weights["uptime"] != 0.0:
+        header += "Uptime [s],"
 
     if simulation:
         header += "RealAI Score,"
@@ -366,6 +421,7 @@ def get_swingup_time(
     mpar=None,
     method="height",
     height=0.9,
+    t_final=10.0,
 ):
     """get_swingup_time.
     get the swingup time from a data_dict.
@@ -397,7 +453,9 @@ def get_swingup_time(
     float
         swingup time
     """
-    if method == "epsilon":
+    if T[-1] < 0.99 * t_final:
+        time = np.inf
+    elif method == "epsilon":
         goal = np.array([np.pi, 0.0, 0.0, 0.0])
 
         dist_x0 = np.abs(np.mod(X.T[0] - goal[0] + np.pi, 2 * np.pi) - np.pi)
@@ -433,7 +491,8 @@ def get_swingup_time(
                 time_index = n[0]
         time = T[time_index]
     elif method == "height":
-        plant = SymbolicDoublePendulum(model_pars=mpar)
+        # plant = SymbolicDoublePendulum(model_pars=mpar)
+        plant = DoublePendulumPlant(model_pars=mpar)
         fk = plant.forward_kinematics(X.T[:2])
         ee_pos_y = fk[1][1]
 
@@ -635,3 +694,110 @@ def get_velocity_cost(T, X, Q=np.diag([1.0, 1.0])):
     V = X.T[2:].T
     cost = np.einsum("ij, i, jk, ik", V[:-1], delta_t, Q, V[:-1])
     return cost
+
+
+def check_if_up_epsilon(x, eps=[1e-2, 1e-2, 1e-2, 1e-2]):
+    goal = np.array([np.pi, 0.0, 0.0, 0.0])
+
+    X_error = np.abs(x - goal)
+    up = np.all(np.where(X_error < eps, True, False), axis=1)
+    return up
+
+
+def check_if_up_height(x, height=0.9, mpar=None, eps=[1e-2, 1e-2, 1e-2, 1e-2]):
+    plant = DoublePendulumPlant(model_pars=mpar)
+    fk = plant.forward_kinematics(x[:2])
+    ee_pos_y = fk[1][1]
+
+    goal_height = height * (mpar.l[0] + mpar.l[1])
+
+    up = ee_pos_y > goal_height  # and np.abs(x[2]) < eps[2] and np.abs(x[3]) < eps[3]
+    return up
+
+
+def check_if_up(
+    x, method="height", mpar=None, eps=[1e-2, 1e-2, 1e-2, 1e-2], height=0.9
+):
+    if method == "epsilon":
+        up = check_if_up_epsilon(x, eps)
+    elif method == "height":
+        up = check_if_up_height(x, height, mpar, eps)
+    else:
+        up = False
+    return up
+
+
+def get_uptime(
+    T,
+    X,
+    eps=[1e-2, 1e-2, 1e-2, 1e-2],
+    mpar=None,
+    method="height",
+    height=0.9,
+):
+
+    DT = np.diff(T, prepend=0.0)
+
+    if method == "epsilon":
+        goal = np.array([np.pi, 0.0, 0.0, 0.0])
+
+        X_error = np.abs(X - goal)
+        up = np.all(np.where(X_error < eps, True, False), axis=1)
+        uptime = np.sum(DT[up])
+
+    elif method == "height":
+        plant = DoublePendulumPlant(model_pars=mpar)
+        fk = plant.forward_kinematics(X.T[:2])
+        ee_pos_y = fk[1][1]
+
+        goal_height = height * (mpar.l[0] + mpar.l[1])
+
+        up = np.where(ee_pos_y > goal_height, True, False)
+        uptime = np.sum(DT[up])
+
+    else:
+        uptime = 0.0
+
+    return uptime
+
+
+def get_number_of_swingups(
+    T,
+    X,
+    eps=[1e-2, 1e-2, 5e-1, 5e-1],
+    mpar=None,
+    method="height",
+    height=0.9,
+    deadtime=1.0,
+):
+    if method == "epsilon":
+        goal = np.array([np.pi, 0.0, 0.0, 0.0])
+        last_up_time = -deadtime
+        last_step_up = False
+        up = False
+        n_swingups = 0
+        for i, t in enumerate(T):
+            up = check_if_up_epsilon(X[i], eps)
+
+            if up and not last_step_up and (T[i] - last_up_time) > deadtime:
+                n_swingups += 1
+                last_up_time = T[i]
+
+            last_step_up = up
+
+    elif method == "height":
+        last_up_time = -deadtime
+        last_step_up = False
+        up = False
+        n_swingups = 0
+        for i, t in enumerate(T):
+            up = check_if_up_height(X[i], height, mpar, eps)
+
+            if up and not last_step_up and (T[i] - last_up_time) > deadtime:
+                n_swingups += 1
+                last_up_time = T[i]
+
+            last_step_up = np.copy(up)
+    else:
+        n_swingups = 0
+    return n_swingups

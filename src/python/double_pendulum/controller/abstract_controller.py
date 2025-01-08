@@ -23,6 +23,7 @@ class AbstractController(ABC):
         self.u_fric_hist = []
         self.u_grav_hist = []
         self.filter = identity_filter(filt_velocity_cut=0.0)
+        self.use_gravity_compensation = False
 
     @abstractmethod
     def get_control_output_(self, x, t=None):
@@ -328,7 +329,8 @@ class AbstractController(ABC):
             order=[u1, u2],
             units=[Nm]
         """
-        if self.grav_plant is not None:
+        # if self.grav_plant is not None:
+        if self.use_gravity_compensation:
             g = self.grav_plant.gravity_vector(x)
             tau_grav = -np.dot(self.grav_plant.B, g)
         else:
