@@ -49,3 +49,11 @@ double\_pendulum.controller.combined\_controller
    :members:
    :undoc-members:
    :show-inheritance:
+
+double\_pendulum.controller.global\_policy\_testing\_controller
+----------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.global_policy_testing_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:
