@@ -112,6 +112,26 @@ visit <a href="#id1"><span class="problematic" id="id2">`eigen&lt;https://eigen.
 </div>
 </li>
 </ol>
+<p>Another option to install and use dependencies would be using [conda/mamba](<a class="reference external" href="https://github.com/mamba-org/mamba">https://github.com/mamba-org/mamba</a>) environment.</p>
+<ol class="arabic">
+<li><p>Clone the repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">dfki</span><span class="o">-</span><span class="n">ric</span><span class="o">-</span><span class="n">underactuated</span><span class="o">-</span><span class="n">lab</span><span class="o">/</span><span class="n">double_pendulum</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a new conda environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">double_pendulum</span>
+<span class="n">mamba</span> <span class="n">env</span> <span class="n">create</span> <span class="o">--</span><span class="n">file</span><span class="o">=</span><span class="n">environment</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+</li>
+<li><p>Activate the environment and install the double pendulum package:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mamba</span> <span class="n">activate</span> <span class="n">double_pendulum</span>
+<span class="n">make</span> <span class="n">install</span>
+</pre></div>
+</div>
+</li>
+</ol>
 <p>With this you are done and you can use all functionalities and some controllers in this repository.
 If you want install all requirements (this includes also larger depoendencies
 such as tensorflow, drake etc.) for all controllers do</p>
