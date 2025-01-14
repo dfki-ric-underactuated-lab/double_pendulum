@@ -1,0 +1,8 @@
+name: double_pendulum
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - yaml-cpp
+  - eigenpy
+  - cxx-compiler
