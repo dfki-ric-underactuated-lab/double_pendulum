@@ -36,6 +36,22 @@ We recommend using a virtual python environment.
     cd double_pendulum
     make install
 
+Another option to install and use dependencies would be using [conda/mamba](https://github.com/mamba-org/mamba) environment.
+
+1. Clone the repository::
+
+    git clone git@github.com:dfki-ric-underactuated-lab/double_pendulum.git
+
+2. Create a new conda environment::
+
+    cd double_pendulum
+    mamba env create --file=environment.yaml
+
+3. Activate the environment and install the double pendulum package::
+
+    mamba activate double_pendulum
+    make install
+
 With this you are done and you can use all functionalities and some controllers in this repository.
 If you want install all requirements (this includes also larger depoendencies
 such as tensorflow, drake etc.) for all controllers do
