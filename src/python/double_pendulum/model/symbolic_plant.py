@@ -390,8 +390,8 @@ class SymbolicDoublePendulum:
         """
         symbolic potential energy of the double pendulum
         """
-        h1 = -self.r1 * smp.cos(self.q1)
-        h2 = -self.l1 * smp.cos(self.q1) - self.r2 * smp.cos(self.q1 + self.q2)
+        h1 = -self.r1 * smp.sin(self.q1)
+        h2 = -self.l1 * smp.sin(self.q1) + self.r2 * smp.sin(self.q1 + self.q2)
         Epot = self.m1 * self.g_sym * h1 + self.m2 * self.g_sym * h2
         return Epot
 
