@@ -8,7 +8,7 @@ from double_pendulum.model.model_parameters import model_parameters
 from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory
-from double_pendulum.controller.energy.energy_Amir import EnergyController
+from double_pendulum.controller.energy.energy_Xin import EnergyController
 
 # model parameters
 design = "design_A.0"
@@ -34,9 +34,9 @@ x0 = [0.1, 0.0, 0.0, 0.0]
 t_final = 60.0
 
 # controller parameters
-kp = 0.68  # > 0.67
-kd = 0.023  # > 0.022
-kv = 0.015  # > 0.0
+kp = 1.2  # > 0.67
+kd = 0.1  # > 0.022
+kv = 0.05  # > 0.0
 
 plant = SymbolicDoublePendulum(model_pars=mpar)
 sim = Simulator(plant=plant)

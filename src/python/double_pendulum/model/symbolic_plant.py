@@ -151,7 +151,7 @@ class SymbolicDoublePendulum:
 
     # state space variables
     q1, q2, qd1, qd2, qdd1, qdd2 = smp.symbols(
-        "q1 q2 \dot{q}_1 \dot{q}_2 \ddot{q}_1 \ddot{q}_2"
+        "q1 q2 \\dot{q}_1 \\dot{q}_2 \\ddot{q}_1 \\ddot{q}_2"
     )
 
     q = smp.Matrix([q1, q2])
@@ -165,11 +165,11 @@ class SymbolicDoublePendulum:
 
     # definition of linearization point
     q01, q02, q0d1, q0d2 = smp.symbols(
-        "\hat{q}_1 \hat{q}_2 \hat{\dot{q}}_1 \hat{\dot{q}}_2"
+        "\\hat{q}_1 \\hat{q}_2 \\hat{\\dot{q}}_1 \\hat{\\dot{q}}_2"
     )
     x0 = smp.Matrix([q01, q02, q0d1, q0d2])
 
-    u01, u02 = smp.symbols("\hat{u}_1 \hat{u}_2")
+    u01, u02 = smp.symbols("\\hat{u}_1 \\hat{u}_2")
     u0 = smp.Matrix([u01, u02])
 
     def __init__(

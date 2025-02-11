@@ -229,12 +229,13 @@ class EnergyController(AbstractController):
         H = np.dot(C, vel)
 
         u2 = -((self.kv*vel[1]+self.kp*pos[1])*Del + \
-                self.kd*(M[1][0]*(H[0]+G[0]) - \
-                         M[0][0]*(H[1]+G[1]))) \
+                self.kd*(M[1][0]*(H[0]+G[0]-F[0]) - \
+                         M[0][0]*(H[1]+G[1]-F[1]))) \
               / (self.kd*M[0][0]+en_diff*Del)
 
         u2 = np.clip(u2, -self.torque_limit[1], self.torque_limit[1])
         u = [0., u2]
+        print(F)
 
         return u
 
