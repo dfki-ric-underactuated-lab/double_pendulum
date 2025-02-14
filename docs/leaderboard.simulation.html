@@ -87,11 +87,6 @@
 <p>The simulation leaderboard compares the performance of different control
 methods in simulation. The task for the controller is to swingup and balance
 the acrobot/pendubot and keep the end-effector above the threshhold line.</p>
-<p>The scripts for the leaderboard calculation can be found in
-<a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/simulation/acrobot">leaderboard/simulation/acrobot</a> .
-for the acrobot and in
-<a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/simulation/pendubot">leaderboard/simulation/pendubot</a> .
-for the pendubot.</p>
 <section id="creating-the-leaderboard">
 <h2>Creating the Leaderboard<a class="headerlink" href="#creating-the-leaderboard" title="Permalink to this headline"></a></h2>
 <p>For creating the leaderboard locally, you can run:</p>
@@ -143,19 +138,12 @@ request, please also add a readme markdown file which describes your controller
 in <cite>readmes/controllername.md</cite>. Add references if applicable.</p>
 <p>Feel free to import the model and simulation parameters from
 <cite>sim_parameters.py</cite> if you need them to instantiate your controller.</p>
-<p>You can now generate the simulation data by calling:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">sim_controller</span><span class="o">.</span><span class="n">py</span> <span class="n">con_controllername</span><span class="o">.</span><span class="n">py</span>
-</pre></div>
-</div>
-<p>This will simulate the double pendulum controlled by your controller and save
-all relevant data in <cite>data/controllername</cite>.</p>
 <p>To calculate the leaderboard scores for your controller do:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">calculate_leaderboard_score</span><span class="o">.</span><span class="n">py</span> <span class="n">con_controllername</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
-<p>If you create a pull request and your controller and the <cite>con_controllername.py</cite>
-is added to the main repository your controller will appear on the
-<a class="reference external" href="https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_performance_leaderboard.html">official leaderboard</a> .</p>
+<p>This will simulate the double pendulum controlled by your controller and save
+all relevant data in <cite>data/controllername</cite> along with the leaderboard scores.</p>
 </section>
 </section>
 

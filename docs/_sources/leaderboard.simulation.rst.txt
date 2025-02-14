@@ -5,12 +5,6 @@ The simulation leaderboard compares the performance of different control
 methods in simulation. The task for the controller is to swingup and balance
 the acrobot/pendubot and keep the end-effector above the threshhold line.
 
-The scripts for the leaderboard calculation can be found in
-`leaderboard/simulation/acrobot <https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/simulation/acrobot>`__ .
-for the acrobot and in
-`leaderboard/simulation/pendubot <https://github.com/dfki-ric-underactuated-lab/double_pendulum/tree/main/leaderboard/simulation/pendubot>`__ .
-for the pendubot.
-
 Creating the Leaderboard
 ------------------------
 
@@ -67,17 +61,9 @@ in `readmes/controllername.md`. Add references if applicable.
 Feel free to import the model and simulation parameters from
 `sim_parameters.py` if you need them to instantiate your controller.
 
-You can now generate the simulation data by calling::
-
-    python sim_controller.py con_controllername.py
-
-This will simulate the double pendulum controlled by your controller and save
-all relevant data in `data/controllername`.
-
 To calculate the leaderboard scores for your controller do::
 
     python calculate_leaderboard_score.py con_controllername.py
 
-If you create a pull request and your controller and the `con_controllername.py` 
-is added to the main repository your controller will appear on the
-`official leaderboard <https://dfki-ric-underactuated-lab.github.io/real_ai_gym_leaderboard/acrobot_simulation_performance_leaderboard.html>`__ .
+This will simulate the double pendulum controlled by your controller and save
+all relevant data in `data/controllername` along with the leaderboard scores.
