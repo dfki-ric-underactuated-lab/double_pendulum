@@ -22,7 +22,7 @@ from sim_parameters import (
 )
 from sim_controller import simulate_controller
 from double_pendulum.controller.global_policy_testing_controller import (
-    GlobalPolicyTestingController,
+    GlobalPolicyTestingControllerV2,
 )
 
 parser = argparse.ArgumentParser()
@@ -34,13 +34,16 @@ if controller_arg[-3:] == ".py":
 controller_name = controller_arg[4:]
 imp = importlib.import_module(controller_arg)
 swingup_controller = imp.controller
-global_policy_testing_controller = GlobalPolicyTestingController(
+global_policy_testing_controller = GlobalPolicyTestingControllerV2(
     swingup_controller,
     goal=goal,
-    knockdown_after=knockdown_after,
-    knockdown_length=knockdown_length,
-    method=method,
-    eps=eps,
+    # knockdown_after=knockdown_after,
+    # knockdown_length=knockdown_length,
+    n_disturbances=15,
+    t_max=t_final,
+    reset_length=0.2,
+    # method=method,
+    # eps=eps,
     mpar=mpar_nolim,
 )
 
