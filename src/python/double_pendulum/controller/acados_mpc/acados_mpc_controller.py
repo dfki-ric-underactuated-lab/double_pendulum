@@ -7,6 +7,7 @@ import casadi as cas
 import numpy as np
 import pandas as pd
 from double_pendulum.controller.abstract_controller import AbstractController
+from double_pendulum.controller.acados_mpc.acados_model import PendulumModel
 import yaml
 
 """

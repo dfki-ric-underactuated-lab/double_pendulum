@@ -10,7 +10,7 @@ from double_pendulum.simulation.simulation import Simulator
 from double_pendulum.utils.plotting import plot_timeseries
 from double_pendulum.utils.csv_trajectory import save_trajectory, load_trajectory
 
-from double_pendulum.controller.acados_mpc_acados_mpc_controller import AcadosMpcController
+from double_pendulum.controller.acados_mpc.acados_mpc_controller import AcadosMpcController
 
 ## labels
 design = "design_C.0"
