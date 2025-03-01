@@ -16,6 +16,16 @@ from sim_parameters import (
     robot,
 )
 
+name="acados_mpc_controller"
+username="maranderine"
+
+leaderboard_config = {"csv_path": name + "/sim_swingup.csv",
+                      "name": name,
+                      "simple_name": "simple name",
+                      "short_description": "Short controller description (max 100 characters)",
+                      "readme_path": f"readmes/{name}.md",
+                      "username": username
+}
 bend_the_rules=True
 
 if bend_the_rules:
@@ -42,12 +52,8 @@ if actuated_joint == 0: #pendubot
     Qf_mat = 2*np.diag([10000, 10000, 100, 100]) 
     R_mat = 2*np.diag([0.0001, 0.0001])
 
-plant = SymbolicDoublePendulum(
-    model_parameters=mpar
-)
-
 controller = AcadosMpcController(
-    model_parameters=mpar,
+    model_pars=mpar,
     cheating_on_inactive_joint= np.min(tl)
 )
 
