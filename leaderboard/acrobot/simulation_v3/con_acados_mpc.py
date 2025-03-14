@@ -1,7 +1,7 @@
 from datetime import datetime
 import numpy as np
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
-from double_pendulum.controller.acados_mpc.acados_mpc_controller import AcadosMpcController
+from double_pendulum.controller.acados_mpc.acados_mpc import AcadosMpc
 
 from sim_parameters import (
     mpar,
@@ -51,7 +51,7 @@ if actuated_joint == 0: #pendubot
     Qf_mat = 2*np.diag([10000, 10000, 100, 100]) 
     R_mat = 2*np.diag([0.00001, 0.00001])
 
-controller = AcadosMpcController(
+controller = AcadosMpc(
     model_pars=mpar,
 )
 

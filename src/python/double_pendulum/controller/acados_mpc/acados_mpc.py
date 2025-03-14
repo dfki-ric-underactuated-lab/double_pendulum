@@ -25,7 +25,7 @@ acados model of the double pendulum
 """
 
 
-class AcadosMpcController(AbstractController):
+class AcadosMpc(AbstractController):
     def __init__(
         self,
         mass=[0.608, 0.630],
