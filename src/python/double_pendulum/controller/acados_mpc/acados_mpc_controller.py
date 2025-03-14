@@ -12,7 +12,7 @@ import concurrent.futures
 import sys
 import numpy as np
 import pandas as pd
-from double_pendulum.controller.acados_mpc.acados_model.PoinPID import PointPIDController
+from double_pendulum.controller.acados_mpc.PoinPID import PointPIDController
 
 """
 File containts:

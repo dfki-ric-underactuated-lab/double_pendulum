@@ -37,6 +37,7 @@ experiments/design_C.0/data/*
 experiments/design_C.1/data/*
 experiments/design_independent/data/*
 *local*
+**/c_generated_code
 
 
 .idea/
