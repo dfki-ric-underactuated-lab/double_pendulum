@@ -18,9 +18,14 @@ for acados problem formulation see https://github.com/acados/acados/blob/main/do
 
 ## controller options
 
+| Command | Description |
+| --- | --- |
+| git status | List all new or modified files |
+| git diff | Show file differences that haven't been staged |
+
 
 | Attribute | Type | Default | Description |
-| --------  | ------- |
+| -------- | ------- |
 | N_horizon | int | 20 | number of shooting nodes |
 | prediction_horizon | float | 0.5 | prediction horizon |
 
