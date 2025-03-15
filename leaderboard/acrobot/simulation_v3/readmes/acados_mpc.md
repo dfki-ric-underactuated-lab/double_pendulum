@@ -1,14 +1,12 @@
-# Time-varying LQR (TVLQR) with iLQR trajectory
+# Nonlinear Model Predictive Control using Acados 
 
 This controller is implemented using the acados framework https://docs.acados.org/
 for acados problem formulation see https://github.com/acados/acados/blob/main/docs/problem_formulation/problem_formulation_ocp_mex.pdf
 
 ## simple setup
-1.initialize controller with model parameters AcadosMpcController(
-    model_pars=mpar
-)
+1.initialize controller with model parameters AcadosMpcController(model_pars=mpar)
 
-2. set controller parameter with controller.
+2. set controller parameter with controller.set_parameters(...)
 
 3. optionally.set cosntraints on velocity with controller.set_velocity_constraints(v_max=vmax, v_final=vf)
 
