@@ -16,7 +16,7 @@ from sim_parameters import (
     robot,
 )
 
-name="acados_mpc_controller"
+name="acados_mpc"
 username="maranderine"
 
 leaderboard_config = {"csv_path": name + "/sim_swingup.csv",
