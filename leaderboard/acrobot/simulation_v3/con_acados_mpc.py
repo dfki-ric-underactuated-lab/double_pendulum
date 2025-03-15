@@ -68,7 +68,7 @@ controller.set_parameters(
     fallback_on_solver_fail=True,
     nonuniform_grid=False,
     cheating_on_inactive_joint=bend_the_rules,
-    mpc_cycle_dt=0.001,
+    mpc_cycle_dt=0.0025,
     outer_cycle_dt=dt,
     qp_solver_tolerance = 0.001,
     qp_solver = 'PARTIAL_CONDENSING_HPIPM',
