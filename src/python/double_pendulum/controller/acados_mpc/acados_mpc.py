@@ -314,7 +314,8 @@ class AcadosMpc(AbstractController):
             ocp.solver_options.qp_solver_tol_eq = self.qp_solver_tolerance
             ocp.solver_options.qp_solver_tol_ineq = self.qp_solver_tolerance
             ocp.solver_options.qp_solver_tol_stat = self.qp_solver_tolerance
-        ocp.solver_options.qp_solver_cond_N = int(self.prediction_horizon / 2)
+        if not DDP:
+            ocp.solver_options.qp_solver_cond_N = int(self.N_horizon / 2)
         ocp.solver_options.hessian_approx = "GAUSS_NEWTON"
         ocp.solver_options.hpipm_mode = self.hpipm_mode
         ocp.solver_options.integrator_type = "IRK"
