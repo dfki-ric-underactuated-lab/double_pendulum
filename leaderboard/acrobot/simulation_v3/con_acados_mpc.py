@@ -21,7 +21,7 @@ username="maranderine"
 
 leaderboard_config = {"csv_path": name + "/sim_swingup.csv",
                       "name": name,
-                      "simple_name": "AcadosMpc,
+                      "simple_name": "AcadosMpc",
                       "short_description": "Real-Time nonlinear Model Predictive Conntrol implemented with Acados framework",
                       "readme_path": f"readmes/{name}.md",
                       "username": username
