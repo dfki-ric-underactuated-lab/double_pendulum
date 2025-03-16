@@ -55,7 +55,6 @@ class lqr_traj_follower():
 
     def find_closest_idx(self, x):
         xp = compute_state_diff_2(x.reshape((1,4)), self.states_np)
-            
         xp = np.linalg.norm(xp, axis=1)
         # print(xp)
         min_idx = np.argmin(xp);
