@@ -122,10 +122,12 @@ class PrxPendubotAnalyticalController(AbstractController):
             min_idx_m, err_m = self.ilqr.find_closest_idx(-x)
                 # print("Minus", t, xerr, err, err_m)
             # if err < .80:
-            # threshold=1.5
+            threshold=2.0
+            # threshold=0.9
             # threshold=0.8
-            threshold=0.7
+            # threshold=0.7
             # threshold=0.6
+            # threshold=0.3
             if err < threshold or err_m < threshold:
                 # print(t, xerr, err, err_m)
                 if err_m < threshold:
