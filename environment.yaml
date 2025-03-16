@@ -6,3 +6,6 @@ dependencies:
   - yaml-cpp
   - eigenpy
   - cxx-compiler
+  - pip:
+    - flow_matching
+    - einops
