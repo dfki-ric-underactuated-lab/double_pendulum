@@ -30,7 +30,8 @@ traj_model = "model_1.1"
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 controller = AcrobotFlowMatchingController(
-    model_path=os.path.join(project_root, "trained_models", MODEL_NAME_VS_MODEL_PATH[MODEL_NAME])
+    model_path=os.path.join(project_root, "trained_models", MODEL_NAME_VS_MODEL_PATH[MODEL_NAME]),
+    horizon_length = 2
 )
 
 controller.init()

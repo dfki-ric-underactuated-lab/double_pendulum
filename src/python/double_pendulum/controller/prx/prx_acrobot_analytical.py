@@ -35,33 +35,19 @@ class PrxAcrobotAnalyticalController(AbstractController):
                 torque_limit=[0.0, 6.0],
                 dt=0.002)
 
-    # def traj_lqr_from_file(self, filename):
-    #     file = open(filename, 'r')
-    #     self.states = []
-    #     self.controls = []
-    #     self.gains = []
-    #     for line in file:
-    #         arr = line.split();
-    #         # print(arr)
-    #         if len(arr) > 5:
-    #             self.states.append(np.asarray(arr[0:4], dtype=np.float64).reshape((4,1)))
-    #             self.controls.append(np.asarray(arr[4], dtype=np.float64))
-    #             self.gains.append(np.asarray(arr[5:], dtype=np.float64))
-    #     self.states_np = np.array(self.states).reshape((-1,4));
-    #     # print(self.states_np.shape)
-    #     # print(self.states_np)
-
+ 
     def init_(self):
         """
         Initalize the controller.
         """
-        self.K = np.matrix([[-255.751, -107.574, -54.1521, -24.8681]]);
+        # self.K = np.matrix([[-255.751, -107.574, -54.1521, -24.8681]]);
+        self.K = np.matrix([[-193.454, -79.8894, -40.9552, -18.5224]])
         # self.K0 = np.matrix([[-44.0505, -15.4619, -3.48382, 9.42782]]);
         # self.K0 = np.matrix([[-46.8337, -9.29643, -2.17849, 10.0649]]);
-        self.K0 = np.matrix([[-44.0505, -15.4619, -3.48382, 9.42782]]);
+        self.K0 = np.matrix([[-0.254049, -0.103628, 0.0291697,  0.126939]]);
         self.goal = np.matrix([math.pi,0.0, 0.0, 0.0]).reshape((4,1))
         self.zero = np.matrix([0.0, 0.0, 0.0, 0.0]).reshape((4,1))
-        self.u = [0.0,0.0];
+        self.u = 0.0;
         self.torque_limit = 6
         self.idx = 0
         self.prev_t = 0.0
@@ -71,7 +57,9 @@ class PrxAcrobotAnalyticalController(AbstractController):
         self.pid_con.set_goal(self.zero)
         self.pid_con.set_parameters(1.0, 0.01, 0.1)
         self.lqr_time=0
-    
+        self.side = 1
+        self.ilqr.idx = 0 
+        
     # def compute_angle_diff(self, diff):
     #     return np.arctan2(np.sin(diff), np.cos(diff))
 
@@ -142,53 +130,68 @@ class PrxAcrobotAnalyticalController(AbstractController):
 
         dt = t - self.prev_t;
 
+        goal_err = prx.compute_state_diff(x.reshape((4,1)), self.goal).reshape((4,1));
+        th_err = np.linalg.norm(goal_err[0:2])
         if dt > 0.01:
             self.use_gc = True
-        goal_err = prx.compute_state_diff(x.reshape((4,1)), self.goal);
-        goal_err = np.linalg.norm(goal_err, axis=1)
-        if self.lqr_time > 2.0 and goal_err[0] > 0.1:
+        else:
+            if self.lqr_time > 1.0 and th_err > 0.2:
+                self.use_gc = True
+        if self.use_gc and math.fabs(goal_err[0]) < 0.5 and goal_err[2] + goal_err[3] < 5:
+            self.lqr_time = 0
+            self.use_gc = False
+        if math.fabs(goal_err[2]) > 25 or  math.fabs(goal_err[3]) > 25:
             self.use_gc = True
-        # if self.ilqr.valid() and:
+              
+        # goal_err = prx.compute_state_diff(x.reshape((4,1)), self.goal);
+        # goal_err = np.linalg.norm(goal_err, axis=1)
+        # if self.lqr_time > 2.0 and goal_err[0] > 0.1:
+        #     self.use_gc = True
+        # # if self.ilqr.valid() and:
 
         if self.use_gc:
             self.lqr_time = 0
             # min_idx, err = self.ilqr.find_closest_idx(x)
-            err = prx.compute_state_diff(x.reshape((4,1)), self.zero);
+            # err = prx.compute_state_diff(x.reshape((4,1)), self.zero);
+            # err = xerr.T @ np.diag([1,1,0.1,0.1]) @ xerr
             # print(err)
-            err = math.sqrt(err[0]*err[0] + err[1]*err[1])
+            # err = math.sqrt(err[0]*err[0] + err[1]*err[1])
+            
+            min_idx, err = self.ilqr.find_closest_idx(x)
+            min_idx_m, err_m = self.ilqr.find_closest_idx(-x)
 
-            # self.compute_control_from_traj(x)
-            if err < .250:
-                # print("changing to traj", t, err, min_idx)
-                self.idx = 0
+            threshold=2.0
+            # if err < threshold:
+            if err < threshold or err_m < threshold:
+                # print("Back to Traj Min", t, x, err_m, min_idx_m)
+                if err_m < threshold:
+                    self.side = -1
+                    self.ilqr.idx = min_idx_m
+                else: 
+                    self.side = 1
+                    self.ilqr.idx = min_idx
                 self.use_gc = False
-                self.ilqr.idx = 0
-                self.u[1] = self.ilqr.compute_control_from_traj(x)
+                self.u = self.side * self.ilqr.compute_control_from_traj(self.side * x)
+                self.ilqr.idx += 1
                 # self.get_control_output_(x, self.prev_t)
 
             else:
-                # print(x, t)
-                # grav_u = self.grav_con.get_control_output(x, t)
-                # pid_u = self.pid_con.get_control_output(x, t)
-                # u = grav_u + pid_u
-                # u = grav_u
-                # self.u[1] = u[1]
-                self.u[1] = prx.compute_control_from_lqr(x, self.K0, self.zero);
+                self.u = prx.compute_control_from_lqr(x, self.K0, self.zero);
         else:
             # if self.idx < len(self.gains):
             if self.ilqr.valid():
                 # print("ilqr")
-                self.u[1] = self.ilqr.compute_control_from_traj(x)
+                self.u = self.ilqr.compute_control_from_traj(x)
                 self.ilqr.idx += 1
                 # self.compute_control_from_traj(x)
                 # self.idx += 1
             else:
-                # print("LQR")
-                self.u[1] = prx.compute_control_from_lqr(x, self.K, self.goal);
+                self.u = prx.compute_control_from_lqr(x, self.K, self.goal);
                 self.lqr_time += dt
 
         self.prev_t = t
-        self.u[1] = np.clip(self.u[1], -self.torque_limit, self.torque_limit)
-
-        return self.u
+        self.u = np.clip(self.u, -self.torque_limit, self.torque_limit)
+        # self.u[1] = np.clip(self.u[1], -self.torque_limit, self.torque_limit)
+        return [0.0, self.u]
+        # return self.u
 

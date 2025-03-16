@@ -2,9 +2,11 @@ import os
 import time
 import numpy as np
 import torch
+import math
 from double_pendulum.controller.abstract_controller import AbstractController
 from .utils.models import load_model
 from .utils.normalization import LimitsNormalizer
+import double_pendulum.controller.prx.prx_utils as prx 
 
 MODEL_DIR_PATH = "./models"
 MODEL_NAME = "25_03_14-21_02_37_H_PADF_HIST_PADF_LD0.99_transformer_large"
@@ -31,6 +33,15 @@ class AcrobotFlowMatchingController(AbstractController):
         self.predicted_horizon = None
 
         self.is_transformer = "Transformer" in self.model_args.model
+        self.use_fm = True
+        # LQR
+        self.K = np.matrix([[-255.751, -107.574, -54.1521, -24.8681]]);
+        self.goal = np.matrix([math.pi,0.0, 0.0, 0.0]).reshape((4,1))
+        self.zero = np.matrix([0.0, 0.0, 0.0, 0.0]).reshape((4,1))
+        self.lqr_time=0
+        self.prev_t = 0.0
+
+
 
     def update_history_buffer(self, x):
         # Shift history buffer up, removing first entry
@@ -95,9 +106,29 @@ class AcrobotFlowMatchingController(AbstractController):
             order=[u1, u2],
             units=[Nm]
         """
+        # dt = t - self.prev_t;
+        # goal_err = prx.compute_state_diff(x.reshape((4,1)), self.goal).reshape((4,1));
+        # if dt > 0.01:
+        #     self.use_fm = True
+        # else:
+        #     th_err = np.linalg.norm(goal_err[0:2])
+        #     if self.lqr_time > 1.0 and th_err > 0.2:
+        #         self.use_fm = True
+        # if self.use_fm and math.fabs(goal_err[0]) < 0.5 and goal_err[2] + goal_err[3] < 5:
+        #     self.lqr_time = 0
+        #     self.use_fm = False
+        # if math.fabs(goal_err[2]) > 25 or  math.fabs(goal_err[3]) > 25:
+        #     self.use_fm = True
+
+        # if self.use_fm:
+        #     if self.stride_counter % self.stride == 0:
+        #         self.update_control(x)
+        # else: # LQR
+        #     self.u = prx.compute_control_from_lqr(x, self.K, self.goal);
+        #     self.lqr_time += dt
+
         if self.stride_counter % self.stride == 0:
             self.update_control(x)
-
         u = [0.0, self.u]
 
         self.stride_counter += 1
