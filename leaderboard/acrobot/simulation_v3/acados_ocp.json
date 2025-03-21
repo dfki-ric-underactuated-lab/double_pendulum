@@ -1,0 +1,798 @@
+{
+    "acados_include_path": "/home/blanka/acados/include",
+    "acados_lib_path": "/home/blanka/acados/lib",
+    "code_export_directory": "/home/blanka/double_pendulum_acados_MPC/leaderboard/acrobot/simulation_v3/c_generated_code",
+    "constraints": {
+        "C": [],
+        "C_e": [],
+        "D": [],
+        "constr_type": "BGH",
+        "constr_type_0": "BGH",
+        "constr_type_e": "BGH",
+        "has_x0": true,
+        "idxbu": [
+            0,
+            1
+        ],
+        "idxbx": [
+            2,
+            3
+        ],
+        "idxbx_0": [
+            0,
+            1,
+            2,
+            3
+        ],
+        "idxbx_e": [
+            2,
+            3
+        ],
+        "idxbxe_0": [
+            0,
+            1,
+            2,
+            3
+        ],
+        "idxsbu": [],
+        "idxsbx": [],
+        "idxsbx_e": [],
+        "idxsg": [],
+        "idxsg_e": [],
+        "idxsh": [],
+        "idxsh_0": [],
+        "idxsh_e": [],
+        "idxsphi": [],
+        "idxsphi_0": [],
+        "idxsphi_e": [],
+        "lbu": [
+            -0.0,
+            -6.0
+        ],
+        "lbx": [
+            -30,
+            -30
+        ],
+        "lbx_0": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "lbx_e": [
+            -30,
+            -30
+        ],
+        "lg": [],
+        "lg_e": [],
+        "lh": [],
+        "lh_0": [],
+        "lh_e": [],
+        "lphi": [],
+        "lphi_0": [],
+        "lphi_e": [],
+        "lsbu": [],
+        "lsbx": [],
+        "lsbx_e": [],
+        "lsg": [],
+        "lsg_e": [],
+        "lsh": [],
+        "lsh_0": [],
+        "lsh_e": [],
+        "lsphi": [],
+        "lsphi_0": [],
+        "lsphi_e": [],
+        "ubu": [
+            0.0,
+            6.0
+        ],
+        "ubx": [
+            30,
+            30
+        ],
+        "ubx_0": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "ubx_e": [
+            30,
+            30
+        ],
+        "ug": [],
+        "ug_e": [],
+        "uh": [],
+        "uh_0": [],
+        "uh_e": [],
+        "uphi": [],
+        "uphi_0": [],
+        "uphi_e": [],
+        "usbu": [],
+        "usbx": [],
+        "usbx_e": [],
+        "usg": [],
+        "usg_e": [],
+        "ush": [],
+        "ush_0": [],
+        "ush_e": [],
+        "usphi": [],
+        "usphi_0": [],
+        "usphi_e": []
+    },
+    "cost": {
+        "Vu": [
+            [
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0
+            ],
+            [
+                1.0,
+                0.0
+            ],
+            [
+                0.0,
+                1.0
+            ]
+        ],
+        "Vu_0": [
+            [
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0
+            ],
+            [
+                1.0,
+                0.0
+            ],
+            [
+                0.0,
+                1.0
+            ]
+        ],
+        "Vx": [
+            [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "Vx_0": [
+            [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "Vx_e": [
+            [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        ],
+        "Vz": [],
+        "Vz_0": [],
+        "W": [
+            [
+                200.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                200.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                20.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                0.0,
+                20.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                2e-06,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                2e-06
+            ]
+        ],
+        "W_0": [
+            [
+                200.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                200.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                20.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                0.0,
+                20.0,
+                0.0,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                2e-06,
+                0.0
+            ],
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                2e-06
+            ]
+        ],
+        "W_e": [
+            [
+                20000,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                20000,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                200,
+                0
+            ],
+            [
+                0,
+                0,
+                0,
+                200
+            ]
+        ],
+        "Zl": [],
+        "Zl_0": [],
+        "Zl_e": [],
+        "Zu": [],
+        "Zu_0": [],
+        "Zu_e": [],
+        "cost_ext_fun_type": "casadi",
+        "cost_ext_fun_type_0": "casadi",
+        "cost_ext_fun_type_e": "casadi",
+        "cost_function_ext_cost": null,
+        "cost_function_ext_cost_0": null,
+        "cost_function_ext_cost_e": null,
+        "cost_source_ext_cost": null,
+        "cost_source_ext_cost_0": null,
+        "cost_source_ext_cost_e": null,
+        "cost_type": "LINEAR_LS",
+        "cost_type_0": "LINEAR_LS",
+        "cost_type_e": "LINEAR_LS",
+        "yref": [
+            3.141592653589793,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "yref_0": [
+            3.141592653589793,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "yref_e": [
+            3.141592653589793,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "zl": [],
+        "zl_0": [],
+        "zl_e": [],
+        "zu": [],
+        "zu_0": [],
+        "zu_e": []
+    },
+    "cython_include_dirs": [
+        "/home/blanka/venv/lib/python3.12/site-packages/numpy/core/include",
+        "/usr/include/python3.12"
+    ],
+    "dims": {
+        "N": 20,
+        "n_global_data": 0,
+        "nbu": 2,
+        "nbx": 2,
+        "nbx_0": 4,
+        "nbx_e": 2,
+        "nbxe_0": 4,
+        "ng": 0,
+        "ng_e": 0,
+        "nh": 0,
+        "nh_0": 0,
+        "nh_e": 0,
+        "np": 1,
+        "np_global": 0,
+        "nphi": 0,
+        "nphi_0": 0,
+        "nphi_e": 0,
+        "nr": 0,
+        "nr_0": 0,
+        "nr_e": 0,
+        "ns": 0,
+        "ns_0": 0,
+        "ns_e": 0,
+        "nsbu": 0,
+        "nsbx": 0,
+        "nsbx_e": 0,
+        "nsg": 0,
+        "nsg_e": 0,
+        "nsh": 0,
+        "nsh_0": 0,
+        "nsh_e": 0,
+        "nsphi": 0,
+        "nsphi_0": 0,
+        "nsphi_e": 0,
+        "nu": 2,
+        "nx": 4,
+        "nx_next": 4,
+        "ny": 6,
+        "ny_0": 6,
+        "ny_e": 4,
+        "nz": 0
+    },
+    "external_function_files_model": [
+        "double_pendulum_model/double_pendulum_impl_dae_fun.c",
+        "double_pendulum_model/double_pendulum_impl_dae_fun_jac_x_xdot_z.c",
+        "double_pendulum_model/double_pendulum_impl_dae_fun_jac_x_xdot_u_z.c",
+        "double_pendulum_model/double_pendulum_impl_dae_fun_jac_x_xdot_u.c",
+        "double_pendulum_model/double_pendulum_impl_dae_jac_x_xdot_u_z.c"
+    ],
+    "external_function_files_ocp": [],
+    "json_file": "acados_ocp.json",
+    "model": {
+        "K1": "jhpnnagiieahaaaadaaaaaaaaaaaaaaaaaegfaaaaaaaaaaaaaaabaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachdgkcanoneidfajpdeglaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaaeaaaaaaaehigegbd",
+        "K2": "jhpnnagiieahaaaadaaaaaaaaaaaaaaaaaegfaaaaaaaaaaaaaaabaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachaaaaaaaaaaaaaopdegbaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachmfofkjcnblngdlpdegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachdeajijcjebbgalpdegoaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaadaaaaaaaehigcdeglaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaadaaaaaaaehigbdegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachlkhaacmnmjlakjpdeglaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaaeaaaaaaaehigegcdegdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachlkhaacmnmjlakkpdegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachdeajijcjebbgakpdegoaaaaaaaaaaaaaaacheaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaaeaaaaaaaehigegbdchnaaaaaaaaaaaaaaa",
+        "P1": "jhpnnagiieahaaaadaaaaaaaaaaaaaaaaaegfaaaaaaaaaaaaaaabaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachcdjnifooflogapplegoaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaadaaaaaaaehigbd",
+        "P2": "jhpnnagiieahaaaadaaaaaaaaaaaaaaaaaegfaaaaaaaaaaaaaaabaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachdomcgeagkbmiibamegbaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachkjjjjjjjjjjjjmpdegoaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaadaaaaaaaehigbdegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachfknlcjgggenfanpdegoaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaachdaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaadaaaaaaaehigcd",
+        "con_h_expr": [],
+        "con_h_expr_0": [],
+        "con_h_expr_e": [],
+        "con_phi_expr": [],
+        "con_phi_expr_0": [],
+        "con_phi_expr_e": [],
+        "con_r_expr": [],
+        "con_r_expr_0": [],
+        "con_r_expr_e": [],
+        "con_r_in_phi": [],
+        "con_r_in_phi_0": [],
+        "con_r_in_phi_e": [],
+        "cost_conl_custom_outer_hess": [],
+        "cost_conl_custom_outer_hess_0": [],
+        "cost_conl_custom_outer_hess_e": [],
+        "cost_expr_ext_cost": [],
+        "cost_expr_ext_cost_0": [],
+        "cost_expr_ext_cost_custom_hess": [],
+        "cost_expr_ext_cost_custom_hess_0": [],
+        "cost_expr_ext_cost_custom_hess_e": [],
+        "cost_expr_ext_cost_e": [],
+        "cost_psi_expr": [],
+        "cost_psi_expr_0": [],
+        "cost_psi_expr_e": [],
+        "cost_r_in_psi_expr": [],
+        "cost_r_in_psi_expr_0": [],
+        "cost_r_in_psi_expr_e": [],
+        "cost_y_expr": [],
+        "cost_y_expr_0": [],
+        "cost_y_expr_e": [],
+        "disc_dyn_expr": [],
+        "dyn_disc_fun": null,
+        "dyn_disc_fun_jac": null,
+        "dyn_disc_fun_jac_hess": null,
+        "dyn_ext_fun_type": "casadi",
+        "dyn_generic_source": null,
+        "dyn_impl_dae_fun": null,
+        "dyn_impl_dae_fun_jac": null,
+        "dyn_impl_dae_jac": null,
+        "f_expl_expr": "jhpnnagiieahaaaadaaaaaaaaaaaaaaaaaegiaaaaaaaaaaaaaaaeaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaacaaaaaaaaaaaaaaadaaaaaaaaaaaaaaaeaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaaeaaaaaaaehigegbdegpcaaaaaaaaaaaaaaeaaaaaaaehigegcdegcaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegeaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachlkhaacmnmjlakkpdegcaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaachdaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachnidhcaceehhjllpdegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachdeajijcjebbgalpdegoaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaadaaaaaaaehigcdegdaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaachdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachdeajijcjebbgakpdegoaaaaaaaaaaaaaaachgaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaachdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaachlaaaaaaaaaaaaaaaegoaaaaaaaaaaaaaaachgaaaaaaaaaaaaaaaegcaaaaaaaaaaaaaaaegcaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachcdjnifooflogapplegnaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaadaaaaaaaehigbdegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachdomcgeagkbmiibaeegbaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachkjjjjjjjjjjjjmpdegnaaaaaaaaaaaaaaachgbaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachfknlcjgggenfanpdegnaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaachgbaaaaaaaaaaaaaachgaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachdeajijcjebbgalplegnaaaaaaaaaaaaaaachgaaaaaaaaaaaaaaachcaaaaaaaaaaaaaaachbaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachdeajijcjebbgakplegnaaaaaaaaaaaaaaachgaaaaaaaaaaaaaaachcaaaaaaaaaaaaaaachcaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegeaaaaaaaaaaaaaaachoaaaaaaaaaaaaaaachdbaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaaegcaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaacaaaaaaafhcdegdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaachlaaaaaaaaaaaaaaaegnaaaaaaaaaaaaaaachgaaaaaaaaaaaaaaachbaaaaaaaaaaaaaaachbaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachfidhholledlbjpplegnaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaachgbaaaaaaaaaaaaaachgaaaaaaaaaaaaaaaegcaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegeaaaaaaaaaaaaaaachjaaaaaaaaaaaaaaachdbaaaaaaaaaaaaaachmdaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegeaaaaaaaaaaaaaaachbbaaaaaaaaaaaaaachdbaaaaaaaaaaaaaachpcaaaaaaaaaaaaaa",
+        "f_impl_expr": "jhpnnagiieahaaaadaaaaaaaaaaaaaaaaaegiaaaaaaaaaaaaaaaeaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaacaaaaaaaaaaaaaaadaaaaaaaaaaaaaaaeaaaaaaaaaaaaaaaegcaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaagaaaaaaaihegpgehpfadegpcaaaaaaaaaaaaaaeaaaaaaaehigegbdegcaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaagaaaaaaaihegpgehpfbdegpcaaaaaaaaaaaaaaeaaaaaaaehigegcdegcaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaagaaaaaaaihegpgehpfcdegcaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegeaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachlkhaacmnmjlakkpdegcaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaachiaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachnidhcaceehhjllpdegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachdeajijcjebbgalpdegoaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaadaaaaaaaehigcdegdaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaachiaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachdeajijcjebbgakpdegoaaaaaaaaaaaaaaachlaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaachiaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaachabaaaaaaaaaaaaaaegoaaaaaaaaaaaaaaachlaaaaaaaaaaaaaaaegcaaaaaaaaaaaaaaaegcaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachcdjnifooflogapplegnaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaadaaaaaaaehigbdegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachdomcgeagkbmiibaeegbaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachkjjjjjjjjjjjjmpdegnaaaaaaaaaaaaaaachlbaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachfknlcjgggenfanpdegnaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaachlbaaaaaaaaaaaaaachlaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachdeajijcjebbgalplegnaaaaaaaaaaaaaaachlaaaaaaaaaaaaaaachfaaaaaaaaaaaaaaachcaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachdeajijcjebbgakplegnaaaaaaaaaaaaaaachlaaaaaaaaaaaaaaachfaaaaaaaaaaaaaaachfaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegeaaaaaaaaaaaaaaachdbaaaaaaaaaaaaaachibaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaaegcaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaacaaaaaaafhcdegdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaachabaaaaaaaaaaaaaaegnaaaaaaaaaaaaaaachlaaaaaaaaaaaaaaachcaaaaaaaaaaaaaaachcaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegmcaaaaaaaaaaaaaachfidhholledlbjpplegnaaaaaaaaaaaaaaaegbaaaaaaaaaaaaaaachlbaaaaaaaaaaaaaachlaaaaaaaaaaaaaaaegcaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaagaaaaaaaihegpgehpfddegcaaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegeaaaaaaaaaaaaaaachoaaaaaaaaaaaaaaachibaaaaaaaaaaaaaachbeaaaaaaaaaaaaaaegdaaaaaaaaaaaaaaaegeaaaaaaaaaaaaaaachgbaaaaaaaaaaaaaachibaaaaaaaaaaaaaachedaaaaaaaaaaaaaa",
+        "gnsf_nontrivial_f_LO": 1,
+        "gnsf_purely_linear": 0,
+        "name": "double_pendulum",
+        "nu_original": null,
+        "p": "jhpnnagiieahaaaadaaaaaaaaaaaaaaaaaegfaaaaaaaaaaaaaaabaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaajaaaaaaadhehfgfgahogfgdhdh",
+        "p_global": "jhpnnagiieahaaaadaaaaaaaaaaaaaaaaaegeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "t": [],
+        "t0": null,
+        "t_label": "t",
+        "u": "jhpnnagiieahaaaadaaaaaaaaaaaaaaaaaeggaaaaaaaaaaaaaaacaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaacaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaacaaaaaaafhbdegpcaaaaaaaaaaaaaacaaaaaaafhcd",
+        "u_labels": null,
+        "x": "jhpnnagiieahaaaadaaaaaaaaaaaaaaaaaegiaaaaaaaaaaaaaaaeaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaacaaaaaaaaaaaaaaadaaaaaaaaaaaaaaaeaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaadaaaaaaaehigbdegpcaaaaaaaaaaaaaadaaaaaaaehigcdegpcaaaaaaaaaaaaaaeaaaaaaaehigegbdegpcaaaaaaaaaaaaaaeaaaaaaaehigegcd",
+        "x_labels": null,
+        "xdot": "jhpnnagiieahaaaadaaaaaaaaaaaaaaaaaegiaaaaaaaaaaaaaaaeaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaacaaaaaaaaaaaaaaadaaaaaaaaaaaaaaaeaaaaaaaaaaaaaaaegpcaaaaaaaaaaaaaagaaaaaaaihegpgehpfadegpcaaaaaaaaaaaaaagaaaaaaaihegpgehpfbdegpcaaaaaaaaaaaaaagaaaaaaaihegpgehpfcdegpcaaaaaaaaaaaaaagaaaaaaaihegpgehpfdd",
+        "z": "jhpnnagiieahaaaadaaaaaaaaaaaaaaaaaegeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "name": "double_pendulum",
+    "p_global_values": [],
+    "parameter_values": [
+        100
+    ],
+    "problem_class": "OCP",
+    "shared_lib_ext": ".so",
+    "simulink_opts": null,
+    "solver_options": {
+        "N_horizon": 20,
+        "Tsim": 0.025,
+        "adaptive_levenberg_marquardt_lam": 5.0,
+        "adaptive_levenberg_marquardt_mu0": 0.001,
+        "adaptive_levenberg_marquardt_mu_min": 1e-16,
+        "as_rti_iter": 1,
+        "as_rti_level": 4,
+        "collocation_type": "GAUSS_LEGENDRE",
+        "cost_discretization": "EULER",
+        "cost_scaling": [
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            1.0
+        ],
+        "custom_templates": [],
+        "custom_update_copy": true,
+        "custom_update_filename": "",
+        "custom_update_header_filename": "",
+        "eval_residual_at_max_iter": false,
+        "exact_hess_constr": 1,
+        "exact_hess_cost": 1,
+        "exact_hess_dyn": 1,
+        "ext_cost_num_hess": 0,
+        "ext_fun_compile_flags": "-O2",
+        "ext_fun_expand": false,
+        "fixed_hess": 0,
+        "globalization": "MERIT_BACKTRACKING",
+        "globalization_alpha_min": 0.05,
+        "globalization_alpha_reduction": 0.7,
+        "globalization_eps_sufficient_descent": 0.0001,
+        "globalization_fixed_step_length": 1.0,
+        "globalization_full_step_dual": 0,
+        "globalization_funnel_fraction_switching_condition": 0.001,
+        "globalization_funnel_init_increase_factor": 15.0,
+        "globalization_funnel_init_upper_bound": 1.0,
+        "globalization_funnel_initial_penalty_parameter": 1.0,
+        "globalization_funnel_kappa": 0.9,
+        "globalization_funnel_sufficient_decrease_factor": 0.9,
+        "globalization_line_search_use_sufficient_descent": 0,
+        "globalization_use_SOC": 0,
+        "hessian_approx": "GAUSS_NEWTON",
+        "hpipm_mode": "ROBUST",
+        "integrator_type": "IRK",
+        "levenberg_marquardt": 0.0,
+        "log_primal_step_norm": false,
+        "model_external_shared_lib_dir": null,
+        "model_external_shared_lib_name": null,
+        "nlp_solver_ext_qp_res": 0,
+        "nlp_solver_max_iter": 40,
+        "nlp_solver_tol_comp": 1e-06,
+        "nlp_solver_tol_eq": 1e-06,
+        "nlp_solver_tol_ineq": 1e-06,
+        "nlp_solver_tol_min_step_norm": 0.0,
+        "nlp_solver_tol_stat": 1e-06,
+        "nlp_solver_type": "SQP_RTI",
+        "nlp_solver_warm_start_first_qp": false,
+        "nlp_solver_warm_start_first_qp_from_nlp": false,
+        "num_threads_in_batch_solve": 1,
+        "print_level": 0,
+        "qp_solver": "PARTIAL_CONDENSING_HPIPM",
+        "qp_solver_cond_N": 0,
+        "qp_solver_cond_block_size": null,
+        "qp_solver_cond_ric_alg": 1,
+        "qp_solver_iter_max": 50,
+        "qp_solver_mu0": 0.0,
+        "qp_solver_ric_alg": 1,
+        "qp_solver_t0_init": 2,
+        "qp_solver_tol_comp": 0.001,
+        "qp_solver_tol_eq": 0.001,
+        "qp_solver_tol_ineq": 0.001,
+        "qp_solver_tol_stat": 0.001,
+        "qp_solver_warm_start": 1,
+        "reg_epsilon": 0.0001,
+        "regularize_method": "NO_REGULARIZE",
+        "rti_log_only_available_residuals": 0,
+        "rti_log_residuals": 0,
+        "shooting_nodes": [
+            0.0,
+            0.025,
+            0.05,
+            0.07500000000000001,
+            0.1,
+            0.125,
+            0.15,
+            0.175,
+            0.19999999999999998,
+            0.22499999999999998,
+            0.24999999999999997,
+            0.27499999999999997,
+            0.3,
+            0.325,
+            0.35000000000000003,
+            0.37500000000000006,
+            0.4000000000000001,
+            0.4250000000000001,
+            0.4500000000000001,
+            0.47500000000000014,
+            0.5000000000000001
+        ],
+        "sim_method_jac_reuse": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "sim_method_newton_iter": 3,
+        "sim_method_newton_tol": 0.0,
+        "sim_method_num_stages": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+        ],
+        "sim_method_num_steps": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+        ],
+        "solution_sens_qp_t_lam_min": 1e-09,
+        "store_iterates": false,
+        "tau_min": 0.0,
+        "tf": 0.5,
+        "time_steps": [
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025
+        ],
+        "timeout_heuristic": "LAST",
+        "timeout_max_time": 0.01,
+        "with_adaptive_levenberg_marquardt": true,
+        "with_solution_sens_wrt_params": false,
+        "with_value_sens_wrt_params": false
+    },
+    "zoro_description": null
+}
