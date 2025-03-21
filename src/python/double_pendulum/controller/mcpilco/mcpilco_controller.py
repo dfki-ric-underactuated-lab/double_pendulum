@@ -3,7 +3,7 @@ from double_pendulum.controller.abstract_controller import AbstractController
 
 
 class Controller_sum_of_Gaussians_with_angles_numpy(AbstractController):
-    def __init__(self, parameters, ctrl_rate, u_max=6, num_dof=2, controlled_dof=None, wait_steps=0):
+    def __init__(self, parameters, ctrl_rate, u_max=6, num_dof=2, controlled_dof=None, wait_steps=0, damping_vel=-1):
         # np arrays
         self.lengthscales = np.exp(parameters['log_lengthscales'])
         self.norm_centers = parameters['centers'] / self.lengthscales
@@ -20,13 +20,19 @@ class Controller_sum_of_Gaussians_with_angles_numpy(AbstractController):
         self.last_control = np.zeros(self.num_dof)
 
         self.wait_steps = wait_steps
+        self.damping_vel = damping_vel
+        self.D = 10
 
         super().__init__()
 
     def get_control_output_(self, x, t):
         meas_pos = x[:self.num_dof]
         meas_vel = x[self.num_dof:]
-        if self.ctrl_cnt % self.ctrl_rate == 0 and self.ctrl_cnt >= self.wait_steps:
+
+        if self.damping_vel > 0 and np.max(np.abs(meas_vel)) > self.damping_vel:
+            self.ctrl_cnt = 0
+            return - self.D * meas_vel
+        elif self.ctrl_cnt % self.ctrl_rate == 0 and self.ctrl_cnt >= self.wait_steps:
             state = np.zeros((self.num_dof * 3))  # velocities, cos, sin
             # print(meas_vel)
             state[:self.num_dof] = meas_vel
@@ -43,7 +49,6 @@ class Controller_sum_of_Gaussians_with_angles_numpy(AbstractController):
             out_u[self.controlled_dof] = u
 
             self.last_control = out_u
-
         self.ctrl_cnt += 1
         return self.last_control
 
