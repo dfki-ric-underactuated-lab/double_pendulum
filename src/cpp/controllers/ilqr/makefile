@@ -8,7 +8,7 @@ SRC_PLANT       := ../../model/src
 SRC_SIMULATOR   := ../../simulator/src
 SRC_ILQR        := src
 SRC_UTILS       := ../../utils/src
-INCLUDE := -I/usr/include/eigen3 -I/usr/local/include
+INCLUDE := /usr/include/eigen3 -I/usr/local/include
 LIB     := lib
 LIBRARIES   := -lyaml-cpp 
 
