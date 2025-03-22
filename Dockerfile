@@ -1,6 +1,6 @@
-From ubuntu:22.04
+# From ubuntu:22.04
 # The suggested way is to use nvidia-containers for proper GPU utilization
-# FROM nvcr.io/nvidia/cuda:12.6.0-cudnn-devel-ubuntu22.04
+FROM nvcr.io/nvidia/cuda:12.6.0-cudnn-devel-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
