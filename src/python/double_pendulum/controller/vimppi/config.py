@@ -17,13 +17,13 @@ from .baseline_control import (
     create_ar_eapo_generator,
 )
 from .disturbance_checker import create_time_disturbance_checker, createt_state_disturbance_checker
-from .integrator import (
+from ...simulation.variational_integrator import (
     create_explicit_euler_integrator,
     create_implicit_integrator,
     create_implicitfast_integrator,
     create_variational_integrator,
 )
-from .plant import create_dynamics
+from ...model.jax_plant import create_dynamics
 
 UPWARD_GOAL = jnp.array([jnp.pi, 0.0, 0.0, 0.0])
 
