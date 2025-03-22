@@ -33,8 +33,8 @@ cfg = Config(
     dx_delta_max=1e-1,
     dt_delta_max=0.02,
     # Baseline control parameters
-    baseline_control_type="ar_eapo",
-    model_path="../../../data/policies/design_C.1/model_1.1/pendubot/AR_EAPO/model.zip",
+    baseline_control_type="zero",
+    model_path="",
     robot="pendubot",
     lqr_dt=0.005,
     sigma=jnp.diag(jnp.array([0.2, 0.2])),
