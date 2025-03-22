@@ -11,7 +11,7 @@ from functools import partial
 import jax
 import jax.numpy as jnp
 
-from .plant import (
+from ..model.jax_plant import (
     D,
     D_fast,
     compute_discrete_force,
