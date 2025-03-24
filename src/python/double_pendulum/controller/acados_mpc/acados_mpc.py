@@ -1,4 +1,5 @@
 import os
+import tempfile
 from acados_template.acados_model import AcadosModel
 from acados_template.acados_ocp import AcadosOcp
 from acados_template.acados_ocp_solver import AcadosOcpSolver
@@ -12,7 +13,7 @@ import concurrent.futures
 import sys
 import numpy as np
 import pandas as pd
-from double_pendulum.controller.acados_mpc.PoinPID import PointPIDController
+from double_pendulum.controller.pid.point_pid_controller import PointPIDController
 
 """
 File containts:
@@ -61,7 +62,6 @@ class AcadosMpc(AbstractController):
         self.pendulum_model = None
         self.warm_start = True
 
-        print(f"modeled friction cfric is {self.coulomb_fric}")
 
         # set default parameters
         self.set_start()
@@ -188,7 +188,7 @@ class AcadosMpc(AbstractController):
 
         self.async_mpc_future = None
         self.spinner = concurrent.futures.ThreadPoolExecutor(1)
-        print(f"mpc_cycle_dt={mpc_cycle_dt}, outer_cycle_dt={outer_cycle_dt}")
+        #print(f"mpc_cycle_dt={mpc_cycle_dt}, outer_cycle_dt={outer_cycle_dt}")
 
     def init_(self):
         self.pendulum_model = PendulumModel(
@@ -202,7 +202,6 @@ class AcadosMpc(AbstractController):
                 -1 if self.cheating_on_inactive_joint else np.argmax(self.torque_limit)
             ),
         )
-        print("init MPC")
         self.setup_solver()
 
         if self.warm_start:
@@ -342,7 +341,7 @@ class AcadosMpc(AbstractController):
             ocp.solver_options.time_steps = time_steps
             self.time_grid = time_steps
 
-        print(f"time grid is {self.time_grid}")
+        #print(f"time grid is {self.time_grid}")
         self.last_good_solution_time = 0.0
 
         for key, value in self.options.items():
@@ -358,8 +357,9 @@ class AcadosMpc(AbstractController):
                 keep_x0=True, keep_cost=True, parametric_x0=False
             )
 
-        #ocp_solver = AcadosOcpSolver(ocp)
-        acados_ocp_solver = AcadosOcpSolver(ocp)
+        temp_dir = tempfile.TemporaryDirectory()
+        filename = temp_dir.name + "/acados_ocp.json"
+        acados_ocp_solver = AcadosOcpSolver(ocp, json_file=filename)
 
         #for i in range(self.N_horizon):
         #    acados_ocp_solver.cost_set(i, "scaling", int(self.scaling[i]))
@@ -376,7 +376,7 @@ class AcadosMpc(AbstractController):
         # do some initial iterations to start with a good initial guess
         num_iter_initial = 30
         for _ in range(num_iter_initial):
-            self.ocp_solver.solve_for_x0(x0_bar=self.x0, fail_on_nonzero_status=False)
+            self.ocp_solver.solve_for_x0(x0_bar=self.x0, fail_on_nonzero_status=False, print_stats_on_failure=False)
 
     def reset_(self):
         self.ocp_solver.reset()
@@ -425,9 +425,6 @@ class AcadosMpc(AbstractController):
 
             if self.use_RTI:
                 if not self.async_mpc_future.done():
-                    print(
-                        f"MPC RTI prepaeration did not return in time! {t} with {t - self.last_mpc_run_t}"
-                    )
                     result = self.async_mpc_future.result()
                 self.ocp_solver.options_set("rti_phase", 2)
                 self.ocp_solver.solve()
@@ -458,14 +455,12 @@ class AcadosMpc(AbstractController):
         status = self.ocp_solver.get_status()
         if self.fallback_on_solver_fail:
             if status == 4 or status == 1 or status == 6:
-                print(f"status not good {status} - state {x}")
                 dt = 0
                 for i in range(len(self.time_grid)):
                     dt += self.time_grid[i]
                     if (t - self.last_good_solution_time) <= dt:
                         return self.last_u[i]
 
-                print(f"No more solutions available, returning 0.0")
                 return np.zeros(2)
             else:
                 for i in range(self.N_horizon):
