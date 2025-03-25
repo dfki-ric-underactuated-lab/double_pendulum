@@ -13,7 +13,7 @@ name = "vimppi"
 leaderboard_config = {
     "csv_path": name + "/sim_swingup.csv",
     "name": name,
-    "simple_name": "VIMPPI-AR-EAPO",
+    "simple_name": "VIMPPI",
     "short_description": "Variational Integrator Model Predictive Path Integral for direct torque planning",
     "readme_path": f"readmes/{name}.md",
     "username": "adk",
