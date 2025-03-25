@@ -17,6 +17,14 @@ double\_pendulum.model.friction\_matrix
    :undoc-members:
    :show-inheritance:
 
+double\_pendulum.model.jax\_plant
+----------------------------------------
+
+.. automodule:: double_pendulum.model.jax_plant
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 double\_pendulum.model.model\_parameters
 -----------------------------------------------
 

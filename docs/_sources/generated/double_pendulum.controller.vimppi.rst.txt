@@ -1,0 +1,50 @@
+double\_pendulum.controller.vimppi
+==========================================
+
+.. automodule:: double_pendulum.controller.vimppi
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.vimppi.baseline\_control
+-----------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.vimppi.baseline_control
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.vimppi.config
+------------------------------------------------
+
+.. automodule:: double_pendulum.controller.vimppi.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.vimppi.controller
+----------------------------------------------------
+
+.. automodule:: double_pendulum.controller.vimppi.controller
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.vimppi.disturbance\_checker
+--------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.vimppi.disturbance_checker
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.vimppi.mppi
+----------------------------------------------
+
+.. automodule:: double_pendulum.controller.vimppi.mppi
+   :members:
+   :undoc-members:
+   :show-inheritance:

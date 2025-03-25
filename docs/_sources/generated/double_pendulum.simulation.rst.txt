@@ -33,6 +33,14 @@ double\_pendulum.simulation.simulation
    :undoc-members:
    :show-inheritance:
 
+double\_pendulum.simulation.variational\_integrator
+----------------------------------------------------------
+
+.. automodule:: double_pendulum.simulation.variational_integrator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 double\_pendulum.simulation.visualization
 ------------------------------------------------
 

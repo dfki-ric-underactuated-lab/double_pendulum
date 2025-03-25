@@ -30,6 +30,7 @@ Subpackages
    double_pendulum.controller.random_exploration
    double_pendulum.controller.trajectory_following
    double_pendulum.controller.tvlqr
+   double_pendulum.controller.vimppi
 
 Submodules
 ----------
