@@ -1,4 +1,6 @@
-From ubuntu:22.04
+# From ubuntu:22.04
+# The suggested way is to use nvidia-containers for proper GPU utilization
+FROM nvcr.io/nvidia/cuda:12.6.0-cudnn-devel-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -18,7 +20,9 @@ RUN apt-get update && \
     apt-get install python3-sphinx -y && \
     apt-get install python3-numpydoc -y && \
     apt-get install python3-sphinx-rtd-theme -y && \
-    apt-get install python-is-python3
+    apt-get install python-is-python3 -y && \
+    apt-get install python3-tk -y && \
+    apt-get install ffmpeg -y
 
 # libeigen3-dev install does not work with apt
 RUN wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
@@ -38,3 +42,6 @@ RUN make install
 RUN make pythonfull
 RUN make doc
 RUN make tests
+
+# make sure we install jax[cuda12] version
+RUN pip install "jax[cuda12]"
