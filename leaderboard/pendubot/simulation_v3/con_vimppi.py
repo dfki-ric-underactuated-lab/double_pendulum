@@ -14,11 +14,10 @@ leaderboard_config = {
     "csv_path": name + "/sim_swingup.csv",
     "name": name,
     "simple_name": "VIMPPI-AR-EAPO",
-    "short_description": "Stabilization of iLQR trajectory with time-varying LQR.",
+    "short_description": "Variational Integrator Model Predictive Path Integral for direct torque planning",
     "readme_path": f"readmes/{name}.md",
     "username": "adk",
 }
-
 
 torque_limit = mpar.tl
 
@@ -36,7 +35,7 @@ cfg = Config(
     # Baseline control parameters
     baseline_control_type="zero",
     model_path="",
-    robot="acrobot",
+    robot="pendubot",
     lqr_dt=0.005,
     sigma=jnp.diag(jnp.array([0.2, 0.2])),
     state_dim=4,
