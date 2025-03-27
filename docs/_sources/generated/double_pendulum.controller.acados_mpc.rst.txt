@@ -1,0 +1,26 @@
+double\_pendulum.controller.acados\_mpc
+===============================================
+
+.. automodule:: double_pendulum.controller.acados_mpc
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.acados\_mpc.acados\_model
+------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.acados_mpc.acados_model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.acados\_mpc.acados\_mpc
+----------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.acados_mpc.acados_mpc
+   :members:
+   :undoc-members:
+   :show-inheritance:

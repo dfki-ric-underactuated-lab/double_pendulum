@@ -15,6 +15,7 @@ Subpackages
    double_pendulum.controller.AR_EAPO
    double_pendulum.controller.DQN
    double_pendulum.controller.SAC
+   double_pendulum.controller.acados_mpc
    double_pendulum.controller.energy
    double_pendulum.controller.evolsac
    double_pendulum.controller.friction_compensation
