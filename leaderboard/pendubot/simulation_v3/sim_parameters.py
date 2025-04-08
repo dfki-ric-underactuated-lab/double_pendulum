@@ -3,14 +3,18 @@ import copy
 
 from double_pendulum.model.model_parameters import model_parameters
 
-# np.random.seed(0)
+# np.random.seed(777)
 
 design = "design_C.1"
 model = "model_1.1"
 robot = "pendubot"
 
 model_par_path = (
-    "../../../data/system_identification/identified_parameters/" + design + "/" + model + "/model_parameters.yml"
+    "../../../data/system_identification/identified_parameters/"
+    + design
+    + "/"
+    + model
+    + "/model_parameters.yml"
 )
 mpar = model_parameters(filepath=model_par_path)
 mpar.set_torque_limit([6.0, 0.0])

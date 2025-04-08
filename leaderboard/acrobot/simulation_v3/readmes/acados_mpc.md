@@ -37,4 +37,3 @@ for acados problem formulation see https://github.com/acados/acados/blob/main/do
 | pd_KD | float | None | Gain for integrated error for the PID Controller |
 | pd_KI | float | None | N_horizon |
 
-

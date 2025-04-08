@@ -1,6 +1,8 @@
 import dill as pkl
 import numpy as np
-from double_pendulum.controller.mcpilco.mcpilco_controller import Controller_sum_of_Gaussians_with_angles_numpy
+from double_pendulum.controller.mcpilco.mcpilco_controller import (
+    Controller_sum_of_Gaussians_with_angles_numpy,
+)
 
 from sim_parameters import (
     mpar,
@@ -10,19 +12,26 @@ from sim_parameters import (
     model,
     robot,
 )
-from double_pendulum.controller.mcpilco.mcpilco_controller import Controller_sum_of_Gaussians_with_angles_numpy
-from double_pendulum.controller.lqr.lqr_controller import LQRController, LQRController_nonsymbolic
+from double_pendulum.controller.mcpilco.mcpilco_controller import (
+    Controller_sum_of_Gaussians_with_angles_numpy,
+)
+from double_pendulum.controller.lqr.lqr_controller import (
+    LQRController,
+    LQRController_nonsymbolic,
+)
 from double_pendulum.controller.combined_controller import CombinedController
 from double_pendulum.utils.wrap_angles import wrap_angles_top
 
 
 name = "mcpilco"
-leaderboard_config = {"csv_path": name + "/sim_swingup.csv",
-                      "name": name,
-                      "simple_name": name,
-                      "short_description": "Swingup controller trained with MBRL algorithm MC-PILCO.",
-                      "readme_path": f"readmes/{name}.md",
-                      "username": 'turcato-niccolo'}
+leaderboard_config = {
+    "csv_path": name + "/sim_swingup.csv",
+    "name": name,
+    "simple_name": name,
+    "short_description": "Swingup controller trained with MBRL algorithm MC-PILCO.",
+    "readme_path": f"readmes/{name}.md",
+    "username": "turcato-niccolo",
+}
 
 switch_stabilization = False
 torque_limit = [6.0, 0.0]
@@ -31,7 +40,7 @@ T_control = 0.02
 T_sym = 0.002
 
 # controller parameters
-ctrl_rate = int(T_control/T_sym)
+ctrl_rate = int(T_control / T_sym)
 u_max = 3.0
 n_dof = 2
 controlled_joint = [0]
@@ -45,10 +54,12 @@ policy_par_path = (
     + robot
     + "/MC-PILCO/global_policy_sim.np"
 )
-file = open(policy_par_path, 'rb')
+file = open(policy_par_path, "rb")
 parameters = pkl.load(file)
 
-controller = Controller_sum_of_Gaussians_with_angles_numpy(parameters, ctrl_rate, u_max, n_dof, controlled_joint, damping_vel=20)
+controller = Controller_sum_of_Gaussians_with_angles_numpy(
+    parameters, ctrl_rate, u_max, n_dof, controlled_joint, damping_vel=20
+)
 
 if switch_stabilization:
     stabilization_controller = LQRController_nonsymbolic(model_pars=mpar)
@@ -102,14 +113,16 @@ if switch_stabilization:
 
     condition_policy = lambda t, x: not condition2(t, x)
 
-    comb_controller = CombinedController(controller1=controller, controller2=stabilization_controller,
-                                         condition1=condition_policy, condition2=condition2,
-                                         verbose=False)
+    comb_controller = CombinedController(
+        controller1=controller,
+        controller2=stabilization_controller,
+        condition1=condition_policy,
+        condition2=condition2,
+        verbose=False,
+    )
     controller = comb_controller
-
 
 
 controller.set_goal(goal)
 controller.init()
 controller.init_()
-
