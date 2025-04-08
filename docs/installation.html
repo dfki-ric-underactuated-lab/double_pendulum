@@ -38,7 +38,11 @@
               <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="dynamics.html"> Double Pendulum Dynamics</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#"> Installation</a><ul class="simple">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"> Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#manual">Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-conda-mamba">Using Conda/Mamba</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#individual-controllers">Individual Controllers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#partial-installations">Partial Installations</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="generated/double_pendulum.html"> Software Documentation</a></li>
@@ -82,21 +86,34 @@
 the moment. Only the moteus python package needs to be commented in the
 setup.py and it will not be possible to operate mjbots hardware.</p>
 <p>We recommend using a virtual python environment.</p>
+<section id="manual">
+<h2>Manual<a class="headerlink" href="#manual" title="Permalink to this headline"></a></h2>
 <ol class="arabic">
 <li><p>Install dependencies:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># ubuntu20</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span> <span class="n">unzip</span> <span class="n">libyaml</span><span class="o">-</span><span class="n">cpp</span><span class="o">-</span><span class="n">dev</span> <span class="n">libeigen3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libpython3</span><span class="mf">.8</span> <span class="n">libx11</span><span class="o">-</span><span class="mi">6</span> <span class="n">libsm6</span> <span class="n">libxt6</span> <span class="n">libglib2</span><span class="mf">.0</span><span class="o">-</span><span class="mi">0</span> <span class="n">python3</span><span class="o">-</span><span class="n">pip</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span> <span class="n">python3</span><span class="o">-</span><span class="n">numpydoc</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span><span class="o">-</span><span class="n">rtd</span><span class="o">-</span><span class="n">theme</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span> <span class="n">unzip</span> <span class="n">libyaml</span><span class="o">-</span><span class="n">cpp</span><span class="o">-</span><span class="n">dev</span> <span class="n">libeigen3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libpython3</span><span class="mf">.8</span> <span class="n">libx11</span><span class="o">-</span><span class="mi">6</span> <span class="n">libsm6</span> <span class="n">libxt6</span> <span class="n">libglib2</span><span class="mf">.0</span><span class="o">-</span><span class="mi">0</span> <span class="n">python3</span><span class="o">-</span><span class="n">pip</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span> <span class="n">python3</span><span class="o">-</span><span class="n">numpydoc</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span><span class="o">-</span><span class="n">rtd</span><span class="o">-</span><span class="n">theme</span> <span class="n">ffmpeg</span>
 
 <span class="c1"># ubuntu22</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span> <span class="n">unzip</span> <span class="n">libyaml</span><span class="o">-</span><span class="n">cpp</span><span class="o">-</span><span class="n">dev</span> <span class="n">libeigen3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libx11</span><span class="o">-</span><span class="mi">6</span> <span class="n">libsm6</span> <span class="n">libglib2</span><span class="mf">.0</span><span class="o">-</span><span class="mi">0</span> <span class="n">libboost</span><span class="o">-</span><span class="n">dev</span> <span class="n">python3</span><span class="o">-</span><span class="n">pip</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span> <span class="n">python3</span><span class="o">-</span><span class="n">numpydoc</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span><span class="o">-</span><span class="n">rtd</span><span class="o">-</span><span class="n">theme</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span> <span class="n">unzip</span> <span class="n">libyaml</span><span class="o">-</span><span class="n">cpp</span><span class="o">-</span><span class="n">dev</span> <span class="n">libeigen3</span><span class="o">-</span><span class="n">dev</span> <span class="n">libx11</span><span class="o">-</span><span class="mi">6</span> <span class="n">libsm6</span> <span class="n">libglib2</span><span class="mf">.0</span><span class="o">-</span><span class="mi">0</span> <span class="n">libboost</span><span class="o">-</span><span class="n">dev</span> <span class="n">python3</span><span class="o">-</span><span class="n">pip</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span> <span class="n">python3</span><span class="o">-</span><span class="n">numpydoc</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span><span class="o">-</span><span class="n">rtd</span><span class="o">-</span><span class="n">theme</span> <span class="n">ffmpeg</span>
 </pre></div>
 </div>
 </li>
-<li><p>The header only eigen library can be installed via (For more information
-visit <a href="#id1"><span class="problematic" id="id2">`eigen&lt;https://eigen.tuxfamily.org/index.php?title=Main_Page&gt;`__</span></a>):</p>
+<li><p>(Optional, only for C++ support, iLQR and PRX controllers) Install <a class="reference external" href="https://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="o">-</span><span class="n">O</span> <span class="n">Eigen</span><span class="o">.</span><span class="n">zip</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">gitlab</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">libeigen</span><span class="o">/</span><span class="n">eigen</span><span class="o">/-/</span><span class="n">archive</span><span class="o">/</span><span class="mf">3.4.0</span><span class="o">/</span><span class="n">eigen</span><span class="o">-</span><span class="mf">3.4.0</span><span class="o">.</span><span class="n">zip</span>
 <span class="n">unzip</span> <span class="n">Eigen</span><span class="o">.</span><span class="n">zip</span>
 <span class="n">sudo</span> <span class="n">mv</span> <span class="n">eigen</span><span class="o">-*/</span><span class="n">Eigen</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">include</span><span class="o">/</span>
+</pre></div>
+</div>
+</li>
+<li><p>(Optional, only for Acados controller) Install <a class="reference external" href="https://docs.acados.org/">Acados</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">acados</span><span class="o">/</span><span class="n">acados</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">acados</span>
+<span class="n">git</span> <span class="n">submodule</span> <span class="n">update</span> <span class="o">--</span><span class="n">recursive</span> <span class="o">--</span><span class="n">init</span>
+<span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="n">build</span>
+<span class="n">cd</span> <span class="n">build</span>
+<span class="n">cmake</span> <span class="o">-</span><span class="n">DACADOS_WITH_QPOASES</span><span class="o">=</span><span class="n">ON</span> <span class="o">..</span>
+<span class="n">make</span> <span class="n">install</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="n">acados</span><span class="o">/</span><span class="n">interfaces</span><span class="o">/</span><span class="n">acados_template</span>
 </pre></div>
 </div>
 </li>
@@ -112,7 +129,10 @@ visit <a href="#id1"><span class="problematic" id="id2">`eigen&lt;https://eigen.
 </div>
 </li>
 </ol>
-<p>Another option to install and use dependencies would be using [conda/mamba](<a class="reference external" href="https://github.com/mamba-org/mamba">https://github.com/mamba-org/mamba</a>) environment.</p>
+</section>
+<section id="using-conda-mamba">
+<h2>Using Conda/Mamba<a class="headerlink" href="#using-conda-mamba" title="Permalink to this headline"></a></h2>
+<p>Another option to install and use dependencies would be using conda/<a class="reference external" href="https://github.com/mamba-org/mamba">mamba</a> environment.</p>
 <ol class="arabic">
 <li><p>Clone the repository:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">dfki</span><span class="o">-</span><span class="n">ric</span><span class="o">-</span><span class="n">underactuated</span><span class="o">-</span><span class="n">lab</span><span class="o">/</span><span class="n">double_pendulum</span><span class="o">.</span><span class="n">git</span>
@@ -133,7 +153,7 @@ visit <a href="#id1"><span class="problematic" id="id2">`eigen&lt;https://eigen.
 </li>
 </ol>
 <p>With this you are done and you can use all functionalities and some controllers in this repository.
-If you want install all requirements (this includes also larger depoendencies
+If you want to install all requirements (this includes also larger dependencies
 such as tensorflow, drake etc.) for all controllers do</p>
 <ol class="arabic" start="4">
 <li><p>(Optional) Full installation</p>
@@ -142,6 +162,25 @@ such as tensorflow, drake etc.) for all controllers do</p>
 </div>
 </li>
 </ol>
+</section>
+<section id="individual-controllers">
+<h2>Individual Controllers<a class="headerlink" href="#individual-controllers" title="Permalink to this headline"></a></h2>
+<p>To install dependencies for individual controllers do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">src</span><span class="o">/</span><span class="n">python</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">.</span><span class="p">[</span><span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>where you replace &lt;name&gt; with the controller name. Have a look in the
+<a class="reference external" href="https://github.com/dfki-ric-underactuated-lab/double_pendulum/blob/main/src/python/setup.py">setup.py</a>
+for the controller names.
+If you want to install all dependencies for all controllers do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">src</span><span class="o">/</span><span class="n">python</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">.</span><span class="p">[</span><span class="nb">all</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="partial-installations">
+<h2>Partial Installations<a class="headerlink" href="#partial-installations" title="Permalink to this headline"></a></h2>
 <p>The following two bullet points may be useful when only
 the C++/Python code is needed, if you work on the code and need to recompile
 often, or if errors appear during the installation call in 4.</p>
@@ -169,6 +208,7 @@ often, or if errors appear during the installation call in 4.</p>
 </div>
 </li>
 </ol>
+</section>
 </section>
 
 
