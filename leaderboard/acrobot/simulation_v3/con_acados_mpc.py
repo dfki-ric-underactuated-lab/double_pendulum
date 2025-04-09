@@ -34,7 +34,7 @@ prediction_horizon=0.5
 Nlp_max_iter=40
 vmax = 30 #rad/s
 vf = 30
-bend_the_rules=False
+bend_the_rules=True
 
 if bend_the_rules:
     tl = mpar.tl
@@ -43,13 +43,13 @@ if bend_the_rules:
 
 if actuated_joint == 1: #acrobot
     Q_mat = 2*np.diag([100, 100, 10, 10])
-    Qf_mat = 2*np.diag([10000, 10000, 100, 100])
+    Qf_mat = 2*np.diag([100000, 100000, 1000, 1000])
     R_mat = 2*np.diag([0.000001, 0.000001])
 
 if actuated_joint == 0: #pendubot
     Q_mat = 2*np.diag([100, 100, 10, 10])
-    Qf_mat = 2*np.diag([10000, 10000, 100, 100]) 
-    R_mat = 2*np.diag([0.00001, 0.00001])
+    Qf_mat = 2*np.diag([100000, 100000, 1000, 1000]) 
+    R_mat = 2*np.diag([0.000001, 0.000001])
 
 controller = AcadosMpc(
     model_pars=mpar,
@@ -68,9 +68,9 @@ controller.set_parameters(
     fallback_on_solver_fail=True,
     nonuniform_grid=False,
     cheating_on_inactive_joint=bend_the_rules,
-    mpc_cycle_dt=0.0025,
+    mpc_cycle_dt=0.002,
     outer_cycle_dt=dt,
-    qp_solver_tolerance = 0.001,
+    qp_solver_tolerance = 0.01,
     qp_solver = 'PARTIAL_CONDENSING_HPIPM',
     hpipm_mode = 'ROBUST'
 )

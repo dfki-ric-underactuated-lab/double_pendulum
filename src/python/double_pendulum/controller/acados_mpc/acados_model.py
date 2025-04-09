@@ -53,9 +53,9 @@ class PendulumModel:
         motor_intertia=0.0,
         gear_ratio=6,
         actuated_joint=0,
+        p_global=False,
+        nonlinear_params=False
     ):
-
-        model_name = "pendulum_ode"
 
         self.m1 = mass[0]  # mass of the ball [kg]
         self.m2 = mass[1]  # mass of the ball [kg]
@@ -121,8 +121,10 @@ class PendulumModel:
 
         # Coulomb Vector
         # shape (2,1)
-
-        steepness = cas.SX.sym("steepness")
+        if p_global or nonlinear_params:
+            steepness = cas.SX.sym("steepness")
+        else:
+            steepness=100
 
         self.F = cas.vertcat(
             self.b1 * self.thd1 + self.cf1 * cas.atan(steepness * self.thd1),
@@ -139,20 +141,20 @@ class PendulumModel:
         self.eom = self.inv_M @ (
             self.B @ self.u - self.C @ self.thd + self.tau - self.F
         )
-
-        # state space form xdot = [qdot, M**-1[tau + Bu - C qdot]]
         f_expl = cas.vertcat(self.thd, self.eom)
-
         f_impl = self.xdot - f_expl
 
         self.model.f_impl_expr = f_impl
         self.model.f_expl_expr = f_expl
         self.model.x = self.x
-        # self.model.p_global = steepness
-        self.model.p = steepness
         self.model.xdot = self.xdot
         self.model.u = self.u
         self.model.name = "double_pendulum"
+
+        if p_global:
+            self.model.p_global = steepness
+        if nonlinear_params:
+            self.model.p = steepness
 
         K1 = 1 / 2 * self.I1 * self.thd1**2
         K2 = (
