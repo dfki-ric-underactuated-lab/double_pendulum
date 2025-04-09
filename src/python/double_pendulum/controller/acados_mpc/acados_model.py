@@ -132,8 +132,8 @@ class PendulumModel:
         )
 
         if (
-            self.cf1 <= 0.0001 and self.cf2 <= 0.0001 and self.b1 <= 0.0001,
-            self.b2 <= 0.0001,
+            self.cf1 <= 0.0001 and self.cf2 <= 0.0001 and self.b1 <= 0.0001 and
+            self.b2 <= 0.0001
         ):
             print("Friction parameters are zero, removing friction term from model")
             self.F = cas.SX([0, 0])

@@ -418,7 +418,7 @@ class AcadosMpc(AbstractController):
             self.async_mpc_future = self.spinner.submit(self.ocp_solver.solve())
 
     def initial_iter(self):
-        num_iter_initial = 10000
+        num_iter_initial = 2000
         for i in range(num_iter_initial):
             if self.use_RTI:
                 self.ocp_solver.options_set("rti_phase", 0)
