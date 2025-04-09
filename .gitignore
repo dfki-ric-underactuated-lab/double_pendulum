@@ -38,6 +38,7 @@ experiments/design_A.0/data/*
 experiments/design_C.0/data/*
 experiments/design_C.1/data/*
 experiments/design_independent/data/*
+experiments/icra_2025/data/*
 *local*
 **/c_generated_code
 
