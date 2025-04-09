@@ -31,11 +31,14 @@ leaderboard/acrobot/simulation_v2/data/*
 leaderboard/acrobot/robustness_v2/data/*
 leaderboard/pendubot/simulation_v2/data/*
 leaderboard/pendubot/robustness_v2/data/*
+leaderboard/pendubot/simulation_v3/data/*
+leaderboard/acrobot/simulation_v3/data/*
 data/experiment_records/*
 experiments/design_A.0/data/*
 experiments/design_C.0/data/*
 experiments/design_C.1/data/*
 experiments/design_independent/data/*
+experiments/icra_2025/data/*
 *local*
 **/c_generated_code
 .vscode

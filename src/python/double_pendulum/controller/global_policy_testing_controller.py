@@ -211,6 +211,9 @@ class GlobalPolicyTestingControllerV2(AbstractController):
         height=0.9,
         mpar=None,
         dt=0.001,
+        kp=10.0,
+        ki=0.1,
+        kd=1.0,
     ):
         super().__init__()
 
@@ -229,7 +232,7 @@ class GlobalPolicyTestingControllerV2(AbstractController):
         self.pid_controller = PointPIDController(
             torque_limit=mpar.tl, dt=dt, modulo_angles=False
         )
-        self.pid_controller.set_parameters(10.0, 0.1, 1.0)
+        self.pid_controller.set_parameters(kp, ki, kd)
 
         self.up_timer = 0.0
         self.last_t = 0.0

@@ -3,10 +3,10 @@ import copy
 
 from double_pendulum.model.model_parameters import model_parameters
 
-# np.random.seed(0)
+# np.random.seed(777)
 
 design = "design_C.1"
-model = "model_1.0"
+model = "model_1.1"
 robot = "pendubot"
 
 model_par_path = (
