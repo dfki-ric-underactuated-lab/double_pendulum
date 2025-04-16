@@ -13,9 +13,9 @@ MODEL_NAME = "25_03_14-21_02_37_H_PADF_HIST_PADF_LD0.99_transformer_large"
 
 class AcrobotFlowMatchingController(AbstractController):
 
-    def __init__(self, model_path, horizon_length=None):
+    def __init__(self, model_path, device="cpu", horizon_length=None):
         super().__init__()
-        self.model, self.model_args = load_model(model_path)
+        self.model, self.model_args = load_model(model_path, device)
         self.normalizer = LimitsNormalizer(params=self.model_args.normalization_params)
         self.history_length = self.model_args.history_length
         self.horizon_length = horizon_length if horizon_length is not None else self.model_args.horizon_length
@@ -40,6 +40,7 @@ class AcrobotFlowMatchingController(AbstractController):
         self.zero = np.matrix([0.0, 0.0, 0.0, 0.0]).reshape((4,1))
         self.lqr_time=0
         self.prev_t = 0.0
+        self.device = device
 
 
 
@@ -47,9 +48,9 @@ class AcrobotFlowMatchingController(AbstractController):
         # Shift history buffer up, removing first entry
         self.history_buffer = self.history_buffer.roll(-1, dims=0)
         # Update last entry with new state
-        self.history_buffer[-1, :4] = torch.tensor(x, dtype=torch.float32)
+        self.history_buffer[-1, :4] = torch.tensor(x, dtype=torch.float32, device=self.device)
         if self.u is not None:
-            self.history_buffer[-1, 4] = torch.tensor(self.u, dtype=torch.float32)
+            self.history_buffer[-1, 4] = torch.tensor(self.u, dtype=torch.float32, device=self.device)
 
     def get_conditions(self):
         if self.is_transformer:

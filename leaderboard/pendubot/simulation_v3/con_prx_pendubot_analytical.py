@@ -17,7 +17,7 @@ leaderboard_config = {
 
 traj_model = "model_1.1"
 
-traj_filename="pendubot_dp_250314_074722_877141370_lqr_traj.txt"
+traj_filename="../../../data/prx_data/pendubot/pendubot_dp_250314_074722_877141370_lqr_traj.txt"
 controller = PrxPendubotAnalyticalController(traj_filename)
 
 controller.init()

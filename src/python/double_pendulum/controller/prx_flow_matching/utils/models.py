@@ -25,7 +25,7 @@ def get_model_classes(model_args):
     return model_class, fm_class
         
 
-def load_model(model_path):
+def load_model(model_path, device):
     model_args = JSONArgs(os.path.join(model_path, "args.json"))
     model_path = os.path.join(model_path, "best.pt")
 
@@ -38,7 +38,7 @@ def load_model(model_path):
         transition_dim=model_args.observation_dim,
         cond_dim=model_args.observation_dim,
         **model_args.model_kwargs
-    ).to('cuda')
+    ).to(device)
 
     fm_model = fm_class(
         model=model,
@@ -50,7 +50,7 @@ def load_model(model_path):
         loss_weights=model_args.loss_weights,
         loss_discount=model_args.loss_discount,
         action_indices=model_args.action_indices,
-    ).to('cuda')
+    ).to(device)
 
     if "model" in fm_model_state_dict:
         fm_model.load_state_dict(fm_model_state_dict["model"])

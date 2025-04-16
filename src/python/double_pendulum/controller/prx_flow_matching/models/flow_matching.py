@@ -134,13 +134,14 @@ class FlowMatching(nn.Module):
     # ------------------------------------------ inference ------------------------------------------#
 
     @torch.no_grad()
-    def conditional_sample(self, cond, step_size=0.05, n_timesteps=100, integration_method="midpoint", return_intermediates=False, device='cuda'):
+    def conditional_sample(self, cond, step_size=0.05, n_timesteps=100, integration_method="midpoint", return_intermediates=False):
         """
         conditions : [ (time, state), ... ]
         """
         horizon = self.horizon_length + self.history_length
         shape = (horizon, self.observation_dim)
 
+        device = cond[0].device
         T = torch.linspace(0, 1, n_timesteps)
 
         x_noisy = torch.randn(shape, device=device)
