@@ -327,14 +327,22 @@ class AcadosMpc(AbstractController):
         ocp.constraints.ubu = np.array(self.torque_limit)
 
         if self.v_max:
-            ocp.constraints.ubx = np.full(2, self.v_max)
-            ocp.constraints.lbx = -np.full(2, self.v_max)
-            ocp.constraints.idxbx = np.array([2, 3])
+            ocp.constraints.ubx = np.hstack([np.array([9.42, 9.42]), np.full(2, self.v_max)])
+            ocp.constraints.lbx =  np.hstack([-np.array([9.42, 9.42]),-np.full(2, self.v_max)])
+            ocp.constraints.idxbx = np.array([0,1, 2, 3])
+        else:
+            ocp.constraints.ubx = np.array([9.42, 9.42])
+            ocp.constraints.lbx =  np.array([-9.42, -9.42])
+            ocp.constraints.idxbx = np.array([0,1])
 
         if self.v_final:
-            ocp.constraints.lbx_e = -np.full(2, self.v_final)
-            ocp.constraints.ubx_e = np.full(2, self.v_final)
-            ocp.constraints.idxbx_e = np.array([2, 3])
+            ocp.constraints.ubx_e = np.hstack([np.array([9.42, 9.42]), np.full(2, self.v_final)])
+            ocp.constraints.lbx_e =  np.hstack([-np.array([9.42, 9.42]),-np.full(2, self.v_final)])
+            ocp.constraints.idxbx_e = np.array([0,1, 2, 3])
+        else:
+            ocp.constraints.ubx_e = np.array([9.42, 9.42])
+            ocp.constraints.lbx_e =  np.array([-9.42, -9.42])
+            ocp.constraints.idxbx_e = np.array([0,1])
 
         ocp.constraints.idxbu = np.array([0, 1])
         ocp.constraints.x0 = self.x0
@@ -463,8 +471,8 @@ class AcadosMpc(AbstractController):
         if not self.wrap_angle: # wrap the current state so the controller does not need to cricle back
             x[0] = (x[0] + 2 * np.pi) % (4 * np.pi) - 2 * np.pi
             x[1] = (x[1] + 2 * np.pi) % (4 * np.pi) - 2 * np.pi
-            x[2] = np.clip(x[2], -25, 25)
-            x[3] = np.clip(x[3], -25, 25)
+        x[2] = np.clip(x[2], -24.9, 24.9)
+        x[3] = np.clip(x[3], -24.9, 24.9)
 
         if (t - self.last_mpc_run_t) > self.mpc_cycle_dt:  # inner loop
             self.ocp_solver.set(0, "lbx", x)

@@ -92,7 +92,7 @@ run_experiment(
     dt=dt,
     t_final=t_final,
     can_port="can0",
-    motor_ids=[3, 1],
+    motor_ids=[7, 1],
     motor_directions=[1.0, -1.0],
     tau_limit=mpar.tl,
     save_dir=os.path.join("data", design, robot, "tmotors/acados_mpc"),
