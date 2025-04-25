@@ -330,6 +330,12 @@ class AcadosMpc(AbstractController):
             ocp.constraints.ubx = np.hstack([np.array([9.42, 9.42]), np.full(2, self.v_max)])
             ocp.constraints.lbx =  np.hstack([-np.array([9.42, 9.42]),-np.full(2, self.v_max)])
             ocp.constraints.idxbx = np.array([0,1, 2, 3])
+            ocp.constraints.idxsbx = np.array([2, 3])
+
+            ocp.cost.zl = 100*np.ones(2)
+            ocp.cost.zu = 100*np.ones(2)
+            ocp.cost.Zl = np.zeros(2)
+            ocp.cost.Zu = np.zeros(2)
         else:
             ocp.constraints.ubx = np.array([9.42, 9.42])
             ocp.constraints.lbx =  np.array([-9.42, -9.42])
@@ -339,6 +345,12 @@ class AcadosMpc(AbstractController):
             ocp.constraints.ubx_e = np.hstack([np.array([9.42, 9.42]), np.full(2, self.v_final)])
             ocp.constraints.lbx_e =  np.hstack([-np.array([9.42, 9.42]),-np.full(2, self.v_final)])
             ocp.constraints.idxbx_e = np.array([0,1, 2, 3])
+            ocp.constraints.idxsbx_e = np.array([2,3])
+
+            ocp.cost.zl_e = 100*np.ones(2)
+            ocp.cost.zu_e = 100*np.ones(2)
+            ocp.cost.Zl_e = np.zeros(2)
+            ocp.cost.Zu_e = np.zeros(2)
         else:
             ocp.constraints.ubx_e = np.array([9.42, 9.42])
             ocp.constraints.lbx_e =  np.array([-9.42, -9.42])
