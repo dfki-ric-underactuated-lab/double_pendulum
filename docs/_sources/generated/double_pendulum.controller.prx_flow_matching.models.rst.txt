@@ -1,0 +1,34 @@
+double\_pendulum.controller.prx\_flow\_matching.models
+==============================================================
+
+.. automodule:: double_pendulum.controller.prx_flow_matching.models
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   double_pendulum.controller.prx_flow_matching.models.helpers
+
+Submodules
+----------
+
+double\_pendulum.controller.prx\_flow\_matching.models.flow\_matching
+----------------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.prx_flow_matching.models.flow_matching
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.prx\_flow\_matching.models.temporal
+----------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.prx_flow_matching.models.temporal
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,26 @@
+double\_pendulum.controller.prx\_flow\_matching.models.helpers
+======================================================================
+
+.. automodule:: double_pendulum.controller.prx_flow_matching.models.helpers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.prx\_flow\_matching.models.helpers.losses
+----------------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.prx_flow_matching.models.helpers.losses
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.prx\_flow\_matching.models.helpers.nn\_helpers
+---------------------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.prx_flow_matching.models.helpers.nn_helpers
+   :members:
+   :undoc-members:
+   :show-inheritance:

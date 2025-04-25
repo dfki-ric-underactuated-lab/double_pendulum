@@ -1,0 +1,34 @@
+double\_pendulum.controller.prx
+=======================================
+
+.. automodule:: double_pendulum.controller.prx
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.prx.prx\_acrobot\_analytical
+---------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.prx.prx_acrobot_analytical
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.prx.prx\_pendubot\_analytical
+----------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.prx.prx_pendubot_analytical
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.prx.prx\_utils
+-------------------------------------------------
+
+.. automodule:: double_pendulum.controller.prx.prx_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

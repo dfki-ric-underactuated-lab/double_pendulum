@@ -1,0 +1,34 @@
+double\_pendulum.controller.prx\_flow\_matching.utils
+=============================================================
+
+.. automodule:: double_pendulum.controller.prx_flow_matching.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+double\_pendulum.controller.prx\_flow\_matching.utils.json\_args
+-----------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.prx_flow_matching.utils.json_args
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.prx\_flow\_matching.utils.models
+-------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.prx_flow_matching.utils.models
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+double\_pendulum.controller.prx\_flow\_matching.utils.normalization
+--------------------------------------------------------------------------
+
+.. automodule:: double_pendulum.controller.prx_flow_matching.utils.normalization
+   :members:
+   :undoc-members:
+   :show-inheritance:
