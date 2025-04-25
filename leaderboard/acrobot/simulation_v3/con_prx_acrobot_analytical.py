@@ -2,7 +2,9 @@ import os
 import numpy as np
 
 from double_pendulum.model.model_parameters import model_parameters
-from double_pendulum.controller.prx.prx_acrobot_analytical import PrxAcrobotAnalyticalController
+from double_pendulum.controller.prx.prx_acrobot_analytical import (
+    PrxAcrobotAnalyticalController,
+)
 
 
 name = "prx_acrobot_analytical"
@@ -16,7 +18,7 @@ leaderboard_config = {
 }
 
 traj_model = "model_1.1"
-traj_filename="../../../data/prx_data/pendubot/lqr_gains.txt"
+traj_filename = "../../../data/prx_data/acrobot/lqr_gains.txt"
 # traj_filename="lqr_gains.txt"
 controller = PrxAcrobotAnalyticalController(traj_filename)
 
