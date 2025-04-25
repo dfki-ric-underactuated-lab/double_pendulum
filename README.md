@@ -1,5 +1,4 @@
 [![DOI](https://zenodo.org/badge/571126240.svg)](https://zenodo.org/badge/latestdoi/571126240)
-![Ubuntu20 Py3.8](https://github.com/dfki-ric-underactuated-lab/double_pendulum/actions/workflows/test_ub20.yml/badge.svg)
 ![Ubuntu22 Py3.10](https://github.com/dfki-ric-underactuated-lab/double_pendulum/actions/workflows/test_ub22.yml/badge.svg)
 ![Documentation](https://github.com/dfki-ric-underactuated-lab/double_pendulum/actions/workflows/docs.yml/badge.svg)
 
