@@ -65,13 +65,13 @@ run_experiment(
     dt=dt,
     t_final=t_final,
     can_port="can0",
-    motor_ids=[3, 1],
+    motor_ids=[2, 1],
     motor_directions=[1.0, -1.0],
     tau_limit=[6.0, 6.0],
     save_dir=save_dir,
     record_video=True,
-    safety_velocity_limit=30.0,
-    safety_position_limit=2 * np.pi,
+    safety_velocity_limit=20.0,
+    safety_position_limit=4 * np.pi,
 )
 
 # os.chdir(search_dir)

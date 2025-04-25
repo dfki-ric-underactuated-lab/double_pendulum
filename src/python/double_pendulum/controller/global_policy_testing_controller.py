@@ -250,8 +250,8 @@ class GlobalPolicyTestingControllerV2(AbstractController):
         self.random_states -= np.pi
         self.random_states.T[2:] *= 4.0
         self.avg_time_between_reset = t_max / float(n_disturbances + 1)
-        self.reset_times = np.arange(
-            self.avg_time_between_reset, t_max, self.avg_time_between_reset
+        self.reset_times = np.linspace(
+            self.avg_time_between_reset, t_max, self.n_disturbances
         ) + 2.0 * (np.random.rand(self.n_disturbances) - 0.5)
         self.reset_times = np.append(self.reset_times, [np.inf], axis=0)
 
