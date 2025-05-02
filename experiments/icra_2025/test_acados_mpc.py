@@ -8,8 +8,15 @@ from double_pendulum.controller.mcpilco.mcpilco_controller import (
 from double_pendulum.simulation.perturbations import get_random_gauss_perturbation_array
 from double_pendulum.model.symbolic_plant import SymbolicDoublePendulum
 from double_pendulum.controller.acados_mpc.acados_mpc import AcadosMpc
+from double_pendulum.controller.global_policy_testing_controller import (
+    GlobalPolicyTestingControllerV2,
+)
+
 
 import pickle as pkl
+
+from double_pendulum.filter.lowpass import lowpass_filter
+np.random.seed(0)
 
 design = "design_C.1"
 robot = "pendubot"
@@ -24,6 +31,19 @@ model_par_path = (
     + "/model_parameters.yml"
 )
 mpar = model_parameters(filepath=model_par_path)
+from parameters import (
+    mpar_nolim,
+    t_final,
+    goal,
+    height,
+    method,
+    design,
+    n_disturbances,
+    reset_length,
+    kp,
+    ki,
+    kd,
+)
 
 
 actuated_joint = 1
@@ -32,8 +52,8 @@ actuated_joint = 1
 N_horizon=20
 prediction_horizon=0.5
 Nlp_max_iter=40
-vmax = 25 #rad/s
-vf = 25
+vmax = 12 #rad/s
+vf = 12
 
 bend_the_rules = True
 tl = mpar.tl
@@ -46,14 +66,16 @@ else:
     mpar.set_torque_limit(tl)
 
 if actuated_joint == 1: #acrobot
-    Q_mat = 2*np.diag([100, 100, 10, 10])
-    Qf_mat = 2*np.diag([100000, 100000, 1000, 1000])
-    R_mat = 2*np.diag([0.000001, 0.000001])
+    Q_mat = 2*np.diag([100, 100, 100, 100])
+    Qf_mat = 2*np.diag([100000, 100000, 10000, 10000])
+    R_mat = 2*np.diag([1.0, 1.0])
+    mpar.set_cfric([0.05, 0.04])
 
 if actuated_joint == 0: #pendubot
-    Q_mat = 2*np.diag([100, 100, 10, 10])
-    Qf_mat = 2*np.diag([100000, 100000, 1000, 1000]) 
-    R_mat = 2*np.diag([0.000001, 0.000001])
+    Q_mat = 2*np.diag([100, 100, 100, 100])
+    Qf_mat = 2*np.diag([100000, 100000, 10000, 10000]) 
+    R_mat = 2*np.diag([1, 1])
+    mpar.set_cfric([0.06, 0.08])
 
 controller = AcadosMpc(
     model_pars=mpar,
@@ -70,7 +92,7 @@ controller.set_parameters(
     Nlp_max_iter=Nlp_max_iter,
     max_solve_time=.01,
     solver_type="SQP_RTI",
-    wrap_angle=False,
+    wrap_angle=True,
     warm_start=True,
     fallback_on_solver_fail=True,
     nonuniform_grid=False,
@@ -79,23 +101,50 @@ controller.set_parameters(
     outer_cycle_dt=dt,
     qp_solver_tolerance = 0.01,
     qp_solver = 'PARTIAL_CONDENSING_HPIPM',
-    hpipm_mode = 'ROBUST'
+    hpipm_mode = 'ROBUST',
+    vel_penalty=100000000000000000000000
 )
 
 controller.set_velocity_constraints(v_max=vmax, v_final=vf)
 controller.set_cost_parameters(Q_mat=Q_mat, Qf_mat=Qf_mat, R_mat=R_mat)
 #controller.load_init_traj(csv_path=init_csv_path)
+
+lowpass_alpha = [1.0, 1.0, 0.3, 0.3]
+filter_velocity_cut = 0.1
+filter = lowpass_filter(lowpass_alpha, x0, filter_velocity_cut)
+controller.set_filter(filter)
 controller.init()
 
+
+
+
+global_policy_testing_controller = GlobalPolicyTestingControllerV2(
+    controller,
+    goal=goal,
+    n_disturbances=11,
+    t_max=t_final,
+    reset_length=1.5,
+    method=method,
+    height=height,
+    mpar=mpar_nolim,
+    kp=4.0,
+    ki=ki,
+    kd=1.0,
+)
+
+print(mpar.tl)
+
 run_experiment(
-    controller=controller,
+    controller=global_policy_testing_controller,
     dt=dt,
     t_final=t_final,
     can_port="can0",
-    motor_ids=[7, 1],
+    motor_ids=[2, 1],
     motor_directions=[1.0, -1.0],
-    tau_limit=mpar.tl,
+    tau_limit=[6.0,6.0],
     save_dir=os.path.join("data", design, robot, "tmotors/acados_mpc"),
     record_video=True,
-    safety_velocity_limit=30.0
+    safety_velocity_limit=20.0,
+    safety_position_limit=4*np.pi,
+    velocities_from_positions=True
 )

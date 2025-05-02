@@ -157,6 +157,7 @@ class AcadosMpc(AbstractController):
         hpipm_mode="SPEED",
         p_global=False,
         nonlinear_params=False,
+        vel_penalty = 100,
         **kwargs,
     ):
         self.N_horizon = N_horizon
@@ -176,6 +177,7 @@ class AcadosMpc(AbstractController):
         self.hpipm_mode = hpipm_mode
         self.qp_solver_tolerance = qp_solver_tolerance
         self.qp_solver = qp_solver
+        self.vel_penalty = vel_penalty
         self.options = kwargs
 
         if pd_tracking:
@@ -325,32 +327,33 @@ class AcadosMpc(AbstractController):
 
         ocp.constraints.lbu = -np.array(self.torque_limit)
         ocp.constraints.ubu = np.array(self.torque_limit)
+        self.torque_limit = np.array(self.torque_limit)
 
         if self.v_max:
-            ocp.constraints.ubx = np.hstack([np.array([9.42, 9.42]), np.full(2, self.v_max)])
-            ocp.constraints.lbx =  np.hstack([-np.array([9.42, 9.42]),-np.full(2, self.v_max)])
-            ocp.constraints.idxbx = np.array([0,1, 2, 3])
-            ocp.constraints.idxsbx = np.array([2, 3])
+            ocp.constraints.ubx = np.hstack([np.array([4*np.pi, 4*np.pi]), np.full(2, self.v_max)])
+            ocp.constraints.lbx =  np.hstack([-np.array([4*np.pi, 4*np.pi]),-np.full(2, self.v_max)])
+            ocp.constraints.idxbx = np.array([0, 1, 2, 3])
+            # ocp.constraints.idxsbx = np.array([2, 3])
 
-            ocp.cost.zl = 100*np.ones(2)
-            ocp.cost.zu = 100*np.ones(2)
-            ocp.cost.Zl = np.zeros(2)
-            ocp.cost.Zu = np.zeros(2)
+            # ocp.cost.Zl = self.vel_penalty*np.ones(2)
+            # ocp.cost.Zu = 0*np.ones(2)
+            # ocp.cost.zl = np.zeros(2)
+            # ocp.cost.zu = np.zeros(2)
         else:
-            ocp.constraints.ubx = np.array([9.42, 9.42])
-            ocp.constraints.lbx =  np.array([-9.42, -9.42])
+            ocp.constraints.ubx = np.array([4*np.pi, 4*np.pi])
+            ocp.constraints.lbx =  np.array([-4*np.pi, -4*np.pi])
             ocp.constraints.idxbx = np.array([0,1])
 
         if self.v_final:
             ocp.constraints.ubx_e = np.hstack([np.array([9.42, 9.42]), np.full(2, self.v_final)])
             ocp.constraints.lbx_e =  np.hstack([-np.array([9.42, 9.42]),-np.full(2, self.v_final)])
             ocp.constraints.idxbx_e = np.array([0,1, 2, 3])
-            ocp.constraints.idxsbx_e = np.array([2,3])
+            # ocp.constraints.idxsbx_e = np.array([2,3])
 
-            ocp.cost.zl_e = 100*np.ones(2)
-            ocp.cost.zu_e = 100*np.ones(2)
-            ocp.cost.Zl_e = np.zeros(2)
-            ocp.cost.Zu_e = np.zeros(2)
+            # ocp.cost.Zl_e = self.vel_penalty*np.ones(2)
+            # ocp.cost.Zu_e = 0*np.ones(2)
+            # ocp.cost.zl_e = np.zeros(2)
+            # ocp.cost.zu_e = np.zeros(2)
         else:
             ocp.constraints.ubx_e = np.array([9.42, 9.42])
             ocp.constraints.lbx_e =  np.array([-9.42, -9.42])
@@ -483,8 +486,8 @@ class AcadosMpc(AbstractController):
         if not self.wrap_angle: # wrap the current state so the controller does not need to cricle back
             x[0] = (x[0] + 2 * np.pi) % (4 * np.pi) - 2 * np.pi
             x[1] = (x[1] + 2 * np.pi) % (4 * np.pi) - 2 * np.pi
-        x[2] = np.clip(x[2], -24.9, 24.9)
-        x[3] = np.clip(x[3], -24.9, 24.9)
+        
+        x[2:4] = np.clip(x[2:4], -np.array([self.v_max, self.v_max]), np.array([self.v_max, self.v_max]))
 
         if (t - self.last_mpc_run_t) > self.mpc_cycle_dt:  # inner loop
             self.ocp_solver.set(0, "lbx", x)
@@ -515,7 +518,7 @@ class AcadosMpc(AbstractController):
             self.pd_tracking_controller.set_goal(self.mpc_x)
             return self.pd_tracking_controller.get_control_output(x, t)
         else:
-            return self.mpc_u
+            return np.clip(self.mpc_u, -self.torque_limit, self.torque_limit)
 
     def get_x0(self, x, t):
         status = self.ocp_solver.get_status()
