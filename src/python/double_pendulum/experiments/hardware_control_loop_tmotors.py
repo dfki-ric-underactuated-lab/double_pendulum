@@ -30,7 +30,7 @@ def run_experiment(
     safety_position_limit=4.0 * np.pi,
     safety_velocity_limit=20.0,
     perturbation_array=None,
-    velocities_from_positions=True,
+    velocities_from_positions=False,
 ):
     """run_experiment.
     Hardware control loop for tmotor system.
@@ -106,6 +106,13 @@ def run_experiment(
     # Create motor controller objects
     motor1 = CanMotorController(can_port, motor_ids[0], motor_type)
     motor2 = CanMotorController(can_port, motor_ids[1], motor_type)
+
+    motor1.change_motor_constants(
+        -12.5, 12.5, -76.0, 76.0, 0.0, 500.0, 0.0, 5.0, -12.0, 12.0
+    )
+    motor2.change_motor_constants(
+        -12.5, 12.5, -76.0, 76.0, 0.0, 500.0, 0.0, 5.0, -12.0, 12.0
+    )
 
     enable_motor(motor1)
     enable_motor(motor2)

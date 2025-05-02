@@ -52,7 +52,7 @@ policy_par_path = (
     "../../../data/policies/"
     + design
     + "/"
-    + "model1.0"
+    + "model_1.0"
     + "/"
     + robot
     + "/MC-PILCO/global_policy_sim.np"

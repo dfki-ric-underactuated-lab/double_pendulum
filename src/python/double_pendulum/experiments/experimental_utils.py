@@ -62,7 +62,7 @@ def setZeroPosition(motor, motor_direction=1.0):
     pos *= motor_direction
     vel *= motor_direction
     tau *= motor_direction
-    while abs(np.rad2deg(pos)) > 0.5 or abs(np.rad2deg(vel)) > 0.5 or abs(tau) > 0.1:
+    while abs(np.rad2deg(pos)) > 0.5 or abs(np.rad2deg(vel)) > 2.0 or abs(tau) > 0.1:
         motor.set_zero_position()
         pos, vel, tau = motor.send_rad_command(0.0, 0.0, 0.0, 0.0, 0.0)
         pos *= motor_direction

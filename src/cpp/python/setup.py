@@ -23,12 +23,25 @@ ilqr_extension = Extension(
     library_dirs=["../controllers/ilqr/obj"],
     include_dirs=[
         "../controllers/ilqr/obj",
+        "/usr/include/eigen3", 
         np.get_include(),
     ]
     + include_dirs,
     language="c++",
 )
+lqr_grid_extension = Extension(
+    name="cppLqrGrid",
+    sources=["cppLqrGrid.pyx"],
+    libraries=["yaml-cpp"],
+    # library_dirs=["../controllers/ilqr/obj"],
+    include_dirs=[
+        "../controllers/lqr_grid/",
+        "/usr/include/eigen3", 
+        np.get_include(),
+    ],
+    language="c++",
+)
 setup(
     name="cppilqr",
-    ext_modules=cythonize([ilqr_extension]),
+    ext_modules=cythonize([ilqr_extension,lqr_grid_extension]),
 )

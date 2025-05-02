@@ -96,9 +96,9 @@ def run_system_identification(
     # calculate errors
     Q_opt = phi.dot(mp_opt)
     mae = mean_absolute_error(Q.flatten(), Q_opt.flatten())
-    rmse = mean_squared_error(Q.flatten(), Q_opt.flatten(), squared=False)
+    rmse = mean_squared_error(Q.flatten(), Q_opt.flatten())
     mae_noisy = mean_absolute_error(Q_noisy.flatten(), Q_opt.flatten())
-    rmse_noisy = mean_squared_error(Q_noisy.flatten(), Q_opt.flatten(), squared=False)
+    rmse_noisy = mean_squared_error(Q_noisy.flatten(), Q_opt.flatten())
 
     print("Mean absolute error (Filtered data): ", mae)
     print("Mean root mean squared error (Filtered data): ", rmse)

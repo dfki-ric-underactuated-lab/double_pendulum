@@ -1,0 +1,64 @@
+From ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install wget -y && \
+    apt-get install unzip -y && \
+    apt-get install git -y && \
+    apt-get install vim -y && \
+    apt-get install python3-pip -y && \
+    apt-get install libyaml-cpp-dev -y && \
+    #apt install libeigen3-dev -y && \
+    apt-get install libpython3.10 -y && \
+    apt-get install libx11-6 -y && \
+    apt-get install libsm6 -y && \
+    apt-get install libxt6 -y && \
+    apt-get install libglib2.0-0 -y && \
+    apt-get install python3-sphinx -y && \
+    apt-get install python3-numpydoc -y && \
+    apt-get install python3-sphinx-rtd-theme -y && \
+    apt-get install python-is-python3
+
+# libeigen3-dev install does not work with apt
+RUN wget -O Eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
+RUN unzip Eigen.zip
+RUN cp -r eigen-3.4.0/Eigen /usr/local/include
+
+# Install Miniconda
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+    bash /tmp/miniconda.sh -b -p /opt/conda && \
+    rm /tmp/miniconda.sh
+ENV PATH="/opt/conda/bin:${PATH}"
+
+# Install gdown for Google Drive download
+RUN pip install gdown
+
+# Clone repository
+RUN git clone https://github.com/dfki-ric-underactuated-lab/double_pendulum.git
+
+WORKDIR "/double_pendulum"
+
+# Download models from Google Drive
+RUN gdown --folder https://drive.google.com/drive/folders/1XiIwnf9U1Cz6gKU7OYCswdQ7_iIk7kf_ -O ./
+
+# Create conda environment from environment.yaml
+COPY environment.yaml .
+RUN conda env create -f environment.yaml
+
+# Make conda environment accessible in shell
+RUN echo "source activate double_pendulum" > ~/.bashrc
+ENV PATH /opt/conda/envs/double_pendulum/bin:$PATH
+
+# Install additional packages
+RUN pip install einops flow_matching
+
+RUN make install
+RUN make pythonfull
+RUN make doc
+RUN make tests
+
+# Set default shell to bash with conda environment activated
+SHELL ["/bin/bash", "-c"]
+CMD ["/bin/bash", "-c", "source activate double_pendulum && python calculate_leaderboard_score.py con_prx_acrobot_fm_trans_disc.py"]
+
