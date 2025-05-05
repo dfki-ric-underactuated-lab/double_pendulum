@@ -45,15 +45,14 @@ from parameters import (
     kd,
 )
 
-
-actuated_joint = 1
+actuated_joint = 0
 
 # controller parameters
 N_horizon=20
 prediction_horizon=0.5
 Nlp_max_iter=40
-vmax = 12 #rad/s
-vf = 12
+vmax = 14 #rad/s
+vf = 14
 
 bend_the_rules = True
 tl = mpar.tl
@@ -66,16 +65,18 @@ else:
     mpar.set_torque_limit(tl)
 
 if actuated_joint == 1: #acrobot
-    Q_mat = 2*np.diag([100, 100, 100, 100])
+    Q_mat = 2*np.diag([1000, 1000, 100, 100])
     Qf_mat = 2*np.diag([100000, 100000, 10000, 10000])
-    R_mat = 2*np.diag([1.0, 1.0])
-    mpar.set_cfric([0.05, 0.04])
+    R_mat = 2*np.diag([0.1, 0.1])
+    #mpar.set_cfric([0.05, 0.04])
+    #mpar.set_damping([0.001, 0.05])
 
 if actuated_joint == 0: #pendubot
-    Q_mat = 2*np.diag([100, 100, 100, 100])
+    Q_mat = 2*np.diag([1000, 1000, 100, 100])
     Qf_mat = 2*np.diag([100000, 100000, 10000, 10000]) 
-    R_mat = 2*np.diag([1, 1])
-    mpar.set_cfric([0.06, 0.08])
+    R_mat = 2*np.diag([0.01, 0.01])
+    #mpar.set_cfric([0.05, 0.04])
+    #mpar.set_damping([0.001, 0.07])
 
 controller = AcadosMpc(
     model_pars=mpar,
@@ -83,7 +84,7 @@ controller = AcadosMpc(
 dt = 0.002
 x0 = [0,0,0,0]
 goal = [np.pi,0,0,0]
-t_final = 60
+t_final = 180
 controller.set_start(x0)
 controller.set_goal(goal)
 controller.set_parameters(
@@ -121,9 +122,9 @@ controller.init()
 global_policy_testing_controller = GlobalPolicyTestingControllerV2(
     controller,
     goal=goal,
-    n_disturbances=11,
+    n_disturbances=33,
     t_max=t_final,
-    reset_length=1.5,
+    reset_length=1.0,
     method=method,
     height=height,
     mpar=mpar_nolim,
@@ -146,5 +147,5 @@ run_experiment(
     record_video=True,
     safety_velocity_limit=20.0,
     safety_position_limit=4*np.pi,
-    velocities_from_positions=True
+    velocities_from_positions=False
 )

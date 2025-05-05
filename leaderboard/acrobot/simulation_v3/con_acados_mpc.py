@@ -32,8 +32,8 @@ actuated_joint = np.argmax(mpar.tl)
 N_horizon=20
 prediction_horizon=0.5
 Nlp_max_iter=40
-vmax = 30 #rad/s
-vf = 30
+vmax = 20 #rad/s
+vf = 20
 bend_the_rules=True
 
 if bend_the_rules:
@@ -72,7 +72,8 @@ controller.set_parameters(
     outer_cycle_dt=dt,
     qp_solver_tolerance = 0.01,
     qp_solver = 'PARTIAL_CONDENSING_HPIPM',
-    hpipm_mode = 'ROBUST'
+    hpipm_mode = 'ROBUST',
+    vel_penalty=100000000
 )
 
 controller.set_velocity_constraints(v_max=vmax, v_final=vf)
