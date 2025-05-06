@@ -214,6 +214,9 @@ class GlobalPolicyTestingControllerV2(AbstractController):
         kp=10.0,
         ki=0.1,
         kd=1.0,
+        pos_limit=np.inf,
+        vel_limit=np.inf,
+        verbose=False,
     ):
         super().__init__()
 
@@ -224,6 +227,9 @@ class GlobalPolicyTestingControllerV2(AbstractController):
         self.method = method
         self.height = height
         self.mpar = mpar
+        self.pos_limit = pos_limit
+        self.vel_limit = vel_limit
+        self.verbose = verbose
 
         plant = DoublePendulumPlant(model_pars=self.mpar)
         super().set_gravity_compensation(plant)
@@ -234,29 +240,28 @@ class GlobalPolicyTestingControllerV2(AbstractController):
         )
         self.pid_controller.set_parameters(kp, ki, kd)
 
-        self.up_timer = 0.0
-        self.last_t = 0.0
-
-        self.reset_mode = False
-
-        # negative_amplitudes = np.random.uniform(-5, -3, (100, 2))
-        # positive_amplitudes = np.random.uniform(3, 5, (100, 2))
-        # mask = np.random.rand(100, 2) > 0.5
-        # self.random_amplitudes = np.where(
-        #     mask, positive_amplitudes, negative_amplitudes
-        # )
-
-        self.random_states = np.random.uniform(0.0, 2 * np.pi, (self.n_disturbances, 4))
+        self.random_states = np.random.uniform(
+            0.0, 2 * np.pi, (10 * self.n_disturbances + 1, 4)
+        )
         self.random_states -= np.pi
-        self.random_states.T[2:] *= 4.0
-        self.avg_time_between_reset = t_max / float(n_disturbances + 1)
+        self.random_states.T[2:] *= 0.0
+        self.avg_time_between_reset = t_max / float(self.n_disturbances + 1)
         self.reset_times = np.linspace(
-            self.avg_time_between_reset, t_max, self.n_disturbances
+            self.avg_time_between_reset,
+            t_max - self.avg_time_between_reset,
+            self.n_disturbances,
         ) + 2.0 * (np.random.rand(self.n_disturbances) - 0.5)
         self.reset_times = np.append(self.reset_times, [np.inf], axis=0)
 
         self.reset_timer = 0
         self.reset_counter = 0
+        self.up_timer = 0.0
+        self.last_t = 0.0
+        self.reset_mode = False
+
+        self.reset_t_start = []
+        self.disturbance_intervals = []
+        self.limit_violation_hist = []
 
     def init_(self):
         """
@@ -339,16 +344,51 @@ class GlobalPolicyTestingControllerV2(AbstractController):
             units=[Nm]
         """
 
-        if t >= self.reset_times[self.reset_counter] and not self.reset_mode:
+        limit_violation = False
+        if (
+            np.abs(x[0]) > self.pos_limit
+            or np.abs(x[1]) > self.pos_limit
+            or np.abs(x[2]) > self.vel_limit
+            or np.abs(x[3]) > self.vel_limit
+        ):
+            limit_violation = True
+
+        self.limit_violation_hist.append(limit_violation)
+
+        if (
+            limit_violation or (t >= self.reset_times[self.reset_counter])
+        ) and not self.reset_mode:
             self.reset_mode = True
             self.pid_controller.set_goal(self.random_states[self.reset_counter])
-            self.reset_counter += 1
             self.reset_timer = 0.0
+            self.reset_t_start = t
             self.use_gravity_compensation = True
+            if limit_violation:
+                self.reset_times = np.insert(self.reset_times, self.reset_counter, [t])
+                if self.reset_counter == 0:
+                    delay = t
+                else:
+                    delay = t - self.reset_times[self.reset_counter - 1]
+                self.reset_times[self.reset_counter + 1 :] += delay
+                if self.verbose:
+                    print(
+                        "limit violation reset t=", t, " x=", x, " resets delay=", delay
+                    )
+            else:
+                if self.verbose:
+                    print("regular reset t=", t)
+            self.reset_counter += 1
 
-        if self.reset_timer > self.reset_length and self.reset_mode:
+        if (
+            not np.any(self.limit_violation_hist[-10:])
+            and self.reset_timer > self.reset_length
+            and self.reset_mode
+        ):
             self.reset_mode = False
+            self.disturbance_intervals.append([self.reset_t_start, t])
             self.use_gravity_compensation = False
+            if self.verbose:
+                print("finished reset at t=", t, " x=", x)
 
         if self.reset_mode:
             u = self.pid_controller.get_control_output_(x, t)

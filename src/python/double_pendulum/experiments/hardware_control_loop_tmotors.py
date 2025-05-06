@@ -23,7 +23,7 @@ def run_experiment(
     can_port="can0",
     motor_ids=[1, 2],
     motor_directions=[1.0, 1.0],
-    motor_type="AK80_6_V1p1",
+    motor_type="AK80_6_V2",
     tau_limit=[6.0, 6.0],
     save_dir=".",
     record_video=False,
@@ -106,13 +106,6 @@ def run_experiment(
     # Create motor controller objects
     motor1 = CanMotorController(can_port, motor_ids[0], motor_type)
     motor2 = CanMotorController(can_port, motor_ids[1], motor_type)
-
-    motor1.change_motor_constants(
-        -12.5, 12.5, -76.0, 76.0, 0.0, 500.0, 0.0, 5.0, -12.0, 12.0
-    )
-    motor2.change_motor_constants(
-        -12.5, 12.5, -76.0, 76.0, 0.0, 500.0, 0.0, 5.0, -12.0, 12.0
-    )
 
     enable_motor(motor1)
     enable_motor(motor2)
@@ -346,6 +339,7 @@ def run_experiment(
                 ],
                 save_to=os.path.join(save_dir_time, "timeseries"),
                 show=True,
+                highlight_t_intervals=controller.disturbance_intervals,
             )
             plot_perturbation_array(
                 t_final,

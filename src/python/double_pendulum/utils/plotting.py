@@ -37,6 +37,7 @@ def plot_timeseries(
     save_to=None,
     show=True,
     scale=1.0,
+    highlight_t_intervals=[],
 ):
     n_subplots = np.sum([plot_pos, plot_vel, plot_tau, plot_acc, plot_energy])
 
@@ -58,6 +59,8 @@ def plot_timeseries(
 
     i = 0
     if plot_pos:
+        for interval in highlight_t_intervals:
+            ax[i].axvspan(interval[0], interval[1], color="gray", alpha=0.5)
         ax[i].plot(T[: len(X)], np.asarray(X).T[0], label=r"$q_1$", color="blue")
         ax[i].plot(T[: len(X)], np.asarray(X).T[1], label=r"$q_2$", color="red")
         if not (X_des is None or np.shape(X_des)[0] == 0):
@@ -118,6 +121,8 @@ def plot_timeseries(
         ax[i].legend(bbox_to_anchor=(1.01, 1), loc="upper left")
     if plot_vel:
         i += 1
+        for interval in highlight_t_intervals:
+            ax[i].axvspan(interval[0], interval[1], color="gray", alpha=0.5)
         ax[i].plot(T[: len(X)], np.asarray(X).T[2], label=r"$\dot{q}_1$", color="blue")
         ax[i].plot(T[: len(X)], np.asarray(X).T[3], label=r"$\dot{q}_2$", color="red")
         if not (X_des is None or np.shape(X_des)[0] == 0):
@@ -178,6 +183,8 @@ def plot_timeseries(
         ax[i].legend(bbox_to_anchor=(1.01, 1), loc="upper left")
     if plot_acc:
         i += 1
+        for interval in highlight_t_intervals:
+            ax[i].axvspan(interval[0], interval[1], color="gray", alpha=0.5)
         ax[i].plot(
             T[: len(ACC)], np.asarray(ACC).T[0], label=r"$\ddot{q}_1$", color="blue"
         )
@@ -210,6 +217,8 @@ def plot_timeseries(
         ax[i].legend(bbox_to_anchor=(1.01, 1), loc="upper left")
     if plot_tau:
         i += 1
+        for interval in highlight_t_intervals:
+            ax[i].axvspan(interval[0], interval[1], color="gray", alpha=0.5)
         ax[i].plot(
             T[: len(U)], np.asarray(U).T[0, : len(T)], label=r"$u_1$", color="blue"
         )
@@ -287,6 +296,8 @@ def plot_timeseries(
         ax[i].legend(bbox_to_anchor=(1.01, 1), loc="upper left")
     if plot_energy:
         i += 1
+        for interval in highlight_t_intervals:
+            ax[i].axvspan(interval[0], interval[1], color="gray", alpha=0.5)
         ax[i].plot(T[: len(energy)], np.asarray(energy), label="energy")
         for line in energy_x_lines:
             ax[i].plot(
