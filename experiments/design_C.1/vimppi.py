@@ -15,10 +15,8 @@ from double_pendulum.simulation.perturbations import (
 from double_pendulum.controller.vimppi.config import Config
 from double_pendulum.controller.vimppi.controller import MPPIController
 import os
-os.environ['XLA_FLAGS'] = (
-    '--xla_gpu_triton_gemm_any=True '
-    '--xla_gpu_enable_latency_hiding_scheduler=true '
-)
+
+os.environ["XLA_FLAGS"] = "--xla_gpu_triton_gemm_any=True " "--xla_gpu_enable_latency_hiding_scheduler=true "
 # model parameters
 design = "design_C.1"
 robot = "acrobot"
@@ -47,7 +45,6 @@ if friction_compensation:
     mpar_con.set_damping([0.0, 0.0])
     mpar_con.set_cfric([0.0, 0.0])
 mpar_con.set_torque_limit(torque_limit_con)
-
 
 
 torque_limit = mpar.tl
@@ -88,9 +85,7 @@ controller.init()
 
 
 # np.random.seed(2)
-perturbation_array, _, _, _ = get_random_gauss_perturbation_array(
-    t_final, dt, 2, 1.0, [0.05, 0.1], [0.4, 0.6]
-)
+perturbation_array, _, _, _ = get_random_gauss_perturbation_array(t_final, dt, 2, 1.0, [0.05, 0.1], [0.4, 0.6])
 
 run_experiment(
     controller=controller,
@@ -103,5 +98,5 @@ run_experiment(
     save_dir=os.path.join("data", design, robot, "vimppi"),
     record_video=True,
     safety_velocity_limit=20.0,
-    #perturbation_array=perturbation_array,
+    # perturbation_array=perturbation_array,
 )
