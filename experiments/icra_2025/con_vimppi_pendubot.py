@@ -1,10 +1,13 @@
+import os
+from copy import deepcopy
+
 import jax
 import jax.numpy as jnp
-
-from parameters import mpar_nolim, goal
 from double_pendulum.controller.vimppi.config import Config
 from double_pendulum.controller.vimppi.controller import MPPIController
-from copy import deepcopy
+from parameters import goal, mpar_nolim
+
+os.environ["XLA_FLAGS"] = "--xla_gpu_triton_gemm_any=True " "--xla_gpu_enable_latency_hiding_scheduler=true "
 
 name = "vimppi"
 leaderboard_config = {
