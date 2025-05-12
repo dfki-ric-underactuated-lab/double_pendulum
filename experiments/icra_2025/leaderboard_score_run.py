@@ -52,7 +52,7 @@ global_policy_testing_controller = GlobalPolicyTestingControllerV2(
     kp=kp,
     ki=ki,
     kd=kd,
-    pos_limit=4.0 * np.pi,
+    pos_limit=3.5 * np.pi,
     vel_limit=20.0,
 )
 
@@ -72,7 +72,7 @@ run_experiment(
     tau_limit=[6.0, 6.0],
     save_dir=save_dir,
     record_video=True,
-    safety_velocity_limit=20.0,
+    safety_velocity_limit=25.0,
     safety_position_limit=4 * np.pi,
 )
 
