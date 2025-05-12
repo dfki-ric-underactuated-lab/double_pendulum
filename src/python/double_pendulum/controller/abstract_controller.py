@@ -24,6 +24,7 @@ class AbstractController(ABC):
         self.u_grav_hist = []
         self.filter = identity_filter(filt_velocity_cut=0.0)
         self.use_gravity_compensation = False
+        self.disturbance_intervals = []
 
     @abstractmethod
     def get_control_output_(self, x, t=None):
