@@ -217,6 +217,7 @@ class GlobalPolicyTestingControllerV2(AbstractController):
         pos_limit=np.inf,
         vel_limit=np.inf,
         verbose=False,
+        pid_pos_contribution_limit=[np.inf, np.inf],
     ):
         super().__init__()
 
@@ -236,7 +237,10 @@ class GlobalPolicyTestingControllerV2(AbstractController):
         self.use_gravity_compensation = False
 
         self.pid_controller = PointPIDController(
-            torque_limit=mpar.tl, dt=dt, modulo_angles=False
+            torque_limit=mpar.tl,
+            dt=dt,
+            modulo_angles=False,
+            pos_contribution_limit=pid_pos_contribution_limit,
         )
         self.pid_controller.set_parameters(kp, ki, kd)
 

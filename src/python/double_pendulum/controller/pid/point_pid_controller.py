@@ -20,13 +20,20 @@ class PointPIDController(AbstractController):
         (Default value=0.01)
     """
 
-    def __init__(self, torque_limit=[1.0, 1.0], dt=0.01, modulo_angles=True):
+    def __init__(
+        self,
+        torque_limit=[1.0, 1.0],
+        dt=0.01,
+        modulo_angles=True,
+        pos_contribution_limit=[np.inf, np.inf],
+    ):
 
         super().__init__()
 
         self.torque_limit = torque_limit
         self.dt = dt
         self.modulo_angles = modulo_angles
+        self.pos_contribution_limit = pos_contribution_limit
 
         # default weights
         self.Kp = 1.0
@@ -118,6 +125,12 @@ class PointPIDController(AbstractController):
             D1 = 0.0
             D2 = 0.0
 
+        P1 = np.clip(
+            P1, -self.pos_contribution_limit[0], self.pos_contribution_limit[0]
+        )
+        P2 = np.clip(
+            P2, -self.pos_contribution_limit[1], self.pos_contribution_limit[1]
+        )
         u1 = P1 + I1 + D1
         u2 = P2 + I2 + D2
 

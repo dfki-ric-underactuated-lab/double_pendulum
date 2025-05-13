@@ -54,6 +54,7 @@ global_policy_testing_controller = GlobalPolicyTestingControllerV2(
     kd=kd,
     pos_limit=3.5 * np.pi,
     vel_limit=20.0,
+    pid_pos_contribution_limit=[3.0, 3.0],
 )
 
 data_dir = "data"
