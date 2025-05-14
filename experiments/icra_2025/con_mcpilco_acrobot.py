@@ -14,7 +14,7 @@ leaderboard_config = {
     "simple_name": "mcpilco",
     "short_description": "Global Controller trained with MC-PILCO.",
     "readme_path": f"readmes/{name}.md",
-    "username": "adk",
+    "username": "turcato-niccolo",
 }
 
 dt = 1 / 330.0  # trained on 33 Hz
