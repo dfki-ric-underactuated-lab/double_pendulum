@@ -19,13 +19,15 @@ from double_pendulum.filter.lowpass import lowpass_filter
 np.random.seed(0)
 
 name = "acados_mpc_pendubot"
+username = "maranderine"
+
 leaderboard_config = {
     "csv_path": "trajectory.csv",
     "name": name,
     "simple_name": "acados_mpc_pendubot",
     "short_description": "Acados mpc pendubot",
     "readme_path": f"readmes/{name}.md",
-    "username": "blanka",
+    "username": username,
 }
 
 design = "design_C.1"
