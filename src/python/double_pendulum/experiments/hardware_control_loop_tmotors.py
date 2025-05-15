@@ -106,9 +106,6 @@ def run_experiment(
     # Create motor controller objects
     motor1 = CanMotorController(can_port, motor_ids[0], motor_type)
     motor2 = CanMotorController(can_port, motor_ids[1], motor_type)
-    
-    motor1.change_motor_constants(-12.5, 12.5, -76, 76, 0, 500, 0, 5, -12, 12)
-    motor2.change_motor_constants(-12.5, 12.5, -76, 76, 0, 500, 0, 5, -12, 12)
 
     enable_motor(motor1)
     enable_motor(motor2)
