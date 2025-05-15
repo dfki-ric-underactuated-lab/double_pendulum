@@ -118,9 +118,6 @@ class PointPIDController(AbstractController):
             D1 = 0.0
             D2 = 0.0
 
-        P1 = np.clip(P1, -3,3)
-        P2 = np.clip(P2, -3,3)
-
         u1 = P1 + I1 + D1
         u2 = P2 + I2 + D2
 
