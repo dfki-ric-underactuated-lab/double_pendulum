@@ -24,7 +24,7 @@ n_dof = 2
 controlled_joint = [0, 1]
 
 policy_par_path = (
-    "../../data/policies/" + design + "/" + model + "/" + robot + "/MC-PILCO/global_policy_" + robot + ".np"
+    "../../data/policies/" + design + "/" + model + "/" + robot + "/MC-PILCO/global_policy_" + robot + "_onsite_tuning.np"
 )
 file = open(policy_par_path, "rb")
 parameters = pkl.load(file)
