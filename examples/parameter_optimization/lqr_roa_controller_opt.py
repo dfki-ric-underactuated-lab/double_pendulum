@@ -1,28 +1,32 @@
 import os
+import numpy as np
 from datetime import datetime
 
 from double_pendulum.controller.lqr.roa.roa_paropt import roa_lqr_opt
+from double_pendulum.model.model_parameters import model_parameters
 
-
-model_pars = [0.63, 0.3, 0.2]
-init_pars = [1., 1., 1., 1., 1.]
-par_prefactors = [20., 20., 10., 10., 10.]
-bounds = [[0, 1], [0, 1], [0, 1], [0, 1], [0, 1]]
-maxfevals = 35
-roa_backend = "najafi"
-robot = "acrobot"
-num_proc = 2
+model_par_path = "../../data/system_identification/identified_parameters/design_C.1/model_1.1/model_parameters.yml"
+mpar = model_parameters(filepath=model_par_path)
+mpar.set_torque_limit([0.0, 5.0])
 
 timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
-save_dir = os.path.join("data", robot, "lqr", "roa_paropt", timestamp)
+save_dir = os.path.join("data", "acrobot", "lqr", "roa_paropt", timestamp)
 
-best_par = roa_lqr_opt(model_pars=model_pars,
-                       init_pars=init_pars,
-                       par_prefactors=par_prefactors,
-                       bounds=bounds,
-                       maxfevals=maxfevals,
-                       roa_backend=roa_backend,
-                       robot=robot,
-                       save_dir=save_dir,
-                       num_proc=num_proc)
-print(best_par)
+c_par = roa_lqr_opt(
+    model_par=mpar,
+    goal=[np.pi, 0.0, 0.0, 0.0],
+    init_pars=[1.0, 1.0, 1.0, 1.0, 1.0],
+    par_prefactors=[20.0, 20.0, 10.0, 10.0, 10.0],
+    bounds=[[0, 1], [0, 1], [0, 1], [0, 1], [0, 1]],
+    maxfevals=1000,
+    sigma0=0.4,
+    roa_backend="najafi",
+    najafi_evals=1000,
+    robot="acrobot",
+    save_dir=save_dir,
+    plots=True,
+    num_proc=2,
+    popsize_factor=4,
+)
+
+print(c_par)

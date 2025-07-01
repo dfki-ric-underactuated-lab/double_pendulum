@@ -15,14 +15,14 @@ def directSphere(d, r_i=0, r_o=1):
     # get its euclidean distance:
     dist = np.linalg.norm(rand, ord=2)
     # divide by norm
-    normed = rand/dist
+    normed = rand / dist
 
     # sample the radius uniformly from 0 to 1
-    rad = np.random.uniform(r_i, r_o**d)**(1/d)
+    rad = np.random.uniform(r_i, r_o**d) ** (1 / d)
     # the r**d part was not there in the original implementation.
     # I added it in order to be able to change the radius of the sphere
     # multiply with vect and return
-    return normed*rad
+    return normed * rad
 
 
 def quadForm(M, x):
@@ -33,7 +33,7 @@ def quadForm(M, x):
 
 
 def sampleFromEllipsoid(S, rho, rInner=0, rOuter=1):
-    lamb, eigV = np.linalg.eigh(S/rho)
+    lamb, eigV = np.linalg.eigh(S / rho)
     d = len(S)
     xy = directSphere(d, r_i=rInner, r_o=rOuter)  # sample from outer shells
     # transform sphere to ellipsoid
@@ -53,16 +53,16 @@ def volEllipsoid(rho, M):
 
     # For a given hyperellipsoid, find the transformation that when applied to
     # the n Ball yields the hyperellipsoid
-    lamb, eigV = np.linalg.eigh(M/rho)
+    lamb, eigV = np.linalg.eigh(M / rho)
     A = np.dot(np.diag(np.sqrt(lamb)), eigV.T)  # transform ellipsoid to sphere
     detA = np.linalg.det(A)
 
     # Volume of n Ball (d dimensions)
     d = M.shape[0]  # dimension
-    volC = (np.pi**(d/2)) / (gamma((d/2)+1))
+    volC = (np.pi ** (d / 2)) / (gamma((d / 2) + 1))
 
     # Volume of Ellipse
-    volE = volC/detA
+    volE = volC / detA
     return volE
 
 
@@ -77,23 +77,27 @@ def getEllipseParamsFromQuad(s0Idx, s1Idx, rho, S):
     s0Idx and s1Idx for funnel plotting.
     """
 
-    ellipse_mat = np.array([[S[s0Idx][s0Idx], S[s0Idx][s1Idx]],
-                            [S[s1Idx][s0Idx], S[s1Idx][s1Idx]]])*(1/rho)
+    ellipse_mat = np.array(
+        [[S[s0Idx][s0Idx], S[s0Idx][s1Idx]], [S[s1Idx][s0Idx], S[s1Idx][s1Idx]]]
+    ) * (1 / rho)
 
     # eigenvalue decomposition to get the axes
     w, v = np.linalg.eigh(ellipse_mat)
 
     try:
         # let the smaller eigenvalue define the width (major axis*2!)
-        width = 2/float(np.sqrt(w[0]))
-        height = 2/float(np.sqrt(w[1]))
+        width = 2 / float(np.sqrt(w[0]))
+        height = 2 / float(np.sqrt(w[1]))
         # the angle of the ellipse is defined by the eigenvector assigned to
         # the smallest eigenvalue (because this defines the major axis (width
         # of the ellipse))
         angle = np.rad2deg(np.arctan2(v[:, 0][1], v[:, 0][0]))
 
     except:
-        print("paramters do not represent an ellipse.")
+        width = 0
+        height = 0
+        angle = 0
+        print("parameters do not represent an ellipse.")
 
     return width, height, angle
 
@@ -104,7 +108,9 @@ def getEllipsePatch(x0, x1, s0Idx, s1Idx, rho, S):
     x0 and x1 -> centerpoint
     """
     w, h, a = getEllipseParamsFromQuad(s0Idx, s1Idx, rho, S)
-    return patches.Ellipse((x0, x1), w, h, a, alpha=1, ec="red", facecolor="none")
+    return patches.Ellipse(
+        xy=(x0, x1), width=w, height=h, angle=a, alpha=1, ec="red", facecolor="none"
+    )
 
 
 def getEllipsePatches(x0, x1, s0Idx, s1Idx, rhoHist, S):
@@ -121,9 +127,11 @@ def plotEllipse(x0, x1, s0Idx, s1Idx, rho, S, save_to=None, show=True):
     fig, ax = plt.subplots()
     ax.add_patch(p)
     l = np.max([p.width, p.height])
-    ax.set_xlim(x0-l/2, x0+l/2)
-    ax.set_ylim(x1-l/2, x1+l/2)
+    ax.set_xlim(x0 - l / 2, x0 + l / 2)
+    ax.set_ylim(x1 - l / 2, x1 + l / 2)
     ax.grid(True)
+    ax.set_xlabel("shoulder pos [rad]")
+    ax.set_ylabel("elbow pos [rad]")
     if not (save_to is None):
         plt.savefig(save_to)
     if show:
