@@ -38,6 +38,7 @@ class AcadosMpc(AbstractController):
         inertia=[0.05472, 0.02522],
         torque_limit=[0.0, 6.0],
         model_pars=None,
+        generate_code_filename="double_pendulum",
     ):
         super().__init__()
         self.mass = mass
@@ -61,7 +62,7 @@ class AcadosMpc(AbstractController):
 
         self.pendulum_model = None
         self.warm_start = True
-
+        self.generate_code_filename = generate_code_filename
 
         # set default parameters
         self.set_start()
@@ -157,7 +158,7 @@ class AcadosMpc(AbstractController):
         hpipm_mode="SPEED",
         p_global=False,
         nonlinear_params=False,
-        vel_penalty = 100,
+        vel_penalty=100,
         **kwargs,
     ):
         self.N_horizon = N_horizon
@@ -192,11 +193,13 @@ class AcadosMpc(AbstractController):
         self.async_mpc_future = None
         self.spinner = concurrent.futures.ThreadPoolExecutor(1)
 
-        self.p_global=p_global
-        self.nonlinear_params=nonlinear_params
+        self.p_global = p_global
+        self.nonlinear_params = nonlinear_params
         if p_global and nonlinear_params:
-            print("WARNING can't use both p_global and noninear_params. defaults to only nonlinear_params")
-            self.p_global=False
+            print(
+                "WARNING can't use both p_global and noninear_params. defaults to only nonlinear_params"
+            )
+            self.p_global = False
 
     def init_(self):
         self.pendulum_model = PendulumModel(
@@ -211,6 +214,7 @@ class AcadosMpc(AbstractController):
             actuated_joint=(
                 -1 if self.cheating_on_inactive_joint else np.argmax(self.torque_limit)
             ),
+            generate_code_filename=self.generate_code_filename,
         )
         self.setup_solver()
         if self.pd_tracking_controller:
@@ -223,11 +227,10 @@ class AcadosMpc(AbstractController):
         self.solve_times_T = []
         self.solve_times_rti_prepare = []
         self.solve_times_rti_feedback = []
-        
 
     def setup_solver(self):
         global smoothing
-        smoothing=0.
+        smoothing = 0.0
 
         DDP = self.solver_type == "DDP"
         self.use_RTI = self.solver_type == "SQP_RTI"
@@ -246,9 +249,9 @@ class AcadosMpc(AbstractController):
         if self.wrap_angle:
             ocp.cost.cost_type = "NONLINEAR_LS"
             ocp.model.cost_y_expr = cas.vertcat(
-                cas.sin(ocp.model.x[0]), 
-                cas.cos(ocp.model.x[0]), 
-                cas.sin(ocp.model.x[1]), 
+                cas.sin(ocp.model.x[0]),
+                cas.cos(ocp.model.x[0]),
+                cas.sin(ocp.model.x[1]),
                 cas.cos(ocp.model.x[1]),
                 ocp.model.x[2],
                 ocp.model.x[3],
@@ -257,46 +260,49 @@ class AcadosMpc(AbstractController):
             )
             ocp.cost.cost_type_e = "NONLINEAR_LS"
             ocp.model.cost_y_expr_e = cas.vertcat(
-                cas.sin(ocp.model.x[0]), 
-                cas.cos(ocp.model.x[0]), 
-                cas.sin(ocp.model.x[1]), 
+                cas.sin(ocp.model.x[0]),
+                cas.cos(ocp.model.x[0]),
+                cas.sin(ocp.model.x[1]),
                 cas.cos(ocp.model.x[1]),
                 ocp.model.x[2],
-                ocp.model.x[3]
+                ocp.model.x[3],
             )
             ocp.cost.yref = np.hstack(
-                [np.sin(self.xf[0]),
-                 np.cos(self.xf[0]),
-                 np.sin(self.xf[1]),
-                 np.cos(self.xf[1]), 
-                 self.xf[2], 
-                 self.xf[3], 
-                 np.zeros((nu,))
-                 ]
+                [
+                    np.sin(self.xf[0]),
+                    np.cos(self.xf[0]),
+                    np.sin(self.xf[1]),
+                    np.cos(self.xf[1]),
+                    self.xf[2],
+                    self.xf[3],
+                    np.zeros((nu,)),
+                ]
             )
             ocp.cost.yref_e = np.hstack(
-                [np.sin(self.xf[0]),
-                 np.cos(self.xf[0]),
-                 np.sin(self.xf[1]),
-                 np.cos(self.xf[1]), 
-                 self.xf[2], 
-                 self.xf[3]
-                 ])
-            new_Q = np.zeros((self.Qf_mat.shape[0]+2, self.Qf_mat.shape[1]+2))
-            new_Q[0,0] = self.Q_mat[0,0]
-            new_Q[1,1] = self.Q_mat[0,0]
-            new_Q[2,2] = self.Q_mat[1,1]
-            new_Q[3,3] = self.Q_mat[1,1]
-            new_Q[4,4] = self.Q_mat[2,2]
-            new_Q[5,5] = self.Q_mat[3,3]
-            new_Qf = np.zeros((self.Qf_mat.shape[0]+2, self.Qf_mat.shape[1]+2))
-            new_Qf[0,0] = self.Qf_mat[0,0]
-            new_Qf[1,1] = self.Qf_mat[0,0]
-            new_Qf[2,2] = self.Qf_mat[1,1]
-            new_Qf[3,3] = self.Qf_mat[1,1]
-            new_Qf[4,4] = self.Qf_mat[2,2]
-            new_Qf[5,5] = self.Qf_mat[3,3]
-            
+                [
+                    np.sin(self.xf[0]),
+                    np.cos(self.xf[0]),
+                    np.sin(self.xf[1]),
+                    np.cos(self.xf[1]),
+                    self.xf[2],
+                    self.xf[3],
+                ]
+            )
+            new_Q = np.zeros((self.Qf_mat.shape[0] + 2, self.Qf_mat.shape[1] + 2))
+            new_Q[0, 0] = self.Q_mat[0, 0]
+            new_Q[1, 1] = self.Q_mat[0, 0]
+            new_Q[2, 2] = self.Q_mat[1, 1]
+            new_Q[3, 3] = self.Q_mat[1, 1]
+            new_Q[4, 4] = self.Q_mat[2, 2]
+            new_Q[5, 5] = self.Q_mat[3, 3]
+            new_Qf = np.zeros((self.Qf_mat.shape[0] + 2, self.Qf_mat.shape[1] + 2))
+            new_Qf[0, 0] = self.Qf_mat[0, 0]
+            new_Qf[1, 1] = self.Qf_mat[0, 0]
+            new_Qf[2, 2] = self.Qf_mat[1, 1]
+            new_Qf[3, 3] = self.Qf_mat[1, 1]
+            new_Qf[4, 4] = self.Qf_mat[2, 2]
+            new_Qf[5, 5] = self.Qf_mat[3, 3]
+
             ocp.cost.W_e = new_Qf
             ocp.cost.W = cas.diagcat(new_Q, self.R_mat).full()
 
@@ -330,8 +336,12 @@ class AcadosMpc(AbstractController):
         self.torque_limit = np.array(self.torque_limit)
 
         if self.v_max:
-            ocp.constraints.ubx = np.hstack([np.array([4*np.pi, 4*np.pi]), np.full(2, self.v_max)])
-            ocp.constraints.lbx =  np.hstack([-np.array([4*np.pi, 4*np.pi]),-np.full(2, self.v_max)])
+            ocp.constraints.ubx = np.hstack(
+                [np.array([4 * np.pi, 4 * np.pi]), np.full(2, self.v_max)]
+            )
+            ocp.constraints.lbx = np.hstack(
+                [-np.array([4 * np.pi, 4 * np.pi]), -np.full(2, self.v_max)]
+            )
             ocp.constraints.idxbx = np.array([0, 1, 2, 3])
             # ocp.constraints.idxsbx = np.array([2, 3])
 
@@ -340,14 +350,18 @@ class AcadosMpc(AbstractController):
             # ocp.cost.zl = np.zeros(2)
             # ocp.cost.zu = np.zeros(2)
         else:
-            ocp.constraints.ubx = np.array([4*np.pi, 4*np.pi])
-            ocp.constraints.lbx =  np.array([-4*np.pi, -4*np.pi])
-            ocp.constraints.idxbx = np.array([0,1])
+            ocp.constraints.ubx = np.array([4 * np.pi, 4 * np.pi])
+            ocp.constraints.lbx = np.array([-4 * np.pi, -4 * np.pi])
+            ocp.constraints.idxbx = np.array([0, 1])
 
         if self.v_final:
-            ocp.constraints.ubx_e = np.hstack([np.array([9.42, 9.42]), np.full(2, self.v_final)])
-            ocp.constraints.lbx_e =  np.hstack([-np.array([9.42, 9.42]),-np.full(2, self.v_final)])
-            ocp.constraints.idxbx_e = np.array([0,1, 2, 3])
+            ocp.constraints.ubx_e = np.hstack(
+                [np.array([9.42, 9.42]), np.full(2, self.v_final)]
+            )
+            ocp.constraints.lbx_e = np.hstack(
+                [-np.array([9.42, 9.42]), -np.full(2, self.v_final)]
+            )
+            ocp.constraints.idxbx_e = np.array([0, 1, 2, 3])
             # ocp.constraints.idxsbx_e = np.array([2,3])
 
             # ocp.cost.Zl_e = self.vel_penalty*np.ones(2)
@@ -356,8 +370,8 @@ class AcadosMpc(AbstractController):
             # ocp.cost.zu_e = np.zeros(2)
         else:
             ocp.constraints.ubx_e = np.array([9.42, 9.42])
-            ocp.constraints.lbx_e =  np.array([-9.42, -9.42])
-            ocp.constraints.idxbx_e = np.array([0,1])
+            ocp.constraints.lbx_e = np.array([-9.42, -9.42])
+            ocp.constraints.idxbx_e = np.array([0, 1])
 
         ocp.constraints.idxbu = np.array([0, 1])
         ocp.constraints.x0 = self.x0
@@ -390,13 +404,16 @@ class AcadosMpc(AbstractController):
         self.time_grid = np.linspace(0, self.prediction_horizon, self.N_horizon)
 
         if self.nonuniform_grid:
-            n_short = 13#self.N_horizon//2
-            dt_short = 0.004 #double mpc cycle
-            n_long = self.N_horizon-n_short
-            time_steps = np.array(n_short * [dt_short] + n_long * [(self.prediction_horizon - dt_short * n_short) / n_long])
-            #time_steps = np.linspace(0, 1, self.N_horizon + 1)[1:]
-            #time_steps = self.prediction_horizon * time_steps / sum(time_steps)
-            #ocp.solver_options.time_steps = time_steps
+            n_short = 13  # self.N_horizon//2
+            dt_short = 0.004  # double mpc cycle
+            n_long = self.N_horizon - n_short
+            time_steps = np.array(
+                n_short * [dt_short]
+                + n_long * [(self.prediction_horizon - dt_short * n_short) / n_long]
+            )
+            # time_steps = np.linspace(0, 1, self.N_horizon + 1)[1:]
+            # time_steps = self.prediction_horizon * time_steps / sum(time_steps)
+            # ocp.solver_options.time_steps = time_steps
 
         self.last_good_solution_time = 0.0
 
@@ -415,6 +432,7 @@ class AcadosMpc(AbstractController):
 
         temp_dir = tempfile.TemporaryDirectory()
         filename = temp_dir.name + "/acados_ocp.json"
+        # filename = self.generate_code_filename + "_acados_ocp.json"
 
         if self.nonlinear_params:
             ocp.parameter_values = np.array([50])
@@ -426,9 +444,9 @@ class AcadosMpc(AbstractController):
 
         if self.nonlinear_params:
             for i in range(self.N_horizon):
-                if i%3==0:
+                if i % 3 == 0:
                     self.ocp_solver.set(i, "p", 0)
-                elif i%3==1:
+                elif i % 3 == 1:
                     self.ocp_solver.set(i, "p", 50)
                 else:
                     self.ocp_solver.set(i, "p", 100)
@@ -448,8 +466,11 @@ class AcadosMpc(AbstractController):
             self.ocp_solver.set(0, "lbx", self.x0)
             self.ocp_solver.set(0, "ubx", self.x0)
             stats = self.ocp_solver.solve()
-            print(f"Warm start with x0={self.x0} and xf={self.xf} {i}/{num_iter_initial} - returned {stats}", end="\r")
-            self.x0 = self.ocp_solver.get(1,'x')
+            print(
+                f"Warm start with x0={self.x0} and xf={self.xf} {i}/{num_iter_initial} - returned {stats}",
+                end="\r",
+            )
+            self.x0 = self.ocp_solver.get(1, "x")
 
     def reset_(self):
         self.ocp_solver.reset()
@@ -478,16 +499,24 @@ class AcadosMpc(AbstractController):
             units=[Nm]
         """
         if self.p_global:
-            global smoothing 
-            self.ocp_solver.set_p_global_and_precompute_dependencies(np.array([smoothing]))
-            smoothing = np.min([smoothing+0.01, 100])
+            global smoothing
+            self.ocp_solver.set_p_global_and_precompute_dependencies(
+                np.array([smoothing])
+            )
+            smoothing = np.min([smoothing + 0.01, 100])
 
         x = np.array(x)
-        if not self.wrap_angle: # wrap the current state so the controller does not need to cricle back
+        if (
+            not self.wrap_angle
+        ):  # wrap the current state so the controller does not need to cricle back
             x[0] = (x[0] + 2 * np.pi) % (4 * np.pi) - 2 * np.pi
             x[1] = (x[1] + 2 * np.pi) % (4 * np.pi) - 2 * np.pi
-        
-        x[2:4] = np.clip(x[2:4], -np.array([self.v_max, self.v_max]), np.array([self.v_max, self.v_max]))
+
+        x[2:4] = np.clip(
+            x[2:4],
+            -np.array([self.v_max, self.v_max]),
+            np.array([self.v_max, self.v_max]),
+        )
 
         if (t - self.last_mpc_run_t) > self.mpc_cycle_dt:  # inner loop
             self.ocp_solver.set(0, "lbx", x)
@@ -498,16 +527,22 @@ class AcadosMpc(AbstractController):
                     result = self.async_mpc_future.result()
                 self.ocp_solver.options_set("rti_phase", 2)
                 self.ocp_solver.solve()
-                self.solve_times.append(self.ocp_solver.get_stats('time_tot'))
-                self.solve_times_rti_feedback.append(self.ocp_solver.get_stats('time_feedback'))
-                self.solve_times_rti_prepare.append(self.ocp_solver.get_stats('time_preparation'))
+                self.solve_times.append(self.ocp_solver.get_stats("time_tot"))
+                self.solve_times_rti_feedback.append(
+                    self.ocp_solver.get_stats("time_feedback")
+                )
+                self.solve_times_rti_prepare.append(
+                    self.ocp_solver.get_stats("time_preparation")
+                )
                 self.solve_times_T.append(t)
                 self.mpc_u = self.get_x0(x, t)
                 self.ocp_solver.options_set("rti_phase", 1)
-                self.async_mpc_future = self.spinner.submit(lambda : self.ocp_solver.solve())
+                self.async_mpc_future = self.spinner.submit(
+                    lambda: self.ocp_solver.solve()
+                )
             else:
                 self.ocp_solver.solve()
-                self.solve_times.append(self.ocp_solver.get_stats('time_tot'))
+                self.solve_times.append(self.ocp_solver.get_stats("time_tot"))
                 self.solve_times_T.append(t)
                 self.mpc_u = self.get_x0(x, t)
 
@@ -568,7 +603,7 @@ class AcadosMpc(AbstractController):
             "qp_solver": self.qp_solver,
             "hpipm_mode": self.hpipm_mode,
             "p_global": self.p_global,
-            "nonlinear_params": self.nonlinear_params
+            "nonlinear_params": self.nonlinear_params,
         }
 
         model_pars.update(self.options)

@@ -161,6 +161,185 @@ class CombinedController(AbstractController):
         return self.controllers[self.active].get_init_trajectory()
 
 
+def dummy_condition(x, t):
+    return False
+
+
+class dummy_controller(AbstractController):
+    def __init__(self):
+        super().__init__()
+
+    def init_(self):
+        pass
+
+    def save_(self, save_dir):
+        pass
+
+    def get_control_output_(self, x, t=None):
+        return [0.0, 0.0]
+
+
+class CombinedControllerN(AbstractController):
+    """
+    Controller to combine two controllers and switch between them on conditions
+
+    Parameters
+    ----------
+    controller1 : Controller object
+        First Controller
+    controller2 : Controller object
+        Second Controller
+    condition1 : function of (x, t)
+        condition to switch to controller 1
+        must be a functin of the state x and the time t
+    condition2 : function of (x, t)
+        condition to switch to controller 2
+        must be a functin of the state x and the time t
+    compute_both : bool
+        Flag whether to compute the control output for both controllers at each
+        timestep or only for the active one
+    """
+
+    def __init__(
+        self,
+        n_con,
+        controllers,
+        conditions,
+        compute_in_bg=[],
+        verbose=False,
+    ):
+        super().__init__()
+
+        self.n_con = n_con
+        self.controllers = controllers
+        self.active = 0
+
+        self.conditions = conditions
+
+        self.compute_in_bg = compute_in_bg
+        self.verbose = verbose
+
+    def init_(self):
+        """
+        initialize both controllers
+        """
+        for i in range(self.n_con):
+            self.controllers[i].init_()
+        self.active = 0
+
+    def set_parameters(self, controller1_pars, controller2_pars, controller3_pars):
+        """
+        Set parametrers for both controllers.
+
+        Parameters
+        ----------
+        controller1_pars : list
+            parameters for controller 1 to be parsed to set_parameters
+        controller2_pars : list
+            parameters for controller 1 to be parsed to set_parameters
+        """
+        for i in range(self.n_con):
+            self.controllers[i].set_parameters(*controller1_pars)
+
+    def set_start(self, x):
+        """
+        Set start state for the controller.
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        """
+        for i in range(self.n_con):
+            self.controllers[i].set_start(x)
+
+    def set_goal(self, x):
+        """
+        Set the desired state for the controllers.
+
+        Parameters
+        ----------
+        x : array like
+            the desired goal state of the controllers
+        """
+        for i in range(self.n_con):
+            self.controllers[i].set_goal(x)
+
+    def save_(self, save_dir):
+        """
+        Save controllers' parameters.
+
+        Parameters
+        ----------
+        save_dir : string or path object
+            directory where the parameters will be saved
+        """
+        for i in range(self.n_con):
+            self.controllers[i].save_(save_dir)
+
+    def reset_(self):
+        """
+        Reset controllers.
+        """
+        for i in range(self.n_con):
+            self.controllers[i].reset_()
+
+    def get_control_output_(self, x, t):
+        """
+        The function to compute the control input for the double pendulum's
+        actuator(s).
+        Will check the switch condition, potetntiolly switch the active
+        controller and use the active controller.
+
+        Parameters
+        ----------
+        x : array_like, shape=(4,), dtype=float,
+            state of the double pendulum,
+            order=[angle1, angle2, velocity1, velocity2],
+            units=[rad, rad, rad/s, rad/s]
+        t : float, optional
+            time, unit=[s]
+
+        Returns
+        -------
+        array_like
+            shape=(2,), dtype=float
+            actuation input/motor torque,
+            order=[u1, u2],
+            units=[Nm]
+        """
+        # inactive = 1 - self.active
+
+        for i in range(self.n_con):
+            if i != self.active:
+                if self.conditions[i](x, t):
+                    self.active = i
+                    if self.verbose:
+                        print("Switching to Controller ", self.active)
+
+        for i in range(self.n_con):
+            if i != self.active and self.compute_in_bg[i]:
+                _ = self.controllers[i].get_control_output(x, t)
+
+        return self.controllers[self.active].get_control_output(x, t)
+
+    def get_forecast(self):
+        """
+        Get a forecast trajectory as planned by the controller.
+        Uses active controller
+        """
+        return self.controllers[self.active].get_forecast()
+
+    def get_init_trajectory(self):
+        """
+        Get the initial (reference) trajectory as planned by the controller.
+        Uses active controller
+        """
+        return self.controllers[self.active].get_init_trajectory()
+
+
 class SimultaneousControllers(AbstractController):
     """
     Controller to combine multiple controllers and add all their outputs torques.

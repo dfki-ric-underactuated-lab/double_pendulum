@@ -9,6 +9,7 @@ import pandas as pd
 from double_pendulum.controller.abstract_controller import AbstractController
 import yaml
 
+
 class PendulumModel:
 
     model = AcadosModel()
@@ -54,7 +55,8 @@ class PendulumModel:
         gear_ratio=6,
         actuated_joint=0,
         p_global=False,
-        nonlinear_params=False
+        nonlinear_params=False,
+        generate_code_filename="double_pendulum",
     ):
 
         self.m1 = mass[0]  # mass of the ball [kg]
@@ -124,7 +126,7 @@ class PendulumModel:
         if p_global or nonlinear_params:
             steepness = cas.SX.sym("steepness")
         else:
-            steepness=100
+            steepness = 100
 
         self.F = cas.vertcat(
             self.b1 * self.thd1 + self.cf1 * cas.atan(steepness * self.thd1),
@@ -132,8 +134,10 @@ class PendulumModel:
         )
 
         if (
-            self.cf1 <= 0.0001 and self.cf2 <= 0.0001 and self.b1 <= 0.0001 and
-            self.b2 <= 0.0001
+            self.cf1 <= 0.0001
+            and self.cf2 <= 0.0001
+            and self.b1 <= 0.0001
+            and self.b2 <= 0.0001
         ):
             print("Friction parameters are zero, removing friction term from model")
             self.F = cas.SX([0, 0])
@@ -149,7 +153,8 @@ class PendulumModel:
         self.model.x = self.x
         self.model.xdot = self.xdot
         self.model.u = self.u
-        self.model.name = "double_pendulum"
+        # self.model.name = "double_pendulum"
+        self.model.name = generate_code_filename
 
         if p_global:
             self.model.p_global = steepness
