@@ -15,7 +15,7 @@ design = "design_A.0"
 model = "model_1.0"
 robot = "acrobot"
 
-torque_limit = [0.0, 15.0]
+torque_limit = [0.0, 5.0]
 active_act = 1
 
 model_par_path = "../../data/system_identification/identified_parameters/"+design+"/"+model+"/model_parameters.yml"
@@ -34,9 +34,9 @@ x0 = [0.1, 0.0, 0.0, 0.0]
 t_final = 60.0
 
 # controller parameters
-kp = 2.2  # > 0.67
-kd = 0.3  # > 0.022
-kv = 0.3  # > 0.0
+kp = 1.2  # > 0.67
+kd = 0.1  # > 0.022
+kv = 0.05  # > 0.0
 
 plant = SymbolicDoublePendulum(model_pars=mpar)
 sim = Simulator(plant=plant)
@@ -44,7 +44,7 @@ sim = Simulator(plant=plant)
 controller = EnergyController(model_pars=mpar)
 controller.set_parameters(kp=kp, kd=kd, kv=kv)
 controller.set_goal(goal)
-controller.check_parameters()
+# controller.check_parameters()
 controller.init()
 
 T, X, U = sim.simulate_and_animate(t0=0.0,
@@ -78,8 +78,7 @@ plot_timeseries(T=T, X=X, U=U, energy=energy,
                 pos_y_lines=[-np.pi, np.pi],
                 tau_y_lines=[-torque_limit[active_act], torque_limit[active_act]],
                 energy_y_lines=[des_energy],
-                save_to=os.path.join(save_dir, "time_series"),
-                kp=kp, kd=kd, kv=kv)    # <-- Added
+                save_to=os.path.join(save_dir, "time_series"))
 
 # par_dict = {
 #             "dt": dt,

@@ -151,7 +151,7 @@ class SymbolicDoublePendulum:
 
     # state space variables
     q1, q2, qd1, qd2, qdd1, qdd2 = smp.symbols(
-        "q1 q2 \dot{q}_1 \dot{q}_2 \ddot{q}_1 \ddot{q}_2"
+        "q1 q2 \\dot{q}_1 \\dot{q}_2 \\ddot{q}_1 \\ddot{q}_2"
     )
 
     q = smp.Matrix([q1, q2])
@@ -165,11 +165,11 @@ class SymbolicDoublePendulum:
 
     # definition of linearization point
     q01, q02, q0d1, q0d2 = smp.symbols(
-        "\hat{q}_1 \hat{q}_2 \hat{\dot{q}}_1 \hat{\dot{q}}_2"
+        "\\hat{q}_1 \\hat{q}_2 \\hat{\\dot{q}}_1 \\hat{\\dot{q}}_2"
     )
     x0 = smp.Matrix([q01, q02, q0d1, q0d2])
 
-    u01, u02 = smp.symbols("\hat{u}_1 \hat{u}_2")
+    u01, u02 = smp.symbols("\\hat{u}_1 \\hat{u}_2")
     u0 = smp.Matrix([u01, u02])
 
     def __init__(
@@ -390,8 +390,8 @@ class SymbolicDoublePendulum:
         """
         symbolic potential energy of the double pendulum
         """
-        h1 = -self.r1 * smp.cos(self.q1)
-        h2 = -self.l1 * smp.cos(self.q1) - self.r2 * smp.cos(self.q1 + self.q2)
+        h1 = -self.r1 * smp.sin(self.q1)
+        h2 = -self.l1 * smp.sin(self.q1) + self.r2 * smp.sin(self.q1 + self.q2)
         Epot = self.m1 * self.g_sym * h1 + self.m2 * self.g_sym * h2
         return Epot
 
