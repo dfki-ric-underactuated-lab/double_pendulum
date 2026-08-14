@@ -4,13 +4,6 @@
 
 <div align="center">
 
-## :bangbang: ICRA 2025 Competition :bangbang:
-
-We are hosting a competition at [ICRA 2025](https://2025.ieee-icra.org/).
-
-If you are interested in participating, check out our competition website:
-[ICRA 2025 Competition](https://ai-olympics.dfki-bremen.de/).
-
 # Dual Purpose Acrobot & Pendubot Platform
 </div>
 
